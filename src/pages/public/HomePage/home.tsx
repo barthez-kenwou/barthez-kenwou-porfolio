@@ -7,6 +7,7 @@ import { TestimonialsSection } from './sections/TestimonialsSection';
 import { CTASection } from './sections/CTASection';
 import { DeferredMount } from '@/shared/ui/DeferredMount';
 import { ErrorBoundary } from '@/app/lib/ErrorBoundary';
+import { useLanguageStore } from '@/shared/state/useLanguageStore';
 
 const SplashCursor = lazy(() =>
   import('@/shared/ui/splash-cursor').then((m) => ({ default: m.SplashCursor })),
@@ -68,12 +69,23 @@ function DeferredSplash() {
 }
 
 export const HomePage: React.FC = () => {
+  const { language } = useLanguageStore();
+  const isFr = language === 'fr';
+
   return (
     <>
       <SEO
         path="/"
-        title="Barthez Kenwou | Développeur Full Stack & Ingénieur DevOps"
-        description="Passionné par le développement web et le cloud computing depuis plus de 3 ans, je me spécialise dans la création d'applications web modernes, performantes et évolutives. Toujours à la recherche de nouveaux défis, je m'investis continuellement dans l'apprentissage de nouvelles technologies et les meilleures pratiques du secteur."
+        title={
+          isFr
+            ? 'Barthez Kenwou | Développeur Full Stack & Ingénieur DevOps'
+            : 'Barthez Kenwou | Full Stack Developer & DevOps Engineer'
+        }
+        description={
+          isFr
+            ? 'Full Stack JS, DevOps et AWS Cloud. Je transforme une vision produit en solution fiable, scalable et exploitable.'
+            : 'Full Stack JS, DevOps, and AWS Cloud. I turn a product vision into a reliable, scalable, production-ready solution.'
+        }
       />
 
       <div className="relative min-h-screen overflow-x-clip">

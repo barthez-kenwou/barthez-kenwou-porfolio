@@ -1,37 +1,51 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Mail } from 'lucide-react';
 import { ThemeToggle } from '@/shared/ui/ThemeToggle';
 import { LanguageToggle } from '@/shared/ui/LanguageToggle';
 import { socialLinks } from '@/shared/constants/socialLink.const';
 import { useSidebar } from '@/shared/ui/sidebar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/ui/tooltip';
-import { SpectrumButton } from '@/shared/ui/SpectrumButton';
-import { AiOutlineDownload } from 'react-icons/ai';
+import { Button } from '@/shared/ui/Button';
 import { useTranslation } from 'react-i18next';
 
+const CONTACT_FROM_SIDEBAR = '/contact?from=sidebar';
+
 /**
- * SidebarFooterSection Component
- *
- * Affiche les liens sociaux, toggles et bouton CV
- * - Mode expanded: Layout horizontal centré
- * - Mode collapsed: Layout vertical avec icônes et tooltips
- *
- * @component
+ * Socials, theme/lang, and persistent Contact CTA (business conversion).
+ * CV download stays in the top navbar utility.
  */
 export const SidebarFooterSection: React.FC = () => {
   const { state } = useSidebar();
   const isExpanded = state === 'expanded';
   const { t } = useTranslation();
 
+  const contactButton = (
+    <Button asChild className={isExpanded ? 'w-full' : 'h-10 w-10 p-0'} size={isExpanded ? 'default' : 'icon'}>
+      <Link
+        to={CONTACT_FROM_SIDEBAR}
+        onMouseEnter={() => {
+          void import('@/app/routes/prefetch').then((m) => m.prefetchRoute('/contact'));
+        }}
+        onTouchStart={() => {
+          void import('@/app/routes/prefetch').then((m) => m.prefetchRoute('/contact'));
+        }}
+        aria-label={t('nav.contactCta')}
+      >
+        <Mail className="h-4 w-4" />
+        {isExpanded && <span>{t('nav.contactCta')}</span>}
+      </Link>
+    </Button>
+  );
+
   return (
     <TooltipProvider delayDuration={0}>
       <div
-        className={`border-t flex flex-col gap-4 transition-all duration-300 ${
+        className={`flex flex-col gap-4 border-t transition-all duration-300 ${
           isExpanded ? 'p-4' : 'p-2'
         }`}
       >
         <div className={`flex flex-col gap-2 ${isExpanded ? 'px-3' : 'px-0'}`}>
-          {/* Social Links */}
           <div className={`flex gap-2 ${isExpanded ? 'justify-center' : 'flex-col items-center'}`}>
             {socialLinks.map((link) => {
               const Icon = link.icon;
@@ -61,7 +75,6 @@ export const SidebarFooterSection: React.FC = () => {
             })}
           </div>
 
-          {/* Theme & Language toggles */}
           <div className={`flex gap-2 ${isExpanded ? 'justify-center' : 'flex-col items-center'}`}>
             {!isExpanded ? (
               <>
@@ -95,14 +108,17 @@ export const SidebarFooterSection: React.FC = () => {
           </div>
         </div>
 
-        {/* CV - spectrum primary (sidebar only) */}
-        {isExpanded && (
-          <SpectrumButton asChild variant="solid" size="default" className="w-full">
-            <Link to="/cv">
-              <AiOutlineDownload className="h-4 w-4" />
-              <span>{t('nav.cv')}</span>
-            </Link>
-          </SpectrumButton>
+        {!isExpanded ? (
+          <div className="flex justify-center">
+            <Tooltip>
+              <TooltipTrigger asChild>{contactButton}</TooltipTrigger>
+              <TooltipContent side="right" className="font-medium">
+                {t('nav.contactCta')}
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        ) : (
+          contactButton
         )}
       </div>
     </TooltipProvider>

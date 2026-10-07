@@ -7,7 +7,7 @@ import {
   SidebarMenuButton,
   useSidebar,
 } from '@/shared/ui/sidebar.tsx';
-import { navItems } from '@/shared/constants/navItems.const';
+import { sidebarNavItems } from '@/shared/constants/navItems.const';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/ui/tooltip';
 
 /**
@@ -27,7 +27,7 @@ export const SidebarContentSection: React.FC = () => {
         className={`w-full transition-all duration-300 ${isExpanded ? 'p-4' : 'p-2'}`}
       >
         <SidebarMenu className={`gap-2 ${isExpanded ? '' : ''}`}>
-          {navItems.map((item) => {
+          {sidebarNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.id;
 

@@ -20,7 +20,7 @@ export const TechStackSection: React.FC<{ project: IProject }> = ({ project }) =
   if (categories.length === 0) return null;
 
   return (
-    <section className="mb-16 px-4 md:px-10 lg:px-14 animate-fade-in-up">
+    <section className="mb-4 px-4 md:px-10 lg:px-14 animate-fade-in-up">
       <div className="flex items-center gap-4 mb-8">
         <div className="h-[1px] flex-grow bg-border/50"></div>
         <h2 className="text-lg md:text-xl font-bold px-4 text-center text-foreground tracking-tight shrink-0">

@@ -33,17 +33,69 @@ function buildContactPrefill(searchParams: URLSearchParams, language: string) {
   const from = searchParams.get('from');
 
   if (from === 'projects') {
+    const project = searchParams.get('article');
     if (language === 'fr') {
       return {
-        subject: 'Échange suite à vos projets',
-        message:
-          "Bonjour,\n\nJ'ai consulté vos réalisations et je souhaiterais échanger sur un besoin / une collaboration dans la même veine.\n\nCordialement,\n",
+        subject: project
+          ? `Échange suite au projet « ${project} »`
+          : 'Échange suite à vos projets',
+        message: project
+          ? `Bonjour,\n\nJ'ai consulté le projet « ${project} » et je souhaiterais échanger sur un besoin dans la même veine.\n\nCordialement,\n`
+          : "Bonjour,\n\nJ'ai consulté vos réalisations et je souhaiterais échanger sur un besoin / une collaboration dans la même veine.\n\nCordialement,\n",
       };
     }
     return {
-      subject: 'Follow-up after reviewing your projects',
+      subject: project
+        ? `Follow-up after « ${project} »`
+        : 'Follow-up after reviewing your projects',
+      message: project
+        ? `Hello,\n\nI reviewed the « ${project} » project and would like to discuss a need along similar lines.\n\nBest regards,\n`
+        : "Hello,\n\nI've reviewed your case studies and would like to discuss a need / collaboration along similar lines.\n\nBest regards,\n",
+    };
+  }
+
+  if (from === 'home') {
+    if (language === 'fr') {
+      return {
+        subject: "Prise de contact depuis la page d'accueil",
+        message:
+          "Bonjour,\n\nJe viens de parcourir votre site et je souhaiterais échanger sur un besoin / une collaboration.\n\nCordialement,\n",
+      };
+    }
+    return {
+      subject: 'Reaching out from your homepage',
       message:
-        "Hello,\n\nI've reviewed your case studies and would like to discuss a need / collaboration along similar lines.\n\nBest regards,\n",
+        "Hello,\n\nI've just browsed your site and would like to discuss a need / collaboration.\n\nBest regards,\n",
+    };
+  }
+
+  if (from === 'services') {
+    if (language === 'fr') {
+      return {
+        subject: 'Demande suite à vos services',
+        message:
+          "Bonjour,\n\nJ'ai consulté vos services et je souhaiterais échanger sur un besoin / un devis.\n\nCordialement,\n",
+      };
+    }
+    return {
+      subject: 'Inquiry after reviewing your services',
+      message:
+        "Hello,\n\nI've reviewed your services and would like to discuss a need / quote.\n\nBest regards,\n",
+    };
+  }
+
+  if (from === 'sidebar') {
+    if (language === 'fr') {
+      return {
+        subject: 'Prise de contact',
+        message:
+          "Bonjour,\n\nJe souhaiterais échanger sur un besoin / une collaboration.\n\nCordialement,\n",
+      };
+    }
+    return {
+      subject: 'Getting in touch',
+      message:
+        "Hello,\n\nI would like to discuss a need / collaboration.\n\nBest regards,\n",
     };
   }
 

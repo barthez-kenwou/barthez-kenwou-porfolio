@@ -8,28 +8,38 @@ import { ExperienceSection } from './sections/ExperienceSection';
 import { SEO } from '@/shared/ui/SEO/SEO';
 import { PresentationVideo } from '@/widgets/PresentationVideo/PresentationVideo';
 import { AboutCTASection } from './sections/AboutCTASection';
+import { useLanguageStore } from '@/shared/state/useLanguageStore';
 
 export const AboutPage: React.FC = () => {
+  const { language } = useLanguageStore();
+  const isFr = language === 'fr';
+
   return (
     <>
       <SEO
         path="/about"
-        title="À propos"
-        description="Passionné par l'innovation technologique - Mon expertise couvre l'ensemble du cycle de développement, de la conception à la mise en production. Technologies AWS, DevOps, et applications web modernes."
+        title={isFr ? 'À propos' : 'About'}
+        description={
+          isFr
+            ? 'Parcours, expérience et approche de Barthez Kenwou: Full Stack, DevOps et AWS, de la conception à la production.'
+            : 'Background, experience, and approach of Barthez Kenwou: Full Stack, DevOps, and AWS, from design to production.'
+        }
       />
 
-      <div className="mx-auto min-h-screen w-full overflow-x-clip">
+      {/* No overflow-x-clip here: it breaks position:sticky on the profile card */}
+      <div className="mx-auto min-h-screen w-full">
         <div className="min-h-screen py-20">
           <div className="mx-auto py-12">
             <HeroSection />
 
             <div className="mb-2 grid gap-8 px-4 md:px-10 lg:grid-cols-3 lg:px-14">
               <div className="lg:col-span-1">
-                <div className="glass sticky top-24 rounded-md border border-border p-4 md:p-6">
-                  <div className="absolute inset-0 z-10 rounded-md">
+                {/* sticky needs a tall grid cell (default stretch) + no overflow clip on ancestors */}
+                <div className="glass relative sticky top-24 self-start rounded-md border border-border p-4 md:p-6">
+                  <div className="pointer-events-none absolute inset-0 z-10 rounded-md">
                     <Pointer className="fill-primary" />
                   </div>
-                  <div className="relative z-20 h-full w-full">
+                  <div className="relative z-20 w-full">
                     <ProfileCard />
                   </div>
                 </div>
@@ -42,7 +52,6 @@ export const AboutPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Know the person → hear them → act */}
             <PresentationVideo />
             <AboutCTASection />
           </div>

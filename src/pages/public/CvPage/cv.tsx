@@ -62,8 +62,12 @@ export const CvPage = () => {
     <>
       <SEO
         path="/cv"
-        title="CV"
-        description="CV de Barthez Kenwou - Développeur Full Stack & Ingénieur DevOps AWS. Expérience, compétences et parcours professionnel."
+        title={isFr ? 'CV' : 'Resume'}
+        description={
+          isFr
+            ? 'CV de Barthez Kenwou: Full Stack & DevOps AWS. Expérience, compétences et parcours, prêt à télécharger.'
+            : 'Resume of Barthez Kenwou: Full Stack & AWS DevOps. Experience, skills, and background, ready to download.'
+        }
       />
 
       <div className="min-h-screen overflow-x-clip pt-16 pb-28 md:py-16 md:pb-16 lg:py-20 xl:pb-20">

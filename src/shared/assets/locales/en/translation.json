@@ -6,7 +6,9 @@
     "skills": "Skills",
     "projects": "Projects",
     "contact": "Contact",
+    "contactCta": "Contact me",
     "cv": "Download CV",
+    "cvPage": "Resume",
     "services": "Services",
     "blog": "Blog"
   },
@@ -76,7 +78,7 @@
       "email": "Email",
       "location": "Location",
       "availability": "Availability",
-      "available": "Available for projects"
+      "available": "Open for remote engagements"
     }
   },
   "footer": {

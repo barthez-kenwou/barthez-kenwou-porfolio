@@ -6,7 +6,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatedList } from '@/shared/ui/animated-list';
 import { ServiceCard2 } from '@/entities/services';
-import { SpectrumButton } from '@/shared/ui/SpectrumButton';
 import { cn } from '@/shared/lib';
 
 const SERVICES_FLARE = '/images/services-flare.webp';
@@ -76,12 +75,19 @@ export const ServiceSection: React.FC = () => {
           </div>
 
           <div className="mx-auto md:mx-0">
-            <SpectrumButton asChild variant="solid" size="default">
-              <Link to="/services">
-                {isFr ? 'Explorer tous les services' : 'Explore all services'}
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </Link>
-            </SpectrumButton>
+            <Link
+              to="/services"
+              onMouseEnter={() => {
+                void import('@/app/routes/prefetch').then((m) => m.prefetchRoute('/services'));
+              }}
+              onTouchStart={() => {
+                void import('@/app/routes/prefetch').then((m) => m.prefetchRoute('/services'));
+              }}
+              className="group inline-flex items-center gap-1.5 text-sm font-semibold text-primary underline-offset-4 transition-colors hover:underline"
+            >
+              {isFr ? 'Explorer tous les services' : 'Explore all services'}
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
           </div>
         </div>
 

@@ -1,12 +1,11 @@
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { HiOutlineCheckCircle } from 'react-icons/hi2';
-import { ArrowRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { IServices } from '../model/service.types';
 import { motion } from 'framer-motion';
 import { GlowingEffect } from '@/shared/ui/glowing-effect';
-import { Button } from '@/shared/ui/Button';
 import { cn } from '@/shared/lib/utils';
 import { AnimatedServicePrice } from './AnimatedServicePrice';
 
@@ -72,20 +71,19 @@ export const ServiceCard: React.FC<{ Service: IServices }> = ({ Service }) => {
             <AnimatedServicePrice amountEur={priceEur} hourly={hourly} />
           </div>
 
-          <Button asChild size="sm" className="h-8 shrink-0 px-3 text-xs font-semibold">
-            <Link
-              to={contactTo}
-              onMouseEnter={() => {
-                void import('@/app/routes/prefetch').then((m) => m.prefetchRoute('/contact'));
-              }}
-              onTouchStart={() => {
-                void import('@/app/routes/prefetch').then((m) => m.prefetchRoute('/contact'));
-              }}
-            >
-              {t('services.cta')}
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </Button>
+          <Link
+            to={contactTo}
+            onMouseEnter={() => {
+              void import('@/app/routes/prefetch').then((m) => m.prefetchRoute('/contact'));
+            }}
+            onTouchStart={() => {
+              void import('@/app/routes/prefetch').then((m) => m.prefetchRoute('/contact'));
+            }}
+            className="group inline-flex shrink-0 items-center gap-0.5 text-[12px] font-semibold text-primary underline-offset-4 transition-colors hover:underline"
+          >
+            {t('services.cta')}
+            <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </Link>
         </div>
       </div>
     </motion.div>

@@ -7,18 +7,26 @@ import { WaContact } from './sections/WaContact';
 import { SocialGeometry } from '@/entities/contact/ui/SocialGeometry.ui';
 import { lazy, Suspense } from 'react';
 import { DeferredMount } from '@/shared/ui/DeferredMount';
+import { useLanguageStore } from '@/shared/state/useLanguageStore';
 
 const MouseParticles = lazy(() =>
   import('@/shared/ui/MouseParticles').then((m) => ({ default: m.MouseParticles })),
 );
 
 export const ContactPage = () => {
+  const { language } = useLanguageStore();
+  const isFr = language === 'fr';
+
   return (
     <>
       <SEO
         path="/contact"
         title="Contact"
-        description="Contactez Barthez Kenwou - discutons de votre prochain projet web, cloud ou DevOps. Réponse rapide et solutions sur mesure."
+        description={
+          isFr
+            ? 'Contactez Barthez Kenwou pour un projet web, cloud ou DevOps. Échange rapide, proposition claire.'
+            : 'Contact Barthez Kenwou for a web, cloud, or DevOps project. Fast response, clear proposal.'
+        }
       />
 
       <div className="min-h-screen overflow-x-clip py-10 md:py-16 lg:py-20">
@@ -42,12 +50,13 @@ export const ContactPage = () => {
           </div>
         </div>
 
+        {/* Alternate channel first, then signature block */}
         <div className="mt-4 px-4 md:mt-4 md:px-10 lg:px-14">
-          <EndContact />
+          <WaContact />
         </div>
 
         <div className="mt-4 px-4 md:mt-4 md:px-10 lg:px-14">
-          <WaContact />
+          <EndContact />
         </div>
 
         <DeferredMount whenVisible={false} timeout={1200} fallback={null}>

@@ -5,16 +5,23 @@ import { ProjectStatsSection } from './sections/ProjectStatsSection';
 import { ProjectCTASection } from './sections/ProjectCTASection';
 import { SEO } from '@/shared/ui/SEO/SEO';
 import { useProjectFilters } from '@/features/projets-browse';
+import { useLanguageStore } from '@/shared/state/useLanguageStore';
 
 export const ProjectPage = () => {
   const filterState = useProjectFilters();
+  const { language } = useLanguageStore();
+  const isFr = language === 'fr';
 
   return (
     <>
       <SEO
         path="/projects"
-        title="Projets"
-        description="Réalisations récentes - applications web, plateformes cloud et solutions DevOps conçues par Barthez Kenwou."
+        title={isFr ? 'Projets' : 'Projects'}
+        description={
+          isFr
+            ? 'Études de cas: applications web, plateformes cloud et solutions DevOps livrées par Barthez Kenwou.'
+            : 'Case studies: web apps, cloud platforms, and DevOps solutions delivered by Barthez Kenwou.'
+        }
       />
       <div className="min-h-screen overflow-x-clip py-10 md:py-16 lg:py-20">
         {/* 1. Frame the journey */}

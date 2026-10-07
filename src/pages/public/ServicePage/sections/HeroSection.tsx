@@ -15,8 +15,8 @@ export const HeroSection: React.FC = () => {
 
         <p className="section-subtitle">
           {language === 'fr'
-            ? 'Des solutions technologiques de pointe architecturées pour transformer vos idées les plus ambitieuses en réalité.'
-            : 'Cutting-edge technological solutions architected to transform your most ambitious ideas into reality.'}
+            ? 'Offres claires pour concevoir, livrer et opérer des produits fiables: cloud, DevOps et full stack.'
+            : 'Clear offers to design, ship, and operate reliable products: cloud, DevOps, and full stack.'}
         </p>
       </div>
 

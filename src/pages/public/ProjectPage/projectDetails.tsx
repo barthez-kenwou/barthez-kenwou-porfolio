@@ -13,6 +13,7 @@ import { ProjectTimelineSection } from './sections/ProjectTimelineSection';
 import { ProjectDecisionsSection } from './sections/ProjectDecisionsSection';
 import { ProjectSecurityInfraSection } from './sections/ProjectSecurityInfraSection';
 import { ImpactSection } from './sections/ImpactSection';
+import { ProjectMidCta, ProjectMidCta2 } from './sections/ProjectMidCta';
 import { ProjectBeforeAfterSection } from './sections/ProjectBeforeAfterSection';
 import { ProjectTestimonialSection } from './sections/ProjectTestimonialSection';
 import { ProjectLessonsSection } from './sections/ProjectLessonsSection';
@@ -87,6 +88,7 @@ export const ProjectDetailPage = () => {
         <ProblemSolutionSection project={project} />
         <ProjectVideoSection project={project} />
         <TechStackSection project={project} />
+        <ProjectMidCta project={project} />
         <ProjectGallerySection project={project} />
         <ArchitectureTestingSection project={project} />
         <ProjectDiagramsSection project={project} />
@@ -96,12 +98,13 @@ export const ProjectDetailPage = () => {
         <ProjectSecurityInfraSection project={project} />
         <ImpactSection project={project} />
         <ProjectBeforeAfterSection project={project} />
+        <ProjectMidCta2 project={project} />
         <ProjectTestimonialSection project={project} />
         <ProjectLessonsSection project={project} />
         <ProjectResourcesSection project={project} />
         <ProjectLinksSection project={project} />
         <OtherProjectSection currentProjectId={project.id} />
-        <CTADetailsSection />
+        <CTADetailsSection project={project} />
       </div>
     </>
   );
