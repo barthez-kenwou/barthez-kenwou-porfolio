@@ -58,7 +58,7 @@ export function AdminSidebar() {
       </SidebarHeader>
 
       <SidebarContent className="gap-1 px-2 py-3">
-        {/* Dashboard — apart, slightly elevated */}
+        {/* Dashboard: apart, slightly elevated */}
         <SidebarGroup className="pb-2">
           <SidebarGroupContent>
             <SidebarMenu>

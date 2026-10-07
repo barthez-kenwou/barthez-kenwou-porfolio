@@ -155,7 +155,7 @@ Disallow: /barthez-admin
 Disallow: /barthez-admin/
 Disallow: /feedback
 Disallow: /feedback/
-# Legacy path — keep blocked if ever probed
+# Legacy path: keep blocked if ever probed
 Disallow: /admin
 
 # AI / LLM discovery

@@ -14,8 +14,8 @@ export const HeroSection: React.FC = () => {
 
         <p className="section-subtitle">
           {language === 'fr'
-            ? 'Articles, tutoriels et réflexions sur le développement, le cloud et le DevOps'
-            : 'Articles, tutorials and thoughts on development, cloud and DevOps'}
+            ? 'Notes de terrain sur le cloud, le DevOps et le full stack, utiles à lire, actionnables ensuite'
+            : 'Field notes on cloud, DevOps, and full stack: useful to read, actionable next'}
         </p>
       </div>
 

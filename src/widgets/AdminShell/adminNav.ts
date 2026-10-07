@@ -4,7 +4,7 @@ export type AdminNavItem = {
   path: string;
   labelFr: string;
   labelEn: string;
-  /** Quiet typographic marker — avoids generic icon clutter */
+  /** Quiet typographic marker; avoids generic icon clutter */
   mark: string;
 };
 

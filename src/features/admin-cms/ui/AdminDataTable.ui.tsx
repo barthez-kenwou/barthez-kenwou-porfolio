@@ -63,7 +63,7 @@ function rowMatchesQuery<T>(row: T, query: string, searchKeys?: string[]) {
 
 function readCellValue<T>(row: T, key: string): ReactNode {
   const value = (row as Record<string, unknown>)[key];
-  if (value == null) return '—';
+  if (value == null) return '-';
   if (typeof value === 'boolean') return value ? 'Yes' : 'No';
   if (typeof value === 'object') return JSON.stringify(value);
   return String(value);
@@ -184,7 +184,7 @@ export function AdminDataTable<T>({
           {toolbar}
         </div>
 
-        {/* Mobile: filters in a sheet — keeps the list readable */}
+        {/* Mobile: filters in a sheet, keeps the list readable */}
         <div className="flex items-center gap-2 md:hidden">
           <Sheet>
             <SheetTrigger asChild>
@@ -216,7 +216,7 @@ export function AdminDataTable<T>({
         <AdminEmptyState title={emptyTitle} description={emptyDescription ?? ''} />
       ) : (
         <>
-          {/* Mobile cards — business-first: identity, status, actions */}
+          {/* Mobile cards, business-first: identity, status, actions */}
           <div className="space-y-2.5 md:hidden">
             {pageRows.map((row) => (
               <article

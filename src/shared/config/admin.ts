@@ -1,4 +1,4 @@
-/** Private admin surface — intentionally not `/admin` to avoid trivial probing. */
+/** Private admin surface; intentionally not `/admin` to avoid trivial probing. */
 export const ADMIN_BASE = '/barthez-admin';
 
 export const adminPath = (...segments: string[]) => {

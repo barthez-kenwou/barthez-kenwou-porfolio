@@ -3,14 +3,14 @@ import { cn } from '@/shared/lib/utils';
 
 export type AdminPageHeaderProps = {
   title: string;
-  /** @deprecated Prefer silent headers — kept optional for rare cases */
+  /** @deprecated Prefer silent headers; kept optional for rare cases */
   description?: string;
   actions?: ReactNode;
   className?: string;
 };
 
 /**
- * Page title row only. Breadcrumbs live in AdminHeader — do not duplicate here.
+ * Page title row only. Breadcrumbs live in AdminHeader; do not duplicate here.
  * On mobile, primary actions become full-width thumb targets.
  */
 export function AdminPageHeader({ title, actions, className }: AdminPageHeaderProps) {

@@ -5,7 +5,7 @@ import { isPublicTestimonial } from '../lib/isPublicTestimonial';
 
 /**
  * Published testimonials for public pages.
- * Select raw array from the store, then filter in useMemo — never `.filter()` inside
+ * Select raw array from the store, then filter in useMemo; never `.filter()` inside
  * the zustand selector (new array ref → infinite re-render loop).
  */
 export function usePublicTestimonials(): ITestimonial[] {

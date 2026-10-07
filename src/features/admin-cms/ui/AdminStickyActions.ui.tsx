@@ -7,7 +7,7 @@ type AdminStickyActionsProps = {
 };
 
 /**
- * Sticky action rail for editors — stays in the thumb zone on mobile,
+ * Sticky action rail for editors; stays in the thumb zone on mobile,
  * sits inline in the page header from md up. Renders children once.
  */
 export function AdminStickyActions({ children, className }: AdminStickyActionsProps) {

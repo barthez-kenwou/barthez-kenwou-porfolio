@@ -113,7 +113,7 @@ export function FeedbackPage() {
               >
                 <HiOutlineCheckCircle className="size-11 text-primary" />
                 <p className="text-lg font-medium tracking-tight">
-                  {fr ? 'Merci — reçu.' : 'Thank you — received.'}
+                  {fr ? 'Merci, reçu.' : 'Thank you, received.'}
                 </p>
                 <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
                   {fr

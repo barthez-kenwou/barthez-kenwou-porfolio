@@ -48,7 +48,7 @@
   },
   "projects": {
     "title": "Mes Projets",
-    "subtitle": "Parcourez des cas concrets — puis parlons de votre prochain livrable",
+    "subtitle": "Parcourez des cas concrets, puis parlons de votre prochain livrable",
     "filter": {
       "all": "Tous",
       "web": "Web App",

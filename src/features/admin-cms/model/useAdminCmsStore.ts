@@ -107,7 +107,7 @@ const seed = () => ({
       id: 'msg_demo_1',
       name: 'Amélie Kouam',
       email: 'amelie.kouam@example.com',
-      subject: 'Demande de devis — infra AWS',
+      subject: 'Demande de devis: infra AWS',
       message:
         'Bonjour Barthez,\n\nNous cherchons un accompagnement pour migrer notre monolithe vers ECS Fargate. Pouvez-vous proposer un cadrage sur 2 semaines ?\n\nCordialement,',
       status: 'new',
@@ -130,7 +130,7 @@ const seed = () => ({
       email: 'sarah@northbridge.io',
       subject: 'Partnership / case study',
       message:
-        'Hi Barthez — loved the NEXUS write-up. Would you be open to a short technical interview for our engineering blog?',
+        'Hi Barthez, loved the NEXUS write-up. Would you be open to a short technical interview for our engineering blog?',
       status: 'replied',
       createdAt: new Date(Date.now() - 1000 * 60 * 60 * 80).toISOString(),
     },
@@ -264,7 +264,7 @@ export const useAdminCmsStore = create<CmsState>()(
     }),
     {
       name: 'bk-admin-cms-v2',
-      // Blogs/projects payloads are too large for localStorage — stay in-memory until API.
+      // Blogs/projects payloads are too large for localStorage; stay in-memory until API.
       partialize: (s) => ({
         skills: s.skills,
         certifications: s.certifications,

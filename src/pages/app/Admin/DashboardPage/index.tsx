@@ -213,8 +213,8 @@ export function AdminDashboardPage() {
 
           <p className="mt-5 text-[11px] leading-relaxed text-muted-foreground sm:mt-6">
             {fr
-              ? 'Chiffres illustratifs — brancher l’API Plausible CE pour du live.'
-              : 'Illustrative figures — wire Plausible CE API for live data.'}
+              ? 'Chiffres illustratifs. Brancher l’API Plausible CE pour du live.'
+              : 'Illustrative figures. Wire Plausible CE API for live data.'}
           </p>
         </div>
 
@@ -238,7 +238,7 @@ export function AdminDashboardPage() {
         </div>
       </section>
 
-      {/* Compact inventory — larger chips on mobile */}
+      {/* Compact inventory: larger chips on mobile */}
       <section>
         <h2 className="mb-3 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
           {fr ? 'Inventaire' : 'Inventory'}

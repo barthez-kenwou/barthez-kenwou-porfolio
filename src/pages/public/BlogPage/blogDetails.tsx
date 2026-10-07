@@ -3,7 +3,7 @@ import { NotFoundPost } from './sections/NotFoundPost';
 import { BackSection } from './sections/BackSection';
 import { HeroDetailSection } from './sections/HeroDetailSection';
 import { MetaTagsSection } from './sections/Meta&tagsSection';
-import { CTADetailsSection } from './sections/CTADetailsSection';
+import { NewsletterCTA } from './sections/NewsletterCTA';
 import { RelatedPostsSection } from './sections/RelatedPostsSection';
 import { NavigationSection } from './sections/NavigationSection';
 import { ShareSection } from './sections/ShareSection';
@@ -107,7 +107,12 @@ export const BlogDetailPage = () => {
                   <ShareSection />
                   <NavigationSection />
                   <RelatedPostsSection />
-                  <CTADetailsSection />
+                  <NewsletterCTA
+                    source="blog-article"
+                    contactTo={`/contact?from=blog&article=${encodeURIComponent(
+                      language === 'fr' ? post.titleFr : post.titleEn || post.titleFr,
+                    )}`}
+                  />
                 </div>
               </motion.div>
             </main>

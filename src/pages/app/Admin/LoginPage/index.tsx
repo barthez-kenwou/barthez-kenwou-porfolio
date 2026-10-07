@@ -54,7 +54,7 @@ export function AdminLoginPage() {
 
   return (
     <div className="relative min-h-svh overflow-hidden bg-background text-foreground pt-[env(safe-area-inset-top)]">
-      {/* Atmosphere — restrained, not purple-glow spam */}
+      {/* Atmosphere: restrained, not purple-glow spam */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
@@ -110,8 +110,8 @@ export function AdminLoginPage() {
             </h1>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
               {fr
-                ? 'Accès propriétaire uniquement. Contenu, case studies, messages — un seul endroit, sans bruit.'
-                : 'Owner-only access. Content, case studies, inbox — one quiet surface.'}
+                ? 'Accès propriétaire uniquement. Contenu, case studies, messages: un seul endroit, sans bruit.'
+                : 'Owner-only access. Content, case studies, inbox: one quiet surface.'}
             </p>
           </div>
 

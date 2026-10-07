@@ -20,12 +20,12 @@ function buildContactPrefill(searchParams: URLSearchParams, language: string) {
   if (service) {
     if (language === 'fr') {
       return {
-        subject: `Demande de devis — ${service}`,
+        subject: `Demande de devis: ${service}`,
         message: `Bonjour,\n\nJe souhaite discuter du service « ${service} ».\n\n`,
       };
     }
     return {
-      subject: `Quote request — ${service}`,
+      subject: `Quote request: ${service}`,
       message: `Hello,\n\nI'd like to discuss the « ${service} » service.\n\n`,
     };
   }
@@ -92,6 +92,28 @@ function buildContactPrefill(searchParams: URLSearchParams, language: string) {
     };
   }
 
+  if (from === 'blog') {
+    const article = searchParams.get('article');
+    if (language === 'fr') {
+      return {
+        subject: article
+          ? `Suite à l'article « ${article} »`
+          : 'Échange suite à vos articles',
+        message: article
+          ? `Bonjour,\n\nJ'ai lu votre article « ${article} » et je souhaiterais échanger sur un besoin dans ce domaine.\n\nCordialement,\n`
+          : "Bonjour,\n\nJ'ai parcouru vos articles et je souhaiterais échanger sur un besoin technique.\n\nCordialement,\n",
+      };
+    }
+    return {
+      subject: article
+        ? `Follow-up after « ${article} »`
+        : 'Follow-up after reading your articles',
+      message: article
+        ? `Hello,\n\nI read your article « ${article} » and would like to discuss a need in this area.\n\nBest regards,\n`
+        : "Hello,\n\nI've been reading your articles and would like to discuss a technical need.\n\nBest regards,\n",
+    };
+  }
+
   return {
     subject: searchParams.get('subject') ?? '',
     message: searchParams.get('message') ?? '',
@@ -104,8 +126,14 @@ export const ContactForm: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [isSubmitted, setIsSubmitted] = React.useState(false);
 
-  const prefillKey =
-    searchParams.get('service') ?? searchParams.get('from') ?? searchParams.get('subject') ?? '';
+  const prefillKey = [
+    searchParams.get('service'),
+    searchParams.get('from'),
+    searchParams.get('article'),
+    searchParams.get('subject'),
+  ]
+    .filter(Boolean)
+    .join('|');
   const prefill = React.useMemo(
     () => buildContactPrefill(searchParams, language),
     [searchParams, language],
