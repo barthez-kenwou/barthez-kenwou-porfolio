@@ -7,9 +7,9 @@ This portfolio is primarily a **static SPA**. Most “API” usage is:
 
 ## Documents
 
-| Doc | Topic |
-| :--- | :--- |
-| [conventions.md](./conventions.md) | Naming, response shapes, client conventions |
+| Doc                                      | Topic                                        |
+| :--------------------------------------- | :------------------------------------------- |
+| [conventions.md](./conventions.md)       | Naming, response shapes, client conventions  |
 | [error-handling.md](./error-handling.md) | Errors, ErrorBoundary, user-facing fallbacks |
 
 `endpoints/` is reserved for documented HTTP routes when a backend is wired.

@@ -12,10 +12,12 @@ export const ExperienceCard: React.FC<{ Experience: IExperience }> = ({ Experien
       <div className="absolute -left-2.25 top-0 h-4 w-4 rounded-full bg-primary" />
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-        <h4 className="font-medium text-[11px] text-foreground">{language === 'fr' ? titleFr : titleEn}</h4>
+        <h4 className="font-medium text-[11px] text-foreground">
+          {language === 'fr' ? titleFr : titleEn}
+        </h4>
         <span className="text-xs text-primary font-mono">{period}</span>
       </div>
-      
+
       <p className="text-sm font-thin uppercase text-muted-foreground mb-2">
         {language === 'fr' ? companyFr : companyEn}
       </p>

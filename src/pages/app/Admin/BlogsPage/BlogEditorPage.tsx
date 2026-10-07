@@ -84,7 +84,9 @@ export const AdminBlogEditorPage: React.FC = () => {
   return (
     <div className="space-y-6 pb-24 md:pb-0">
       <AdminPageHeader
-        title={isNew ? (fr ? 'Nouvel article' : 'New article') : fr ? 'Éditer l’article' : 'Edit article'}
+        title={
+          isNew ? (fr ? 'Nouvel article' : 'New article') : fr ? 'Éditer l’article' : 'Edit article'
+        }
         actions={
           <AdminStickyActions>
             <Button variant="outline" asChild className="flex-1 md:flex-none">
@@ -127,7 +129,11 @@ export const AdminBlogEditorPage: React.FC = () => {
             <Input value={draft.category} onChange={(e) => patch('category', e.target.value)} />
           </Field>
           <Field label={fr ? 'Date' : 'Date'}>
-            <Input type="date" value={draft.date.slice(0, 10)} onChange={(e) => patch('date', e.target.value)} />
+            <Input
+              type="date"
+              value={draft.date.slice(0, 10)}
+              onChange={(e) => patch('date', e.target.value)}
+            />
           </Field>
           <Field label={fr ? 'Temps de lecture' : 'Read time'}>
             <Input value={draft.readTime} onChange={(e) => patch('readTime', e.target.value)} />
@@ -137,7 +143,9 @@ export const AdminBlogEditorPage: React.FC = () => {
           </Field>
           <div className="flex items-center justify-between rounded-lg border border-border/60 px-3 py-2">
             <div>
-              <p className="text-sm font-medium">{fr ? 'Visible publiquement' : 'Publicly visible'}</p>
+              <p className="text-sm font-medium">
+                {fr ? 'Visible publiquement' : 'Publicly visible'}
+              </p>
               <p className="text-xs text-muted-foreground">
                 {fr ? 'Masqué = hors vitrine' : 'Hidden = off the public site'}
               </p>
@@ -165,9 +173,7 @@ export const AdminBlogEditorPage: React.FC = () => {
         </div>
       </AdminSectionCard>
 
-      <AdminSectionCard
-        title={fr ? 'Contenu Markdown' : 'Markdown content'}
-      >
+      <AdminSectionCard title={fr ? 'Contenu Markdown' : 'Markdown content'}>
         <Tabs defaultValue="fr">
           <TabsList>
             <TabsTrigger value="fr">FR</TabsTrigger>

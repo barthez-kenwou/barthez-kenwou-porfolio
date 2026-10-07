@@ -94,8 +94,8 @@ export default {
           '100%': { opacity: '1', transform: 'scale(1)' },
         },
         aurora: {
-          from: { backgroundPosition: "50% 50%, 50% 50%" },
-          to: { backgroundPosition: "350% 50%, 350% 50%" },
+          from: { backgroundPosition: '50% 50%, 50% 50%' },
+          to: { backgroundPosition: '350% 50%, 350% 50%' },
         },
       },
       animation: {
@@ -104,7 +104,7 @@ export default {
         'fade-in': 'fade-in 0.6s ease-out forwards',
         'slide-in-left': 'slide-in-left 0.5s ease-out forwards',
         'scale-in': 'scale-in 0.4s ease-out forwards',
-        aurora: "aurora 60s linear infinite",
+        aurora: 'aurora 60s linear infinite',
       },
     },
   },

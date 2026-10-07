@@ -22,10 +22,7 @@ export const ServiceSection: React.FC = () => {
   return (
     <section className="relative z-10 overflow-x-clip px-4 md:px-10 lg:px-14 py-8 md:py-8 lg:py-0">
       {/* Ambient flare - bottom-right, discreet (mirrors hero strategy) */}
-      <div
-        className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
-        aria-hidden
-      >
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
         <div
           className={cn(
             'absolute -right-[8%] -bottom-[12%] w-[72%] max-w-[520px]',
@@ -47,9 +44,7 @@ export const ServiceSection: React.FC = () => {
             )}
             style={{
               mixBlendMode: isDark ? 'screen' : 'multiply',
-              filter: isDark
-                ? 'saturate(1.05)'
-                : 'saturate(0.85) brightness(0.92) contrast(1.05)',
+              filter: isDark ? 'saturate(1.05)' : 'saturate(0.85) brightness(0.92) contrast(1.05)',
             }}
           />
         </div>
@@ -59,9 +54,7 @@ export const ServiceSection: React.FC = () => {
         <div className="flex flex-col items-start space-y-8 animate-fade-in">
           <div className="space-y-4">
             <h2 className="section-title text-center md:!text-left">
-              <span className="gradient-text">
-                {isFr ? 'Mes Services' : 'My Services'}
-              </span>
+              <span className="gradient-text">{isFr ? 'Mes Services' : 'My Services'}</span>
             </h2>
 
             <p className="section-subtitle text-center md:!text-left md:!mx-0 !mb-0">

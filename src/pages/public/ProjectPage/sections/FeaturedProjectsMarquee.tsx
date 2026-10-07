@@ -4,9 +4,7 @@ import { projectsData } from '@/entities/projets/api/mocks/projectData.mocks';
 import { FeaturedProjectCard } from '@/entities/projets';
 
 export const FeaturedProjectsMarquee: React.FC = () => {
-  const featuredProjects = projectsData.filter(
-    (p) => p.isFeatured && p.isPublished !== false,
-  );
+  const featuredProjects = projectsData.filter((p) => p.isFeatured && p.isPublished !== false);
 
   if (featuredProjects.length === 0) return null;
 

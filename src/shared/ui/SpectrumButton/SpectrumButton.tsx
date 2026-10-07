@@ -60,7 +60,8 @@ const spectrumButtonVariants = cva(
 );
 
 interface SpectrumButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof spectrumButtonVariants> {
   asChild?: boolean;
 }

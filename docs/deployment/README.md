@@ -15,8 +15,8 @@ Edge TLS / routing: **Nginx Proxy Manager** on Docker network `web-proxy` → co
 
 ## Guides
 
-| Document | Content |
-| :--- | :--- |
+| Document                         | Content                                                   |
+| :------------------------------- | :-------------------------------------------------------- |
 | [DEPLOY_VPS.md](./DEPLOY_VPS.md) | Full OVH VPS guide (secrets, bootstrap, NPM, smoke tests) |
 
 ## Related
@@ -26,9 +26,9 @@ Edge TLS / routing: **Nginx Proxy Manager** on Docker network `web-proxy` → co
 
 ## Image & compose (quick refs)
 
-| Item | Value |
-| :--- | :--- |
-| GHCR image | `ghcr.io/barthez-kenwou/barthez-kenwou-porfolio` |
-| Runtime Dockerfile | `infra/docker/Dockerfile.runtime` |
-| Prod compose | `infra/docker/docker-compose.prod.yml` |
-| Health | `GET /health` → `200 OK` |
+| Item               | Value                                            |
+| :----------------- | :----------------------------------------------- |
+| GHCR image         | `ghcr.io/barthez-kenwou/barthez-kenwou-porfolio` |
+| Runtime Dockerfile | `infra/docker/Dockerfile.runtime`                |
+| Prod compose       | `infra/docker/docker-compose.prod.yml`           |
+| Health             | `GET /health` → `200 OK`                         |

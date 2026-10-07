@@ -15,7 +15,7 @@ export const BackSection: React.FC = () => {
         <HiOutlineArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-0.5" />
         {language === 'fr' ? 'Retour' : 'Back'}
       </Link>
-      
+
       <div className="hidden md:flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/30">
         <div className="h-px w-6 bg-border" />
         <span>Barthez Kenwou • Blog</span>
@@ -23,5 +23,3 @@ export const BackSection: React.FC = () => {
     </div>
   );
 };
-
-

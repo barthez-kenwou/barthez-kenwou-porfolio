@@ -168,7 +168,12 @@ export function AdminProjectsPage() {
                 <Pencil className="size-3.5" />
               </Link>
             </Button>
-            <Button size="icon-sm" variant="ghost" className="size-11 md:size-8" onClick={() => setPending(r)}>
+            <Button
+              size="icon-sm"
+              variant="ghost"
+              className="size-11 md:size-8"
+              onClick={() => setPending(r)}
+            >
               <Trash2 className="size-3.5 text-destructive" />
             </Button>
           </>

@@ -20,38 +20,36 @@ interface PDFDocumentProps {
 }
 
 export const CvPDFDocument: React.FC<PDFDocumentProps> = ({ data, language }) => {
-  const { 
-    personalInfo, 
-    experiences, 
-    education, 
-    skills, 
-    languages, 
-    featuredProjects, 
-    certifications 
+  const {
+    personalInfo,
+    experiences,
+    education,
+    skills,
+    languages,
+    featuredProjects,
+    certifications,
   } = data;
 
   return (
     <Document title={`${personalInfo.name} - CV ${language.toUpperCase()}`}>
       <Page size="A4" style={styles.page}>
-        
         <HeaderSection personalInfo={personalInfo} language={language} />
-        
-        <ProfileSection language={language} />
-        
-        <ExperienceSection experiences={experiences} language={language} />
-        
-        <ProjectSection projects={featuredProjects || []} language={language} />
-        
-        <CertificationSection certifications={certifications || []} />
-        
-        <EducationSection education={education} language={language} />
-        
-        <SkillSection skills={skills} language={language} />
-        
-        <LanguageSection languages={languages} language={language} />
-        
-        <ReferenceSection references={data.references || []} language={language} />
 
+        <ProfileSection language={language} />
+
+        <ExperienceSection experiences={experiences} language={language} />
+
+        <ProjectSection projects={featuredProjects || []} language={language} />
+
+        <CertificationSection certifications={certifications || []} />
+
+        <EducationSection education={education} language={language} />
+
+        <SkillSection skills={skills} language={language} />
+
+        <LanguageSection languages={languages} language={language} />
+
+        <ReferenceSection references={data.references || []} language={language} />
       </Page>
     </Document>
   );

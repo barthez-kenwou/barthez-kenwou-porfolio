@@ -17,7 +17,16 @@ import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
 
-const emptyItem = () => ({ id: createId('exp'), titleFr: '', titleEn: '', companyFr: '', companyEn: '', period: '', descriptionFr: [], descriptionEn: [] });
+const emptyItem = () => ({
+  id: createId('exp'),
+  titleFr: '',
+  titleEn: '',
+  companyFr: '',
+  companyEn: '',
+  period: '',
+  descriptionFr: [],
+  descriptionEn: [],
+});
 
 export const AdminExperiencesPage: React.FC = () => {
   const { language } = useLanguageStore();
@@ -62,17 +71,40 @@ export const AdminExperiencesPage: React.FC = () => {
           }
         >
           <div className="grid gap-4 md:grid-cols-2">
-            
-            <BilingualField label={fr ? 'Poste' : 'Title'} valueFr={editing.titleFr} valueEn={editing.titleEn} onChangeFr={(v) => setEditing({ ...editing, titleFr: v })} onChangeEn={(v) => setEditing({ ...editing, titleEn: v })} />
-            <BilingualField label={fr ? 'Entreprise' : 'Company'} valueFr={editing.companyFr} valueEn={editing.companyEn} onChangeFr={(v) => setEditing({ ...editing, companyFr: v })} onChangeEn={(v) => setEditing({ ...editing, companyEn: v })} />
-            <Field label={fr ? 'Période' : 'Period'}><Input value={editing.period} onChange={(e) => setEditing({ ...editing, period: e.target.value })} /></Field>
+            <BilingualField
+              label={fr ? 'Poste' : 'Title'}
+              valueFr={editing.titleFr}
+              valueEn={editing.titleEn}
+              onChangeFr={(v) => setEditing({ ...editing, titleFr: v })}
+              onChangeEn={(v) => setEditing({ ...editing, titleEn: v })}
+            />
+            <BilingualField
+              label={fr ? 'Entreprise' : 'Company'}
+              valueFr={editing.companyFr}
+              valueEn={editing.companyEn}
+              onChangeFr={(v) => setEditing({ ...editing, companyFr: v })}
+              onChangeEn={(v) => setEditing({ ...editing, companyEn: v })}
+            />
+            <Field label={fr ? 'Période' : 'Period'}>
+              <Input
+                value={editing.period}
+                onChange={(e) => setEditing({ ...editing, period: e.target.value })}
+              />
+            </Field>
             <div className="md:col-span-2">
-              <StringListEditor label={fr ? 'Description FR' : 'Description FR'} values={editing.descriptionFr || []} onChange={(v) => setEditing({ ...editing, descriptionFr: v })} />
+              <StringListEditor
+                label={fr ? 'Description FR' : 'Description FR'}
+                values={editing.descriptionFr || []}
+                onChange={(v) => setEditing({ ...editing, descriptionFr: v })}
+              />
             </div>
             <div className="md:col-span-2">
-              <StringListEditor label={fr ? 'Description EN' : 'Description EN'} values={editing.descriptionEn || []} onChange={(v) => setEditing({ ...editing, descriptionEn: v })} />
+              <StringListEditor
+                label={fr ? 'Description EN' : 'Description EN'}
+                values={editing.descriptionEn || []}
+                onChange={(v) => setEditing({ ...editing, descriptionEn: v })}
+              />
             </div>
-  
           </div>
         </AdminSectionCard>
       ) : null}
@@ -80,7 +112,19 @@ export const AdminExperiencesPage: React.FC = () => {
       <AdminDataTable
         data={items}
         getRowId={(r: any) => String(r.id)}
-        searchKeys={['nameFr','nameEn','name','titleFr','titleEn','title','company','companyFr','companyEn','role','category']}
+        searchKeys={[
+          'nameFr',
+          'nameEn',
+          'name',
+          'titleFr',
+          'titleEn',
+          'title',
+          'company',
+          'companyFr',
+          'companyEn',
+          'role',
+          'category',
+        ]}
         emptyTitle={fr ? 'Aucun élément' : 'No items'}
         columns={[
           {
@@ -94,7 +138,7 @@ export const AdminExperiencesPage: React.FC = () => {
             ),
           },
           { key: 'period', header: fr ? 'Période' : 'Period' },
-  ]}
+        ]}
         actions={(r: any) => (
           <>
             <Button size="icon-sm" variant="ghost" onClick={() => setEditing({ ...r })}>

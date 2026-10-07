@@ -8,7 +8,10 @@ import { findByNumericId } from '@/shared/lib/entity-slug';
 export const SolutionSection: React.FC = () => {
   const { language } = useLanguageStore();
   const { id, projectID } = useParams();
-  const project = findByNumericId(projectsData, projectID || id) || { solutionsFr: [], solutionsEn: [] };
+  const project = findByNumericId(projectsData, projectID || id) || {
+    solutionsFr: [],
+    solutionsEn: [],
+  };
 
   return (
     <div className="p-6 rounded-md bg-card border border-border">

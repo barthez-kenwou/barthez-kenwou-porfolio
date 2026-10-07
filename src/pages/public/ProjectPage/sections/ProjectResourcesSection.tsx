@@ -40,9 +40,7 @@ export const ProjectResourcesSection: React.FC<{ project: IProject }> = ({ proje
   if (resources.length === 0) return null;
 
   return (
-    <ProjectSectionShell
-      title={isFr ? 'Ressources' : 'Resources'}
-    >
+    <ProjectSectionShell title={isFr ? 'Ressources' : 'Resources'}>
       <ul className="grid sm:grid-cols-2 gap-3">
         {resources.map((res, idx) => {
           const Icon = ICONS[res.type] ?? FileText;

@@ -3,7 +3,7 @@ import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import React from 'react';
 import { Terminal, AnimatedSpan, TypingAnimation } from '@/shared/ui/terminal';
 import { Pointer } from '@/shared/ui/pointer';
-import { motion } from "motion/react"
+import { motion } from 'motion/react';
 
 export const WhyChooseMeSection: React.FC = () => {
   const { language } = useLanguageStore();
@@ -24,8 +24,8 @@ export const WhyChooseMeSection: React.FC = () => {
 
           <p className="section-subtitle !mb-0">
             {isFr
-              ? "Une expertise technique au service de vos projets les plus ambitieux."
-              : "Technical expertise at the service of your most ambitious projects."}
+              ? 'Une expertise technique au service de vos projets les plus ambitieux.'
+              : 'Technical expertise at the service of your most ambitious projects.'}
           </p>
         </div>
 
@@ -40,7 +40,7 @@ export const WhyChooseMeSection: React.FC = () => {
                 transition={{
                   duration: 1.5,
                   repeat: Infinity,
-                  ease: "easeInOut",
+                  ease: 'easeInOut',
                 }}
               >
                 <svg
@@ -58,7 +58,7 @@ export const WhyChooseMeSection: React.FC = () => {
                     transition={{
                       duration: 0.8,
                       repeat: Infinity,
-                      ease: "easeInOut",
+                      ease: 'easeInOut',
                     }}
                   />
                 </svg>
@@ -68,7 +68,7 @@ export const WhyChooseMeSection: React.FC = () => {
 
           <Terminal className="relative z-20 bg-background/80 backdrop-blur-xl border-primary/20 shadow-lg w-full max-w-full">
             <TypingAnimation className="text-primary font-bold text-xs sm:text-sm md:text-base">
-              {isFr ? "$ ls specialites/" : "$ ls core-specialties/"}
+              {isFr ? '$ ls specialites/' : '$ ls core-specialties/'}
             </TypingAnimation>
 
             <AnimatedSpan className="flex gap-2 sm:gap-1 flex-wrap text-muted-foreground mt-2 text-xs sm:text-sm md:text-base">
@@ -78,18 +78,27 @@ export const WhyChooseMeSection: React.FC = () => {
               <span className="bg-muted px-2 py-1 rounded">clean-code</span>
             </AnimatedSpan>
 
-            <TypingAnimation delay={800} className="text-primary font-bold mt-3 text-xs sm:text-sm md:text-base">
-              {isFr ? "$ ./analyser_atouts.sh" : "$ ./analyze_capabilities.sh"}
+            <TypingAnimation
+              delay={800}
+              className="text-primary font-bold mt-3 text-xs sm:text-sm md:text-base"
+            >
+              {isFr ? '$ ./analyser_atouts.sh' : '$ ./analyze_capabilities.sh'}
             </TypingAnimation>
 
             <AnimatedSpan className="text-muted-foreground mt-1 text-xs sm:text-sm md:text-base">
-              {isFr ? "Recherche de correspondances..." : "Searching for matches..."}
+              {isFr ? 'Recherche de correspondances...' : 'Searching for matches...'}
             </AnimatedSpan>
 
             <div className="grid gap-0 sm:gap-0 mt-2">
               {whyMe.map((item, index) => (
-                <AnimatedSpan key={index} delay={index * 500} className="flex items-start gap-3 sm:gap-4">
-                  <span className="text-primary font-bold shrink-0 mt-[2px] text-sm md:text-base">[ ✓ ]</span>
+                <AnimatedSpan
+                  key={index}
+                  delay={index * 500}
+                  className="flex items-start gap-3 sm:gap-4"
+                >
+                  <span className="text-primary font-bold shrink-0 mt-[2px] text-sm md:text-base">
+                    [ ✓ ]
+                  </span>
                   <span className="text-foreground/90 font-medium text-xs sm:text-sm md:text-base leading-relaxed">
                     {isFr ? item.textFr : item.textEn}
                   </span>
@@ -97,12 +106,17 @@ export const WhyChooseMeSection: React.FC = () => {
               ))}
             </div>
 
-            <TypingAnimation delay={2000} className="text-primary font-bold mt-3 text-xs sm:text-sm md:text-base break-words">
-              {isFr ? "$ echo \"Prêt à collaborer !\"" : "$ echo \"Ready to collaborate!\""}
+            <TypingAnimation
+              delay={2000}
+              className="text-primary font-bold mt-3 text-xs sm:text-sm md:text-base break-words"
+            >
+              {isFr ? '$ echo "Prêt à collaborer !"' : '$ echo "Ready to collaborate!"'}
             </TypingAnimation>
 
             <AnimatedSpan className="text-primary font-bold mt-0 text-xs sm:text-sm md:text-base break-words">
-              {isFr ? "> Statut : DISPONIBLE POUR COLLABORER" : "> Status: AVAILABLE FOR COLLABORATION"}
+              {isFr
+                ? '> Statut : DISPONIBLE POUR COLLABORER'
+                : '> Status: AVAILABLE FOR COLLABORATION'}
             </AnimatedSpan>
           </Terminal>
         </div>
@@ -110,4 +124,3 @@ export const WhyChooseMeSection: React.FC = () => {
     </section>
   );
 };
-

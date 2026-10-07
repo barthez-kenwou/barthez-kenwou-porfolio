@@ -1,205 +1,275 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="dark">
-
-<head>
-  <!-- Meta de base -->
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#1a1548" media="(prefers-color-scheme: dark)" />
-  <meta name="theme-color" content="#1a1548" />
-  <script>
-    (function () {
-      try {
-        var raw = localStorage.getItem('frontend-starter-theme');
-        var theme = 'dark';
-        if (raw) {
-          var parsed = JSON.parse(raw);
-          var t = (parsed && parsed.state && parsed.state.theme) || (parsed && parsed.theme);
-          if (t === 'light' || t === 'dark') theme = t;
-        }
-        document.documentElement.classList.toggle('dark', theme === 'dark');
-      } catch (e) {
-        document.documentElement.classList.add('dark');
-      }
-    })();
-  </script>
-
-  <!-- SEO & Social -->
-  <title>Barthez Kenwou | Développeur Full Stack &amp; Ingénieur DevOps</title>
-  <meta name="description"
-    content="Portfolio de Barthez Kenwou - Développeur Full Stack JS &amp; Ingénieur DevOps spécialiste AWS Cloud. Applications web modernes, CI/CD, Kubernetes et architectures cloud performantes." />
-  <meta name="keywords"
-    content="Barthez Kenwou, Full Stack Developer, DevOps Engineer, Ingénieur DevOps, AWS Cloud, React, Node.js, Kubernetes, Terraform, CI/CD, Docker, Portfolio, Développeur Web, Yaoundé, Cameroun" />
-  <meta name="author" content="Barthez Kenwou" />
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-  <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-  <link rel="canonical" href="https://barthez-kenwou.dev/" />
-  <link rel="author" type="text/plain" href="https://barthez-kenwou.dev/humans.txt" />
-  <link rel="alternate" type="text/plain" title="LLM context" href="https://barthez-kenwou.dev/llms.txt" />
-  <link rel="sitemap" type="application/xml" href="https://barthez-kenwou.dev/sitemap-index.xml" />
-
-  <!-- Open Graph / LinkedIn / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:locale" content="en_US" />
-  <meta property="og:locale:alternate" content="fr_FR" />
-  <meta property="og:title" content="Barthez Kenwou | Développeur Full Stack &amp; Ingénieur DevOps" />
-  <meta property="og:description"
-    content="Découvrez mon portfolio : Ingénieur DevOps &amp; Full Stack JS. Je conçois et déploie des applications web modernes, scalables et ultra-performantes." />
-  <meta property="og:image" content="https://barthez-kenwou.dev/og-share.jpg" />
-  <meta property="og:image:secure_url" content="https://barthez-kenwou.dev/og-share.jpg" />
-  <meta property="og:image:type" content="image/jpeg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Barthez Kenwou - Portfolio DevOps &amp; Full Stack JS" />
-  <meta property="og:url" content="https://barthez-kenwou.dev/" />
-  <meta property="og:site_name" content="Barthez Kenwou - Portfolio" />
-  <meta property="profile:first_name" content="Barthez" />
-  <meta property="profile:last_name" content="Kenwou" />
-
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Barthez Kenwou | Full Stack Developer &amp; DevOps" />
-  <meta name="twitter:description"
-    content="Expert AWS Cloud, CI/CD et développement JS Full Stack. Portfolio premium et réalisations techniques." />
-  <meta name="twitter:image" content="https://barthez-kenwou.dev/og-share.jpg" />
-  <meta name="twitter:image:alt" content="Barthez Kenwou - Portfolio DevOps &amp; Full Stack JS" />
-
-  <!-- Structured data (Person + WebSite) - visible to crawlers without waiting for JS -->
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "WebSite",
-          "@id": "https://barthez-kenwou.dev/#website",
-          "url": "https://barthez-kenwou.dev",
-          "name": "Barthez Kenwou - Portfolio",
-          "description": "Portfolio de Barthez Kenwou - Développeur Full Stack JS & Ingénieur DevOps spécialiste AWS Cloud.",
-          "inLanguage": ["fr-FR", "en-US"],
-          "publisher": { "@id": "https://barthez-kenwou.dev/#person" }
-        },
-        {
-          "@type": "Person",
-          "@id": "https://barthez-kenwou.dev/#person",
-          "name": "Barthez Kenwou",
-          "url": "https://barthez-kenwou.dev",
-          "image": "https://barthez-kenwou.dev/images/barthez-kenwou.png",
-          "jobTitle": "Full Stack Developer & DevOps Engineer",
-          "email": "mailto:kenwoubarthez@gmail.com",
-          "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Yaoundé",
-            "addressCountry": "CM"
-          },
-          "sameAs": [
-            "https://github.com/barthez-kenwou",
-            "https://linkedin.com/in/barthez-kenwou"
-          ],
-          "knowsAbout": ["DevOps", "AWS", "React", "Node.js", "Kubernetes", "CI/CD", "Full Stack JavaScript"]
-        },
-        {
-          "@type": "WebPage",
-          "@id": "https://barthez-kenwou.dev/#webpage",
-          "url": "https://barthez-kenwou.dev/",
-          "name": "Barthez Kenwou | Développeur Full Stack & Ingénieur DevOps",
-          "isPartOf": { "@id": "https://barthez-kenwou.dev/#website" },
-          "about": { "@id": "https://barthez-kenwou.dev/#person" },
-          "primaryImageOfPage": {
-            "@type": "ImageObject",
-            "url": "https://barthez-kenwou.dev/og-share.jpg",
-            "width": 1200,
-            "height": 630
+  <head>
+    <!-- Meta de base -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1a1548" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#1a1548" />
+    <script>
+      (function () {
+        try {
+          var raw = localStorage.getItem('frontend-starter-theme');
+          var theme = 'dark';
+          if (raw) {
+            var parsed = JSON.parse(raw);
+            var t = (parsed && parsed.state && parsed.state.theme) || (parsed && parsed.theme);
+            if (t === 'light' || t === 'dark') theme = t;
           }
+          document.documentElement.classList.toggle('dark', theme === 'dark');
+        } catch (e) {
+          document.documentElement.classList.add('dark');
         }
-      ]
-    }
-  </script>
+      })();
+    </script>
 
-  <!-- Performance & loading -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://jebiwuygwtpmdnhhzsbw.supabase.co" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <!-- SEO & Social -->
+    <title>Barthez Kenwou | Développeur Full Stack &amp; Ingénieur DevOps</title>
+    <meta
+      name="description"
+      content="Portfolio de Barthez Kenwou - Développeur Full Stack JS &amp; Ingénieur DevOps spécialiste AWS Cloud. Applications web modernes, CI/CD, Kubernetes et architectures cloud performantes."
+    />
+    <meta
+      name="keywords"
+      content="Barthez Kenwou, Full Stack Developer, DevOps Engineer, Ingénieur DevOps, AWS Cloud, React, Node.js, Kubernetes, Terraform, CI/CD, Docker, Portfolio, Développeur Web, Yaoundé, Cameroun"
+    />
+    <meta name="author" content="Barthez Kenwou" />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+    <meta
+      name="googlebot"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+    <link rel="canonical" href="https://barthez-kenwou.dev/" />
+    <link rel="author" type="text/plain" href="https://barthez-kenwou.dev/humans.txt" />
+    <link
+      rel="alternate"
+      type="text/plain"
+      title="LLM context"
+      href="https://barthez-kenwou.dev/llms.txt"
+    />
+    <link
+      rel="sitemap"
+      type="application/xml"
+      href="https://barthez-kenwou.dev/sitemap-index.xml"
+    />
 
-  <!-- Preload LCP-adjacent decorative asset only (do NOT preload /src/main.tsx - breaks as data: URI in build) -->
-  <link rel="preload" href="/images/hero-flare.webp" as="image" type="image/webp" />
+    <!-- Open Graph / LinkedIn / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="fr_FR" />
+    <meta
+      property="og:title"
+      content="Barthez Kenwou | Développeur Full Stack &amp; Ingénieur DevOps"
+    />
+    <meta
+      property="og:description"
+      content="Découvrez mon portfolio : Ingénieur DevOps &amp; Full Stack JS. Je conçois et déploie des applications web modernes, scalables et ultra-performantes."
+    />
+    <meta property="og:image" content="https://barthez-kenwou.dev/og-share.jpg" />
+    <meta property="og:image:secure_url" content="https://barthez-kenwou.dev/og-share.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Barthez Kenwou - Portfolio DevOps &amp; Full Stack JS" />
+    <meta property="og:url" content="https://barthez-kenwou.dev/" />
+    <meta property="og:site_name" content="Barthez Kenwou - Portfolio" />
+    <meta property="profile:first_name" content="Barthez" />
+    <meta property="profile:last_name" content="Kenwou" />
 
-  <!-- Branding / Icons / PWA -->
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <link rel="mask-icon" href="/favicon.svg" color="#1a1548" />
-  <link rel="manifest" href="/manifest.webmanifest" />
-  <meta name="application-name" content="Barthez Kenwou" />
-  <meta name="apple-mobile-web-app-title" content="Barthez K." />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Barthez Kenwou | Full Stack Developer &amp; DevOps" />
+    <meta
+      name="twitter:description"
+      content="Expert AWS Cloud, CI/CD et développement JS Full Stack. Portfolio premium et réalisations techniques."
+    />
+    <meta name="twitter:image" content="https://barthez-kenwou.dev/og-share.jpg" />
+    <meta
+      name="twitter:image:alt"
+      content="Barthez Kenwou - Portfolio DevOps &amp; Full Stack JS"
+    />
 
-  <!-- Sécurité -->
-  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
-  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-  <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval' https://www.googletagmanager.com https://analytics.zenora360.com 'sha256-ARxjj1g3vFcvPzf055X8ebP+uzq6nT8Dfic0Bw7aJS8=' 'sha256-yQsdh66HMnhkak/1y0WTHPlq6r9oqHlqdcuPaRssTUM=' 'sha256-dTcxFR1TUIGFGCD/XFEP9a96mP948MdY+XNhJQYnDvs='; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://analytics.zenora360.com https://*.vimeo.com https://*.vimeocdn.com blob: data:; img-src 'self' data: https: blob:; media-src 'self' blob: https://*.vimeocdn.com https://player.vimeo.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; frame-src 'self' blob: https://player.vimeo.com https://vimeo.com https://www.youtube-nocookie.com https://www.youtube.com; child-src 'self' blob: https://player.vimeo.com https://vimeo.com; worker-src 'self' blob:;" />
+    <!-- Structured data (Person + WebSite) - visible to crawlers without waiting for JS -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://barthez-kenwou.dev/#website",
+            "url": "https://barthez-kenwou.dev",
+            "name": "Barthez Kenwou - Portfolio",
+            "description": "Portfolio de Barthez Kenwou - Développeur Full Stack JS & Ingénieur DevOps spécialiste AWS Cloud.",
+            "inLanguage": ["fr-FR", "en-US"],
+            "publisher": { "@id": "https://barthez-kenwou.dev/#person" }
+          },
+          {
+            "@type": "Person",
+            "@id": "https://barthez-kenwou.dev/#person",
+            "name": "Barthez Kenwou",
+            "url": "https://barthez-kenwou.dev",
+            "image": "https://barthez-kenwou.dev/images/barthez-kenwou.png",
+            "jobTitle": "Full Stack Developer & DevOps Engineer",
+            "email": "mailto:kenwoubarthez@gmail.com",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Yaoundé",
+              "addressCountry": "CM"
+            },
+            "sameAs": [
+              "https://github.com/barthez-kenwou",
+              "https://linkedin.com/in/barthez-kenwou"
+            ],
+            "knowsAbout": [
+              "DevOps",
+              "AWS",
+              "React",
+              "Node.js",
+              "Kubernetes",
+              "CI/CD",
+              "Full Stack JavaScript"
+            ]
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://barthez-kenwou.dev/#webpage",
+            "url": "https://barthez-kenwou.dev/",
+            "name": "Barthez Kenwou | Développeur Full Stack & Ingénieur DevOps",
+            "isPartOf": { "@id": "https://barthez-kenwou.dev/#website" },
+            "about": { "@id": "https://barthez-kenwou.dev/#person" },
+            "primaryImageOfPage": {
+              "@type": "ImageObject",
+              "url": "https://barthez-kenwou.dev/og-share.jpg",
+              "width": 1200,
+              "height": 630
+            }
+          }
+        ]
+      }
+    </script>
 
-  <!-- Compatibilité -->
-  <meta name="format-detection" content="telephone=no" />
+    <!-- Performance & loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://jebiwuygwtpmdnhhzsbw.supabase.co" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QKFZ112SCK"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
+    <!-- Preload LCP-adjacent decorative asset only (do NOT preload /src/main.tsx - breaks as data: URI in build) -->
+    <link rel="preload" href="/images/hero-flare.webp" as="image" type="image/webp" />
 
-    gtag('config', 'G-QKFZ112SCK');
-  </script>
+    <!-- Branding / Icons / PWA -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="mask-icon" href="/favicon.svg" color="#1a1548" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="application-name" content="Barthez Kenwou" />
+    <meta name="apple-mobile-web-app-title" content="Barthez K." />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-  <!-- Privacy-friendly analytics by Plausible -->
-  <script async src="https://analytics.zenora360.com/js/pa-IZ8naue6cPKpIdClxFRax.js"></script>
-  <script>
-    window.plausible = window.plausible || function () { (plausible.q = plausible.q || []).push(arguments) }, plausible.init = plausible.init || function (i) { plausible.o = i || {} };
-    plausible.init()
-  </script>
-</head>
+    <!-- Sécurité -->
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval' https://www.googletagmanager.com https://analytics.zenora360.com 'sha256-ARxjj1g3vFcvPzf055X8ebP+uzq6nT8Dfic0Bw7aJS8=' 'sha256-yQsdh66HMnhkak/1y0WTHPlq6r9oqHlqdcuPaRssTUM=' 'sha256-dTcxFR1TUIGFGCD/XFEP9a96mP948MdY+XNhJQYnDvs='; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://analytics.zenora360.com https://*.vimeo.com https://*.vimeocdn.com blob: data:; img-src 'self' data: https: blob:; media-src 'self' blob: https://*.vimeocdn.com https://player.vimeo.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; frame-src 'self' blob: https://player.vimeo.com https://vimeo.com https://www.youtube-nocookie.com https://www.youtube.com; child-src 'self' blob: https://player.vimeo.com https://vimeo.com; worker-src 'self' blob:;"
+    />
 
-<body>
-  <!-- Crawlable fallback when JS is disabled or not yet executed -->
-  <noscript>
-    <main style="max-width:48rem;margin:2rem auto;padding:1.5rem;font-family:system-ui,sans-serif;line-height:1.6;color:#111;background:#fff">
-      <h1>Barthez Kenwou</h1>
-      <p><strong>Développeur Full Stack JS &amp; Ingénieur DevOps</strong> - spécialiste AWS Cloud, basé à Yaoundé (Cameroun).</p>
-      <p>Je conçois et déploie des applications web modernes, scalables et performantes : React, Node.js, Docker, Kubernetes, Terraform, CI/CD et observabilité.</p>
-      <h2>Navigation</h2>
-      <ul>
-        <li><a href="https://barthez-kenwou.dev/">Accueil</a></li>
-        <li><a href="https://barthez-kenwou.dev/about">À propos</a></li>
-        <li><a href="https://barthez-kenwou.dev/services">Services</a></li>
-        <li><a href="https://barthez-kenwou.dev/projects">Projets</a></li>
-        <li><a href="https://barthez-kenwou.dev/skills">Compétences</a></li>
-        <li><a href="https://barthez-kenwou.dev/blog">Blog</a></li>
-        <li><a href="https://barthez-kenwou.dev/cv">CV</a></li>
-        <li><a href="https://barthez-kenwou.dev/contact">Contact</a></li>
-      </ul>
-      <h2>Contact</h2>
-      <ul>
-        <li>Email : <a href="mailto:kenwoubarthez@gmail.com">kenwoubarthez@gmail.com</a></li>
-        <li>LinkedIn : <a href="https://linkedin.com/in/barthez-kenwou">barthez-kenwou</a></li>
-        <li>GitHub : <a href="https://github.com/barthez-kenwou">barthez-kenwou</a></li>
-      </ul>
-      <p>Fichiers machine-readable : <a href="/llms.txt">llms.txt</a>, <a href="/sitemap-index.xml">sitemap-index.xml</a>, <a href="/robots.txt">robots.txt</a>.</p>
-      <p><em>Activez JavaScript pour l’expérience interactive complète du portfolio.</em></p>
-    </main>
-  </noscript>
+    <!-- Compatibilité -->
+    <meta name="format-detection" content="telephone=no" />
 
-  <!-- Root React -->
-  <div id="root"></div>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QKFZ112SCK"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
 
-  <!-- Scripts (module) -->
-  <script type="module" src="/src/main.tsx"></script>
-</body>
+      gtag('config', 'G-QKFZ112SCK');
+    </script>
 
+    <!-- Privacy-friendly analytics by Plausible -->
+    <script async src="https://analytics.zenora360.com/js/pa-IZ8naue6cPKpIdClxFRax.js"></script>
+    <script>
+      ((window.plausible =
+        window.plausible ||
+        function () {
+          (plausible.q = plausible.q || []).push(arguments);
+        }),
+        (plausible.init =
+          plausible.init ||
+          function (i) {
+            plausible.o = i || {};
+          }));
+      plausible.init();
+    </script>
+  </head>
+
+  <body>
+    <!-- Crawlable fallback when JS is disabled or not yet executed -->
+    <noscript>
+      <main
+        style="
+          max-width: 48rem;
+          margin: 2rem auto;
+          padding: 1.5rem;
+          font-family: system-ui, sans-serif;
+          line-height: 1.6;
+          color: #111;
+          background: #fff;
+        "
+      >
+        <h1>Barthez Kenwou</h1>
+        <p>
+          <strong>Développeur Full Stack JS &amp; Ingénieur DevOps</strong> - spécialiste AWS Cloud,
+          basé à Yaoundé (Cameroun).
+        </p>
+        <p>
+          Je conçois et déploie des applications web modernes, scalables et performantes : React,
+          Node.js, Docker, Kubernetes, Terraform, CI/CD et observabilité.
+        </p>
+        <h2>Navigation</h2>
+        <ul>
+          <li><a href="https://barthez-kenwou.dev/">Accueil</a></li>
+          <li><a href="https://barthez-kenwou.dev/about">À propos</a></li>
+          <li><a href="https://barthez-kenwou.dev/services">Services</a></li>
+          <li><a href="https://barthez-kenwou.dev/projects">Projets</a></li>
+          <li><a href="https://barthez-kenwou.dev/skills">Compétences</a></li>
+          <li><a href="https://barthez-kenwou.dev/blog">Blog</a></li>
+          <li><a href="https://barthez-kenwou.dev/cv">CV</a></li>
+          <li><a href="https://barthez-kenwou.dev/contact">Contact</a></li>
+        </ul>
+        <h2>Contact</h2>
+        <ul>
+          <li>Email : <a href="mailto:kenwoubarthez@gmail.com">kenwoubarthez@gmail.com</a></li>
+          <li>LinkedIn : <a href="https://linkedin.com/in/barthez-kenwou">barthez-kenwou</a></li>
+          <li>GitHub : <a href="https://github.com/barthez-kenwou">barthez-kenwou</a></li>
+        </ul>
+        <p>
+          Fichiers machine-readable : <a href="/llms.txt">llms.txt</a>,
+          <a href="/sitemap-index.xml">sitemap-index.xml</a>, <a href="/robots.txt">robots.txt</a>.
+        </p>
+        <p><em>Activez JavaScript pour l’expérience interactive complète du portfolio.</em></p>
+      </main>
+    </noscript>
+
+    <!-- Root React -->
+    <div id="root"></div>
+
+    <!-- Scripts (module) -->
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

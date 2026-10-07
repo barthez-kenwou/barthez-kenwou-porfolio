@@ -15,9 +15,7 @@ export const ProjectSecurityInfraSection: React.FC<{ project: IProject }> = ({ p
   if (!hasSecurity && !hasInfra) return null;
 
   return (
-    <ProjectSectionShell
-      title={isFr ? 'Sécurité & Infrastructure' : 'Security & Infrastructure'}
-    >
+    <ProjectSectionShell title={isFr ? 'Sécurité & Infrastructure' : 'Security & Infrastructure'}>
       <div className="grid md:grid-cols-2 gap-6 md:gap-8">
         {hasSecurity && (
           <div className="rounded-md border border-border/40 bg-card/40 p-5 md:p-6">
@@ -29,7 +27,10 @@ export const ProjectSecurityInfraSection: React.FC<{ project: IProject }> = ({ p
             </h3>
             <ul className="space-y-3">
               {security!.map((item, idx) => (
-                <li key={idx} className="flex gap-2.5 text-sm text-muted-foreground leading-relaxed">
+                <li
+                  key={idx}
+                  className="flex gap-2.5 text-sm text-muted-foreground leading-relaxed"
+                >
                   <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                   <span>{item}</span>
                 </li>
@@ -47,7 +48,10 @@ export const ProjectSecurityInfraSection: React.FC<{ project: IProject }> = ({ p
             </h3>
             <ul className="space-y-3">
               {infra!.map((item, idx) => (
-                <li key={idx} className="flex gap-2.5 text-sm text-muted-foreground leading-relaxed">
+                <li
+                  key={idx}
+                  className="flex gap-2.5 text-sm text-muted-foreground leading-relaxed"
+                >
                   <CheckCircle2 className="w-4 h-4 text-secondary-foreground shrink-0 mt-0.5" />
                   <span>{item}</span>
                 </li>

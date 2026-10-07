@@ -83,11 +83,7 @@ export default defineConfig(() => {
           maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
           globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,webmanifest}'],
           // Exclude huge vendor chunks and any helper utilities that change hash on every build
-          globIgnores: [
-            '**/vendor.3d-*.js',
-            '**/vendor.motion-*.js',
-            '**/helpers-*.js',
-          ],
+          globIgnores: ['**/vendor.3d-*.js', '**/vendor.motion-*.js', '**/helpers-*.js'],
           runtimeCaching: [
             {
               urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|avif)$/,
@@ -161,7 +157,9 @@ export default defineConfig(() => {
           optipng: { optimizationLevel: 7 },
           mozjpeg: { quality: 75 },
           pngquant: { quality: [0.7, 0.9], speed: 4 },
-          svgo: { plugins: [{ name: 'removeViewBox' }, { name: 'removeEmptyAttrs', active: false }] },
+          svgo: {
+            plugins: [{ name: 'removeViewBox' }, { name: 'removeEmptyAttrs', active: false }],
+          },
         }),
       );
     }

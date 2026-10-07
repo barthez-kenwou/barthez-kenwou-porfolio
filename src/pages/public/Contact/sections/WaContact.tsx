@@ -14,25 +14,24 @@ import {
 import { cn } from '@/lib/utils';
 import { contactsInfo } from '@/shared/mocks/constContactInfo.mocks';
 
-const Circle = forwardRef<
-  HTMLDivElement,
-  { className?: string; children?: React.ReactNode }
->(({ className, children }, ref) => {
-  return (
-    <div
-      ref={ref}
-      className={cn(
-        'z-10 flex size-9 items-center justify-center rounded-full border p-2 backdrop-blur-md',
-        'border-border/70 bg-background/80 text-foreground shadow-sm',
-        'transition-all duration-500 ease-out',
-        'group-hover:border-primary/30 group-hover:bg-primary/5',
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
-});
+const Circle = forwardRef<HTMLDivElement, { className?: string; children?: React.ReactNode }>(
+  ({ className, children }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'z-10 flex size-9 items-center justify-center rounded-full border p-2 backdrop-blur-md',
+          'border-border/70 bg-background/80 text-foreground shadow-sm',
+          'transition-all duration-500 ease-out',
+          'group-hover:border-primary/30 group-hover:bg-primary/5',
+          className,
+        )}
+      >
+        {children}
+      </div>
+    );
+  },
+);
 Circle.displayName = 'Circle';
 
 export const WaContact = () => {
@@ -93,13 +92,92 @@ export const WaContact = () => {
           </Circle>
         </div>
 
-        <AnimatedBeam containerRef={containerRef} fromRef={div1Ref} toRef={centerRef} className="z-0" curvature={-30} endYOffset={-8} duration={2.5} delay={0} repeatDelay={1} pathColor="hsla(268,20%,50%,0.12)" gradientStartColor="hsla(268,55%,45%,0)" gradientStopColor="hsl(268 55% 45%)" />
-        <AnimatedBeam containerRef={containerRef} fromRef={div2Ref} toRef={centerRef} className="z-0" curvature={0} duration={2} delay={0.5} repeatDelay={0.5} pathColor="hsla(268,20%,50%,0.12)" gradientStartColor="hsla(268,55%,45%,0)" gradientStopColor="hsl(268 55% 45%)" />
-        <AnimatedBeam containerRef={containerRef} fromRef={div3Ref} toRef={centerRef} className="z-0" curvature={30} endYOffset={8} duration={2.5} delay={1} repeatDelay={1} pathColor="hsla(268,20%,50%,0.12)" gradientStartColor="hsla(268,55%,45%,0)" gradientStopColor="hsl(268 55% 45%)" />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={div1Ref}
+          toRef={centerRef}
+          className="z-0"
+          curvature={-30}
+          endYOffset={-8}
+          duration={2.5}
+          delay={0}
+          repeatDelay={1}
+          pathColor="hsla(268,20%,50%,0.12)"
+          gradientStartColor="hsla(268,55%,45%,0)"
+          gradientStopColor="hsl(268 55% 45%)"
+        />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={div2Ref}
+          toRef={centerRef}
+          className="z-0"
+          curvature={0}
+          duration={2}
+          delay={0.5}
+          repeatDelay={0.5}
+          pathColor="hsla(268,20%,50%,0.12)"
+          gradientStartColor="hsla(268,55%,45%,0)"
+          gradientStopColor="hsl(268 55% 45%)"
+        />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={div3Ref}
+          toRef={centerRef}
+          className="z-0"
+          curvature={30}
+          endYOffset={8}
+          duration={2.5}
+          delay={1}
+          repeatDelay={1}
+          pathColor="hsla(268,20%,50%,0.12)"
+          gradientStartColor="hsla(268,55%,45%,0)"
+          gradientStopColor="hsl(268 55% 45%)"
+        />
 
-        <AnimatedBeam containerRef={containerRef} fromRef={div4Ref} toRef={centerRef} className="z-0" curvature={-30} endYOffset={-8} reverse duration={2.2} delay={0.2} repeatDelay={0.8} pathColor="hsla(268,20%,50%,0.12)" gradientStartColor="hsla(268,55%,45%,0)" gradientStopColor="hsl(268 55% 45%)" />
-        <AnimatedBeam containerRef={containerRef} fromRef={div5Ref} toRef={centerRef} className="z-0" curvature={0} reverse duration={2.5} delay={0.8} repeatDelay={0.4} pathColor="hsla(268,20%,50%,0.12)" gradientStartColor="hsla(268,55%,45%,0)" gradientStopColor="hsl(268 55% 45%)" />
-        <AnimatedBeam containerRef={containerRef} fromRef={div6Ref} toRef={centerRef} className="z-0" curvature={30} endYOffset={8} reverse duration={2} delay={1.2} repeatDelay={0.8} pathColor="hsla(268,20%,50%,0.12)" gradientStartColor="hsla(268,55%,45%,0)" gradientStopColor="hsl(268 55% 45%)" />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={div4Ref}
+          toRef={centerRef}
+          className="z-0"
+          curvature={-30}
+          endYOffset={-8}
+          reverse
+          duration={2.2}
+          delay={0.2}
+          repeatDelay={0.8}
+          pathColor="hsla(268,20%,50%,0.12)"
+          gradientStartColor="hsla(268,55%,45%,0)"
+          gradientStopColor="hsl(268 55% 45%)"
+        />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={div5Ref}
+          toRef={centerRef}
+          className="z-0"
+          curvature={0}
+          reverse
+          duration={2.5}
+          delay={0.8}
+          repeatDelay={0.4}
+          pathColor="hsla(268,20%,50%,0.12)"
+          gradientStartColor="hsla(268,55%,45%,0)"
+          gradientStopColor="hsl(268 55% 45%)"
+        />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={div6Ref}
+          toRef={centerRef}
+          className="z-0"
+          curvature={30}
+          endYOffset={8}
+          reverse
+          duration={2}
+          delay={1.2}
+          repeatDelay={0.8}
+          pathColor="hsla(268,20%,50%,0.12)"
+          gradientStartColor="hsla(268,55%,45%,0)"
+          gradientStopColor="hsl(268 55% 45%)"
+        />
       </div>
 
       <div className="z-20 -mt-4 text-center">

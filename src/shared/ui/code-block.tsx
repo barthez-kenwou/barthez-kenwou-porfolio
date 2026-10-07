@@ -23,17 +23,27 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ language, value, filename,
       if (!highlighterCache) {
         highlighterCache = await createHighlighter({
           themes: ['github-dark-dimmed', 'ayu-mirage'],
-          langs: ['javascript', 'typescript', 'bash', 'yaml', 'json', 'python', 'markdown', 'html', 'css', 'go', 'rust', 'dockerfile'],
+          langs: [
+            'javascript',
+            'typescript',
+            'bash',
+            'yaml',
+            'json',
+            'python',
+            'markdown',
+            'html',
+            'css',
+            'go',
+            'rust',
+            'dockerfile',
+          ],
         });
       }
 
       const highlighted = highlighterCache.codeToHtml(value, {
         lang: language || 'text',
         theme: 'github-dark-dimmed',
-        transformers: [
-          transformerNotationDiff(),
-          transformerNotationHighlight(),
-        ],
+        transformers: [transformerNotationDiff(), transformerNotationHighlight()],
       });
 
       setHtml(highlighted);
@@ -50,7 +60,12 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ language, value, filename,
   };
 
   return (
-    <div className={cn("group relative my-3 w-full overflow-hidden rounded-sm border border-border/50 bg-card font-mono text-sm shadow-sm transition-all hover:shadow-primary/5", className)}>
+    <div
+      className={cn(
+        'group relative my-3 w-full overflow-hidden rounded-sm border border-border/50 bg-card font-mono text-sm shadow-sm transition-all hover:shadow-primary/5',
+        className,
+      )}
+    >
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border/50 bg-secondary/50 px-4 py-3">
         <div className="flex items-center gap-2">
@@ -95,8 +110,8 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ language, value, filename,
             <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
           </div>
         ) : (
-          <div 
-            dangerouslySetInnerHTML={{ __html: html }} 
+          <div
+            dangerouslySetInnerHTML={{ __html: html }}
             className="[&>pre]:!m-0 [&>pre]:!bg-transparent [&>pre]:!p-0"
           />
         )}

@@ -21,7 +21,17 @@ const INITIAL_FILTERS: ProjectFilters = {
 /** Skill-taxonomy chips → project category / stack matching (not exact equality). */
 const CATEGORY_NEEDLES: Record<string, string[]> = {
   cloud: ['cloud', 'aws', 'saas', 'serverless'],
-  devops: ['devops', 'docker', 'kubernetes', 'ci/cd', 'gitlab', 'github actions', 'terraform', 'ansible', 'observability'],
+  devops: [
+    'devops',
+    'docker',
+    'kubernetes',
+    'ci/cd',
+    'gitlab',
+    'github actions',
+    'terraform',
+    'ansible',
+    'observability',
+  ],
   devsecops: ['devsecops', 'security', 'sonarqube', 'trivy', 'owasp', 'gitleaks'],
   backend: ['backend', 'node', 'express', 'nestjs', 'api'],
   frontend: ['frontend', 'react', 'vue', 'pwa', 'fullstack', 'full stack', 'full-stack'],
@@ -53,11 +63,7 @@ const matchesCategoryFilter = (project: IProject, filterId: string): boolean => 
   if (filterId === 'devops' && (project.techStack?.devops?.length ?? 0) > 0) return true;
 
   const haystack = normalize(
-    [
-      project.category,
-      ...getProjectTechs(project),
-      ...(project.architecture || []),
-    ].join(' • '),
+    [project.category, ...getProjectTechs(project), ...(project.architecture || [])].join(' • '),
   );
 
   const needles = CATEGORY_NEEDLES[filterId] ?? [filterId];
@@ -104,8 +110,7 @@ export const useProjectFilters = () => {
     filters.techs.length + (filters.role ? 1 : 0) + (filters.status ? 1 : 0);
 
   // ── Actions ───────────────────────────────────────────────────────────────
-  const setCategory = (category: string) =>
-    setFilters((prev) => ({ ...prev, category }));
+  const setCategory = (category: string) => setFilters((prev) => ({ ...prev, category }));
 
   const toggleTech = (tech: string) =>
     setFilters((prev) => ({
@@ -115,11 +120,9 @@ export const useProjectFilters = () => {
         : [...prev.techs, tech],
     }));
 
-  const setRole = (role: ProjectRole | null) =>
-    setFilters((prev) => ({ ...prev, role }));
+  const setRole = (role: ProjectRole | null) => setFilters((prev) => ({ ...prev, role }));
 
-  const setStatus = (status: ProjectStatus | null) =>
-    setFilters((prev) => ({ ...prev, status }));
+  const setStatus = (status: ProjectStatus | null) => setFilters((prev) => ({ ...prev, status }));
 
   const resetSecondaryFilters = () =>
     setFilters((prev) => ({ ...prev, techs: [], role: null, status: null }));

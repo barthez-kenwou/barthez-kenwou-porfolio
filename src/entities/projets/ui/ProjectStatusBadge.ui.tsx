@@ -7,7 +7,10 @@ interface ProjectStatusBadgeProps {
   className?: string;
 }
 
-export const ProjectStatusBadge: React.FC<ProjectStatusBadgeProps> = ({ status, className = '' }) => {
+export const ProjectStatusBadge: React.FC<ProjectStatusBadgeProps> = ({
+  status,
+  className = '',
+}) => {
   const config = PROJECT_STATUS_CONFIG[status] || {
     color: 'text-primary',
     dot: 'bg-primary',

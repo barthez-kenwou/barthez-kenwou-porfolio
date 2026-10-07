@@ -39,24 +39,59 @@ export function DomainIcon3D({ id, active = false, className }: DomainIcon3DProp
       style={{ opacity: active ? 1 : 0.68 }}
     >
       <defs>
-        <linearGradient id={`${uid}-p`} x1="6" y1="4" x2="26" y2="28" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id={`${uid}-p`}
+          x1="6"
+          y1="4"
+          x2="26"
+          y2="28"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stopColor={active ? 'hsl(268 52% 68%)' : 'hsl(270 14% 68%)'} />
           <stop offset="0.5" stopColor={active ? 'hsl(268 50% 42%)' : 'hsl(270 12% 42%)'} />
           <stop offset="1" stopColor={active ? 'hsl(270 38% 22%)' : 'hsl(270 12% 22%)'} />
         </linearGradient>
-        <linearGradient id={`${uid}-top`} x1="8" y1="2" x2="22" y2="14" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id={`${uid}-top`}
+          x1="8"
+          y1="2"
+          x2="22"
+          y2="14"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stopColor={active ? 'hsl(268 48% 78%)' : 'hsl(270 12% 76%)'} />
           <stop offset="1" stopColor={active ? 'hsl(268 45% 48%)' : 'hsl(270 10% 48%)'} />
         </linearGradient>
-        <linearGradient id={`${uid}-side`} x1="4" y1="10" x2="18" y2="28" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id={`${uid}-side`}
+          x1="4"
+          y1="10"
+          x2="18"
+          y2="28"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stopColor={active ? 'hsl(270 35% 34%)' : 'hsl(270 10% 34%)'} />
           <stop offset="1" stopColor={active ? 'hsl(270 40% 14%)' : 'hsl(270 12% 14%)'} />
         </linearGradient>
-        <linearGradient id={`${uid}-sheen`} x1="6" y1="3" x2="18" y2="16" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id={`${uid}-sheen`}
+          x1="6"
+          y1="3"
+          x2="18"
+          y2="16"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stopColor="hsla(0,0%,100%,0.5)" />
           <stop offset="1" stopColor="hsla(0,0%,100%,0)" />
         </linearGradient>
-        <linearGradient id={`${uid}-gold`} x1="8" y1="4" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id={`${uid}-gold`}
+          x1="8"
+          y1="4"
+          x2="24"
+          y2="24"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stopColor={active ? '#f0dfb0' : 'hsl(42 14% 70%)'} />
           <stop offset="0.5" stopColor={active ? '#c9952e' : 'hsl(40 12% 48%)'} />
           <stop offset="1" stopColor={active ? '#7a5214' : 'hsl(38 12% 28%)'} />
@@ -84,7 +119,10 @@ function IconAll({ uid }: { uid: string }) {
   return (
     <g filter={`url(#${uid}-d)`}>
       <ellipse cx="16" cy="28.4" rx="7" ry="1.2" fill="hsla(270,40%,10%,0.22)" />
-      <path d="M16 4.2 L26.2 9.8 L26.2 20.6 L16 26.2 L5.8 20.6 L5.8 9.8 Z" fill={`url(#${uid}-p)`} />
+      <path
+        d="M16 4.2 L26.2 9.8 L26.2 20.6 L16 26.2 L5.8 20.6 L5.8 9.8 Z"
+        fill={`url(#${uid}-p)`}
+      />
       <path d="M16 4.2 L26.2 9.8 L16 15.4 L5.8 9.8 Z" fill={`url(#${uid}-top)`} />
       <path d="M16 4.2 L5.8 9.8 L5.8 20.6 L16 15.4 Z" fill={`url(#${uid}-side)`} opacity="0.9" />
       <path d="M16 15.4 L26.2 9.8 L26.2 20.6 L16 26.2 Z" fill={`url(#${uid}-p)`} opacity="0.88" />
@@ -120,15 +158,38 @@ function IconDevops({ uid }: { uid: string }) {
     <g filter={`url(#${uid}-d)`}>
       <ellipse cx="16" cy="27.6" rx="8.2" ry="1.1" fill="hsla(270,40%,10%,0.2)" />
       {/* left cube */}
-      <path d="M5.4 12.2 L10.2 9.6 L15 12.2 L15 17.4 L10.2 20 L5.4 17.4 Z" fill={`url(#${uid}-p)`} />
-      <path d="M5.4 12.2 L10.2 9.6 L10.2 14.8 L5.4 17.4 Z" fill={`url(#${uid}-side)`} opacity="0.85" />
+      <path
+        d="M5.4 12.2 L10.2 9.6 L15 12.2 L15 17.4 L10.2 20 L5.4 17.4 Z"
+        fill={`url(#${uid}-p)`}
+      />
+      <path
+        d="M5.4 12.2 L10.2 9.6 L10.2 14.8 L5.4 17.4 Z"
+        fill={`url(#${uid}-side)`}
+        opacity="0.85"
+      />
       <path d="M10.2 9.6 L15 12.2 L15 17.4 L10.2 14.8 Z" fill={`url(#${uid}-top)`} opacity="0.9" />
       {/* right cube */}
-      <path d="M17 12.2 L21.8 9.6 L26.6 12.2 L26.6 17.4 L21.8 20 L17 17.4 Z" fill={`url(#${uid}-p)`} />
-      <path d="M17 12.2 L21.8 9.6 L21.8 14.8 L17 17.4 Z" fill={`url(#${uid}-side)`} opacity="0.85" />
-      <path d="M21.8 9.6 L26.6 12.2 L26.6 17.4 L21.8 14.8 Z" fill={`url(#${uid}-top)`} opacity="0.9" />
+      <path
+        d="M17 12.2 L21.8 9.6 L26.6 12.2 L26.6 17.4 L21.8 20 L17 17.4 Z"
+        fill={`url(#${uid}-p)`}
+      />
+      <path
+        d="M17 12.2 L21.8 9.6 L21.8 14.8 L17 17.4 Z"
+        fill={`url(#${uid}-side)`}
+        opacity="0.85"
+      />
+      <path
+        d="M21.8 9.6 L26.6 12.2 L26.6 17.4 L21.8 14.8 Z"
+        fill={`url(#${uid}-top)`}
+        opacity="0.9"
+      />
       {/* link */}
-      <path d="M14.4 14.6 H17.6" stroke={`url(#${uid}-gold)`} strokeWidth="1.6" strokeLinecap="round" />
+      <path
+        d="M14.4 14.6 H17.6"
+        stroke={`url(#${uid}-gold)`}
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
       <circle cx="10.2" cy="14.8" r="1" fill={`url(#${uid}-gold)`} />
       <circle cx="21.8" cy="14.8" r="1" fill={`url(#${uid}-gold)`} />
     </g>
@@ -165,7 +226,10 @@ function IconBackend({ uid }: { uid: string }) {
     <g filter={`url(#${uid}-d)`}>
       <ellipse cx="16" cy="28.4" rx="8" ry="1.15" fill="hsla(270,40%,10%,0.2)" />
       {/* bottom rack */}
-      <path d="M6.2 18.2 H25.8 V22.2 C25.8 23.4 21.6 24.4 16 24.4 C10.4 24.4 6.2 23.4 6.2 22.2 Z" fill={`url(#${uid}-side)`} />
+      <path
+        d="M6.2 18.2 H25.8 V22.2 C25.8 23.4 21.6 24.4 16 24.4 C10.4 24.4 6.2 23.4 6.2 22.2 Z"
+        fill={`url(#${uid}-side)`}
+      />
       <path d="M6.2 18.2 H25.8 V19.8 H6.2 Z" fill={`url(#${uid}-top)`} opacity="0.55" />
       {/* mid */}
       <path d="M6.2 12.6 H25.8 V17.4 H6.2 Z" fill={`url(#${uid}-p)`} />
@@ -188,8 +252,16 @@ function IconFrontend({ uid }: { uid: string }) {
       <path d="M5.6 11 L16 5.2 L16 10.4 L5.6 16.2 Z" fill={`url(#${uid}-side)`} opacity="0.55" />
       <path d="M16 5.2 L26.4 11 L26.4 16.2 L16 10.4 Z" fill={`url(#${uid}-top)`} opacity="0.75" />
       {/* screen inset */}
-      <path d="M9.2 13.4 L16 9.8 L22.8 13.4 L22.8 19.2 L16 22.8 L9.2 19.2 Z" fill={`url(#${uid}-side)`} opacity="0.4" />
-      <path d="M10.8 14.4 L16 11.6 L21.2 14.4 L16 17.2 Z" fill={`url(#${uid}-sheen)`} opacity="0.55" />
+      <path
+        d="M9.2 13.4 L16 9.8 L22.8 13.4 L22.8 19.2 L16 22.8 L9.2 19.2 Z"
+        fill={`url(#${uid}-side)`}
+        opacity="0.4"
+      />
+      <path
+        d="M10.8 14.4 L16 11.6 L21.2 14.4 L16 17.2 Z"
+        fill={`url(#${uid}-sheen)`}
+        opacity="0.55"
+      />
       <circle cx="10.2" cy="12.4" r="0.6" fill={`url(#${uid}-gold)`} />
       <circle cx="11.8" cy="12.4" r="0.6" fill={`url(#${uid}-gold)`} opacity="0.65" />
     </g>
@@ -205,8 +277,26 @@ function IconDatabase({ uid }: { uid: string }) {
         fill={`url(#${uid}-p)`}
       />
       <ellipse cx="16" cy="9.8" rx="8.6" ry="3.2" fill={`url(#${uid}-top)`} />
-      <ellipse cx="16" cy="15.2" rx="8.6" ry="2.6" fill="none" stroke={`url(#${uid}-side)`} strokeWidth="0.9" opacity="0.45" />
-      <ellipse cx="16" cy="19.4" rx="8.6" ry="2.6" fill="none" stroke={`url(#${uid}-side)`} strokeWidth="0.9" opacity="0.35" />
+      <ellipse
+        cx="16"
+        cy="15.2"
+        rx="8.6"
+        ry="2.6"
+        fill="none"
+        stroke={`url(#${uid}-side)`}
+        strokeWidth="0.9"
+        opacity="0.45"
+      />
+      <ellipse
+        cx="16"
+        cy="19.4"
+        rx="8.6"
+        ry="2.6"
+        fill="none"
+        stroke={`url(#${uid}-side)`}
+        strokeWidth="0.9"
+        opacity="0.35"
+      />
       <ellipse cx="13.2" cy="8.4" rx="3.2" ry="1.1" fill={`url(#${uid}-sheen)`} opacity="0.5" />
     </g>
   );
@@ -224,7 +314,11 @@ function IconTools({ uid }: { uid: string }) {
       <path d="M10.4 6.2 L14.6 4 L15.8 5.4 L11.6 7.6 Z" fill={`url(#${uid}-top)`} opacity="0.75" />
       {/* shaft */}
       <path d="M13.2 14.2 L21.4 19.6 L19.4 22 L11.2 16.6 Z" fill={`url(#${uid}-p)`} />
-      <path d="M13.2 14.2 L19.6 18.4 L21.4 19.6 L15.2 15.4 Z" fill={`url(#${uid}-top)`} opacity="0.5" />
+      <path
+        d="M13.2 14.2 L19.6 18.4 L21.4 19.6 L15.2 15.4 Z"
+        fill={`url(#${uid}-top)`}
+        opacity="0.5"
+      />
       <path d="M19.4 22 L21.4 19.6 L23.6 21.6 L21.6 24 Z" fill={`url(#${uid}-side)`} />
       <circle cx="12.2" cy="7.4" r="1" fill={`url(#${uid}-gold)`} />
     </g>
@@ -236,7 +330,10 @@ function IconArchitecture({ uid }: { uid: string }) {
     <g filter={`url(#${uid}-d)`}>
       <ellipse cx="16" cy="28.4" rx="7.6" ry="1.15" fill="hsla(270,40%,10%,0.2)" />
       {/* base block */}
-      <path d="M8.2 17.4 L16 13.2 L23.8 17.4 L23.8 22.4 L16 26.6 L8.2 22.4 Z" fill={`url(#${uid}-p)`} />
+      <path
+        d="M8.2 17.4 L16 13.2 L23.8 17.4 L23.8 22.4 L16 26.6 L8.2 22.4 Z"
+        fill={`url(#${uid}-p)`}
+      />
       <path d="M8.2 17.4 L16 13.2 L16 18.4 L8.2 22.4 Z" fill={`url(#${uid}-side)`} opacity="0.7" />
       <path d="M16 13.2 L23.8 17.4 L23.8 22.4 L16 18.4 Z" fill={`url(#${uid}-top)`} opacity="0.8" />
       {/* mid block */}

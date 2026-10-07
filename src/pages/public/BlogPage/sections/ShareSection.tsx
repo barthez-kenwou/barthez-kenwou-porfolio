@@ -17,7 +17,7 @@ export const ShareSection: React.FC = () => {
   return (
     <div className="flex flex-col md:flex-row items-center gap-4 p-2 md:px-4 md:py-2 rounded-sm bg-secondary/20 border border-border/40 mb-8 relative overflow-hidden group">
       <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-      
+
       <div className="flex items-center gap-2 relative z-10 text-left">
         <div className="h-8 w-8 flex items-center justify-center rounded-sm bg-primary text-primary-foreground shadow-sm shadow-primary/10">
           <Share2 className="h-4 w-4" />
@@ -25,7 +25,7 @@ export const ShareSection: React.FC = () => {
 
         <div>
           <span className="block text-foreground font-black uppercase tracking-[0.1em] text-[10px]">
-            {language === 'fr' ? 'Partager l\'article' : 'Share the article'}
+            {language === 'fr' ? "Partager l'article" : 'Share the article'}
           </span>
           <span className="text-xs text-muted-foreground">
             {language === 'fr' ? 'Diffusez le savoir' : 'Spread the knowledge'}
@@ -56,6 +56,4 @@ export const ShareSection: React.FC = () => {
       </div>
     </div>
   );
-
 };
-

@@ -11,7 +11,7 @@ import {
   Shield,
   Layout,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
 } from 'lucide-react';
 
 import { Image } from '@/shared/ui/Image';
@@ -79,17 +79,10 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   const renderMedia = (media: string, isActive: boolean) => {
     if (!media) return null;
     const isVideo = media.endsWith('.mp4') || media.endsWith('.webm') || media.endsWith('.ogg');
-    const baseClasses = "w-full h-full object-cover transition-transform duration-500";
+    const baseClasses = 'w-full h-full object-cover transition-transform duration-500';
     if (isVideo) {
       return (
-        <video
-          src={media}
-          autoPlay={isActive}
-          loop
-          muted
-          playsInline
-          className={baseClasses}
-        />
+        <video src={media} autoPlay={isActive} loop muted playsInline className={baseClasses} />
       );
     }
     return <Image src={media} alt={title} className={baseClasses} />;
@@ -146,8 +139,10 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                     setCurrentImageIndex(idx);
                   }}
                   className={cn(
-                    "h-1.5 rounded-full transition-all cursor-pointer shadow-[0_0_2px_rgba(0,0,0,0.5)]",
-                    currentImageIndex === idx ? "bg-white w-4" : "bg-white/60 hover:bg-white/90 w-1.5"
+                    'h-1.5 rounded-full transition-all cursor-pointer shadow-[0_0_2px_rgba(0,0,0,0.5)]',
+                    currentImageIndex === idx
+                      ? 'bg-white w-4'
+                      : 'bg-white/60 hover:bg-white/90 w-1.5',
                   )}
                   aria-label={`Go to slide ${idx + 1}`}
                 />
@@ -155,7 +150,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             </div>
           </>
         ) : (
-          renderMedia(project.images[0] || "", true)
+          renderMedia(project.images[0] || '', true)
         )}
 
         {/* Overlay gradient for text readability */}

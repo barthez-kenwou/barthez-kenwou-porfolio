@@ -11,31 +11,31 @@ Live: [https://barthez-kenwou.dev](https://barthez-kenwou.dev)
 
 ## Tech stack
 
-| Category | Technologies |
-| :--- | :--- |
-| **Frontend** | React 18, TypeScript, Vite (Rolldown), Bun |
-| **UI** | Tailwind CSS 4, Radix UI, Framer Motion / Motion |
-| **Architecture** | Feature-Sliced Design (FSD) |
-| **State** | Zustand |
-| **Content** | Velite, React Markdown, Shiki |
-| **i18n** | i18next, react-i18next |
-| **Forms** | React Hook Form, Zod |
-| **QA** | Vitest, Cypress, Storybook, ESLint, Prettier, Husky, Commitlint |
-| **Runtime** | Nginx (Alpine), Docker, PWA (Workbox) |
+| Category          | Technologies                                                                      |
+| :---------------- | :-------------------------------------------------------------------------------- |
+| **Frontend**      | React 18, TypeScript, Vite (Rolldown), Bun                                        |
+| **UI**            | Tailwind CSS 4, Radix UI, Framer Motion / Motion                                  |
+| **Architecture**  | Feature-Sliced Design (FSD)                                                       |
+| **State**         | Zustand                                                                           |
+| **Content**       | Velite, React Markdown, Shiki                                                     |
+| **i18n**          | i18next, react-i18next                                                            |
+| **Forms**         | React Hook Form, Zod                                                              |
+| **QA**            | Vitest, Cypress, Storybook, ESLint, Prettier, Husky, Commitlint                   |
+| **Runtime**       | Nginx (Alpine), Docker, PWA (Workbox)                                             |
 | **CD / security** | GitHub Actions, GHCR, Gitleaks, SonarQube, Trivy, Watchtower, Nginx Proxy Manager |
 
 ---
 
 ## Architecture (FSD)
 
-| Layer | Role |
-| :--- | :--- |
-| `src/app` | Providers, router, global styles |
-| `src/pages` | Route compositions (Home, About, Blog, Contact, CV, Projects, Services, Skills, …) |
-| `src/widgets` | Navbar, Sidebar, Footer, … |
-| `src/features` | Theme, language, contact, … |
-| `src/entities` | Blog, projects, skills, experiences, services, … |
-| `src/shared` | UI kit, hooks, config, utils |
+| Layer          | Role                                                                               |
+| :------------- | :--------------------------------------------------------------------------------- |
+| `src/app`      | Providers, router, global styles                                                   |
+| `src/pages`    | Route compositions (Home, About, Blog, Contact, CV, Projects, Services, Skills, …) |
+| `src/widgets`  | Navbar, Sidebar, Footer, …                                                         |
+| `src/features` | Theme, language, contact, …                                                        |
+| `src/entities` | Blog, projects, skills, experiences, services, …                                   |
+| `src/shared`   | UI kit, hooks, config, utils                                                       |
 
 Details: [architecture/frontend-architecture.md](./architecture/frontend-architecture.md)
 
@@ -71,14 +71,14 @@ Full guide: [deployment/DEPLOY_VPS.md](./deployment/DEPLOY_VPS.md)
 
 ## Key paths
 
-| Concern | Path |
-| :--- | :--- |
-| Content / Velite | `velite.config.ts` |
+| Concern                 | Path                                                    |
+| :---------------------- | :------------------------------------------------------ |
+| Content / Velite        | `velite.config.ts`                                      |
 | Tailwind / theme tokens | `tailwind.config.ts`, `src/index.css`, `src/app/style/` |
-| Shared UI | `src/shared/ui/` |
-| Public pages | `src/pages/public/` |
-| Nginx / Docker | `infra/docker/` |
-| CD workflow | `.github/workflows/deploy-vps.yml` |
+| Shared UI               | `src/shared/ui/`                                        |
+| Public pages            | `src/pages/public/`                                     |
+| Nginx / Docker          | `infra/docker/`                                         |
+| CD workflow             | `.github/workflows/deploy-vps.yml`                      |
 
 ---
 

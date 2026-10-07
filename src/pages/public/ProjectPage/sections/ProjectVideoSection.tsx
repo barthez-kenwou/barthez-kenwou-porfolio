@@ -60,9 +60,7 @@ export const ProjectVideoSection: React.FC<{ project: IProject }> = ({ project }
     (isFr ? 'Vidéo du projet' : 'Project video');
 
   return (
-    <ProjectSectionShell
-      title={isFr ? 'Vidéos' : 'Videos'}
-    >
+    <ProjectSectionShell title={isFr ? 'Vidéos' : 'Videos'}>
       {resolved.length > 1 && (
         <div className="flex flex-wrap gap-2 mb-5">
           {resolved.map((row, idx) => {

@@ -20,7 +20,9 @@ export const CTASection: React.FC = () => {
         <div className="relative z-10 w-full mx-auto text-center p-5 sm:p-6 md:p-8">
           <div className="mx-auto max-w-xl rounded-md border border-border/40 bg-background/55 dark:bg-background/50 backdrop-blur-lg px-4 py-5 sm:px-6 sm:py-6 shadow-sm">
             <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground mb-2 sm:mb-3">
-              {language === 'fr' ? 'Prêt à Démarrer Votre Projet ?' : 'Ready to Start Your Project?'}
+              {language === 'fr'
+                ? 'Prêt à Démarrer Votre Projet ?'
+                : 'Ready to Start Your Project?'}
             </h2>
 
             <p className="text-muted-foreground mb-5 sm:mb-6 text-xs sm:text-sm font-medium leading-relaxed">

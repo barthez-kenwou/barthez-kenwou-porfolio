@@ -10,7 +10,9 @@ interface Props {
 export const EducationSection: React.FC<Props> = ({ education, language }) => (
   <View style={styles.section}>
     <View style={styles.sectionTitleBox}>
-      <Text style={styles.sectionTitle}>{language === 'fr' ? 'Éducation & Formations' : 'Education & Training'}</Text>
+      <Text style={styles.sectionTitle}>
+        {language === 'fr' ? 'Éducation & Formations' : 'Education & Training'}
+      </Text>
     </View>
     {(education || []).map((edu, i) => (
       <View key={i} style={styles.row}>

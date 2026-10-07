@@ -17,7 +17,13 @@ import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
 
-const emptyItem = () => ({ id: createId('skill'), name: '', category: 'cloud', level: 80, icon: '' });
+const emptyItem = () => ({
+  id: createId('skill'),
+  name: '',
+  category: 'cloud',
+  level: 80,
+  icon: '',
+});
 
 export const AdminSkillsPage: React.FC = () => {
   const { language } = useLanguageStore();
@@ -62,20 +68,33 @@ export const AdminSkillsPage: React.FC = () => {
           }
         >
           <div className="grid gap-4 md:grid-cols-2">
-            
             <Field label={fr ? 'Nom' : 'Name'} required>
-              <Input value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} />
+              <Input
+                value={editing.name}
+                onChange={(e) => setEditing({ ...editing, name: e.target.value })}
+              />
             </Field>
             <Field label={fr ? 'Catégorie' : 'Category'}>
-              <Input value={editing.category} onChange={(e) => setEditing({ ...editing, category: e.target.value })} />
+              <Input
+                value={editing.category}
+                onChange={(e) => setEditing({ ...editing, category: e.target.value })}
+              />
             </Field>
             <Field label={fr ? 'Niveau (0-100)' : 'Level (0-100)'}>
-              <Input type="number" min={0} max={100} value={editing.level} onChange={(e) => setEditing({ ...editing, level: Number(e.target.value) })} />
+              <Input
+                type="number"
+                min={0}
+                max={100}
+                value={editing.level}
+                onChange={(e) => setEditing({ ...editing, level: Number(e.target.value) })}
+              />
             </Field>
             <Field label="Icon URL">
-              <Input value={editing.icon} onChange={(e) => setEditing({ ...editing, icon: e.target.value })} />
+              <Input
+                value={editing.icon}
+                onChange={(e) => setEditing({ ...editing, icon: e.target.value })}
+              />
             </Field>
-  
           </div>
         </AdminSectionCard>
       ) : null}
@@ -83,7 +102,19 @@ export const AdminSkillsPage: React.FC = () => {
       <AdminDataTable
         data={items}
         getRowId={(r: any) => String(r.id)}
-        searchKeys={['nameFr','nameEn','name','titleFr','titleEn','title','company','companyFr','companyEn','role','category']}
+        searchKeys={[
+          'nameFr',
+          'nameEn',
+          'name',
+          'titleFr',
+          'titleEn',
+          'title',
+          'company',
+          'companyFr',
+          'companyEn',
+          'role',
+          'category',
+        ]}
         emptyTitle={fr ? 'Aucun élément' : 'No items'}
         columns={[
           {
@@ -102,7 +133,7 @@ export const AdminSkillsPage: React.FC = () => {
             header: fr ? 'Niveau' : 'Level',
             render: (r: any) => `${r.level}%`,
           },
-  ]}
+        ]}
         actions={(r: any) => (
           <>
             <Button size="icon-sm" variant="ghost" onClick={() => setEditing({ ...r })}>

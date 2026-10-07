@@ -36,7 +36,14 @@ export const ProfileCard: React.FC = () => {
               aria-hidden
             >
               <defs>
-                <linearGradient id="profile-badge-star" x1="0" y1="0" x2="12" y2="14" gradientUnits="userSpaceOnUse">
+                <linearGradient
+                  id="profile-badge-star"
+                  x1="0"
+                  y1="0"
+                  x2="12"
+                  y2="14"
+                  gradientUnits="userSpaceOnUse"
+                >
                   <stop stopColor="#fff8e7" />
                   <stop offset="0.42" stopColor="#edd078" />
                   <stop offset="1" stopColor="#b8922a" />
@@ -68,7 +75,9 @@ export const ProfileCard: React.FC = () => {
       <div className="px-4 py-3">
         {/* Presentation */}
         <h2 className="cursor-default text-lg font-bold text-foreground mb-0">Barthez Kenwou</h2>
-        <p className="cursor-default text-xs text-primary font-medium mb-2">Full Stack Developer & DevOps</p>
+        <p className="cursor-default text-xs text-primary font-medium mb-2">
+          Full Stack Developer & DevOps
+        </p>
 
         <div className="space-y-1 text-sm">
           <div className="flex items-center gap-3 text-muted-foreground">
@@ -77,7 +86,9 @@ export const ProfileCard: React.FC = () => {
           </div>
           <div className="flex items-center gap-3 text-muted-foreground">
             <Calendar className="h-4 w-4 text-primary" />
-            <span className="cursor-default">3+ {language === 'fr' ? "ans d'expérience" : 'years of experience'}</span>
+            <span className="cursor-default">
+              3+ {language === 'fr' ? "ans d'expérience" : 'years of experience'}
+            </span>
           </div>
           <div className="flex items-center gap-3 text-muted-foreground">
             <Award className="h-4 w-4 text-primary" />

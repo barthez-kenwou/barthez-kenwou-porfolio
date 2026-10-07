@@ -62,12 +62,30 @@ export const AdminCertificationsPage: React.FC = () => {
           }
         >
           <div className="grid gap-4 md:grid-cols-2">
-            
-            <Field label={fr ? 'Nom' : 'Name'}><Input value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} /></Field>
-            <Field label={fr ? 'Organisme' : 'Issuer'}><Input value={editing.issuer} onChange={(e) => setEditing({ ...editing, issuer: e.target.value })} /></Field>
-            <Field label={fr ? 'Année' : 'Year'}><Input value={editing.year} onChange={(e) => setEditing({ ...editing, year: e.target.value })} /></Field>
-            <Field label="Link"><Input value={editing.link || ''} onChange={(e) => setEditing({ ...editing, link: e.target.value })} /></Field>
-  
+            <Field label={fr ? 'Nom' : 'Name'}>
+              <Input
+                value={editing.name}
+                onChange={(e) => setEditing({ ...editing, name: e.target.value })}
+              />
+            </Field>
+            <Field label={fr ? 'Organisme' : 'Issuer'}>
+              <Input
+                value={editing.issuer}
+                onChange={(e) => setEditing({ ...editing, issuer: e.target.value })}
+              />
+            </Field>
+            <Field label={fr ? 'Année' : 'Year'}>
+              <Input
+                value={editing.year}
+                onChange={(e) => setEditing({ ...editing, year: e.target.value })}
+              />
+            </Field>
+            <Field label="Link">
+              <Input
+                value={editing.link || ''}
+                onChange={(e) => setEditing({ ...editing, link: e.target.value })}
+              />
+            </Field>
           </div>
         </AdminSectionCard>
       ) : null}
@@ -75,13 +93,29 @@ export const AdminCertificationsPage: React.FC = () => {
       <AdminDataTable
         data={items}
         getRowId={(r: any) => String(r.id)}
-        searchKeys={['nameFr','nameEn','name','titleFr','titleEn','title','company','companyFr','companyEn','role','category']}
+        searchKeys={[
+          'nameFr',
+          'nameEn',
+          'name',
+          'titleFr',
+          'titleEn',
+          'title',
+          'company',
+          'companyFr',
+          'companyEn',
+          'role',
+          'category',
+        ]}
         emptyTitle={fr ? 'Aucun élément' : 'No items'}
         columns={[
-          { key: 'name', header: fr ? 'Nom' : 'Name', render: (r: any) => <span className="font-medium">{r.name}</span> },
+          {
+            key: 'name',
+            header: fr ? 'Nom' : 'Name',
+            render: (r: any) => <span className="font-medium">{r.name}</span>,
+          },
           { key: 'issuer', header: fr ? 'Organisme' : 'Issuer' },
           { key: 'year', header: fr ? 'Année' : 'Year' },
-  ]}
+        ]}
         actions={(r: any) => (
           <>
             <Button size="icon-sm" variant="ghost" onClick={() => setEditing({ ...r })}>

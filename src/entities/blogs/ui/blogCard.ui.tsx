@@ -15,10 +15,12 @@ export const BlogCard: React.FC<{ Blog: IBlog; isFeatured?: boolean }> = ({ Blog
 
   return (
     <Link to={blogHref} className="block group">
-      <article className={cn(
-        "relative overflow-hidden rounded-md transition-all duration-300",
-        isFeatured && "md:grid md:grid-cols-2 lg:grid-cols-5 md:gap-2"
-      )}>
+      <article
+        className={cn(
+          'relative overflow-hidden rounded-md transition-all duration-300',
+          isFeatured && 'md:grid md:grid-cols-2 lg:grid-cols-5 md:gap-2',
+        )}
+      >
         <div
           className={cn(
             'relative w-full overflow-hidden bg-muted/30',
@@ -38,36 +40,46 @@ export const BlogCard: React.FC<{ Blog: IBlog; isFeatured?: boolean }> = ({ Blog
             </span>
           </div>
         </div>
-        
-        <div className={cn(
-          "p-4 flex flex-col justify-center",
-          isFeatured ? "md:p-3 lg:col-span-2" : "p-2"
-        )}>
+
+        <div
+          className={cn(
+            'p-4 flex flex-col justify-center',
+            isFeatured ? 'md:p-3 lg:col-span-2' : 'p-2',
+          )}
+        >
           <div className="flex items-center gap-3 text-[10px] uppercase tracking-wider font-bold text-muted-foreground/60 mb-3">
             <span className="flex items-center gap-1">
               <HiOutlineCalendar className="h-3.5 w-3.5" />
-              {new Date(date).toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+              {new Date(date).toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-US', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+              })}
             </span>
             <span className="flex items-center gap-1">
               <HiOutlineClock className="h-3.5 w-3.5" />
               {readTime}
             </span>
           </div>
-          
-          <h3 className={cn(
-            "font-extrabold text-foreground group-hover:text-primary transition-colors leading-tight mb-2",
-            isFeatured ? "text-xl md:text-2xl" : "text-base line-clamp-2"
-          )}>
+
+          <h3
+            className={cn(
+              'font-extrabold text-foreground group-hover:text-primary transition-colors leading-tight mb-2',
+              isFeatured ? 'text-xl md:text-2xl' : 'text-base line-clamp-2',
+            )}
+          >
             {language === 'fr' ? titleFr : titleEn}
           </h3>
-          
-          <p className={cn(
-            "text-muted-foreground line-clamp-2",
-            isFeatured ? "text-sm md:text-base mb-2" : "text-xs mb-4"
-          )}>
+
+          <p
+            className={cn(
+              'text-muted-foreground line-clamp-2',
+              isFeatured ? 'text-sm md:text-base mb-2' : 'text-xs mb-4',
+            )}
+          >
             {language === 'fr' ? excerptFr : excerptEn}
           </p>
-          
+
           <div className="flex flex-wrap gap-1.5 mt-auto">
             {tags.slice(0, 3).map((tag) => (
               <span

@@ -55,7 +55,13 @@ export function AnimatedServicePrice({
           <span
             className={cn(
               'font-bold text-primary',
-              compact ? (isEuro ? 'text-[10px]' : 'text-[9px] tracking-wide') : isEuro ? 'text-sm' : 'text-[11px] tracking-wide',
+              compact
+                ? isEuro
+                  ? 'text-[10px]'
+                  : 'text-[9px] tracking-wide'
+                : isEuro
+                  ? 'text-sm'
+                  : 'text-[11px] tracking-wide',
             )}
           >
             {isEuro ? '€' : 'FCFA'}

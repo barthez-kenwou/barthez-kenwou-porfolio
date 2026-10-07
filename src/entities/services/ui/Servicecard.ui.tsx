@@ -1,16 +1,23 @@
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { HiOutlineCheckCircle } from 'react-icons/hi2';
+import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { IServices } from '../model/service.types';
 import { motion } from 'framer-motion';
 import { GlowingEffect } from '@/shared/ui/glowing-effect';
+import { Button } from '@/shared/ui/Button';
 import { cn } from '@/shared/lib/utils';
 import { AnimatedServicePrice } from './AnimatedServicePrice';
 
 export const ServiceCard: React.FC<{ Service: IServices }> = ({ Service }) => {
   const { language } = useLanguageStore();
+  const { t } = useTranslation();
 
-  const { titleFr, titleEn, descFr, descEn, featuresFr, featuresEn, priceEur, hourly } =
-    Service;
+  const { titleFr, titleEn, descFr, descEn, featuresFr, featuresEn, priceEur, hourly } = Service;
+
+  const title = language === 'fr' ? titleFr : titleEn;
+  const contactTo = `/contact?service=${encodeURIComponent(title)}`;
 
   return (
     <motion.div
@@ -36,7 +43,7 @@ export const ServiceCard: React.FC<{ Service: IServices }> = ({ Service }) => {
       <div className="relative z-10 flex h-full flex-col rounded-[inherit] border border-border/40 bg-card/90 p-5 backdrop-blur-md transition-colors duration-300 group-hover:border-transparent md:p-6">
         <div className="mb-4 flex items-start gap-4">
           <h3 className="pt-0.5 text-sm leading-tight font-bold text-foreground transition-colors duration-300 group-hover:text-primary md:text-base">
-            {language === 'fr' ? titleFr : titleEn}
+            {title}
           </h3>
         </div>
 
@@ -45,23 +52,40 @@ export const ServiceCard: React.FC<{ Service: IServices }> = ({ Service }) => {
         </p>
 
         <div className="mb-6 flex-1 space-y-2.5">
-          {(language === 'fr' ? featuresFr : featuresEn).slice(0, 4).map((feature: string, i: number) => (
-            <div key={i} className="group/item flex items-start gap-2.5">
-              <HiOutlineCheckCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary/70 transition-colors group-hover/item:text-primary" />
-              <span className="text-[11px] leading-snug text-muted-foreground/90 md:text-[12px]">
-                {feature}
-              </span>
-            </div>
-          ))}
+          {(language === 'fr' ? featuresFr : featuresEn)
+            .slice(0, 4)
+            .map((feature: string, i: number) => (
+              <div key={i} className="group/item flex items-start gap-2.5">
+                <HiOutlineCheckCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary/70 transition-colors group-hover/item:text-primary" />
+                <span className="text-[11px] leading-snug text-muted-foreground/90 md:text-[12px]">
+                  {feature}
+                </span>
+              </div>
+            ))}
         </div>
 
-        <div className="flex items-center justify-between border-t border-border/40 pt-4">
+        <div className="flex items-end justify-between gap-3 border-t border-border/40 pt-4">
           <div className="flex min-w-0 flex-col">
             <span className="mb-0.5 text-[10px] font-bold tracking-wider text-muted-foreground/60 uppercase">
               {language === 'fr' ? 'À partir de' : 'Starting at'}
             </span>
             <AnimatedServicePrice amountEur={priceEur} hourly={hourly} />
           </div>
+
+          <Button asChild size="sm" className="h-8 shrink-0 px-3 text-xs font-semibold">
+            <Link
+              to={contactTo}
+              onMouseEnter={() => {
+                void import('@/app/routes/prefetch').then((m) => m.prefetchRoute('/contact'));
+              }}
+              onTouchStart={() => {
+                void import('@/app/routes/prefetch').then((m) => m.prefetchRoute('/contact'));
+              }}
+            >
+              {t('services.cta')}
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </Button>
         </div>
       </div>
     </motion.div>

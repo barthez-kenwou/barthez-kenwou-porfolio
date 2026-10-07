@@ -54,9 +54,7 @@ export const ProjectDiagramsSection: React.FC<{ project: IProject }> = ({ projec
   const title = isFr ? current.titleFr : current.titleEn;
 
   return (
-    <ProjectSectionShell
-      title={isFr ? 'Diagrammes' : 'Diagrams'}
-    >
+    <ProjectSectionShell title={isFr ? 'Diagrammes' : 'Diagrams'}>
       {diagrams.length > 1 && (
         <div className="flex flex-wrap gap-2 mb-5">
           {diagrams.map((d, idx) => (

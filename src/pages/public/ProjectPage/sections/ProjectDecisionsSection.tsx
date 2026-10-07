@@ -12,15 +12,10 @@ export const ProjectDecisionsSection: React.FC<{ project: IProject }> = ({ proje
   if (decisions.length === 0) return null;
 
   return (
-    <ProjectSectionShell
-      title={isFr ? 'Décisions clés' : 'Key decisions'}
-    >
+    <ProjectSectionShell title={isFr ? 'Décisions clés' : 'Key decisions'}>
       <div className="space-y-3">
         {decisions.map((d, idx) => (
-          <article
-            key={idx}
-            className="rounded-md border border-border/40 bg-card/40 p-4 md:p-5"
-          >
+          <article key={idx} className="rounded-md border border-border/40 bg-card/40 p-4 md:p-5">
             <div className="flex items-start gap-3 mb-2">
               <div className="p-1.5 rounded-md bg-primary/10 text-primary shrink-0 mt-0.5">
                 <GitBranch className="w-3.5 h-3.5" />

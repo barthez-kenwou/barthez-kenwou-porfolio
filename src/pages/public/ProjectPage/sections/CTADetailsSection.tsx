@@ -19,7 +19,9 @@ export const CTADetailsSection: React.FC = () => {
         <div className="relative z-10 w-full mx-auto text-center p-5 sm:p-6 md:p-8">
           <div className="mx-auto max-w-2xl rounded-md border border-border/40 bg-background/55 dark:bg-background/50 backdrop-blur-md px-4 py-5 sm:px-6 sm:py-6 shadow-sm flex flex-col items-center">
             <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground mb-3 leading-tight">
-              {language === 'fr' ? 'Prêt à propulser votre prochain projet ?' : 'Ready to launch your next project?'}
+              {language === 'fr'
+                ? 'Prêt à propulser votre prochain projet ?'
+                : 'Ready to launch your next project?'}
             </h2>
 
             <p className="text-xs sm:text-sm text-muted-foreground mb-6 leading-relaxed max-w-xl">

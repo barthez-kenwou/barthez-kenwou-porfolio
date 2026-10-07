@@ -17,8 +17,7 @@ const avatarVariants = cva('relative flex shrink-0 overflow-hidden rounded-full'
 });
 
 export interface AvatarProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof avatarVariants> {
+  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof avatarVariants> {
   src?: string;
   alt?: string;
   fallback?: string;

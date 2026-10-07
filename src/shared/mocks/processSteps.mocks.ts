@@ -1,8 +1,8 @@
-import { 
-  HiOutlineChatBubbleLeftRight, 
-  HiOutlineLightBulb, 
-  HiOutlineCommandLine, 
-  HiOutlineCheckBadge 
+import {
+  HiOutlineChatBubbleLeftRight,
+  HiOutlineLightBulb,
+  HiOutlineCommandLine,
+  HiOutlineCheckBadge,
 } from 'react-icons/hi2';
 
 export const processSteps = [

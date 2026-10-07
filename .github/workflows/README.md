@@ -2,11 +2,11 @@
 
 CI/CD for the portfolio. Primary hosting is **OVH VPS + GHCR** (not Vercel).
 
-| Workflow | Trigger | Role |
-| :--- | :--- | :--- |
+| Workflow                             | Trigger                                     | Role                                                       |
+| :----------------------------------- | :------------------------------------------ | :--------------------------------------------------------- |
 | [`deploy-vps.yml`](./deploy-vps.yml) | Push `main` / `master`, `workflow_dispatch` | Full CD: CI → Gitleaks → Sonar → Trivy → GHCR → SSH deploy |
-| [`ci.yml`](./ci.yml) | PRs + `develop` / `development` | Format, lint, typecheck, tests, build artifact |
-| [`qa.yml`](./qa.yml) | PRs (optional) | E2E / Lighthouse |
+| [`ci.yml`](./ci.yml)                 | PRs + `develop` / `development`             | Format, lint, typecheck, tests, build artifact             |
+| [`qa.yml`](./qa.yml)                 | PRs (optional)                              | E2E / Lighthouse                                           |
 
 ## Production CD (`deploy-vps.yml`)
 

@@ -9,7 +9,10 @@ export const ChallengesSection: React.FC = () => {
   const { language } = useLanguageStore();
 
   const { id, projectID } = useParams();
-  const project = findByNumericId(projectsData, projectID || id) || { challengesEn: [], challengesFr: [] };
+  const project = findByNumericId(projectsData, projectID || id) || {
+    challengesEn: [],
+    challengesFr: [],
+  };
 
   return (
     <div className="p-6 rounded-md bg-card border border-border">

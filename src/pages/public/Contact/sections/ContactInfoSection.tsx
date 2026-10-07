@@ -1,20 +1,15 @@
 import React from 'react';
-import {
-  HiOutlineEnvelope,
-  HiOutlineMapPin,
-  HiOutlineClock,
-} from 'react-icons/hi2';
+import { HiOutlineEnvelope, HiOutlineMapPin, HiOutlineClock } from 'react-icons/hi2';
 import { useTranslation } from 'react-i18next';
 import { contactsInfo } from '@/shared/mocks/constContactInfo.mocks';
 import { ContactInfoCard } from '@/entities/contact/ui/ContactInfoCard.ui';
-import { SocialGeometry } from '@/entities/contact/ui/SocialGeometry.ui';
 import { cn } from '@/shared/lib/utils';
 
 export const ContactInfoSection: React.FC<{ className?: string }> = ({ className }) => {
   const { t } = useTranslation();
 
   return (
-    <section className={cn('flex h-full flex-col gap-3', className)}>
+    <section className={cn('flex flex-col gap-3', className)}>
       <ContactInfoCard
         icon={HiOutlineEnvelope}
         label={t('contact.info.email')}
@@ -33,10 +28,6 @@ export const ContactInfoSection: React.FC<{ className?: string }> = ({ className
         label={t('contact.info.availability')}
         value={t('contact.info.available')}
       />
-
-      <div className="mt-auto">
-        <SocialGeometry />
-      </div>
     </section>
   );
 };

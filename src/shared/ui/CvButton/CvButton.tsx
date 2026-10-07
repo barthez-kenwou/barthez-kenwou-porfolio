@@ -1,10 +1,10 @@
-import { AiOutlineDownload } from "react-icons/ai"; 
+import { AiOutlineDownload } from 'react-icons/ai';
 import React from 'react';
 import { Button } from '../Button';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-export const CvButton: React.FC<React.HTMLAttributes<HTMLButtonElement>> = ({ className}) => {
+export const CvButton: React.FC<React.HTMLAttributes<HTMLButtonElement>> = ({ className }) => {
   const { t } = useTranslation();
 
   return (

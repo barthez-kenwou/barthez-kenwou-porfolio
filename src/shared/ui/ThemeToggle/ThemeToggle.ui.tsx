@@ -5,11 +5,5 @@ import { AnimatedThemeToggler } from '../animated-theme-toggler';
 export const ThemeToggle: React.FC<{ className?: string }> = () => {
   const toggle = useThemeStore((s) => s.toggleTheme);
 
-  return (
-    <AnimatedThemeToggler
-      aria-label="Toggle theme"
-      onToggle={toggle}
-      duration={700}
-    />
-  );
+  return <AnimatedThemeToggler aria-label="Toggle theme" onToggle={toggle} duration={700} />;
 };

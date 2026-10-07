@@ -51,10 +51,7 @@ const IconPerformance3D = () => (
       </linearGradient>
     </defs>
     <ellipse cx="32" cy="56" rx="16" ry="3.5" fill="hsl(32 60% 20% / 0.22)" />
-    <path
-      d="M36 8L18 34h12l-4 22 22-30H36L40 8z"
-      fill="url(#p-bolt)"
-    />
+    <path d="M36 8L18 34h12l-4 22 22-30H36L40 8z" fill="url(#p-bolt)" />
     <path d="M34 12l-12 20h8l-2 14 14-20h-8l4-14z" fill="url(#p-core)" opacity="0.45" />
     <path d="M28 18l8 2-4 8" stroke="hsl(0 0% 100% / 0.4)" strokeWidth="1.2" fill="none" />
   </svg>
@@ -107,11 +104,21 @@ const IconPipeline3D = () => (
     <rect x="8" y="26" width="14" height="12" rx="3" fill="url(#pipe-a)" />
     <rect x="25" y="26" width="14" height="12" rx="3" fill="url(#pipe-b)" />
     <rect x="42" y="26" width="14" height="12" rx="3" fill="url(#pipe-c)" />
-    <path d="M22 32h3M39 32h3" stroke="hsl(0 0% 100% / 0.55)" strokeWidth="2" strokeLinecap="round" />
+    <path
+      d="M22 32h3M39 32h3"
+      stroke="hsl(0 0% 100% / 0.55)"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
     <circle cx="15" cy="32" r="2.2" fill="hsl(0 0% 100% / 0.85)" />
     <circle cx="32" cy="32" r="2.2" fill="hsl(0 0% 100% / 0.85)" />
     <circle cx="49" cy="32" r="2.2" fill="hsl(0 0% 100% / 0.85)" />
-    <path d="M15 20v6M32 18v8M49 22v4" stroke="hsl(262 40% 55% / 0.5)" strokeWidth="1.5" strokeLinecap="round" />
+    <path
+      d="M15 20v6M32 18v8M49 22v4"
+      stroke="hsl(262 40% 55% / 0.5)"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
     <circle cx="15" cy="18" r="2" fill="url(#pipe-a)" />
     <circle cx="32" cy="16" r="2" fill="url(#pipe-b)" />
     <circle cx="49" cy="20" r="2" fill="url(#pipe-c)" />
@@ -158,7 +165,7 @@ const ImpactMetricCard: React.FC<MetricProps> = ({
         <p className="mt-0.5 text-[8px] font-semibold uppercase leading-tight tracking-[0.12em] text-primary sm:text-[9px] sm:tracking-[0.14em]">
           {label}
         </p>
-    </div>
+      </div>
 
       <div className="relative mt-2 h-10 w-full sm:mt-2.5 sm:h-12 md:h-14">
         <div
@@ -204,8 +211,8 @@ const ImpactMetricCard: React.FC<MetricProps> = ({
           )}
         />
       </div>
-  </div>
-);
+    </div>
+  );
 };
 
 // ─── Section ───────────────────────────────────────────────────────────────────
@@ -286,7 +293,7 @@ export const ProjectStatsSection: React.FC = () => {
             </span>
           </h2>
           <p className="section-subtitle !mb-0 text-sm">
-            {isFr 
+            {isFr
               ? "Des solutions robustes déployées à l'échelle, alliant performance et automatisation."
               : 'Robust solutions deployed at scale, combining performance and automation.'}
           </p>

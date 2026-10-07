@@ -16,10 +16,7 @@ export interface AuthSession {
 const SESSION_KEY = 'bk-admin-session';
 
 /** Solo-owner gate until the real auth API is wired. Credentials live in env only. */
-export async function loginWithCredentials(
-  email: string,
-  password: string,
-): Promise<AuthSession> {
+export async function loginWithCredentials(email: string, password: string): Promise<AuthSession> {
   const expectedEmail = (import.meta.env.VITE_ADMIN_EMAIL as string | undefined)?.trim();
   const expectedPassword = (import.meta.env.VITE_ADMIN_PASSWORD as string | undefined)?.trim();
 

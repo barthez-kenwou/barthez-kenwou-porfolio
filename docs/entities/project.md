@@ -20,22 +20,22 @@ Types: `src/entities/projets/model/project.types.ts`
 
 Sections on the detail page render **only when data is present**:
 
-| Field | Section |
-| :--- | :--- |
-| `responsibilitiesFr/En` | Overview |
-| `confidential` | Hero badge (NDA / anonymized) |
-| `videos[]` / `videoDemo` | Videos (YouTube/Vimeo or `.mp4`/`.webm`) |
-| `gallery[]` | Gallery + lightbox |
-| `diagrams[]` | Mermaid diagrams |
-| `scope*` / `nonGoals*` | Scope |
-| `milestones[]` | Timeline |
-| `decisions[]` | Key decisions (ADR light) |
-| `security*` / `infra*` | Security & infrastructure |
-| `beforeAfter[]` | Before / After |
-| `testimonial` | Client quote |
-| `lessons*` | Lessons learned |
-| `resources[]` / `documentation` / `caseStudy` | Public documents |
-| `externalLinks[]` | Extra links |
+| Field                                         | Section                                  |
+| :-------------------------------------------- | :--------------------------------------- |
+| `responsibilitiesFr/En`                       | Overview                                 |
+| `confidential`                                | Hero badge (NDA / anonymized)            |
+| `videos[]` / `videoDemo`                      | Videos (YouTube/Vimeo or `.mp4`/`.webm`) |
+| `gallery[]`                                   | Gallery + lightbox                       |
+| `diagrams[]`                                  | Mermaid diagrams                         |
+| `scope*` / `nonGoals*`                        | Scope                                    |
+| `milestones[]`                                | Timeline                                 |
+| `decisions[]`                                 | Key decisions (ADR light)                |
+| `security*` / `infra*`                        | Security & infrastructure                |
+| `beforeAfter[]`                               | Before / After                           |
+| `testimonial`                                 | Client quote                             |
+| `lessons*`                                    | Lessons learned                          |
+| `resources[]` / `documentation` / `caseStudy` | Public documents                         |
+| `externalLinks[]`                             | Extra links                              |
 
 ## Detail page order
 

@@ -6,8 +6,8 @@ export const HeroSection: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <section className="text-center relative mb-16 pt-24 animate-fade-in">
-      <div className="">
+    <section className="relative mb-16 animate-fade-in pt-24 text-center">
+      <div>
         <h1 className="section-title">
           <span className="gradient-text">{t('projects.title')}</span>
         </h1>
@@ -17,6 +17,5 @@ export const HeroSection: React.FC = () => {
 
       <RetroGrid />
     </section>
-
   );
 };

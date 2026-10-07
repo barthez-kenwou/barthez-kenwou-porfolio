@@ -27,16 +27,16 @@ Full documentation lives in [`docs/`](./docs/README.md).
 
 ## Tech stack
 
-| Layer | Tools |
-| :--- | :--- |
-| **App** | React 18, TypeScript, Vite (Rolldown), Bun |
-| **UI** | Tailwind CSS 4, Radix UI, Framer Motion / Motion |
-| **State & forms** | Zustand, React Hook Form, Zod |
-| **Content** | Velite, React Markdown, Shiki |
-| **i18n** | i18next, react-i18next |
-| **QA** | Vitest, Cypress, Storybook, ESLint, Prettier, Lighthouse CI |
-| **Runtime** | Nginx (Alpine), Docker, PWA (Workbox) |
-| **CD** | GitHub Actions, GHCR, Watchtower, Nginx Proxy Manager (OVH VPS) |
+| Layer             | Tools                                                           |
+| :---------------- | :-------------------------------------------------------------- |
+| **App**           | React 18, TypeScript, Vite (Rolldown), Bun                      |
+| **UI**            | Tailwind CSS 4, Radix UI, Framer Motion / Motion                |
+| **State & forms** | Zustand, React Hook Form, Zod                                   |
+| **Content**       | Velite, React Markdown, Shiki                                   |
+| **i18n**          | i18next, react-i18next                                          |
+| **QA**            | Vitest, Cypress, Storybook, ESLint, Prettier, Lighthouse CI     |
+| **Runtime**       | Nginx (Alpine), Docker, PWA (Workbox)                           |
+| **CD**            | GitHub Actions, GHCR, Watchtower, Nginx Proxy Manager (OVH VPS) |
 
 ---
 
@@ -91,18 +91,18 @@ See [docs/onboarding/setup-local.md](./docs/onboarding/setup-local.md).
 
 ## Scripts
 
-| Command | Description |
-| :--- | :--- |
-| `bun run dev` | Vite dev server |
-| `bun run build` | Production build (`scripts/build.sh`) |
-| `bun run preview` | Preview production build |
-| `bun run lint` | ESLint |
-| `bun run typecheck` | TypeScript (`tsc --noEmit`) |
-| `bun run test` / `test:ci` | Vitest |
-| `bun run validate` | lint + typecheck + test:ci |
-| `bun run e2e:open` / `e2e:run` | Cypress |
-| `bun run storybook` | Storybook |
-| `bun run seo:generate` | Generate SEO artifacts |
+| Command                        | Description                           |
+| :----------------------------- | :------------------------------------ |
+| `bun run dev`                  | Vite dev server                       |
+| `bun run build`                | Production build (`scripts/build.sh`) |
+| `bun run preview`              | Preview production build              |
+| `bun run lint`                 | ESLint                                |
+| `bun run typecheck`            | TypeScript (`tsc --noEmit`)           |
+| `bun run test` / `test:ci`     | Vitest                                |
+| `bun run validate`             | lint + typecheck + test:ci            |
+| `bun run e2e:open` / `e2e:run` | Cypress                               |
+| `bun run storybook`            | Storybook                             |
+| `bun run seo:generate`         | Generate SEO artifacts                |
 
 ---
 
@@ -138,18 +138,18 @@ curl -fsS http://127.0.0.1:18080/health
 
 ## Documentation map
 
-| Section | Path |
-| :--- | :--- |
-| Docs index | [docs/README.md](./docs/README.md) |
-| Architecture | [docs/architecture](./docs/architecture/frontend-architecture.md) |
-| Features | [docs/features](./docs/features/README.md) |
-| Entities | [docs/entities](./docs/entities/README.md) |
-| Guidelines | [docs/guidelines](./docs/guidelines/README.md) |
-| Onboarding | [docs/onboarding](./docs/onboarding/README.md) |
-| Deployment | [docs/deployment](./docs/deployment/README.md) |
-| ADRs | [docs/decisions](./docs/decisions/README.md) |
-| Project analysis | [docs/PROJECT_ANALYSIS.md](./docs/PROJECT_ANALYSIS.md) |
-| Contributing | [CONTRIBUTING.md](./CONTRIBUTING.md) |
+| Section          | Path                                                              |
+| :--------------- | :---------------------------------------------------------------- |
+| Docs index       | [docs/README.md](./docs/README.md)                                |
+| Architecture     | [docs/architecture](./docs/architecture/frontend-architecture.md) |
+| Features         | [docs/features](./docs/features/README.md)                        |
+| Entities         | [docs/entities](./docs/entities/README.md)                        |
+| Guidelines       | [docs/guidelines](./docs/guidelines/README.md)                    |
+| Onboarding       | [docs/onboarding](./docs/onboarding/README.md)                    |
+| Deployment       | [docs/deployment](./docs/deployment/README.md)                    |
+| ADRs             | [docs/decisions](./docs/decisions/README.md)                      |
+| Project analysis | [docs/PROJECT_ANALYSIS.md](./docs/PROJECT_ANALYSIS.md)            |
+| Contributing     | [CONTRIBUTING.md](./CONTRIBUTING.md)                              |
 
 ---
 

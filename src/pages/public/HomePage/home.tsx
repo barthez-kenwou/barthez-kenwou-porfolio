@@ -23,7 +23,9 @@ function canUseWebGL(): boolean {
     const canvas = document.createElement('canvas');
     return !!(
       window.WebGLRenderingContext &&
-      (canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
+      (canvas.getContext('webgl2') ||
+        canvas.getContext('webgl') ||
+        canvas.getContext('experimental-webgl'))
     );
   } catch {
     return false;
@@ -39,8 +41,11 @@ function DeferredSplash() {
     if (reduced || coarse || !canUseWebGL()) return;
 
     const schedule =
-      (window as Window & { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number })
-        .requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 400));
+      (
+        window as Window & {
+          requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+        }
+      ).requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 400));
 
     const id = schedule(() => setReady(true), { timeout: 1800 });
     return () => {
@@ -76,7 +81,11 @@ export const HomePage: React.FC = () => {
 
         <HeroSection />
 
-        <DeferredMount timeout={400} rootMargin="200px" fallback={<div className="min-h-[340px]" aria-hidden />}>
+        <DeferredMount
+          timeout={400}
+          rootMargin="200px"
+          fallback={<div className="min-h-[340px]" aria-hidden />}
+        >
           <Suspense fallback={<div className="min-h-[340px]" aria-hidden />}>
             <PresentationVideo />
           </Suspense>

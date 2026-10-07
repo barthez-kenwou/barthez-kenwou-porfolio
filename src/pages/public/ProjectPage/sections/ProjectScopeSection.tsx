@@ -15,9 +15,7 @@ export const ProjectScopeSection: React.FC<{ project: IProject }> = ({ project }
   if (!hasScope && !hasNonGoals) return null;
 
   return (
-    <ProjectSectionShell
-      title={isFr ? 'Périmètre' : 'Scope'}
-    >
+    <ProjectSectionShell title={isFr ? 'Périmètre' : 'Scope'}>
       <div className="grid md:grid-cols-2 gap-6 md:gap-8">
         {hasScope && (
           <div className="rounded-md border border-border/40 bg-card/40 p-5">
@@ -27,7 +25,10 @@ export const ProjectScopeSection: React.FC<{ project: IProject }> = ({ project }
             </h3>
             <ul className="space-y-2.5">
               {scope!.map((item, idx) => (
-                <li key={idx} className="flex gap-2.5 text-sm text-muted-foreground leading-relaxed">
+                <li
+                  key={idx}
+                  className="flex gap-2.5 text-sm text-muted-foreground leading-relaxed"
+                >
                   <Check className="w-3.5 h-3.5 text-primary mt-0.5 shrink-0" />
                   <span>{item}</span>
                 </li>
@@ -43,7 +44,10 @@ export const ProjectScopeSection: React.FC<{ project: IProject }> = ({ project }
             </h3>
             <ul className="space-y-2.5">
               {nonGoals!.map((item, idx) => (
-                <li key={idx} className="flex gap-2.5 text-sm text-muted-foreground leading-relaxed">
+                <li
+                  key={idx}
+                  className="flex gap-2.5 text-sm text-muted-foreground leading-relaxed"
+                >
                   <Ban className="w-3.5 h-3.5 text-muted-foreground/70 mt-0.5 shrink-0" />
                   <span>{item}</span>
                 </li>

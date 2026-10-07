@@ -33,28 +33,48 @@ export const FeaturedProjectsSection: React.FC<FeaturedProjectsSectionProps> = (
               </h3>
               <div className="flex gap-2 shrink-0">
                 {project.github && project.github !== '#' && (
-                  <a href={project.github} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                  >
                     <Github className="h-4 w-4" />
                   </a>
                 )}
                 {project.demo && project.demo !== '#' && (
-                  <a href={project.demo} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                  <a
+                    href={project.demo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                  >
                     <ExternalLink className="h-4 w-4" />
                   </a>
                 )}
               </div>
             </div>
-            
+
             <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
               {language === 'fr' ? project.descriptionFr : project.descriptionEn}
             </p>
 
             <div className="flex flex-wrap gap-2 mt-auto">
-              {[...(project.techStack?.frontend || []), ...(project.techStack?.backend || []), ...(project.techStack?.database || []), ...(project.techStack?.devops || [])].slice(0, 4).map((tag, i) => (
-                <span key={i} className="text-xs bg-background border border-border px-2 py-1 rounded-md text-foreground">
-                  {tag}
-                </span>
-              ))}
+              {[
+                ...(project.techStack?.frontend || []),
+                ...(project.techStack?.backend || []),
+                ...(project.techStack?.database || []),
+                ...(project.techStack?.devops || []),
+              ]
+                .slice(0, 4)
+                .map((tag, i) => (
+                  <span
+                    key={i}
+                    className="text-xs bg-background border border-border px-2 py-1 rounded-md text-foreground"
+                  >
+                    {tag}
+                  </span>
+                ))}
             </div>
           </div>
         ))}

@@ -1,8 +1,5 @@
 import { Link } from 'react-router-dom';
-import {
-  AdminPageHeader,
-  useAdminCmsStore,
-} from '@/features/admin-cms';
+import { AdminPageHeader, useAdminCmsStore } from '@/features/admin-cms';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { adminPath } from '@/shared/config/admin';
 import { Badge } from '@/shared/ui/badge';

@@ -1,7 +1,7 @@
 import { IEducation } from '../../model/education.types';
 
 export const education: IEducation[] = [
-{
+  {
     degreeFr: 'Formation en DevOps & AWS Cloud ',
     degreeEn: 'DevOps & AWS Cloud Training',
     school: 'FreeCodeCamp & Udemy',

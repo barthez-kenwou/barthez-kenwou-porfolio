@@ -1,11 +1,11 @@
-import { cn } from "@/shared/lib";
-import React, { ReactNode } from "react";
+import { cn } from '@/shared/lib';
+import React, { ReactNode } from 'react';
 
 interface AuroraBackgroundProps extends React.HTMLProps<HTMLDivElement> {
   children: ReactNode;
   showRadialGradient?: boolean;
   /** Soft = ambient haze that doesn't fight hero visuals */
-  intensity?: "soft" | "normal";
+  intensity?: 'soft' | 'normal';
 }
 
 /** Theme-aware aurora - soft lilac pearl in light, deep violet haze in dark */
@@ -13,16 +13,16 @@ export const AuroraBackground = ({
   className,
   children,
   showRadialGradient = true,
-  intensity = "normal",
+  intensity = 'normal',
   ...props
 }: AuroraBackgroundProps) => {
-  const isSoft = intensity === "soft";
+  const isSoft = intensity === 'soft';
 
   return (
     <div
       className={cn(
-        "relative flex flex-col min-h-screen w-full items-center justify-center bg-background text-foreground transition-bg",
-        className
+        'relative flex flex-col min-h-screen w-full items-center justify-center bg-background text-foreground transition-bg',
+        className,
       )}
       {...props}
     >
@@ -46,11 +46,9 @@ export const AuroraBackground = ({
           after:animate-aurora after:[background-attachment:fixed]
           after:mix-blend-difference dark:after:mix-blend-soft-light
           absolute -inset-[10px] will-change-transform`,
-            isSoft
-              ? "opacity-[0.22] dark:opacity-[0.18]"
-              : "opacity-50 dark:opacity-40",
+            isSoft ? 'opacity-[0.22] dark:opacity-[0.18]' : 'opacity-50 dark:opacity-40',
             showRadialGradient &&
-              `[mask-image:radial-gradient(ellipse_at_100%_0%,black_10%,transparent_70%)]`
+              `[mask-image:radial-gradient(ellipse_at_100%_0%,black_10%,transparent_70%)]`,
           )}
         ></div>
       </div>

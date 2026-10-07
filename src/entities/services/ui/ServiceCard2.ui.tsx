@@ -1,18 +1,20 @@
-import { cn } from "@/lib/utils";
-import { ServiceCardProps } from "../model/service.types";
-import { GlowingEffect } from "@/shared/ui/glowing-effect";
-import { AnimatedServicePrice } from "./AnimatedServicePrice";
+import { cn } from '@/lib/utils';
+import { ServiceCardProps } from '../model/service.types';
+import { GlowingEffect } from '@/shared/ui/glowing-effect';
+import { AnimatedServicePrice } from './AnimatedServicePrice';
 
 export const ServiceCard2: React.FC<ServiceCardProps> = ({ service, language }) => {
   const isFr = language === 'fr';
 
   return (
-    <div className={cn(
-      "relative group flex items-center gap-2.5 p-0.5 rounded-md w-full max-w-[400px]",
-      "shadow-sm transition-all duration-500 hover:shadow-sm hover:shadow-primary/5"
-    )}>
+    <div
+      className={cn(
+        'relative group flex items-center gap-2.5 p-0.5 rounded-md w-full max-w-[400px]',
+        'shadow-sm transition-all duration-500 hover:shadow-sm hover:shadow-primary/5',
+      )}
+    >
       <GlowingEffect
-          spread={60}
+        spread={60}
         glow={true}
         disabled={false}
         proximity={128}
@@ -27,11 +29,7 @@ export const ServiceCard2: React.FC<ServiceCardProps> = ({ service, language }) 
               {isFr ? service.titleFr : service.titleEn}
             </h3>
             <span className="shrink-0 text-primary px-2 py-0.5 rounded bg-primary/10 shadow-sm border border-primary/20">
-              <AnimatedServicePrice
-                amountEur={service.priceEur}
-                hourly={service.hourly}
-                compact
-              />
+              <AnimatedServicePrice amountEur={service.priceEur} hourly={service.hourly} compact />
             </span>
           </div>
           <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">

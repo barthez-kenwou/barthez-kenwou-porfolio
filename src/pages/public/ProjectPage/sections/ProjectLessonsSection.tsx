@@ -12,9 +12,7 @@ export const ProjectLessonsSection: React.FC<{ project: IProject }> = ({ project
   if (!lessons || lessons.length === 0) return null;
 
   return (
-    <ProjectSectionShell
-      title={isFr ? 'Leçons apprises' : 'Lessons learned'}
-    >
+    <ProjectSectionShell title={isFr ? 'Leçons apprises' : 'Lessons learned'}>
       <ul className="space-y-2.5">
         {lessons.map((lesson, idx) => (
           <li

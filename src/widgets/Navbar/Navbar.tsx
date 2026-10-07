@@ -39,8 +39,7 @@ export const Navbar: React.FC = () => {
         ? 'Passer en mode sombre'
         : 'Switch to dark mode';
 
-  const languageLabel =
-    language === 'fr' ? 'Switch to English' : 'Passer en français';
+  const languageLabel = language === 'fr' ? 'Switch to English' : 'Passer en français';
 
   return (
     <header

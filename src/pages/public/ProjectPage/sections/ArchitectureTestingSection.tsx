@@ -15,7 +15,6 @@ export const ArchitectureTestingSection: React.FC<{ project: IProject }> = ({ pr
   return (
     <section className="mb-16 px-4 md:px-10 lg:px-14 animate-fade-in-up">
       <div className="grid md:grid-cols-2 gap-8">
-        
         {/* Architecture */}
         {architecture && architecture.length > 0 && (
           <div className="bg-card border border-border/40 p-6 rounded-md shadow-sm hover:shadow-sm transition-shadow">
@@ -55,7 +54,6 @@ export const ArchitectureTestingSection: React.FC<{ project: IProject }> = ({ pr
             </ul>
           </div>
         )}
-
       </div>
     </section>
   );

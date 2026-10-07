@@ -31,31 +31,73 @@ export function AboutSectionIcon({ variant, className }: AboutSectionIconProps) 
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <linearGradient id={`${id}-p`} x1="6" y1="4" x2="26" y2="28" gradientUnits="userSpaceOnUse">
+          <linearGradient
+            id={`${id}-p`}
+            x1="6"
+            y1="4"
+            x2="26"
+            y2="28"
+            gradientUnits="userSpaceOnUse"
+          >
             <stop stopColor="hsl(268 55% 68%)" />
             <stop offset="0.5" stopColor="hsl(268 58% 42%)" />
             <stop offset="1" stopColor="hsl(270 38% 24%)" />
           </linearGradient>
-          <linearGradient id={`${id}-pTop`} x1="8" y1="2" x2="22" y2="16" gradientUnits="userSpaceOnUse">
+          <linearGradient
+            id={`${id}-pTop`}
+            x1="8"
+            y1="2"
+            x2="22"
+            y2="16"
+            gradientUnits="userSpaceOnUse"
+          >
             <stop stopColor="hsla(0,0%,100%,0.55)" />
             <stop offset="1" stopColor="hsla(0,0%,100%,0)" />
           </linearGradient>
-          <linearGradient id={`${id}-skin`} x1="10" y1="6" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+          <linearGradient
+            id={`${id}-skin`}
+            x1="10"
+            y1="6"
+            x2="22"
+            y2="22"
+            gradientUnits="userSpaceOnUse"
+          >
             <stop stopColor="hsl(28 45% 82%)" />
             <stop offset="0.55" stopColor="hsl(24 38% 62%)" />
             <stop offset="1" stopColor="hsl(22 35% 42%)" />
           </linearGradient>
-          <linearGradient id={`${id}-gold`} x1="10" y1="6" x2="26" y2="26" gradientUnits="userSpaceOnUse">
+          <linearGradient
+            id={`${id}-gold`}
+            x1="10"
+            y1="6"
+            x2="26"
+            y2="26"
+            gradientUnits="userSpaceOnUse"
+          >
             <stop stopColor="#f3e2b0" />
             <stop offset="0.5" stopColor="#c9952e" />
             <stop offset="1" stopColor="#7a5214" />
           </linearGradient>
-          <linearGradient id={`${id}-leather`} x1="4" y1="8" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+          <linearGradient
+            id={`${id}-leather`}
+            x1="4"
+            y1="8"
+            x2="28"
+            y2="28"
+            gradientUnits="userSpaceOnUse"
+          >
             <stop stopColor="hsl(268 40% 48%)" />
             <stop offset="0.55" stopColor="hsl(270 35% 28%)" />
             <stop offset="1" stopColor="hsl(270 40% 14%)" />
           </linearGradient>
-          <linearGradient id={`${id}-leatherSide`} x1="4" y1="12" x2="16" y2="28" gradientUnits="userSpaceOnUse">
+          <linearGradient
+            id={`${id}-leatherSide`}
+            x1="4"
+            y1="12"
+            x2="16"
+            y2="28"
+            gradientUnits="userSpaceOnUse"
+          >
             <stop stopColor="hsl(270 30% 22%)" />
             <stop offset="1" stopColor="hsl(270 35% 10%)" />
           </linearGradient>

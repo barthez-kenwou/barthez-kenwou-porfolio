@@ -11,7 +11,15 @@ export const ProjectOverviewSection: React.FC<{ project: IProject }> = ({ projec
   const stats = [
     { icon: Clock, label: language === 'fr' ? 'Durée' : 'Duration', value: project.duration },
     { icon: Calendar, label: 'Date', value: project.date },
-    ...(project.teamSize ? [{ icon: Users, label: language === 'fr' ? 'Équipe' : 'Team Size', value: `${project.teamSize} person(s)` }] : []),
+    ...(project.teamSize
+      ? [
+          {
+            icon: Users,
+            label: language === 'fr' ? 'Équipe' : 'Team Size',
+            value: `${project.teamSize} person(s)`,
+          },
+        ]
+      : []),
     { icon: Zap, label: 'Complexité', value: project.complexity },
     { icon: Briefcase, label: 'Rôle', value: project.role },
   ];
@@ -19,7 +27,6 @@ export const ProjectOverviewSection: React.FC<{ project: IProject }> = ({ projec
   return (
     <section className="mb-16 px-4 md:px-10 lg:px-14 animate-fade-in-up">
       <div className="grid lg:grid-cols-3 gap-12 items-start">
-        
         {/* Left Column: Stats - sticky until this section ends */}
         <div className="lg:col-span-1 lg:sticky lg:top-28 self-start bg-secondary/30 p-6 rounded-md border border-border/50 backdrop-blur-sm shadow-sm">
           <h3 className="text-lg font-bold mb-5 text-foreground">
@@ -32,7 +39,9 @@ export const ProjectOverviewSection: React.FC<{ project: IProject }> = ({ projec
                   <stat.icon className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider mb-0.5">{stat.label}</p>
+                  <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider mb-0.5">
+                    {stat.label}
+                  </p>
                   <p className="text-xs font-bold text-foreground">{stat.value}</p>
                 </div>
               </div>
@@ -88,7 +97,6 @@ export const ProjectOverviewSection: React.FC<{ project: IProject }> = ({ projec
             </div>
           )}
         </div>
-
       </div>
     </section>
   );

@@ -32,8 +32,7 @@ export function SkillsDomainAtlas({
     filters.findIndex((f) => f.id === activeId),
   );
   const nodeCount = filters.length;
-  const litRatio =
-    nodeCount <= 1 ? 1 : activeIndex / Math.max(nodeCount - 1, 1);
+  const litRatio = nodeCount <= 1 ? 1 : activeIndex / Math.max(nodeCount - 1, 1);
   const needleDeg = litRatio * 250;
   const atlasEase = { type: 'spring' as const, stiffness: 95, damping: 20, mass: 0.7 };
 
@@ -121,8 +120,7 @@ export function SkillsDomainAtlas({
             linear-gradient(to bottom, hsla(268,40%,45%,0.06) 1px, transparent 1px)
           `,
           backgroundSize: 'auto, auto, auto, 13px 13px, 13px 13px',
-          maskImage:
-            'radial-gradient(ellipse 80% 70% at 25% 35%, black 10%, transparent 72%)',
+          maskImage: 'radial-gradient(ellipse 80% 70% at 25% 35%, black 10%, transparent 72%)',
         }}
       />
       <div
@@ -242,9 +240,7 @@ export function SkillsDomainAtlas({
                         : 'bg-muted-foreground/25',
                   )}
                 >
-                  {isActive && (
-                    <span className="block h-1 w-1 shrink-0 rounded-full bg-white" />
-                  )}
+                  {isActive && <span className="block h-1 w-1 shrink-0 rounded-full bg-white" />}
                 </span>
                 {isActive && (
                   <span

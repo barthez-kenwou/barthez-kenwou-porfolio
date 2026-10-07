@@ -12,15 +12,7 @@ export type FieldProps = {
   required?: boolean;
 };
 
-export function Field({
-  label,
-  hint,
-  error,
-  children,
-  htmlFor,
-  className,
-  required,
-}: FieldProps) {
+export function Field({ label, hint, error, children, htmlFor, className, required }: FieldProps) {
   return (
     <div className={cn('space-y-2', className)}>
       <div className="flex items-baseline justify-between gap-3">

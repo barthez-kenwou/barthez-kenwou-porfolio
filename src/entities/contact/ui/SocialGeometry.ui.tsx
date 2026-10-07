@@ -65,12 +65,7 @@ export function SocialGeometry() {
                   shape === 'diamond' && 'rotate-45 rounded-[4px]',
                 )}
               >
-                <Icon
-                  className={cn(
-                    'h-4 w-4',
-                    shape === 'diamond' && '-rotate-45',
-                  )}
-                />
+                <Icon className={cn('h-4 w-4', shape === 'diamond' && '-rotate-45')} />
               </span>
               <span className="text-[8px] font-bold tracking-[0.18em] text-muted-foreground uppercase transition-colors duration-500 group-hover:text-primary/80">
                 {label}

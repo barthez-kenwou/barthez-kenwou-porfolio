@@ -12,7 +12,7 @@ export const Header: React.FC = () => {
       <div
         className={cn(
           'fixed z-50 transition-all duration-250 hidden xl:block',
-          isExpanded ? 'top-16 left-60' : 'top-10 left-14'
+          isExpanded ? 'top-16 left-60' : 'top-10 left-14',
         )}
       >
         <SidebarTrigger className="cursor-pointer shadow-sm bg-background/80 backdrop-blur-sm ring-1 ring-sidebar-border" />

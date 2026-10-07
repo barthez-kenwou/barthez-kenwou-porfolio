@@ -18,9 +18,7 @@ export const ProjectSection: React.FC<Props> = ({ projects, language }) => {
   return (
     <View style={styles.section}>
       <View style={styles.sectionTitleBox}>
-        <Text style={styles.sectionTitle}>
-          {isFr ? 'Projets Phares' : 'Featured Projects'}
-        </Text>
+        <Text style={styles.sectionTitle}>{isFr ? 'Projets Phares' : 'Featured Projects'}</Text>
       </View>
 
       {featured.map((proj, i) => (
@@ -29,12 +27,8 @@ export const ProjectSection: React.FC<Props> = ({ projects, language }) => {
             <Text style={styles.period}>{proj.date}</Text>
           </View>
           <View style={styles.rightCol}>
-            <Text style={styles.boldText}>
-              {isFr ? proj.titleFr : proj.titleEn}
-            </Text>
-            <Text style={styles.metaText}>
-              {isFr ? proj.descriptionFr : proj.descriptionEn}
-            </Text>
+            <Text style={styles.boldText}>{isFr ? proj.titleFr : proj.titleEn}</Text>
+            <Text style={styles.metaText}>{isFr ? proj.descriptionFr : proj.descriptionEn}</Text>
             <View style={[styles.skillGrid, { marginTop: 4 }]}>
               {[
                 ...(proj.techStack?.frontend || []),

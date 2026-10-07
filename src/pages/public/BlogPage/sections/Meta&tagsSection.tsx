@@ -31,21 +31,27 @@ export const MetaTagsSection: React.FC = () => {
           <div className="p-1 rounded-md bg-secondary/50 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
             <HiOutlineUser className="h-3.5 w-3.5" />
           </div>
-          <span className="text-[10px] font-semibold uppercase tracking-[0.14em]">{post.author}</span>
+          <span className="text-[10px] font-semibold uppercase tracking-[0.14em]">
+            {post.author}
+          </span>
         </div>
 
         <div className="flex items-center gap-2 text-muted-foreground group">
           <div className="p-1 rounded-md bg-secondary/50 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
             <HiOutlineCalendar className="h-3.5 w-3.5" />
           </div>
-          <span className="text-[10px] font-semibold uppercase tracking-[0.14em]">{formattedDate}</span>
+          <span className="text-[10px] font-semibold uppercase tracking-[0.14em]">
+            {formattedDate}
+          </span>
         </div>
 
         <div className="flex items-center gap-2 text-muted-foreground group">
           <div className="p-1 rounded-md bg-secondary/50 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
             <HiOutlineClock className="h-3.5 w-3.5" />
           </div>
-          <span className="text-[10px] font-semibold uppercase tracking-[0.14em]">{post.readTime}</span>
+          <span className="text-[10px] font-semibold uppercase tracking-[0.14em]">
+            {post.readTime}
+          </span>
         </div>
       </div>
 

@@ -32,8 +32,7 @@ export const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonPr
     },
     ref,
   ) => {
-    const face =
-      background ?? 'hsl(var(--card))';
+    const face = background ?? 'hsl(var(--card))';
 
     const shellClassName = cn(
       'group relative inline-flex cursor-pointer items-center justify-center overflow-hidden',
@@ -70,8 +69,7 @@ export const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonPr
           style={{
             borderRadius,
             padding: borderWidth,
-            WebkitMask:
-              'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+            WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
             WebkitMaskComposite: 'xor',
             mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
             maskComposite: 'exclude',
@@ -95,9 +93,7 @@ export const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonPr
           }}
         />
 
-        <span className="relative z-[2] inline-flex items-center gap-2 px-5 py-2.5">
-          {label}
-        </span>
+        <span className="relative z-[2] inline-flex items-center gap-2 px-5 py-2.5">{label}</span>
       </>
     );
 

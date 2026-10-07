@@ -30,14 +30,16 @@ export const BlogDetailPage = () => {
     <>
       <SEO
         path={blogPath}
-        title={`${language === 'fr'
-          ? truncateFonction(post?.titleFr || '', 60)
-          : truncateFonction(post?.titleEn || post?.titleFr || '', 60)
-          }`}
-        description={`${language === 'fr'
-          ? truncateFonction(post?.excerptFr || post?.contentFr || '', 160)
-          : truncateFonction(post?.excerptEn || post?.excerptFr || post?.contentEn || '', 160)
-          }`}
+        title={`${
+          language === 'fr'
+            ? truncateFonction(post?.titleFr || '', 60)
+            : truncateFonction(post?.titleEn || post?.titleFr || '', 60)
+        }`}
+        description={`${
+          language === 'fr'
+            ? truncateFonction(post?.excerptFr || post?.contentFr || '', 160)
+            : truncateFonction(post?.excerptEn || post?.excerptFr || post?.contentEn || '', 160)
+        }`}
         openGraph={{
           type: 'article',
           image: post.image,
@@ -55,10 +57,7 @@ export const BlogDetailPage = () => {
         jsonLd={{
           '@type': 'BlogPosting',
           headline: language === 'fr' ? post.titleFr : post.titleEn || post.titleFr,
-          description:
-            language === 'fr'
-              ? post.excerptFr
-              : post.excerptEn || post.excerptFr,
+          description: language === 'fr' ? post.excerptFr : post.excerptEn || post.excerptFr,
           image: post.image,
           datePublished: post.date,
           author: {
@@ -122,5 +121,3 @@ export const BlogDetailPage = () => {
     </>
   );
 };
-
-

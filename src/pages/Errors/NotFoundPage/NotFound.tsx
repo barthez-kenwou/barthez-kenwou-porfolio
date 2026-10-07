@@ -65,9 +65,7 @@ export const NotFoundPage: React.FC = () => {
                 {title}
               </h1>
 
-              <p className="mb-6 max-w-sm text-sm leading-relaxed text-muted-foreground">
-                {lead}
-              </p>
+              <p className="mb-6 max-w-sm text-sm leading-relaxed text-muted-foreground">{lead}</p>
 
               <div className="flex flex-wrap items-center justify-center gap-2.5">
                 <Button asChild className="gap-2">

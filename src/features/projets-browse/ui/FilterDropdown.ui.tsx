@@ -13,11 +13,7 @@ interface FilterDropdownProps {
 
 // ─── Component ──────────────────────────────────────────────────────────────────
 
-export const FilterDropdown: React.FC<FilterDropdownProps> = ({
-  label,
-  activeCount,
-  children,
-}) => {
+export const FilterDropdown: React.FC<FilterDropdownProps> = ({ label, activeCount, children }) => {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 

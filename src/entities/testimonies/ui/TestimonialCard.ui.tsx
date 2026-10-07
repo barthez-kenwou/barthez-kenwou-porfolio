@@ -36,7 +36,9 @@ export const TestimonialCard = ({
 
       {/* About the speaker */}
       <div className="space-y-0.5">
-        <p className="font-semibold text-foreground text-[13px]">{language === 'fr' ? nameFr : nameEn}</p>
+        <p className="font-semibold text-foreground text-[13px]">
+          {language === 'fr' ? nameFr : nameEn}
+        </p>
         <p className="text-[11px] text-muted-foreground">{language === 'fr' ? roleFr : roleEn}</p>
       </div>
     </figure>

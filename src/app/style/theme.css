@@ -48,7 +48,12 @@
     --sidebar-border: 270 16% 88%;
     --sidebar-ring: 268 58% 40%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(270 28% 14%) 0%, hsl(268 58% 40%) 55%, hsl(268 45% 52%) 100%);
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(270 28% 14%) 0%,
+      hsl(268 58% 40%) 55%,
+      hsl(268 45% 52%) 100%
+    );
     --gradient-accent: linear-gradient(135deg, hsl(270 20% 28%) 0%, hsl(268 40% 48%) 100%);
     --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(270 30% 97%) 100%);
     --glass-bg: hsla(0, 0%, 100%, 0.78);
@@ -102,7 +107,12 @@
     --sidebar-border: 270 12% 13%;
     --sidebar-ring: 268 62% 64%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(270 20% 82%) 40%, hsl(268 58% 68%) 100%);
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(0 0% 100%) 0%,
+      hsl(270 20% 82%) 40%,
+      hsl(268 58% 68%) 100%
+    );
     --gradient-accent: linear-gradient(135deg, hsl(0 0% 90%) 0%, hsl(268 40% 65%) 100%);
     --gradient-card: linear-gradient(180deg, hsl(270 16% 8%) 0%, hsl(270 22% 4%) 100%);
     --glass-bg: hsla(270, 18%, 6%, 0.72);

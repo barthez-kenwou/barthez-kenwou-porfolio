@@ -13,9 +13,7 @@ export const ProjectBeforeAfterSection: React.FC<{ project: IProject }> = ({ pro
   if (pairs.length === 0) return null;
 
   return (
-    <ProjectSectionShell
-      title={isFr ? 'Avant / Après' : 'Before / After'}
-    >
+    <ProjectSectionShell title={isFr ? 'Avant / Après' : 'Before / After'}>
       <div className="space-y-8">
         {pairs.map((pair, idx) => {
           const caption = isFr ? pair.captionFr : pair.captionEn;

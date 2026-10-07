@@ -2,7 +2,11 @@ import React from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Plus, Save, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
-import type { IProject, IProjectDiagram, IProjectGalleryItem } from '@/entities/projets/model/project.types';
+import type {
+  IProject,
+  IProjectDiagram,
+  IProjectGalleryItem,
+} from '@/entities/projets/model/project.types';
 import {
   AdminPageHeader,
   AdminSectionCard,
@@ -124,7 +128,9 @@ export const AdminProjectEditorPage: React.FC = () => {
   return (
     <div className="space-y-6 pb-24 md:pb-0">
       <AdminPageHeader
-        title={isNew ? (fr ? 'Nouveau projet' : 'New project') : fr ? 'Éditer le projet' : 'Edit project'}
+        title={
+          isNew ? (fr ? 'Nouveau projet' : 'New project') : fr ? 'Éditer le projet' : 'Edit project'
+        }
         actions={
           <AdminStickyActions>
             <Button variant="outline" asChild className="flex-1 md:flex-none">
@@ -143,33 +149,76 @@ export const AdminProjectEditorPage: React.FC = () => {
 
       <AdminSectionCard title={fr ? 'Identité' : 'Identity'}>
         <div className="grid gap-4 md:grid-cols-2">
-          <BilingualField label={fr ? 'Titre' : 'Title'} required valueFr={draft.titleFr} valueEn={draft.titleEn} onChangeFr={(v) => patch('titleFr', v)} onChangeEn={(v) => patch('titleEn', v)} />
-          <BilingualField label={fr ? 'Description courte' : 'Short description'} multiline valueFr={draft.descriptionFr} valueEn={draft.descriptionEn} onChangeFr={(v) => patch('descriptionFr', v)} onChangeEn={(v) => patch('descriptionEn', v)} />
-          <Field label={fr ? 'Catégorie' : 'Category'}><Input value={draft.category} onChange={(e) => patch('category', e.target.value)} /></Field>
+          <BilingualField
+            label={fr ? 'Titre' : 'Title'}
+            required
+            valueFr={draft.titleFr}
+            valueEn={draft.titleEn}
+            onChangeFr={(v) => patch('titleFr', v)}
+            onChangeEn={(v) => patch('titleEn', v)}
+          />
+          <BilingualField
+            label={fr ? 'Description courte' : 'Short description'}
+            multiline
+            valueFr={draft.descriptionFr}
+            valueEn={draft.descriptionEn}
+            onChangeFr={(v) => patch('descriptionFr', v)}
+            onChangeEn={(v) => patch('descriptionEn', v)}
+          />
+          <Field label={fr ? 'Catégorie' : 'Category'}>
+            <Input value={draft.category} onChange={(e) => patch('category', e.target.value)} />
+          </Field>
           <Field label="Status">
-            <Select value={draft.status} onValueChange={(v) => patch('status', v as IProject['status'])}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+            <Select
+              value={draft.status}
+              onValueChange={(v) => patch('status', v as IProject['status'])}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 {['Production', 'En cours', 'Actif', 'MVP', 'Archivé'].map((s) => (
-                  <SelectItem key={s} value={s}>{s}</SelectItem>
+                  <SelectItem key={s} value={s}>
+                    {s}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </Field>
-          <Field label={fr ? 'Rôle' : 'Role'}><Input value={draft.role} onChange={(e) => patch('role', e.target.value)} /></Field>
-          <Field label={fr ? 'Complexité' : 'Complexity'}><Input value={draft.complexity} onChange={(e) => patch('complexity', e.target.value)} /></Field>
-          <Field label={fr ? 'Durée' : 'Duration'}><Input value={draft.duration} onChange={(e) => patch('duration', e.target.value)} /></Field>
-          <Field label={fr ? 'Date' : 'Date'}><Input value={draft.date} onChange={(e) => patch('date', e.target.value)} /></Field>
-          <Field label="GitHub"><Input value={draft.github || ''} onChange={(e) => patch('github', e.target.value)} /></Field>
-          <Field label="Demo"><Input value={draft.demo || ''} onChange={(e) => patch('demo', e.target.value)} /></Field>
+          <Field label={fr ? 'Rôle' : 'Role'}>
+            <Input value={draft.role} onChange={(e) => patch('role', e.target.value)} />
+          </Field>
+          <Field label={fr ? 'Complexité' : 'Complexity'}>
+            <Input value={draft.complexity} onChange={(e) => patch('complexity', e.target.value)} />
+          </Field>
+          <Field label={fr ? 'Durée' : 'Duration'}>
+            <Input value={draft.duration} onChange={(e) => patch('duration', e.target.value)} />
+          </Field>
+          <Field label={fr ? 'Date' : 'Date'}>
+            <Input value={draft.date} onChange={(e) => patch('date', e.target.value)} />
+          </Field>
+          <Field label="GitHub">
+            <Input value={draft.github || ''} onChange={(e) => patch('github', e.target.value)} />
+          </Field>
+          <Field label="Demo">
+            <Input value={draft.demo || ''} onChange={(e) => patch('demo', e.target.value)} />
+          </Field>
           <Field label={fr ? 'Taille équipe' : 'Team size'}>
-            <Input type="number" value={draft.teamSize ?? 1} onChange={(e) => patch('teamSize', Number(e.target.value))} />
+            <Input
+              type="number"
+              value={draft.teamSize ?? 1}
+              onChange={(e) => patch('teamSize', Number(e.target.value))}
+            />
           </Field>
           <div className="flex items-center justify-between rounded-lg border border-border/60 px-3 py-2">
             <div>
-              <p className="text-sm font-medium">{fr ? 'Visible publiquement' : 'Publicly visible'}</p>
+              <p className="text-sm font-medium">
+                {fr ? 'Visible publiquement' : 'Publicly visible'}
+              </p>
               <p className="text-xs text-muted-foreground">
-                {fr ? 'Contrôle la présence sur la vitrine' : 'Controls presence on the public site'}
+                {fr
+                  ? 'Contrôle la présence sur la vitrine'
+                  : 'Controls presence on the public site'}
               </p>
             </div>
             <Switch
@@ -183,7 +232,10 @@ export const AdminProjectEditorPage: React.FC = () => {
           </div>
           <div className="flex items-center justify-between rounded-lg border border-border/60 px-3 py-2">
             <span className="text-sm">Confidential / NDA</span>
-            <Switch checked={!!draft.confidential} onCheckedChange={(v) => patch('confidential', v)} />
+            <Switch
+              checked={!!draft.confidential}
+              onCheckedChange={(v) => patch('confidential', v)}
+            />
           </div>
           <div className="md:col-span-2">
             <MediaCoverField
@@ -197,36 +249,124 @@ export const AdminProjectEditorPage: React.FC = () => {
 
       <AdminSectionCard title={fr ? 'Narratif' : 'Narrative'}>
         <div className="space-y-4">
-          <BilingualField label={fr ? 'Description complète' : 'Full description'} multiline rows={8} valueFr={draft.fullDescriptionFr || ''} valueEn={draft.fullDescriptionEn || ''} onChangeFr={(v) => patch('fullDescriptionFr', v)} onChangeEn={(v) => patch('fullDescriptionEn', v)} />
-          <BilingualField label={fr ? 'Problème' : 'Problem'} multiline valueFr={draft.problemFr} valueEn={draft.problemEn} onChangeFr={(v) => patch('problemFr', v)} onChangeEn={(v) => patch('problemEn', v)} />
-          <BilingualField label={fr ? 'Contexte business' : 'Business context'} multiline valueFr={draft.businessContextFr || ''} valueEn={draft.businessContextEn || ''} onChangeFr={(v) => patch('businessContextFr', v)} onChangeEn={(v) => patch('businessContextEn', v)} />
-          <BilingualStringListEditor label={fr ? 'Solutions' : 'Solutions'} valuesFr={draft.solutionFr} valuesEn={draft.solutionEn} onChangeFr={(v) => patch('solutionFr', v)} onChangeEn={(v) => patch('solutionEn', v)} />
-          <BilingualStringListEditor label={fr ? 'Challenges' : 'Challenges'} valuesFr={draft.challengesFr || []} valuesEn={draft.challengesEn || []} onChangeFr={(v) => patch('challengesFr', v)} onChangeEn={(v) => patch('challengesEn', v)} />
-          <BilingualStringListEditor label="Impact" valuesFr={draft.impactFr} valuesEn={draft.impactEn} onChangeFr={(v) => patch('impactFr', v)} onChangeEn={(v) => patch('impactEn', v)} />
-          <BilingualStringListEditor label={fr ? 'Leçons' : 'Lessons'} valuesFr={draft.lessonsFr || []} valuesEn={draft.lessonsEn || []} onChangeFr={(v) => patch('lessonsFr', v)} onChangeEn={(v) => patch('lessonsEn', v)} />
-          <BilingualStringListEditor label={fr ? 'Responsabilités' : 'Responsibilities'} valuesFr={draft.responsibilitiesFr || []} valuesEn={draft.responsibilitiesEn || []} onChangeFr={(v) => patch('responsibilitiesFr', v)} onChangeEn={(v) => patch('responsibilitiesEn', v)} />
+          <BilingualField
+            label={fr ? 'Description complète' : 'Full description'}
+            multiline
+            rows={8}
+            valueFr={draft.fullDescriptionFr || ''}
+            valueEn={draft.fullDescriptionEn || ''}
+            onChangeFr={(v) => patch('fullDescriptionFr', v)}
+            onChangeEn={(v) => patch('fullDescriptionEn', v)}
+          />
+          <BilingualField
+            label={fr ? 'Problème' : 'Problem'}
+            multiline
+            valueFr={draft.problemFr}
+            valueEn={draft.problemEn}
+            onChangeFr={(v) => patch('problemFr', v)}
+            onChangeEn={(v) => patch('problemEn', v)}
+          />
+          <BilingualField
+            label={fr ? 'Contexte business' : 'Business context'}
+            multiline
+            valueFr={draft.businessContextFr || ''}
+            valueEn={draft.businessContextEn || ''}
+            onChangeFr={(v) => patch('businessContextFr', v)}
+            onChangeEn={(v) => patch('businessContextEn', v)}
+          />
+          <BilingualStringListEditor
+            label={fr ? 'Solutions' : 'Solutions'}
+            valuesFr={draft.solutionFr}
+            valuesEn={draft.solutionEn}
+            onChangeFr={(v) => patch('solutionFr', v)}
+            onChangeEn={(v) => patch('solutionEn', v)}
+          />
+          <BilingualStringListEditor
+            label={fr ? 'Challenges' : 'Challenges'}
+            valuesFr={draft.challengesFr || []}
+            valuesEn={draft.challengesEn || []}
+            onChangeFr={(v) => patch('challengesFr', v)}
+            onChangeEn={(v) => patch('challengesEn', v)}
+          />
+          <BilingualStringListEditor
+            label="Impact"
+            valuesFr={draft.impactFr}
+            valuesEn={draft.impactEn}
+            onChangeFr={(v) => patch('impactFr', v)}
+            onChangeEn={(v) => patch('impactEn', v)}
+          />
+          <BilingualStringListEditor
+            label={fr ? 'Leçons' : 'Lessons'}
+            valuesFr={draft.lessonsFr || []}
+            valuesEn={draft.lessonsEn || []}
+            onChangeFr={(v) => patch('lessonsFr', v)}
+            onChangeEn={(v) => patch('lessonsEn', v)}
+          />
+          <BilingualStringListEditor
+            label={fr ? 'Responsabilités' : 'Responsibilities'}
+            valuesFr={draft.responsibilitiesFr || []}
+            valuesEn={draft.responsibilitiesEn || []}
+            onChangeFr={(v) => patch('responsibilitiesFr', v)}
+            onChangeEn={(v) => patch('responsibilitiesEn', v)}
+          />
         </div>
       </AdminSectionCard>
 
       <AdminSectionCard title="Tech stack">
         <div className="grid gap-4 md:grid-cols-2">
-          <StringListEditor label="Frontend" values={draft.techStack.frontend || []} onChange={(v) => patch('techStack', { ...draft.techStack, frontend: v })} />
-          <StringListEditor label="Backend" values={draft.techStack.backend || []} onChange={(v) => patch('techStack', { ...draft.techStack, backend: v })} />
-          <StringListEditor label="Database" values={draft.techStack.database || []} onChange={(v) => patch('techStack', { ...draft.techStack, database: v })} />
-          <StringListEditor label="DevOps" values={draft.techStack.devops || []} onChange={(v) => patch('techStack', { ...draft.techStack, devops: v })} />
-          <StringListEditor label="Architecture" values={draft.architecture || []} onChange={(v) => patch('architecture', v)} />
-          <StringListEditor label="Testing" values={draft.testing || []} onChange={(v) => patch('testing', v)} />
+          <StringListEditor
+            label="Frontend"
+            values={draft.techStack.frontend || []}
+            onChange={(v) => patch('techStack', { ...draft.techStack, frontend: v })}
+          />
+          <StringListEditor
+            label="Backend"
+            values={draft.techStack.backend || []}
+            onChange={(v) => patch('techStack', { ...draft.techStack, backend: v })}
+          />
+          <StringListEditor
+            label="Database"
+            values={draft.techStack.database || []}
+            onChange={(v) => patch('techStack', { ...draft.techStack, database: v })}
+          />
+          <StringListEditor
+            label="DevOps"
+            values={draft.techStack.devops || []}
+            onChange={(v) => patch('techStack', { ...draft.techStack, devops: v })}
+          />
+          <StringListEditor
+            label="Architecture"
+            values={draft.architecture || []}
+            onChange={(v) => patch('architecture', v)}
+          />
+          <StringListEditor
+            label="Testing"
+            values={draft.testing || []}
+            onChange={(v) => patch('testing', v)}
+          />
         </div>
         <div className="mt-4">
-          <KeyValueEditor label="Metrics" value={draft.metrics || {}} onChange={(v) => patch('metrics', v)} />
+          <KeyValueEditor
+            label="Metrics"
+            value={draft.metrics || {}}
+            onChange={(v) => patch('metrics', v)}
+          />
         </div>
       </AdminSectionCard>
 
       <AdminSectionCard title={fr ? 'Médias' : 'Media'}>
-        <MediaUrlListEditor label={fr ? 'Images (carousel)' : 'Images (carousel)'} kind="image" urls={draft.images} onChange={(v) => patch('images', v)} />
+        <MediaUrlListEditor
+          label={fr ? 'Images (carousel)' : 'Images (carousel)'}
+          kind="image"
+          urls={draft.images}
+          onChange={(v) => patch('images', v)}
+        />
         <div className="mt-4">
           <Field label="Video demo URL">
-            <Input value={draft.videoDemo || ''} onChange={(e) => patch('videoDemo', e.target.value)} />
+            <Input
+              value={draft.videoDemo || ''}
+              onChange={(e) => patch('videoDemo', e.target.value)}
+            />
           </Field>
         </div>
       </AdminSectionCard>
@@ -264,7 +404,12 @@ export const AdminProjectEditorPage: React.FC = () => {
                   type="button"
                   size="icon-sm"
                   variant="ghost"
-                  onClick={() => patch('gallery', gallery.filter((_, idx) => idx !== i))}
+                  onClick={() =>
+                    patch(
+                      'gallery',
+                      gallery.filter((_, idx) => idx !== i),
+                    )
+                  }
                 >
                   <Trash2 className="size-3.5 text-destructive" />
                 </Button>
@@ -299,7 +444,12 @@ export const AdminProjectEditorPage: React.FC = () => {
             onClick={() =>
               patch('diagrams', [
                 ...diagrams,
-                { id: `d_${Date.now()}`, titleFr: '', titleEn: '', mermaid: 'flowchart LR\n  A --> B' },
+                {
+                  id: `d_${Date.now()}`,
+                  titleFr: '',
+                  titleEn: '',
+                  mermaid: 'flowchart LR\n  A --> B',
+                },
               ])
             }
           >
@@ -311,7 +461,17 @@ export const AdminProjectEditorPage: React.FC = () => {
           {diagrams.map((d, i) => (
             <div key={d.id || i} className="space-y-3 rounded-lg border border-border/60 p-3">
               <div className="flex justify-end">
-                <Button type="button" size="icon-sm" variant="ghost" onClick={() => patch('diagrams', diagrams.filter((_, idx) => idx !== i))}>
+                <Button
+                  type="button"
+                  size="icon-sm"
+                  variant="ghost"
+                  onClick={() =>
+                    patch(
+                      'diagrams',
+                      diagrams.filter((_, idx) => idx !== i),
+                    )
+                  }
+                >
                   <Trash2 className="size-3.5 text-destructive" />
                 </Button>
               </div>
@@ -351,8 +511,18 @@ export const AdminProjectEditorPage: React.FC = () => {
             multiline
             valueFr={draft.testimonial?.quoteFr || ''}
             valueEn={draft.testimonial?.quoteEn || ''}
-            onChangeFr={(v) => patch('testimonial', { ...(draft.testimonial || { quoteFr: '', quoteEn: '', author: '' }), quoteFr: v })}
-            onChangeEn={(v) => patch('testimonial', { ...(draft.testimonial || { quoteFr: '', quoteEn: '', author: '' }), quoteEn: v })}
+            onChangeFr={(v) =>
+              patch('testimonial', {
+                ...(draft.testimonial || { quoteFr: '', quoteEn: '', author: '' }),
+                quoteFr: v,
+              })
+            }
+            onChangeEn={(v) =>
+              patch('testimonial', {
+                ...(draft.testimonial || { quoteFr: '', quoteEn: '', author: '' }),
+                quoteEn: v,
+              })
+            }
           />
           <Field label={fr ? 'Auteur' : 'Author'}>
             <Input
@@ -369,8 +539,18 @@ export const AdminProjectEditorPage: React.FC = () => {
             label={fr ? 'Rôle' : 'Role'}
             valueFr={draft.testimonial?.roleFr || ''}
             valueEn={draft.testimonial?.roleEn || ''}
-            onChangeFr={(v) => patch('testimonial', { ...(draft.testimonial || { quoteFr: '', quoteEn: '', author: '' }), roleFr: v })}
-            onChangeEn={(v) => patch('testimonial', { ...(draft.testimonial || { quoteFr: '', quoteEn: '', author: '' }), roleEn: v })}
+            onChangeFr={(v) =>
+              patch('testimonial', {
+                ...(draft.testimonial || { quoteFr: '', quoteEn: '', author: '' }),
+                roleFr: v,
+              })
+            }
+            onChangeEn={(v) =>
+              patch('testimonial', {
+                ...(draft.testimonial || { quoteFr: '', quoteEn: '', author: '' }),
+                roleEn: v,
+              })
+            }
           />
           <Field label={fr ? 'Société' : 'Company'}>
             <Input

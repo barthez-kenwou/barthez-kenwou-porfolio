@@ -1,4 +1,7 @@
+import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { CTASection } from './sections/CTASection';
+import { CvQuickActions } from './sections/CvQuickActions';
+import { CvMobileStickyBar } from './sections/CvMobileStickyBar';
 import { LanguageSection } from './sections/LanguageSection';
 import { CertificationSection } from './sections/CertificationSection';
 import { SkillsSection } from './sections/SkillsSection';
@@ -13,8 +16,47 @@ import { cvData } from '@/entities/cv/api/mock/cv-data';
 import { RetroGrid } from '@/shared/ui/retro-grid';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 
+const CVPreviewModal = lazy(() =>
+  import('./sections/CVPreviewModal').then((m) => ({ default: m.CVPreviewModal })),
+);
+
 export const CvPage = () => {
   const { language } = useLanguageStore();
+  const isFr = language === 'fr';
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [pastHero, setPastHero] = useState(false);
+  const [endCtaInView, setEndCtaInView] = useState(false);
+  const heroActionsRef = useRef<HTMLDivElement | null>(null);
+  const endCtaRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const heroEl = heroActionsRef.current;
+    const endEl = endCtaRef.current;
+    if (!heroEl || !endEl) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.target === heroEl) {
+            // Sticky only after hero CTAs leave the viewport
+            setPastHero(!entry.isIntersecting);
+          }
+          if (entry.target === endEl) {
+            setEndCtaInView(entry.isIntersecting);
+          }
+        }
+      },
+      { threshold: 0.15 },
+    );
+
+    observer.observe(heroEl);
+    observer.observe(endEl);
+    return () => observer.disconnect();
+  }, []);
+
+  const stickyVisible = pastHero && !endCtaInView;
+
+  const openPreview = () => setIsPreviewOpen(true);
 
   return (
     <>
@@ -24,20 +66,27 @@ export const CvPage = () => {
         description="CV de Barthez Kenwou - Développeur Full Stack & Ingénieur DevOps AWS. Expérience, compétences et parcours professionnel."
       />
 
-      {/* No horizontal padding on shell - RetroGrid must be full-bleed like /projects */}
-      <div className="min-h-screen overflow-x-clip pt-16 md:py-16 lg:py-20">
-        <section className="relative mb-8 animate-fade-in pt-14 text-center md:mb-12 md:pt-16">
+      <div className="min-h-screen overflow-x-clip pt-16 pb-28 md:py-16 md:pb-16 lg:py-20 xl:pb-20">
+        <section className="relative mb-6 animate-fade-in px-4 pt-14 text-center md:mb-10 md:px-10 md:pt-16 lg:px-14">
           <h1 className="section-title relative z-10">
-            {language === 'fr' ? 'Mon' : 'My'}
+            {isFr ? 'Mon' : 'My'}
             <span className="bg-gradient-to-r from-foreground via-foreground/80 to-muted-foreground bg-clip-text text-transparent">
               &nbsp;CV
             </span>
           </h1>
           <p className="section-subtitle relative z-10 mx-auto mt-2 max-w-lg !mb-0 text-sm">
-            {language === 'fr'
-              ? 'Parcours, compétences et réalisations - prêt à télécharger.'
-              : 'Background, skills and achievements - ready to download.'}
+            {isFr
+              ? 'Profil prêt à partager, téléchargez le PDF ou démarrons la conversation.'
+              : 'A shareable profile, download the PDF or start the conversation.'}
           </p>
+
+          <div
+            ref={heroActionsRef}
+            className="relative z-10 mx-auto mt-5 flex max-w-md justify-center sm:mt-6"
+          >
+            <CvQuickActions variant="hero" onDownload={openPreview} />
+          </div>
+
           <RetroGrid />
         </section>
 
@@ -57,9 +106,17 @@ export const CvPage = () => {
             </div>
           </section>
 
-          <CTASection />
+          <CTASection onDownload={openPreview} sectionRef={endCtaRef} />
         </div>
       </div>
+
+      <CvMobileStickyBar onDownload={openPreview} visible={stickyVisible} />
+
+      {isPreviewOpen && (
+        <Suspense fallback={null}>
+          <CVPreviewModal isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)} />
+        </Suspense>
+      )}
     </>
   );
 };

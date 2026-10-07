@@ -92,7 +92,12 @@ export const TestimonialsSection: React.FC = () => {
               ))}
             </Marquee>
 
-            <Marquee reverse pauseOnHover className="[--duration:20s] md:scale-105 scale-95" vertical>
+            <Marquee
+              reverse
+              pauseOnHover
+              className="[--duration:20s] md:scale-105 scale-95"
+              vertical
+            >
               {secondRow.map((review) => (
                 <TestimonialCard key={review.id} {...review} />
               ))}
@@ -109,7 +114,6 @@ export const TestimonialsSection: React.FC = () => {
           <div className="from-background pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b"></div>
           <div className="from-background pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t"></div>
           <div className="from-background pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l"></div>
-      
         </div>
 
         <div className="relative md:col-span-1 w-full min-w-0 h-full flex flex-col items-center justify-center gap-6 md:gap-0 mt-4 md:-mt-10 overflow-x-visible">
@@ -117,17 +121,13 @@ export const TestimonialsSection: React.FC = () => {
             <AnimatedBlob />
 
             <div className="relative z-30 w-[160px] sm:w-[180px] md:w-full max-w-[280px] aspect-square p-2 drop-shadow-lg overflow-hidden rounded-full md:rounded-[4rem] border-4 border-primary/20 bg-background/50 backdrop-blur-sm">
-              <Lens
-                zoomFactor={1.3}
-                lensSize={110}
-                isStatic={false}
-                ariaLabel="Zoom Area"
-              >
+              <Lens zoomFactor={1.3} lensSize={110} isStatic={false} ariaLabel="Zoom Area">
                 <Image
                   src="/images/barthez-kenwou-profil-assis.png"
                   alt="Barthez Kenwou"
                   className="object-cover w-full h-full rounded-full md:rounded-[3.5rem] scale-110 md:scale-120"
-                />              </Lens>
+                />{' '}
+              </Lens>
             </div>
           </div>
 

@@ -68,7 +68,7 @@ export const TestimonialsSection: React.FC = () => {
             </div>
             <p className="relative z-10 text-center text-sm leading-relaxed font-medium text-muted-foreground italic md:text-[15px]">
               {language === 'fr'
-                ? "Les deux jours les plus importants de votre vie sont le jour où vous êtes né et le jour où vous en découvrez la raison."
+                ? 'Les deux jours les plus importants de votre vie sont le jour où vous êtes né et le jour où vous en découvrez la raison.'
                 : 'The two most important days in your life are the day you are born and the day you find out why.'}
             </p>
             <div className="mt-4 flex items-center justify-center gap-3">
@@ -124,7 +124,12 @@ export const TestimonialsSection: React.FC = () => {
               ))}
             </Marquee>
 
-            <Marquee reverse pauseOnHover className="[--duration:20s] scale-95 md:scale-105" vertical>
+            <Marquee
+              reverse
+              pauseOnHover
+              className="[--duration:20s] scale-95 md:scale-105"
+              vertical
+            >
               {secondRow.map((review) => (
                 <TestimonialCard key={review.id} {...review} />
               ))}

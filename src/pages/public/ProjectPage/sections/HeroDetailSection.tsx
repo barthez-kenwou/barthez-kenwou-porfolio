@@ -19,28 +19,15 @@ export const HeroDetailSection: React.FC<Props> = ({ project }) => {
 
   const [currentIdx, setCurrentIdx] = useState(0);
 
-  const next = () =>
-    setCurrentIdx((prev) => (prev === project.images.length - 1 ? 0 : prev + 1));
-  const prev = () =>
-    setCurrentIdx((p) => (p === 0 ? project.images.length - 1 : p - 1));
+  const next = () => setCurrentIdx((prev) => (prev === project.images.length - 1 ? 0 : prev + 1));
+  const prev = () => setCurrentIdx((p) => (p === 0 ? project.images.length - 1 : p - 1));
 
   const renderMedia = (media: string, isActive: boolean) => {
     if (!media) return null;
-    const isVideo =
-      media.endsWith('.mp4') || media.endsWith('.webm') || media.endsWith('.ogg');
-    const classes =
-      'w-full h-full object-cover transition-transform duration-700 hover:scale-105';
+    const isVideo = media.endsWith('.mp4') || media.endsWith('.webm') || media.endsWith('.ogg');
+    const classes = 'w-full h-full object-cover transition-transform duration-700 hover:scale-105';
     if (isVideo) {
-      return (
-        <video
-          src={media}
-          autoPlay={isActive}
-          loop
-          muted
-          playsInline
-          className={classes}
-        />
-      );
+      return <video src={media} autoPlay={isActive} loop muted playsInline className={classes} />;
     }
     return <Image src={media} alt={title} className={classes} />;
   };

@@ -14,9 +14,7 @@ export const AchievmentSection: React.FC = () => {
           <div className="rounded-sm bg-primary/10 p-2">
             <AiFillTrophy className="h-4 w-4 text-primary" />
           </div>
-          <h3 className="text-xl font-semibold text-foreground">
-            {t('skills.achievements')}
-          </h3>
+          <h3 className="text-xl font-semibold text-foreground">{t('skills.achievements')}</h3>
         </div>
 
         <div className="grid grid-cols-2 justify-between gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-4 lg:gap-6">

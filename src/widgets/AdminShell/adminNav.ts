@@ -101,17 +101,13 @@ export function findAdminNavItem(pathname: string): AdminNavItem | undefined {
   if (pathname === ADMIN_BASE || pathname === `${ADMIN_BASE}/`) {
     return adminDashboardItem;
   }
-  return adminNavItems.find(
-    (item) => item.path !== ADMIN_BASE && pathname.startsWith(item.path),
-  );
+  return adminNavItems.find((item) => item.path !== ADMIN_BASE && pathname.startsWith(item.path));
 }
 
 /** Build header crumbs from pathname segments after /barthez-admin */
 export function buildAdminCrumbs(pathname: string, language: 'fr' | 'en') {
   const rest = pathname.replace(ADMIN_BASE, '').replace(/^\//, '');
-  const crumbs: Array<{ label: string; href?: string }> = [
-    { label: 'Admin', href: ADMIN_BASE },
-  ];
+  const crumbs: Array<{ label: string; href?: string }> = [{ label: 'Admin', href: ADMIN_BASE }];
   if (!rest) return crumbs;
 
   const parts = rest.split('/').filter(Boolean);

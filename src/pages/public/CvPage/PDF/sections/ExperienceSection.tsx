@@ -15,10 +15,7 @@ export const ExperienceSection: React.FC<Props> = ({ experiences, language }) =>
       </Text>
     </View>
     {(experiences || []).map((exp, i) => {
-      const company =
-        (language === 'fr' ? exp.companyFr : exp.companyEn) ||
-        exp.company ||
-        '';
+      const company = (language === 'fr' ? exp.companyFr : exp.companyEn) || exp.company || '';
 
       return (
         <View key={i} style={styles.row}>
@@ -26,9 +23,7 @@ export const ExperienceSection: React.FC<Props> = ({ experiences, language }) =>
             <Text style={styles.period}>{exp.period}</Text>
           </View>
           <View style={styles.rightCol}>
-            <Text style={styles.boldText}>
-              {language === 'fr' ? exp.titleFr : exp.titleEn}
-            </Text>
+            <Text style={styles.boldText}>{language === 'fr' ? exp.titleFr : exp.titleEn}</Text>
             {company ? <Text style={styles.company}>{company}</Text> : null}
             <View style={styles.bulletList}>
               {((language === 'fr' ? exp.descriptionFr : exp.descriptionEn) || []).map(

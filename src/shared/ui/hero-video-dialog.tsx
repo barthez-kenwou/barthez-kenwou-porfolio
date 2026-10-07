@@ -177,9 +177,7 @@ export function HeroVideoDialog({
               transition={{ type: 'spring', damping: 30, stiffness: 340 }}
               className={cn(
                 'relative w-full',
-                isPortrait
-                  ? 'max-w-[min(100%,240px)] sm:max-w-[300px]'
-                  : 'max-w-3xl lg:max-w-4xl',
+                isPortrait ? 'max-w-[min(100%,240px)] sm:max-w-[300px]' : 'max-w-3xl lg:max-w-4xl',
               )}
               onClick={(e) => e.stopPropagation()}
             >

@@ -19,7 +19,7 @@ export const generatePdfDocument = async (
     link.download = fileName;
     document.body.appendChild(link);
     link.click();
-    
+
     // Cleanup
     setTimeout(() => {
       document.body.removeChild(link);

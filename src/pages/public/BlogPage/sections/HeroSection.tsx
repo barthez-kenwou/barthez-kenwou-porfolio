@@ -9,9 +9,7 @@ export const HeroSection: React.FC = () => {
     <section className="text-center relative z-0 mb-0 pt-36 sm:mb-4 sm:pt-32 md:mb-18 md:pt-36 animate-fade-in">
       <div className="mb-10">
         <h1 className="section-title">
-          <span className="gradient-text">
-            Blog
-          </span>
+          <span className="gradient-text">Blog</span>
         </h1>
 
         <p className="section-subtitle">
@@ -23,6 +21,5 @@ export const HeroSection: React.FC = () => {
 
       <RetroGrid />
     </section>
-
   );
 };

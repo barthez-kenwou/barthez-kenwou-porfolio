@@ -197,7 +197,19 @@ export const AdminServicesPage: React.FC = () => {
       <AdminDataTable
         data={items}
         getRowId={(r) => r.id}
-        searchKeys={['nameFr','nameEn','name','titleFr','titleEn','title','company','companyFr','companyEn','role','category']}
+        searchKeys={[
+          'nameFr',
+          'nameEn',
+          'name',
+          'titleFr',
+          'titleEn',
+          'title',
+          'company',
+          'companyFr',
+          'companyEn',
+          'role',
+          'category',
+        ]}
         emptyTitle={fr ? 'Aucun service' : 'No services'}
         columns={[
           {

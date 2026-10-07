@@ -12,7 +12,7 @@ export const contactsInfo = {
   whatsappLink: 'https://wa.me/237655646688',
   location: 'Yaounde - Cameroun',
   website: 'barthez-kenwou.dev',
-  repository: "https://github.com/barthez-kenwou?tab=repositories",
+  repository: 'https://github.com/barthez-kenwou?tab=repositories',
   github: socialLinks[0].href,
   linkedin: socialLinks[1].href,
   facebook: socialLinks[2].href,

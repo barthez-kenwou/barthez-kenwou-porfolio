@@ -19,19 +19,9 @@ export const ProjectSectionShell: React.FC<Props> = ({
   centered = false,
 }) => {
   return (
-    <section
-      className={cn(
-        'mb-16 px-4 md:px-10 lg:px-14 animate-fade-in-up',
-        className,
-      )}
-    >
+    <section className={cn('mb-16 px-4 md:px-10 lg:px-14 animate-fade-in-up', className)}>
       <div className={cn('mb-6 md:mb-8', centered && 'text-center')}>
-        <div
-          className={cn(
-            'flex items-center gap-3 mb-2',
-            centered && 'justify-center',
-          )}
-        >
+        <div className={cn('flex items-center gap-3 mb-2', centered && 'justify-center')}>
           {!centered && <span className="w-5 h-0.5 bg-primary rounded-full shrink-0" />}
           <h2 className="text-lg md:text-xl font-bold text-foreground tracking-tight !mb-0">
             {title}
@@ -40,10 +30,7 @@ export const ProjectSectionShell: React.FC<Props> = ({
         </div>
         {subtitle && (
           <p
-            className={cn(
-              'text-sm text-muted-foreground max-w-2xl',
-              centered ? 'mx-auto' : 'pl-8',
-            )}
+            className={cn('text-sm text-muted-foreground max-w-2xl', centered ? 'mx-auto' : 'pl-8')}
           >
             {subtitle}
           </p>

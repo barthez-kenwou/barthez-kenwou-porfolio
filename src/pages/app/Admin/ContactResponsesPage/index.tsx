@@ -15,23 +15,15 @@ import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
 import { Textarea } from '@/shared/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/ui/select';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '@/shared/ui/sheet';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/shared/ui/sheet';
 import { useIsMobile } from '@/shared/hooks/use-mobile';
 import { cn } from '@/shared/lib/utils';
 
-const statusVariant: Record<ContactResponseStatus, 'default' | 'secondary' | 'warning' | 'success'> = {
+const statusVariant: Record<
+  ContactResponseStatus,
+  'default' | 'secondary' | 'warning' | 'success'
+> = {
   new: 'warning',
   read: 'secondary',
   replied: 'success',
@@ -197,7 +189,9 @@ export const AdminContactResponsesPage: React.FC = () => {
               header: fr ? 'Expéditeur' : 'From',
               render: (r) => (
                 <div className="min-w-0">
-                  <p className={cn('truncate font-medium', r.status === 'new' && 'text-foreground')}>
+                  <p
+                    className={cn('truncate font-medium', r.status === 'new' && 'text-foreground')}
+                  >
                     {r.name}
                     {r.status === 'new' ? (
                       <span className="ml-2 inline-block size-1.5 rounded-full bg-amber-400 align-middle" />
@@ -234,7 +228,12 @@ export const AdminContactResponsesPage: React.FC = () => {
             },
           ]}
           actions={(r) => (
-            <Button size="icon-sm" variant="ghost" className="size-11 md:size-8" onClick={() => setPending(r)}>
+            <Button
+              size="icon-sm"
+              variant="ghost"
+              className="size-11 md:size-8"
+              onClick={() => setPending(r)}
+            >
               <Trash2 className="size-3.5 text-destructive" />
             </Button>
           )}
@@ -269,9 +268,7 @@ export const AdminContactResponsesPage: React.FC = () => {
           className="flex max-h-[88dvh] flex-col rounded-t-2xl pb-[max(1rem,env(safe-area-inset-bottom))]"
         >
           <SheetHeader className="text-left">
-            <SheetTitle className="pr-8 text-base leading-snug">
-              {selected?.subject}
-            </SheetTitle>
+            <SheetTitle className="pr-8 text-base leading-snug">{selected?.subject}</SheetTitle>
           </SheetHeader>
           <div className="mt-4 min-h-0 flex-1 overflow-y-auto">
             {selected ? <MessageDetail selected={selected} fr={fr} update={update} /> : null}

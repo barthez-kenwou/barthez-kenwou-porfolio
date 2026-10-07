@@ -42,10 +42,7 @@ export const AmbientFlareBackdrop: React.FC<AmbientFlareBackdropProps> = ({
 
   return (
     <div
-      className={cn(
-        'pointer-events-none absolute inset-0 z-0 overflow-hidden',
-        className,
-      )}
+      className={cn('pointer-events-none absolute inset-0 z-0 overflow-hidden', className)}
       aria-hidden
     >
       <img
@@ -75,9 +72,7 @@ export const AmbientFlareBackdrop: React.FC<AmbientFlareBackdropProps> = ({
         )}
         style={{
           mixBlendMode: isDark ? 'screen' : 'multiply',
-          filter: isDark
-            ? 'saturate(1.25) brightness(0.92)'
-            : 'saturate(0.95) brightness(1.05)',
+          filter: isDark ? 'saturate(1.25) brightness(0.92)' : 'saturate(0.95) brightness(1.05)',
         }}
       />
 

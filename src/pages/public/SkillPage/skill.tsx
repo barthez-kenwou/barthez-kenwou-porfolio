@@ -3,6 +3,7 @@ import { HeroSection } from './sections/HeroSection';
 import { SkillsSection } from './sections/SkillsSection';
 import { AchievmentSection } from './sections/AchievmentSection';
 import { CertificationSection } from './sections/CertificationSection';
+import { SkillsCTASection } from './sections/SkillsCTASection';
 import { SEO } from '@/shared/ui/SEO/SEO';
 import { SmoothCursor } from '@/shared/ui/smooth-cursor';
 import { RouteFallback } from '@/shared/ui/RouteFallback/RouteFallback';
@@ -34,6 +35,7 @@ export const SkillPage: React.FC = () => {
           <SkillsSection />
           <CertificationSection />
           <AchievmentSection />
+          <SkillsCTASection />
           <SmoothCursor />
         </div>
       )}

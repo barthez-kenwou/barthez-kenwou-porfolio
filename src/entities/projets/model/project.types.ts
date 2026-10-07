@@ -53,12 +53,7 @@ export interface IProjectDiagram {
   mermaid: string;
 }
 
-export type ProjectResourceType =
-  | 'spec'
-  | 'report'
-  | 'case-study'
-  | 'slides'
-  | 'other';
+export type ProjectResourceType = 'spec' | 'report' | 'case-study' | 'slides' | 'other';
 
 export interface IProjectResource {
   labelFr: string;

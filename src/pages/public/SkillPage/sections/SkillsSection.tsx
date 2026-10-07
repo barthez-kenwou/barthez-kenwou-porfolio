@@ -1,4 +1,8 @@
-import { skillsByCategory, skillsData, imageIcon } from '@/entities/skills/api/mocks/skillsData.mocks';
+import {
+  skillsByCategory,
+  skillsData,
+  imageIcon,
+} from '@/entities/skills/api/mocks/skillsData.mocks';
 import React, { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'motion/react';
@@ -83,7 +87,7 @@ export const SkillsSection: React.FC = () => {
     () => [
       { id: 'all', labelKey: 'all', count: skillsData.length },
       ...Object.keys(skillsByCategory).map((category) => ({
-      id: category,
+        id: category,
         labelKey: `${category}`,
         count: (skillsByCategory[category] as unknown[]).length,
       })),
@@ -168,7 +172,7 @@ export const SkillsSection: React.FC = () => {
 
                 <div className="relative z-10 flex w-full justify-center">
                   <IconCloud images={imageIcon} size={360} className="w-full" />
-            </div>
+                </div>
               </motion.div>
             ) : (
               <motion.div
@@ -180,7 +184,7 @@ export const SkillsSection: React.FC = () => {
                 exit="exit"
                 className="mb-20 grid grid-cols-3 items-stretch gap-2 sm:grid-cols-4 sm:gap-2 md:gap-5 lg:grid-cols-5 xl:grid-cols-6"
               >
-              {filteredSkills.map((skill) => (
+                {filteredSkills.map((skill) => (
                   <motion.div
                     key={skill.name}
                     custom={swipeDir}

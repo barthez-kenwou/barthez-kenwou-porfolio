@@ -11,9 +11,7 @@ export const ProjectTimelineSection: React.FC<{ project: IProject }> = ({ projec
   if (milestones.length === 0) return null;
 
   return (
-    <ProjectSectionShell
-      title={isFr ? 'Timeline' : 'Timeline'}
-    >
+    <ProjectSectionShell title={isFr ? 'Timeline' : 'Timeline'}>
       <ol className="relative border-l border-border/50 ml-2 space-y-6 pl-6">
         {milestones.map((m, idx) => (
           <li key={idx} className="relative">

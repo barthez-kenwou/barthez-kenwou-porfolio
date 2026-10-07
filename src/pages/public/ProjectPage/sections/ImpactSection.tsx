@@ -36,9 +36,7 @@ export const ImpactSection: React.FC<{ project: IProject }> = ({ project }) => {
                   className="flex gap-3 p-3.5 md:p-4 rounded-md bg-card/50 border border-border/40 hover:border-primary/25 transition-colors"
                 >
                   <AlertTriangle className="w-4 h-4 text-primary/80 mt-0.5 shrink-0" />
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {challenge}
-                  </p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{challenge}</p>
                 </div>
               ))}
             </div>
@@ -64,9 +62,7 @@ export const ImpactSection: React.FC<{ project: IProject }> = ({ project }) => {
                     <div className="shrink-0 mt-0.5 p-1 bg-primary/10 rounded-full">
                       <Icon className="w-3.5 h-3.5 text-primary" />
                     </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {impact}
-                    </p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{impact}</p>
                   </div>
                 );
               })}

@@ -20,7 +20,8 @@ export const LanguageSection: React.FC<Props> = ({ languages, language }) => (
         <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
           {(languages || []).map((lang, i) => (
             <Text key={i} style={[styles.text, { marginRight: 15 }]}>
-              <Text style={styles.boldText}>{lang.language}</Text>: {language === 'fr' ? lang.proficiencyFr : lang.proficiencyEn}
+              <Text style={styles.boldText}>{lang.language}</Text>:{' '}
+              {language === 'fr' ? lang.proficiencyFr : lang.proficiencyEn}
             </Text>
           ))}
         </View>

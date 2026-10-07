@@ -5,7 +5,6 @@ This directory contains GitHub Actions workflows used to run CI checks and deplo
 Workflows
 
 - `.github/workflows/ci.yml` - runs on `push` and `pull_request` for `main` and `develop` branches. It performs:
-
   - Checkout, Node setup and dependency install
   - `format:check`, `lint`, `typecheck`, `test:ci`, `build`
   - Uploads `dist` as an artifact when build succeeds

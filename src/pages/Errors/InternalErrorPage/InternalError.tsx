@@ -34,18 +34,11 @@ export const InternalErrorPage: React.FC<InternalErrorPageProps> = ({
   const contactLabel = isFr ? 'Me contacter' : 'Contact me';
 
   const errorLabel =
-    error?.name && error.name !== 'Error'
-      ? `${error.name}: ${error.message}`
-      : error?.message;
+    error?.name && error.name !== 'Error' ? `${error.name}: ${error.message}` : error?.message;
 
   return (
     <>
-      <SEO
-        noIndex
-        path="/server-error"
-        title={isFr ? 'Erreur' : 'Error'}
-        description={lead}
-      />
+      <SEO noIndex path="/server-error" title={isFr ? 'Erreur' : 'Error'} description={lead} />
 
       <div
         className={cn(
@@ -89,9 +82,7 @@ export const InternalErrorPage: React.FC<InternalErrorPageProps> = ({
                 {title}
               </h1>
 
-              <p className="mb-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
-                {lead}
-              </p>
+              <p className="mb-4 max-w-sm text-sm leading-relaxed text-muted-foreground">{lead}</p>
 
               {errorLabel && (
                 <div className="mb-5 w-full rounded-md border border-border/40 bg-background/40 px-3 py-2.5 text-left backdrop-blur-sm">
@@ -99,19 +90,13 @@ export const InternalErrorPage: React.FC<InternalErrorPageProps> = ({
                     {errorLabel}
                   </p>
                   {errorId && (
-                    <p className="mt-1.5 font-mono text-[10px] text-muted-foreground">
-                      {errorId}
-                    </p>
+                    <p className="mt-1.5 font-mono text-[10px] text-muted-foreground">{errorId}</p>
                   )}
                 </div>
               )}
 
               <div className="flex flex-wrap items-center justify-center gap-2.5">
-                <Button
-                  type="button"
-                  className="gap-2"
-                  onClick={() => window.location.reload()}
-                >
+                <Button type="button" className="gap-2" onClick={() => window.location.reload()}>
                   <RefreshCw className="size-3.5" />
                   {refreshLabel}
                 </Button>
@@ -122,11 +107,7 @@ export const InternalErrorPage: React.FC<InternalErrorPageProps> = ({
                     variant="outline"
                     className="gap-2 border-white/20 bg-background/30 backdrop-blur-sm"
                   >
-                    <a
-                      href={contactsInfo.whatsappLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
+                    <a href={contactsInfo.whatsappLink} target="_blank" rel="noopener noreferrer">
                       <MessageCircle className="size-3.5" />
                       {contactLabel}
                     </a>

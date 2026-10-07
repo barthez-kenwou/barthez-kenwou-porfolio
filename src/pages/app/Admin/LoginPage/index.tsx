@@ -118,7 +118,10 @@ export function AdminLoginPage() {
           <div className="space-y-3 text-xs text-muted-foreground">
             <div className="h-px w-16 bg-border" />
             <p>Barthez Kenwou · Full Stack & DevOps</p>
-            <Link to="/" className="inline-block underline-offset-4 hover:text-foreground hover:underline">
+            <Link
+              to="/"
+              className="inline-block underline-offset-4 hover:text-foreground hover:underline"
+            >
               {fr ? 'Retour au site' : 'Back to site'}
             </Link>
           </div>
@@ -167,7 +170,9 @@ export function AdminLoginPage() {
                 invalid={!!form.formState.errors.email}
               />
               {form.formState.errors.email ? (
-                <p className="mt-1.5 text-xs text-destructive">{form.formState.errors.email.message}</p>
+                <p className="mt-1.5 text-xs text-destructive">
+                  {form.formState.errors.email.message}
+                </p>
               ) : null}
             </div>
 
@@ -177,7 +182,9 @@ export function AdminLoginPage() {
                 type={showPassword ? 'text' : 'password'}
                 name="password"
                 value={form.watch('password')}
-                onChange={(e) => form.setValue('password', e.target.value, { shouldValidate: true })}
+                onChange={(e) =>
+                  form.setValue('password', e.target.value, { shouldValidate: true })
+                }
                 onBlur={() => form.trigger('password')}
                 invalid={!!form.formState.errors.password}
               />
@@ -204,18 +211,15 @@ export function AdminLoginPage() {
                 'shadow-[var(--glow-primary)]',
               )}
             >
-              {submitting
-                ? fr
-                  ? 'Ouverture…'
-                  : 'Opening…'
-                : fr
-                  ? 'Entrer'
-                  : 'Enter'}
+              {submitting ? (fr ? 'Ouverture…' : 'Opening…') : fr ? 'Entrer' : 'Enter'}
             </Button>
           </form>
 
           <p className="mt-10 text-center text-xs text-muted-foreground lg:text-left">
-            <Link to="/" className="underline-offset-4 hover:text-foreground hover:underline lg:hidden">
+            <Link
+              to="/"
+              className="underline-offset-4 hover:text-foreground hover:underline lg:hidden"
+            >
               {fr ? 'Retour au site public' : 'Back to public site'}
             </Link>
           </p>

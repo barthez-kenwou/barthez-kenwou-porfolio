@@ -25,9 +25,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
   const [toc, setToc] = useState<TOCItem[]>([]);
   const [activeId, setActiveId] = useState<string>('');
   const [isOpen, setIsOpen] = useState(false);
-  const [fixedBox, setFixedBox] = useState<{ left: number; width: number } | null>(
-    null,
-  );
+  const [fixedBox, setFixedBox] = useState<{ left: number; width: number } | null>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
   const { language } = useLanguageStore();
 
@@ -92,9 +90,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
         width: Math.round(rect.width),
       };
       setFixedBox((prev) =>
-        prev && prev.left === next.left && prev.width === next.width
-          ? prev
-          : next,
+        prev && prev.left === next.left && prev.width === next.width ? prev : next,
       );
     };
 

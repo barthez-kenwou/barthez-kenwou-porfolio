@@ -1,7 +1,10 @@
 import React from 'react';
 import { Check, Link2, Pencil, Plus, Trash2, Save, X } from 'lucide-react';
 import { toast } from 'sonner';
-import type { ITestimonial, TestimonialStatus } from '@/entities/testimonies/model/testimonial.types';
+import type {
+  ITestimonial,
+  TestimonialStatus,
+} from '@/entities/testimonies/model/testimonial.types';
 import {
   AdminPageHeader,
   AdminDataTable,
@@ -17,13 +20,7 @@ import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Badge } from '@/shared/ui/badge';
 import { Switch } from '@/shared/ui/switch';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
 
 const FEEDBACK_PATH = '/feedback';
 
@@ -169,9 +166,7 @@ export const AdminTestimonialsPage: React.FC = () => {
             <Field label="Status">
               <Select
                 value={editing.status || 'approved'}
-                onValueChange={(v) =>
-                  setEditing({ ...editing, status: v as TestimonialStatus })
-                }
+                onValueChange={(v) => setEditing({ ...editing, status: v as TestimonialStatus })}
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -197,7 +192,16 @@ export const AdminTestimonialsPage: React.FC = () => {
       <AdminDataTable<ITestimonial>
         data={items}
         getRowId={(r) => String(r.id)}
-        searchKeys={['nameFr', 'nameEn', 'roleFr', 'roleEn', 'company', 'email', 'textFr', 'textEn']}
+        searchKeys={[
+          'nameFr',
+          'nameEn',
+          'roleFr',
+          'roleEn',
+          'company',
+          'email',
+          'textFr',
+          'textEn',
+        ]}
         emptyTitle={fr ? 'Aucun témoignage' : 'No testimonials'}
         filters={[
           {
@@ -249,7 +253,11 @@ export const AdminTestimonialsPage: React.FC = () => {
               return (
                 <Badge
                   variant={
-                    status === 'pending' ? 'warning' : status === 'approved' ? 'success' : 'secondary'
+                    status === 'pending'
+                      ? 'warning'
+                      : status === 'approved'
+                        ? 'success'
+                        : 'secondary'
                   }
                 >
                   {status}

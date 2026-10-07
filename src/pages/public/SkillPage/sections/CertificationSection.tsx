@@ -14,9 +14,7 @@ export const CertificationSection: React.FC = () => {
           <div className="rounded-sm bg-primary/10 p-2">
             <FaAward className="h-4 w-4 text-primary" />
           </div>
-          <h3 className="text-xl font-semibold text-foreground">
-            {t('skills.certifications')}
-          </h3>
+          <h3 className="text-xl font-semibold text-foreground">{t('skills.certifications')}</h3>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">

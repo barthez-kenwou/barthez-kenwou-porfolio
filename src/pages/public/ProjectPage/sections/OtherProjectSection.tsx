@@ -49,16 +49,9 @@ export const OtherProjectSection: React.FC<{ currentProjectId: string | number }
         <div className="relative overflow-hidden">
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-4 bg-gradient-to-r from-background to-transparent md:w-16" />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-4 bg-gradient-to-l from-background to-transparent md:w-16" />
-          <Marquee
-            pauseOnHover
-            repeat={3}
-            className="[--duration:32s] [--gap:1rem] p-1"
-          >
+          <Marquee pauseOnHover repeat={3} className="[--duration:32s] [--gap:1rem] p-1">
             {relatedProjects.map((project) => (
-              <div
-                key={project.id}
-                className="w-[min(88vw,380px)] shrink-0 md:w-[400px]"
-              >
+              <div key={project.id} className="w-[min(88vw,380px)] shrink-0 md:w-[400px]">
                 <ProjectCard project={project} />
               </div>
             ))}

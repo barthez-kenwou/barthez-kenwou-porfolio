@@ -70,9 +70,7 @@ export const PostsGrid: React.FC = () => {
 
               <input
                 type="search"
-                placeholder={
-                  language === 'fr' ? 'Rechercher…' : 'Search…'
-                }
+                placeholder={language === 'fr' ? 'Rechercher…' : 'Search…'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setSearchFocused(true)}

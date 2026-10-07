@@ -96,9 +96,10 @@ export function AdminBlogsPage() {
           {
             key: 'category',
             label: fr ? 'Catégorie' : 'Category',
-            options: Array.from(new Set(blogs.map((b) => b.category).filter(Boolean))).map(
-              (c) => ({ value: c, label: c }),
-            ),
+            options: Array.from(new Set(blogs.map((b) => b.category).filter(Boolean))).map((c) => ({
+              value: c,
+              label: c,
+            })),
           },
         ]}
         columns={[
@@ -146,7 +147,13 @@ export function AdminBlogsPage() {
             >
               <Copy className="size-3.5" />
             </Button>
-            <Button size="icon-sm" variant="ghost" className="size-11 md:size-8" asChild title={fr ? 'Ouvrir' : 'Open'}>
+            <Button
+              size="icon-sm"
+              variant="ghost"
+              className="size-11 md:size-8"
+              asChild
+              title={fr ? 'Ouvrir' : 'Open'}
+            >
               <a href={`/blog/${r.slug || r.id}`} target="_blank" rel="noreferrer">
                 <ExternalLink className="size-3.5" />
               </a>
@@ -165,7 +172,12 @@ export function AdminBlogsPage() {
                 <Pencil className="size-3.5" />
               </Link>
             </Button>
-            <Button size="icon-sm" variant="ghost" className="size-11 md:size-8" onClick={() => setPending(r)}>
+            <Button
+              size="icon-sm"
+              variant="ghost"
+              className="size-11 md:size-8"
+              onClick={() => setPending(r)}
+            >
               <Trash2 className="size-3.5 text-destructive" />
             </Button>
           </>

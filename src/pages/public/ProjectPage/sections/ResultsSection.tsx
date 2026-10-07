@@ -7,7 +7,10 @@ import { findByNumericId } from '@/shared/lib/entity-slug';
 export const ResultsSection: React.FC = () => {
   const { language } = useLanguageStore();
   const { id, projectID } = useParams();
-  const project = findByNumericId(projectsData, projectID || id) || { resultsEn: [], resultsFr: [] };
+  const project = findByNumericId(projectsData, projectID || id) || {
+    resultsEn: [],
+    resultsFr: [],
+  };
 
   return (
     <section className="mb-12">

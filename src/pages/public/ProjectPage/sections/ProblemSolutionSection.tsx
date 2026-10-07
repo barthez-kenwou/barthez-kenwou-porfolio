@@ -6,9 +6,7 @@ import { cn } from '@/shared/lib/utils';
 
 const PROBLEM_FLARE = '/images/project-problem-flare.webp';
 
-export const ProblemSolutionSection: React.FC<{ project: IProject }> = ({
-  project,
-}) => {
+export const ProblemSolutionSection: React.FC<{ project: IProject }> = ({ project }) => {
   const { language } = useLanguageStore();
   const theme = useThemeStore((s) => s.theme);
   const isDark = theme === 'dark';
@@ -20,10 +18,7 @@ export const ProblemSolutionSection: React.FC<{ project: IProject }> = ({
   return (
     <section className="relative mb-16 px-4 md:px-10 lg:px-14 overflow-hidden animate-fade-in-up">
       {/* Flare - vertically centered; from the right on desktop, behind glass on mobile */}
-      <div
-        className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
-        aria-hidden
-      >
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
         <div
           className={cn(
             'absolute top-1/2 -translate-y-1/2',
@@ -46,9 +41,7 @@ export const ProblemSolutionSection: React.FC<{ project: IProject }> = ({
             )}
             style={{
               mixBlendMode: isDark ? 'screen' : 'multiply',
-              filter: isDark
-                ? 'saturate(1.18) brightness(0.9)'
-                : 'saturate(0.95) brightness(1.05)',
+              filter: isDark ? 'saturate(1.18) brightness(0.9)' : 'saturate(0.95) brightness(1.05)',
             }}
           />
         </div>
@@ -90,9 +83,7 @@ export const ProblemSolutionSection: React.FC<{ project: IProject }> = ({
                     <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary/20 text-primary flex items-center justify-center text-[10px] font-bold mt-0.5">
                       {idx + 1}
                     </span>
-                    <span className="text-sm text-muted-foreground leading-relaxed">
-                      {sol}
-                    </span>
+                    <span className="text-sm text-muted-foreground leading-relaxed">{sol}</span>
                   </li>
                 ))}
               </ul>

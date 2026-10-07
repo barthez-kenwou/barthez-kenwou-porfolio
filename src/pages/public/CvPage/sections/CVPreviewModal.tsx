@@ -32,16 +32,16 @@ export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose 
   return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-hidden">
       {/* Backdrop */}
-      <div 
-        className={`fixed inset-0 bg-black/60 backdrop-blur-md transition-opacity duration-500 ease-out ${renderState ? 'opacity-100' : 'opacity-0'}`} 
+      <div
+        className={`fixed inset-0 bg-black/60 backdrop-blur-md transition-opacity duration-500 ease-out ${renderState ? 'opacity-100' : 'opacity-0'}`}
         onClick={() => {
           setRenderState(false);
           setTimeout(onClose, 500); // Wait for scale down
-        }} 
+        }}
       />
 
       {/* Modal Container */}
-      <div 
+      <div
         className={`relative w-full max-w-5xl h-[85vh] md:h-[90vh] flex flex-col transition-all duration-500 ease-out origin-center
           ${renderState ? 'scale-100 opacity-100' : 'scale-[0.2] opacity-0'}
         `}
@@ -49,14 +49,13 @@ export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose 
         {/* Animated Double Border & Glassmorphism Wrapper */}
         <div className="absolute inset-0 rounded-md overflow-hidden shadow-lg border border-white/10">
           <div className="absolute -inset-[100%] animate-[spin_6s_linear_infinite] opacity-50">
-             <div className="w-full h-full bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_120deg,hsl(var(--primary))_240deg,transparent_360deg)]" />
+            <div className="w-full h-full bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_120deg,hsl(var(--primary))_240deg,transparent_360deg)]" />
           </div>
           <div className="absolute inset-[2px] rounded-[calc(1.5rem-2px)] bg-background/90 backdrop-blur-2xl" />
         </div>
 
         {/* Content Layer */}
         <div className="relative z-10 w-full h-full flex flex-col p-4 md:p-6">
-          
           {/* Header */}
           <div className="flex justify-between items-center mb-4 shrink-0 px-2">
             <div className="flex items-center gap-3">
@@ -67,7 +66,7 @@ export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose 
                 {language === 'fr' ? 'Aperçu du CV' : 'CV Preview'}
               </h3>
             </div>
-            <button 
+            <button
               onClick={() => {
                 setRenderState(false);
                 setTimeout(onClose, 500);
@@ -83,16 +82,20 @@ export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose 
             <BlobProvider document={<CvPDFDocument data={cvData} language={language as 'fr'} />}>
               {({ url, loading, error }) => {
                 if (error) {
-                  console.error("PDF Generator Error:", error);
-                  return <div className="text-destructive font-medium p-6">Error loading PDF: {error.message}</div>;
+                  console.error('PDF Generator Error:', error);
+                  return (
+                    <div className="text-destructive font-medium p-6">
+                      Error loading PDF: {error.message}
+                    </div>
+                  );
                 }
-                
+
                 if (loading || !url) {
                   return (
                     <div className="flex flex-col items-center justify-center gap-4 text-primary animate-pulse">
                       <Loader2 className="h-10 w-10 animate-spin" />
                       <p className="font-semibold text-foreground/80">
-                        {language === 'fr' ? 'Génération de l\'aperçu...' : 'Generating preview...'}
+                        {language === 'fr' ? "Génération de l'aperçu..." : 'Generating preview...'}
                       </p>
                     </div>
                   );
@@ -100,8 +103,8 @@ export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose 
 
                 return (
                   <>
-                    <iframe 
-                      src={`${url}#view=FitH`} 
+                    <iframe
+                      src={`${url}#view=FitH`}
                       className="w-full h-full border-none rounded-md"
                       title="CV Preview"
                     />
@@ -125,6 +128,6 @@ export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose 
         </div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };

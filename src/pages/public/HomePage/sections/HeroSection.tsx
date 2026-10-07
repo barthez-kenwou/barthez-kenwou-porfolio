@@ -8,8 +8,8 @@ import { GridPattern } from '@/shared/ui/grid-pattern';
 import { TextAnimate } from '@/shared/ui/text-animate';
 import { TypingAnimation } from '@/shared/ui/typing-animation';
 import { AuroraBackground } from '@/shared/ui/aurora-background';
+import { Button } from '@/shared/ui/Button';
 import { SpectrumButton } from '@/shared/ui/SpectrumButton';
-import { ShimmerButton } from '@/shared/ui/ShimmerButton';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { useThemeStore } from '@/shared/state/useThemeStore';
 
@@ -89,10 +89,7 @@ export const HeroSection: React.FC = () => {
       />
 
       {/* Flare is ambient decor: present immediately (no entrance fade with text) */}
-      <div
-        className="pointer-events-none absolute inset-0 z-[5] overflow-hidden"
-        aria-hidden
-      >
+      <div className="pointer-events-none absolute inset-0 z-[5] overflow-hidden" aria-hidden>
         <div className="absolute -right-[18%] bottom-[2%] w-[130%] max-w-none sm:-right-[14%] sm:bottom-[0%] sm:w-[115%] md:-right-[10%] md:bottom-[-2%] md:w-[95%] lg:-right-[6%] lg:w-[85%] xl:w-[78%]">
           <img
             src={HERO_FLARE}
@@ -195,7 +192,7 @@ export const HeroSection: React.FC = () => {
           {t('hero.description')}
         </motion.p>
 
-        {/* CTAs - spectrum primary + shimmer secondary */}
+        {/* CTAs - Contact (spectrum, sole rainbow) + Projects (outline) */}
         <motion.div
           custom={4}
           variants={fadeUp}
@@ -204,21 +201,15 @@ export const HeroSection: React.FC = () => {
           className="flex flex-col sm:flex-row items-center justify-center gap-3"
         >
           <SpectrumButton asChild variant="solid" size="default">
-            <Link to="/projects">
-              {t('hero.cta.projects')}
+            <Link to="/contact">
+              {t('hero.cta.contact')}
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </SpectrumButton>
 
-          <ShimmerButton
-            asChild
-            className="min-h-10"
-            borderWidth={1.5}
-            background={isDark ? 'hsl(270 22% 7%)' : 'hsl(0 0% 100%)'}
-            shimmerColor={isDark ? '#e9d5ff' : '#7c3aed'}
-          >
-            <Link to="/services">{t('hero.cta.services')}</Link>
-          </ShimmerButton>
+          <Button asChild variant="outline" size="lg" className="min-h-10 px-6">
+            <Link to="/projects">{t('hero.cta.projects')}</Link>
+          </Button>
         </motion.div>
       </section>
     </AuroraBackground>

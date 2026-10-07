@@ -2,16 +2,11 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import { HiOutlinePaperAirplane, HiOutlineCheckCircle } from 'react-icons/hi2';
 import { motion } from 'framer-motion';
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from '@/shared/ui/form';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/ui/form';
 import { contactSchema, type ContactFormValues } from '../model/contact.schema';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { Button } from '@/shared/ui/button';
@@ -20,20 +15,117 @@ import { FloatingFillField } from './FloatingFillField.ui';
 
 const WHATSAPP_NUMBER = '237655646688';
 
+function buildContactPrefill(searchParams: URLSearchParams, language: string) {
+  const service = searchParams.get('service');
+  if (service) {
+    if (language === 'fr') {
+      return {
+        subject: `Demande de devis — ${service}`,
+        message: `Bonjour,\n\nJe souhaite discuter du service « ${service} ».\n\n`,
+      };
+    }
+    return {
+      subject: `Quote request — ${service}`,
+      message: `Hello,\n\nI'd like to discuss the « ${service} » service.\n\n`,
+    };
+  }
+
+  const from = searchParams.get('from');
+
+  if (from === 'projects') {
+    if (language === 'fr') {
+      return {
+        subject: 'Échange suite à vos projets',
+        message:
+          "Bonjour,\n\nJ'ai consulté vos réalisations et je souhaiterais échanger sur un besoin / une collaboration dans la même veine.\n\nCordialement,\n",
+      };
+    }
+    return {
+      subject: 'Follow-up after reviewing your projects',
+      message:
+        "Hello,\n\nI've reviewed your case studies and would like to discuss a need / collaboration along similar lines.\n\nBest regards,\n",
+    };
+  }
+
+  if (from === 'about') {
+    if (language === 'fr') {
+      return {
+        subject: 'Prise de contact suite à votre page À propos',
+        message:
+          "Bonjour,\n\nJ'ai pris connaissance de votre parcours et de votre approche. Je souhaiterais échanger sur une collaboration ou un besoin technique.\n\nCordialement,\n",
+      };
+    }
+    return {
+      subject: 'Reaching out after your About page',
+      message:
+        "Hello,\n\nI've reviewed your background and approach. I would like to discuss a collaboration or a technical need.\n\nBest regards,\n",
+    };
+  }
+
+  if (from === 'skills') {
+    if (language === 'fr') {
+      return {
+        subject: 'Échange suite à votre stack / compétences',
+        message:
+          "Bonjour,\n\nJ'ai consulté votre stack et vos compétences. Je souhaiterais échanger sur un besoin technique où cette expertise serait pertinente.\n\nCordialement,\n",
+      };
+    }
+    return {
+      subject: 'Follow-up after reviewing your skills stack',
+      message:
+        "Hello,\n\nI've reviewed your stack and skills. I would like to discuss a technical need where this expertise would be a fit.\n\nBest regards,\n",
+    };
+  }
+
+  if (from === 'cv') {
+    if (language === 'fr') {
+      return {
+        subject: 'Suite à la consultation de votre CV',
+        message:
+          "Bonjour,\n\nJ'ai consulté votre CV et je souhaiterais échanger sur une opportunité ou une collaboration.\n\nCordialement,\n",
+      };
+    }
+    return {
+      subject: 'Follow-up after reviewing your CV',
+      message:
+        "Hello,\n\nI've reviewed your CV and would like to discuss an opportunity or collaboration.\n\nBest regards,\n",
+    };
+  }
+
+  return {
+    subject: searchParams.get('subject') ?? '',
+    message: searchParams.get('message') ?? '',
+  };
+}
+
 export const ContactForm: React.FC = () => {
   const { t } = useTranslation();
   const { language } = useLanguageStore();
+  const [searchParams] = useSearchParams();
   const [isSubmitted, setIsSubmitted] = React.useState(false);
+
+  const prefillKey =
+    searchParams.get('service') ?? searchParams.get('from') ?? searchParams.get('subject') ?? '';
+  const prefill = React.useMemo(
+    () => buildContactPrefill(searchParams, language),
+    [searchParams, language],
+  );
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
     defaultValues: {
       name: '',
       email: '',
-      subject: '',
-      message: '',
+      subject: prefill.subject,
+      message: prefill.message,
     },
   });
+
+  React.useEffect(() => {
+    if (!prefillKey && !prefill.subject && !prefill.message) return;
+    form.setValue('subject', prefill.subject, { shouldDirty: false });
+    form.setValue('message', prefill.message, { shouldDirty: false });
+  }, [prefillKey, prefill.subject, prefill.message, form]);
 
   const onSubmit = (values: ContactFormValues) => {
     setIsSubmitted(true);
@@ -75,10 +167,7 @@ export const ContactForm: React.FC = () => {
       )}
 
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex h-full flex-col gap-4"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex h-full flex-col gap-4">
           <div className="grid gap-3 md:grid-cols-2">
             <FormField
               control={form.control}

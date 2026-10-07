@@ -76,7 +76,10 @@ export const AdminContactInfoPage: React.FC = () => {
             <Input value={draft.phone} onChange={(e) => patch('phone', e.target.value)} />
           </Field>
           <Field label="WhatsApp link">
-            <Input value={draft.whatsappLink} onChange={(e) => patch('whatsappLink', e.target.value)} />
+            <Input
+              value={draft.whatsappLink}
+              onChange={(e) => patch('whatsappLink', e.target.value)}
+            />
           </Field>
           <Field label={fr ? 'Localisation' : 'Location'}>
             <Input value={draft.location} onChange={(e) => patch('location', e.target.value)} />

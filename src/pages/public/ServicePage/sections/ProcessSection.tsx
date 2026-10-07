@@ -20,15 +20,13 @@ export const ProcessSection: React.FC = () => {
         >
           <h2 className="section-title">
             {language === 'fr' ? 'Mon Processus ' : 'My Work '}
-            <span className="gradient-text">
-              {language === 'fr' ? 'de Travail' : 'Process'}
-            </span>
+            <span className="gradient-text">{language === 'fr' ? 'de Travail' : 'Process'}</span>
           </h2>
           <div className="w-16 h-1 bg-primary/30 mx-auto rounded-full mb-4" />
           <p className="section-subtitle !mb-0 italic opacity-90">
             {language === 'fr'
               ? "Une approche structurée et transparente pour transformer vos idées en solutions numériques d'exception."
-              : "A structured and transparent approach to transform your ideas into exceptional digital solutions."}
+              : 'A structured and transparent approach to transform your ideas into exceptional digital solutions.'}
           </p>
         </motion.div>
       </div>
@@ -58,31 +56,37 @@ export const ProcessSection: React.FC = () => {
             const isEven = index % 2 === 0;
 
             return (
-              <div key={index} className={cn(
-                "relative flex flex-col md:flex-row items-center justify-between md:py-4 group",
-                !isEven && "md:flex-row-reverse"
-              )}>
-
+              <div
+                key={index}
+                className={cn(
+                  'relative flex flex-col md:flex-row items-center justify-between md:py-4 group',
+                  !isEven && 'md:flex-row-reverse',
+                )}
+              >
                 {/* Content Card container */}
                 <motion.div
                   className="w-full md:w-[45%] z-10"
                   initial={{ opacity: 0, x: isEven ? -40 : 40 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.7, delay: index * 0.1, ease: "easeOut" }}
+                  viewport={{ once: true, margin: '-50px' }}
+                  transition={{ duration: 0.7, delay: index * 0.1, ease: 'easeOut' }}
                 >
-                  <div className={cn(
-                    "glass p-3 md:p-4 rounded-md border border-border/40 shadow-sm transition-all duration-500 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 relative group/card ml-14 md:ml-0",
-                    isEven ? "md:text-right" : "md:text-left"
-                  )}>
+                  <div
+                    className={cn(
+                      'glass p-3 md:p-4 rounded-md border border-border/40 shadow-sm transition-all duration-500 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 relative group/card ml-14 md:ml-0',
+                      isEven ? 'md:text-right' : 'md:text-left',
+                    )}
+                  >
                     {/* Subtle inner glow */}
                     <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity rounded-md" />
 
                     <div className="relative z-10">
-                      <div className={cn(
-                        "flex items-center gap-3 mb-4",
-                        isEven ? "md:flex-row-reverse" : "md:flex-row"
-                      )}>
+                      <div
+                        className={cn(
+                          'flex items-center gap-3 mb-4',
+                          isEven ? 'md:flex-row-reverse' : 'md:flex-row',
+                        )}
+                      >
                         <div className="flex items-center justify-center w-8 h-8 rounded-md bg-primary text-primary-foreground text-xs font-bold shadow-sm shadow-primary/20">
                           {index + 1}
                         </div>
@@ -98,10 +102,12 @@ export const ProcessSection: React.FC = () => {
                     </div>
 
                     {/* Decorative accent */}
-                    <div className={cn(
-                      "absolute top-1/2 -translate-y-1/2 w-1 h-12 bg-primary/40 rounded-full transition-all duration-500 group-hover/card:h-20 group-hover/card:bg-primary",
-                      isEven ? "right-0" : "left-0"
-                    )} />
+                    <div
+                      className={cn(
+                        'absolute top-1/2 -translate-y-1/2 w-1 h-12 bg-primary/40 rounded-full transition-all duration-500 group-hover/card:h-20 group-hover/card:bg-primary',
+                        isEven ? 'right-0' : 'left-0',
+                      )}
+                    />
                   </div>
                 </motion.div>
 
@@ -111,7 +117,12 @@ export const ProcessSection: React.FC = () => {
                   initial={{ scale: 0, opacity: 0 }}
                   whileInView={{ scale: 1, opacity: 1 }}
                   viewport={{ once: true }}
-                  transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.3 + index * 0.1 }}
+                  transition={{
+                    type: 'spring',
+                    stiffness: 260,
+                    damping: 20,
+                    delay: 0.3 + index * 0.1,
+                  }}
                 >
                   <div className="group relative">
                     <div className="absolute inset-0 bg-primary/30 blur-xl rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

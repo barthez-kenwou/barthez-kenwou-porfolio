@@ -3,8 +3,7 @@
 export const SITE_URL = 'https://barthez-kenwou.dev';
 export const SITE_NAME = 'Barthez Kenwou';
 export const SITE_NAME_FULL = 'Barthez Kenwou - Portfolio';
-export const DEFAULT_TITLE =
-  'Barthez Kenwou | Développeur Full Stack & Ingénieur DevOps';
+export const DEFAULT_TITLE = 'Barthez Kenwou | Développeur Full Stack & Ingénieur DevOps';
 export const DEFAULT_DESCRIPTION =
   'Portfolio de Barthez Kenwou - Développeur Full Stack JS & Ingénieur DevOps spécialiste AWS Cloud. Applications web modernes, CI/CD, Kubernetes et architectures cloud performantes.';
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-share.jpg`;
@@ -117,10 +116,8 @@ export const STATIC_PAGES: StaticPage[] = [
     path: '/projects',
     titleFr: 'Projets | Barthez Kenwou',
     titleEn: 'Projects | Barthez Kenwou',
-    descriptionFr:
-      'Études de cas : SaaS, PWA, ERP, DevSecOps, observabilité et plateformes cloud.',
-    descriptionEn:
-      'Case studies: SaaS, PWA, ERP, DevSecOps, observability and cloud platforms.',
+    descriptionFr: 'Études de cas : SaaS, PWA, ERP, DevSecOps, observabilité et plateformes cloud.',
+    descriptionEn: 'Case studies: SaaS, PWA, ERP, DevSecOps, observability and cloud platforms.',
     priority: 0.9,
     changefreq: 'weekly',
     bodyFr: `<h1>Projets</h1>

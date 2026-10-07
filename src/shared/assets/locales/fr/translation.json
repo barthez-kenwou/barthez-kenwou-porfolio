@@ -19,7 +19,7 @@
     "cta": {
       "projects": "Voir mes projets",
       "services": "Découvrir mes services",
-      "contact": "Me contacter"
+      "contact": "Discutons"
     }
   },
   "about": {
@@ -48,7 +48,7 @@
   },
   "projects": {
     "title": "Mes Projets",
-    "subtitle": "Découvrez mes réalisations récentes",
+    "subtitle": "Parcourez des cas concrets — puis parlons de votre prochain livrable",
     "filter": {
       "all": "Tous",
       "web": "Web App",
@@ -58,6 +58,9 @@
     "demo": "Voir démo",
     "code": "Code source",
     "details": "Voir détails"
+  },
+  "services": {
+    "cta": "Demander un devis"
   },
   "contact": {
     "title": "Me Contacter",

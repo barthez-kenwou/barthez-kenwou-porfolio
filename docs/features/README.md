@@ -4,11 +4,11 @@ User-facing capabilities. In FSD, a feature is an isolated user scenario that ma
 
 ## Documented features
 
-| Feature | Doc |
-| :--- | :--- |
-| Theme (dark / light) | [theme-switching.md](./theme-switching.md) |
-| Internationalization (FR / EN) | [i18n.md](./i18n.md) |
-| Contact system | [contact-system.md](./contact-system.md) |
+| Feature                        | Doc                                        |
+| :----------------------------- | :----------------------------------------- |
+| Theme (dark / light)           | [theme-switching.md](./theme-switching.md) |
+| Internationalization (FR / EN) | [i18n.md](./i18n.md)                       |
+| Contact system                 | [contact-system.md](./contact-system.md)   |
 
 ## Also in the product (see source / entities)
 

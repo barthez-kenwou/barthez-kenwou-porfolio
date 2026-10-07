@@ -8,17 +8,17 @@ Live site: [https://barthez-kenwou.dev](https://barthez-kenwou.dev)
 
 ## Documentation map
 
-| Area | Description |
-| :--- | :--- |
-| [Architecture](./architecture/README.md) | FSD layers, routing, state, diagrams |
-| [Features](./features/README.md) | Theme, i18n, contact, and related capabilities |
-| [Entities](./entities/README.md) | Domain models (project, blog, skill, experience) |
-| [Onboarding](./onboarding/README.md) | Local setup, first feature, FAQ |
-| [Guidelines](./guidelines/README.md) | Coding standards, naming, testing, deps |
-| [Deployment](./deployment/README.md) | OVH VPS, GHCR, Watchtower, NPM |
-| [API conventions](./api/README.md) | Client conventions and error handling |
-| [ADRs](./decisions/README.md) | Architecture decision records |
-| [Project analysis](./PROJECT_ANALYSIS.md) | Executive summary of the product and stack |
+| Area                                      | Description                                      |
+| :---------------------------------------- | :----------------------------------------------- |
+| [Architecture](./architecture/README.md)  | FSD layers, routing, state, diagrams             |
+| [Features](./features/README.md)          | Theme, i18n, contact, and related capabilities   |
+| [Entities](./entities/README.md)          | Domain models (project, blog, skill, experience) |
+| [Onboarding](./onboarding/README.md)      | Local setup, first feature, FAQ                  |
+| [Guidelines](./guidelines/README.md)      | Coding standards, naming, testing, deps          |
+| [Deployment](./deployment/README.md)      | OVH VPS, GHCR, Watchtower, NPM                   |
+| [API conventions](./api/README.md)        | Client conventions and error handling            |
+| [ADRs](./decisions/README.md)             | Architecture decision records                    |
+| [Project analysis](./PROJECT_ANALYSIS.md) | Executive summary of the product and stack       |
 
 Related (outside `docs/`):
 
@@ -32,15 +32,15 @@ Related (outside `docs/`):
 
 ## Tech stack (summary)
 
-| Layer | Tools |
-| :--- | :--- |
-| **Core** | React 18, TypeScript, Vite (Rolldown), Bun |
-| **UI** | Tailwind CSS 4, Radix UI, Framer Motion |
-| **State / forms** | Zustand, React Hook Form, Zod |
-| **Content** | Velite, React Markdown, Shiki |
-| **i18n** | i18next |
-| **QA** | Vitest, Cypress, Storybook, Lighthouse CI, Husky, Commitlint |
-| **Runtime / CD** | Nginx, Docker, GHCR, GitHub Actions, Watchtower, Nginx Proxy Manager |
+| Layer             | Tools                                                                |
+| :---------------- | :------------------------------------------------------------------- |
+| **Core**          | React 18, TypeScript, Vite (Rolldown), Bun                           |
+| **UI**            | Tailwind CSS 4, Radix UI, Framer Motion                              |
+| **State / forms** | Zustand, React Hook Form, Zod                                        |
+| **Content**       | Velite, React Markdown, Shiki                                        |
+| **i18n**          | i18next                                                              |
+| **QA**            | Vitest, Cypress, Storybook, Lighthouse CI, Husky, Commitlint         |
+| **Runtime / CD**  | Nginx, Docker, GHCR, GitHub Actions, Watchtower, Nginx Proxy Manager |
 
 ---
 

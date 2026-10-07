@@ -7,14 +7,14 @@ Docs index: [docs/deployment/README.md](../docs/deployment/README.md)
 
 ## Docker (production path)
 
-| File | Purpose |
-|------|---------|
-| `docker/Dockerfile` | Multi-stage Bun → nginx (optional full in-image build) |
-| `docker/Dockerfile.runtime` | **CI default** - nginx:stable-alpine + prebuilt `dist/` |
-| `docker/docker-compose.yml` | Local build + optional Watchtower profile |
-| `docker/docker-compose.prod.yml` | VPS pull-only from GHCR |
-| `docker/nginx.conf` | SPA on `:8080`, `/health`, security headers |
-| `scripts/bootstrap-vps.sh` | One-shot VPS bootstrap |
+| File                             | Purpose                                                 |
+| -------------------------------- | ------------------------------------------------------- |
+| `docker/Dockerfile`              | Multi-stage Bun → nginx (optional full in-image build)  |
+| `docker/Dockerfile.runtime`      | **CI default** - nginx:stable-alpine + prebuilt `dist/` |
+| `docker/docker-compose.yml`      | Local build + optional Watchtower profile               |
+| `docker/docker-compose.prod.yml` | VPS pull-only from GHCR                                 |
+| `docker/nginx.conf`              | SPA on `:8080`, `/health`, security headers             |
+| `scripts/bootstrap-vps.sh`       | One-shot VPS bootstrap                                  |
 
 Full guide: [docs/deployment/DEPLOY_VPS.md](../docs/deployment/DEPLOY_VPS.md)
 

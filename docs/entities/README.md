@@ -4,11 +4,11 @@ Core domain models. They define data shapes and contracts used across pages, wid
 
 ## Documented entities
 
-| Entity | Doc |
-| :--- | :--- |
-| Project | [project.md](./project.md) |
-| Blog | [blog.md](./blog.md) |
-| Skill | [skill.md](./skill.md) |
+| Entity     | Doc                              |
+| :--------- | :------------------------------- |
+| Project    | [project.md](./project.md)       |
+| Blog       | [blog.md](./blog.md)             |
+| Skill      | [skill.md](./skill.md)           |
 | Experience | [experience.md](./experience.md) |
 
 ## Also present in `src/entities/`

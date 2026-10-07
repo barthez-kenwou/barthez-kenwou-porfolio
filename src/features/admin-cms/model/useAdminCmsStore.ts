@@ -25,10 +25,7 @@ import type {
 
 function flattenSkills(): IAdminSkill[] {
   return skillsData.map((s) =>
-    ensureId(
-      { name: s.name, category: s.category, level: s.level, icon: s.icon },
-      'skill',
-    ),
+    ensureId({ name: s.name, category: s.category, level: s.level, icon: s.icon }, 'skill'),
   );
 }
 
@@ -80,7 +77,11 @@ type CmsState = {
 
   // contact
   setContactInfo: (info: IContactInfo) => void;
-  addContactResponse: (payload: Omit<IContactResponse, 'id' | 'createdAt' | 'status'> & { status?: IContactResponse['status'] }) => void;
+  addContactResponse: (
+    payload: Omit<IContactResponse, 'id' | 'createdAt' | 'status'> & {
+      status?: IContactResponse['status'];
+    },
+  ) => void;
   updateContactResponse: (id: string, patch: Partial<IContactResponse>) => void;
   deleteContactResponse: (id: string) => void;
 
@@ -107,7 +108,8 @@ const seed = () => ({
       name: 'Amélie Kouam',
       email: 'amelie.kouam@example.com',
       subject: 'Demande de devis — infra AWS',
-      message: 'Bonjour Barthez,\n\nNous cherchons un accompagnement pour migrer notre monolithe vers ECS Fargate. Pouvez-vous proposer un cadrage sur 2 semaines ?\n\nCordialement,',
+      message:
+        'Bonjour Barthez,\n\nNous cherchons un accompagnement pour migrer notre monolithe vers ECS Fargate. Pouvez-vous proposer un cadrage sur 2 semaines ?\n\nCordialement,',
       status: 'new',
       createdAt: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
     },
@@ -116,7 +118,8 @@ const seed = () => ({
       name: 'Jean-Paul Mbarga',
       email: 'jp.mbarga@startup.cm',
       subject: 'Formation DevOps équipe',
-      message: 'Salut, on a une équipe de 6 et on voudrait une formation CI/CD GitHub Actions + Terraform. Dispo en présentiel Yaoundé ?',
+      message:
+        'Salut, on a une équipe de 6 et on voudrait une formation CI/CD GitHub Actions + Terraform. Dispo en présentiel Yaoundé ?',
       status: 'read',
       createdAt: new Date(Date.now() - 1000 * 60 * 60 * 26).toISOString(),
       notes: 'Relancer semaine prochaine',
@@ -126,7 +129,8 @@ const seed = () => ({
       name: 'Sarah Chen',
       email: 'sarah@northbridge.io',
       subject: 'Partnership / case study',
-      message: 'Hi Barthez — loved the NEXUS write-up. Would you be open to a short technical interview for our engineering blog?',
+      message:
+        'Hi Barthez — loved the NEXUS write-up. Would you be open to a short technical interview for our engineering blog?',
       status: 'replied',
       createdAt: new Date(Date.now() - 1000 * 60 * 60 * 80).toISOString(),
     },

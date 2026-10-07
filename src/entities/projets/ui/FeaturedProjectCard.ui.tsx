@@ -36,11 +36,7 @@ export const FeaturedProjectCard: React.FC<FeaturedProjectCardProps> = ({ projec
       )}
     >
       {/* Full-card hit area - image, tags, title, description */}
-      <Link
-        to={projectHref}
-        className="absolute inset-0 z-10"
-        aria-label={title}
-      />
+      <Link to={projectHref} className="absolute inset-0 z-10" aria-label={title} />
 
       <div className="relative h-44 w-full shrink-0 overflow-hidden md:h-full md:w-[45%]">
         <img

@@ -1,4 +1,4 @@
-import { AiOutlineDownload } from "react-icons/ai"; 
+import { AiOutlineDownload } from 'react-icons/ai';
 import { navItems } from '@/shared/constants/navItems.const';
 import { Button } from '@/shared/ui/Button';
 import { LanguageToggle } from '@/shared/ui/LanguageToggle';
@@ -28,11 +28,11 @@ export const MobileNavbar: React.FC = () => {
         ? 'Passer en mode sombre'
         : 'Switch to dark mode';
 
-  const languageLabel =
-    language === 'fr' ? 'Switch to English' : 'Passer en français';
+  const languageLabel = language === 'fr' ? 'Switch to English' : 'Passer en français';
 
-  // Bottom bar: skip Blog (top) + drop Contact for breathing room
-  const bottomNavItems = navItems.filter((item) => item.id !== '/blog').slice(0, -1);
+  // Bottom dock: Blog lives in the top bar; Skills stays in the sidebar.
+  // Keep Contact as a one-tap destination.
+  const bottomNavItems = navItems.filter((item) => item.id !== '/blog' && item.id !== '/skills');
 
   return (
     <div className="xl:hidden">
@@ -58,7 +58,10 @@ export const MobileNavbar: React.FC = () => {
             </Link>
           </Button>
 
-          <Button asChild className="w-fit px-2 h-8 font-semibold text-primary-foreground contrast-more:text-white">
+          <Button
+            asChild
+            className="w-fit px-2 h-8 font-semibold text-primary-foreground contrast-more:text-white"
+          >
             <Link
               to="/cv"
               onMouseEnter={() => {

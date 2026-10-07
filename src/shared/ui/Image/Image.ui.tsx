@@ -87,10 +87,7 @@ export const Image: React.FC<ImageProps> = ({
       : style;
 
   return (
-    <div
-      ref={wrapperRef}
-      className={`relative overflow-hidden ${className}`}
-    >
+    <div ref={wrapperRef} className={`relative overflow-hidden ${className}`}>
       {showSkeleton && !loaded && (
         <div
           aria-hidden

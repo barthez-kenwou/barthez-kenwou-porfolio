@@ -71,7 +71,11 @@ function DropdownMenuLabel({
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Label> & { inset?: boolean }) {
   return (
     <DropdownMenuPrimitive.Label
-      className={cn('px-2 py-1.5 text-xs font-medium text-muted-foreground', inset && 'pl-8', className)}
+      className={cn(
+        'px-2 py-1.5 text-xs font-medium text-muted-foreground',
+        inset && 'pl-8',
+        className,
+      )}
       {...props}
     />
   );

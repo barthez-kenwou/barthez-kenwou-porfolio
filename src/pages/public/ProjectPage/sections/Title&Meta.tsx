@@ -36,7 +36,12 @@ export const TitleMeta: React.FC = () => {
         </span>
       </div>
       <div className="flex flex-wrap gap-2 mb-6">
-        {[...(project.techStack?.frontend || []), ...(project.techStack?.backend || []), ...(project.techStack?.database || []), ...(project.techStack?.devops || [])].map((tag: string) => (
+        {[
+          ...(project.techStack?.frontend || []),
+          ...(project.techStack?.backend || []),
+          ...(project.techStack?.database || []),
+          ...(project.techStack?.devops || []),
+        ].map((tag: string) => (
           <span
             key={tag}
             className="px-3 py-1 rounded-md bg-secondary text-sm text-muted-foreground"

@@ -20,11 +20,9 @@ export const TechBadge: React.FC<TechBadgeProps> = ({
 }) => {
   const interactive = typeof onClick === 'function';
 
-  const baseClass =
-    'px-2 py-0.5 rounded-md text-xs transition-all duration-200';
+  const baseClass = 'px-2 py-0.5 rounded-md text-xs transition-all duration-200';
 
-  const activeClass =
-    'bg-primary/20 text-primary border border-primary/40 shadow-primary/20';
+  const activeClass = 'bg-primary/20 text-primary border border-primary/40 shadow-primary/20';
 
   const inactiveClass = interactive
     ? 'bg-secondary/50 text-muted-foreground border border-transparent hover:border-primary/30 hover:text-foreground hover:bg-secondary/80 cursor-pointer'
@@ -43,9 +41,5 @@ export const TechBadge: React.FC<TechBadgeProps> = ({
     );
   }
 
-  return (
-    <span className={`${baseClass} ${inactiveClass} ${className}`}>
-      {tag}
-    </span>
-  );
+  return <span className={`${baseClass} ${inactiveClass} ${className}`}>{tag}</span>;
 };

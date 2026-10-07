@@ -1,41 +1,41 @@
 import { StyleSheet } from '@react-pdf/renderer';
 
 export const pdfStyles = StyleSheet.create({
-  page: { 
-    flexDirection: 'column', 
-    backgroundColor: '#FFFFFF', 
-    padding: 30, 
-    fontFamily: 'Helvetica' 
+  page: {
+    flexDirection: 'column',
+    backgroundColor: '#FFFFFF',
+    padding: 30,
+    fontFamily: 'Helvetica',
   },
-  header: { 
-    marginBottom: 15, 
-    borderBottomWidth: 1.5, 
-    borderBottomColor: '#0f172a', 
+  header: {
+    marginBottom: 15,
+    borderBottomWidth: 1.5,
+    borderBottomColor: '#0f172a',
     paddingBottom: 10,
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   headerLeft: {
-    width: '60%'
+    width: '60%',
   },
   headerRight: {
     width: '40%',
     alignItems: 'flex-end',
-    lineHeight: 1.3
+    lineHeight: 1.3,
   },
-  name: { 
-    fontSize: 20, 
-    fontWeight: 'bold', 
+  name: {
+    fontSize: 20,
+    fontWeight: 'bold',
     color: '#0f172a',
     textTransform: 'uppercase',
-    letterSpacing: 1
+    letterSpacing: 1,
   },
-  title: { 
-    fontSize: 10, 
-    color: '#4B2A78', 
+  title: {
+    fontSize: 10,
+    color: '#4B2A78',
     marginTop: 3,
     fontWeight: 'bold',
-    textTransform: 'uppercase'
+    textTransform: 'uppercase',
   },
   subtitle: {
     fontSize: 9,
@@ -43,7 +43,7 @@ export const pdfStyles = StyleSheet.create({
     marginTop: 2,
   },
   section: {
-    marginBottom: 10
+    marginBottom: 10,
   },
   sectionTitleBox: {
     backgroundColor: '#f1f5f9',
@@ -51,14 +51,14 @@ export const pdfStyles = StyleSheet.create({
     paddingHorizontal: 6,
     marginBottom: 8,
     borderLeftWidth: 3,
-    borderLeftColor: '#4B2A78'
+    borderLeftColor: '#4B2A78',
   },
   sectionTitle: {
     fontSize: 11,
     fontWeight: 'bold',
     color: '#0f172a',
     textTransform: 'uppercase',
-    letterSpacing: 0.5
+    letterSpacing: 0.5,
   },
   row: {
     flexDirection: 'row',
@@ -67,26 +67,26 @@ export const pdfStyles = StyleSheet.create({
   },
   leftCol: {
     width: '22%',
-    paddingRight: 8
+    paddingRight: 8,
   },
   rightCol: {
-    width: '78%'
+    width: '78%',
   },
   period: {
     fontSize: 9,
     color: '#4B2A78',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
-  text: { 
-    fontSize: 9, 
-    color: '#334155', 
-    lineHeight: 1.3 
+  text: {
+    fontSize: 9,
+    color: '#334155',
+    lineHeight: 1.3,
   },
-  boldText: { 
-    fontSize: 10, 
-    fontWeight: 'bold', 
+  boldText: {
+    fontSize: 10,
+    fontWeight: 'bold',
     color: '#0f172a',
-    marginBottom: 1
+    marginBottom: 1,
   },
   company: {
     fontSize: 9,
@@ -128,12 +128,12 @@ export const pdfStyles = StyleSheet.create({
     color: '#334155',
     marginBottom: 2,
     lineHeight: 1.3,
-    paddingLeft: 4
+    paddingLeft: 4,
   },
   skillGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginTop: 2
+    marginTop: 2,
   },
   skillPill: {
     fontSize: 8,
@@ -145,6 +145,6 @@ export const pdfStyles = StyleSheet.create({
     marginBottom: 4,
     borderRadius: 3,
     borderWidth: 0.5,
-    borderColor: '#e2e8f0'
-  }
+    borderColor: '#e2e8f0',
+  },
 });

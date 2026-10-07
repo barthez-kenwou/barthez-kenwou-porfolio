@@ -23,12 +23,12 @@ cp .env.example .env
 
 Useful variables:
 
-| Variable | Role |
-| :--- | :--- |
-| `VITE_SITE_URL` / `VITE_APP_URL` | Canonical site URL |
-| `VITE_ENABLE_PWA` | Enable service worker in builds |
-| `VITE_API_BASE_URL` | Optional backend base URL |
-| `VITE_PRESENTATION_YOUTUBE_URL` | Optional presentation video |
+| Variable                         | Role                            |
+| :------------------------------- | :------------------------------ |
+| `VITE_SITE_URL` / `VITE_APP_URL` | Canonical site URL              |
+| `VITE_ENABLE_PWA`                | Enable service worker in builds |
+| `VITE_API_BASE_URL`              | Optional backend base URL       |
+| `VITE_PRESENTATION_YOUTUBE_URL`  | Optional presentation video     |
 
 ## 4. Dev server
 
@@ -40,15 +40,15 @@ Open `http://localhost:5173`.
 
 ## 5. Daily commands
 
-| Action | Command |
-| :--- | :--- |
-| Build | `bun run build` |
-| Lint | `bun run lint` |
-| Typecheck | `bun run typecheck` |
-| Unit tests | `bun run test` / `bun run test:ci` |
-| Full local gate | `bun run validate` |
-| Storybook | `bun run storybook` |
-| SEO artifacts | `bun run seo:generate` |
+| Action          | Command                            |
+| :-------------- | :--------------------------------- |
+| Build           | `bun run build`                    |
+| Lint            | `bun run lint`                     |
+| Typecheck       | `bun run typecheck`                |
+| Unit tests      | `bun run test` / `bun run test:ci` |
+| Full local gate | `bun run validate`                 |
+| Storybook       | `bun run storybook`                |
+| SEO artifacts   | `bun run seo:generate`             |
 
 ## 6. Docker smoke test (optional)
 

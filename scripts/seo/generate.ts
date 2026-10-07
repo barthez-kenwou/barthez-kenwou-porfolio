@@ -5,10 +5,7 @@ import { projectsData } from '../../src/entities/projets/api/mocks/projectData.m
 import { blogPostsData } from '../../src/entities/blogs/api/mock/blog.mocks';
 import type { IProject } from '../../src/entities/projets/model/project.types';
 import type { IBlog } from '../../src/entities/blogs/model/blog.type';
-import {
-  getBlogPathSlug,
-  getProjectPathSlug,
-} from '../../src/shared/lib/entity-slug';
+import { getBlogPathSlug, getProjectPathSlug } from '../../src/shared/lib/entity-slug';
 import {
   AUTHOR_EMAIL,
   AUTHOR_LOCATION,
@@ -120,7 +117,12 @@ function projectImage(project: IProject): string {
 
 function flattenTech(project: IProject): string[] {
   const stack = project.techStack || {};
-  return [...(stack.frontend || []), ...(stack.backend || []), ...(stack.database || []), ...(stack.devops || [])];
+  return [
+    ...(stack.frontend || []),
+    ...(stack.backend || []),
+    ...(stack.database || []),
+    ...(stack.devops || []),
+  ];
 }
 
 function collectCategories(): Map<string, IBlog[]> {
@@ -534,11 +536,13 @@ ${blogFull}
   writeBoth('llms-full.txt', llmsFull);
 }
 
-function replaceMeta(html: string, attr: 'name' | 'property', key: string, content: string): string {
-  const re = new RegExp(
-    `<meta\\s+${attr}=["']${key}["']\\s+content=["'][^"']*["']\\s*/?>`,
-    'i',
-  );
+function replaceMeta(
+  html: string,
+  attr: 'name' | 'property',
+  key: string,
+  content: string,
+): string {
+  const re = new RegExp(`<meta\\s+${attr}=["']${key}["']\\s+content=["'][^"']*["']\\s*/?>`, 'i');
   const tag = `<meta ${attr}="${key}" content="${escapeHtml(content)}" />`;
   if (re.test(html)) return html.replace(re, tag);
   return html.replace('</head>', `  ${tag}\n</head>`);
@@ -558,7 +562,10 @@ function replaceCanonical(html: string, url: string): string {
 function injectJsonLd(html: string, id: string, data: unknown): string {
   const script = `<script type="application/ld+json" id="${id}">${JSON.stringify(data)}</script>`;
   // Remove previous same id if any
-  const cleaned = html.replace(new RegExp(`<script[^>]*id="${id}"[^>]*>[\\s\\S]*?<\\/script>`, 'i'), '');
+  const cleaned = html.replace(
+    new RegExp(`<script[^>]*id="${id}"[^>]*>[\\s\\S]*?<\\/script>`, 'i'),
+    '',
+  );
   return cleaned.replace('</head>', `  ${script}\n</head>`);
 }
 
@@ -658,7 +665,10 @@ function buildPrerenderPages(): PrerenderPage[] {
     const related = blogPostsData
       .filter((p) => p.category === post.category && p.id !== post.id)
       .slice(0, 4)
-      .map((p) => `<li><a href="${absoluteUrl(`/blog/${getBlogPathSlug(p)}`)}">${escapeHtml(blogTitle(p))}</a></li>`)
+      .map(
+        (p) =>
+          `<li><a href="${absoluteUrl(`/blog/${getBlogPathSlug(p)}`)}">${escapeHtml(blogTitle(p))}</a></li>`,
+      )
       .join('');
     pages.push({
       path: `/blog/${getBlogPathSlug(post)}`,

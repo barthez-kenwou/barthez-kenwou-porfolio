@@ -1,15 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import {
-  Bold,
-  Code2,
-  Heading2,
-  Italic,
-  Link2,
-  List,
-  Table2,
-} from 'lucide-react';
+import { Bold, Code2, Heading2, Italic, Link2, List, Table2 } from 'lucide-react';
 import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 import { Label } from '@/shared/ui/label';
@@ -42,8 +34,7 @@ const SNIPPETS: Record<string, Snippet> = {
   link: { before: '[', after: '](https://)', placeholder: 'label' },
   list: { before: '- ', placeholder: 'item', block: true },
   table: {
-    before:
-      '| Column | Column |\n| --- | --- |\n| Cell | Cell |\n',
+    before: '| Column | Column |\n| --- | --- |\n| Cell | Cell |\n',
     block: true,
   },
 };
@@ -56,7 +47,8 @@ function insertSnippet(
 ): { next: string; cursor: number } {
   const selected = value.slice(selectionStart, selectionEnd);
   const content = selected || snippet.placeholder || '';
-  const prefix = snippet.block && selectionStart > 0 && value[selectionStart - 1] !== '\n' ? '\n' : '';
+  const prefix =
+    snippet.block && selectionStart > 0 && value[selectionStart - 1] !== '\n' ? '\n' : '';
   const insertion = `${prefix}${snippet.before}${content}${snippet.after ?? ''}`;
   const next = value.slice(0, selectionStart) + insertion + value.slice(selectionEnd);
   const cursor =

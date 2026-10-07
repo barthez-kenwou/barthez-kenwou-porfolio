@@ -1,10 +1,10 @@
-import { 
-  HiOutlineCloud, 
-  HiOutlineServerStack, 
-  HiOutlineCodeBracketSquare, 
-  HiOutlineShieldCheck, 
-  HiOutlineBolt, 
-  HiOutlineAcademicCap 
+import {
+  HiOutlineCloud,
+  HiOutlineServerStack,
+  HiOutlineCodeBracketSquare,
+  HiOutlineShieldCheck,
+  HiOutlineBolt,
+  HiOutlineAcademicCap,
 } from 'react-icons/hi2';
 
 /**

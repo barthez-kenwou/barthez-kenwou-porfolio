@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback } from 'react';
 
 interface Particle {
   x: number;
@@ -13,11 +13,11 @@ interface Particle {
 }
 
 const BRAND_COLORS = [
-  "rgba(91, 58, 140, ", // amethyst
-  "rgba(75, 42, 120, ", // deep violet
-  "rgba(167, 139, 250, ", // soft lilac (light-friendly)
-  "rgba(196, 181, 253, ", // pale violet
-  "rgba(180, 180, 190, ", // silver
+  'rgba(91, 58, 140, ', // amethyst
+  'rgba(75, 42, 120, ', // deep violet
+  'rgba(167, 139, 250, ', // soft lilac (light-friendly)
+  'rgba(196, 181, 253, ', // pale violet
+  'rgba(180, 180, 190, ', // silver
 ];
 
 const MAX_PARTICLES = 40; // Reduced from 60 for better performance
@@ -44,10 +44,12 @@ export const MouseParticles = () => {
       const speed = 0.3 + Math.random() * 1.5;
       const maxLife = 30 + Math.random() * 30; // Shorter life for performance
       particlesRef.current.push({
-        x, y,
+        x,
+        y,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed - 0.5,
-        life: 0, maxLife,
+        life: 0,
+        maxLife,
         size: 1 + Math.random() * 2,
         color: BRAND_COLORS[Math.floor(Math.random() * BRAND_COLORS.length)],
         opacity: 0.5 + Math.random() * 0.5,
@@ -58,7 +60,7 @@ export const MouseParticles = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d", { alpha: true });
+    const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
 
     const resize = () => {
@@ -91,28 +93,28 @@ export const MouseParticles = () => {
       startAnimation();
     };
 
-    const handleMouseEnter = () => { 
+    const handleMouseEnter = () => {
       mouseRef.current.active = true;
       startAnimation();
     };
-    
-    const handleMouseLeave = () => { 
-      mouseRef.current.active = false; 
+
+    const handleMouseLeave = () => {
+      mouseRef.current.active = false;
     };
 
     const parent = canvas.parentElement!;
-    parent.addEventListener("mousemove", handleMouseMove, { passive: true });
-    parent.addEventListener("mouseenter", handleMouseEnter);
-    parent.addEventListener("mouseleave", handleMouseLeave);
+    parent.addEventListener('mousemove', handleMouseMove, { passive: true });
+    parent.addEventListener('mouseenter', handleMouseEnter);
+    parent.addEventListener('mouseleave', handleMouseLeave);
 
     const animate = () => {
       const particles = particlesRef.current;
-      
+
       // OPTIMIZATION: Stop animation loop if no particles and mouse is inactive
       if (particles.length === 0 && !mouseRef.current.active) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         isAnimatingRef.current = false;
-        return; 
+        return;
       }
 
       const w = canvas.width / Math.min(window.devicePixelRatio, 2);
@@ -127,9 +129,10 @@ export const MouseParticles = () => {
         p.vy -= 0.01;
 
         const progress = p.life / p.maxLife;
-        const alpha = progress < 0.15
-          ? (progress / 0.15) * p.opacity
-          : (1 - (progress - 0.15) / 0.85) * p.opacity;
+        const alpha =
+          progress < 0.15
+            ? (progress / 0.15) * p.opacity
+            : (1 - (progress - 0.15) / 0.85) * p.opacity;
 
         if (p.life >= p.maxLife || alpha <= 0) {
           particles.splice(i, 1);
@@ -155,8 +158,8 @@ export const MouseParticles = () => {
       if (mouseRef.current.active) {
         const { x, y } = mouseRef.current;
         const glow = ctx.createRadialGradient(x, y, 0, x, y, 40);
-        glow.addColorStop(0, "rgba(91, 58, 140, 0.1)");
-        glow.addColorStop(1, "rgba(91, 58, 140, 0)");
+        glow.addColorStop(0, 'rgba(91, 58, 140, 0.1)');
+        glow.addColorStop(1, 'rgba(91, 58, 140, 0)');
         ctx.beginPath();
         ctx.fillStyle = glow;
         ctx.arc(x, y, 40, 0, Math.PI * 2);
@@ -168,9 +171,9 @@ export const MouseParticles = () => {
 
     return () => {
       cancelAnimationFrame(animFrameRef.current);
-      parent.removeEventListener("mousemove", handleMouseMove);
-      parent.removeEventListener("mouseenter", handleMouseEnter);
-      parent.removeEventListener("mouseleave", handleMouseLeave);
+      parent.removeEventListener('mousemove', handleMouseMove);
+      parent.removeEventListener('mouseenter', handleMouseEnter);
+      parent.removeEventListener('mouseleave', handleMouseLeave);
       ro.disconnect();
     };
   }, [spawnParticles]);

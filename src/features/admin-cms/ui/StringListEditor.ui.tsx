@@ -52,12 +52,7 @@ export function StringListEditor({
         )}
       >
         {!hideLabel && label ? <Label className="text-foreground">{label}</Label> : null}
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => onChange([...values, ''])}
-        >
+        <Button type="button" variant="outline" size="sm" onClick={() => onChange([...values, ''])}>
           <Plus className="size-3.5" aria-hidden />
           {isFr ? 'Ajouter' : 'Add'}
         </Button>
@@ -79,7 +74,13 @@ export function StringListEditor({
                 onChange={(e) => updateAt(index, e.target.value)}
                 placeholder={placeholder}
                 className="border-0 bg-transparent shadow-none focus-visible:ring-0"
-                aria-label={label ? `${label} ${index + 1}` : isFr ? `Élément ${index + 1}` : `Item ${index + 1}`}
+                aria-label={
+                  label
+                    ? `${label} ${index + 1}`
+                    : isFr
+                      ? `Élément ${index + 1}`
+                      : `Item ${index + 1}`
+                }
               />
               <div className="flex shrink-0 items-center gap-0.5">
                 <Button

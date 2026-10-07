@@ -2,28 +2,9 @@ import { useMemo, useState, type ReactNode } from 'react';
 import { ChevronLeft, ChevronRight, Search, SlidersHorizontal } from 'lucide-react';
 import { Input } from '@/shared/ui/input';
 import { Button } from '@/shared/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/ui/select';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/shared/ui/table';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/shared/ui/sheet';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/shared/ui/sheet';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { cn } from '@/shared/lib/utils';
 import { AdminEmptyState } from './AdminEmptyState.ui';
@@ -217,7 +198,10 @@ export function AdminDataTable<T>({
                 ) : null}
               </Button>
             </SheetTrigger>
-            <SheetContent side="bottom" className="rounded-t-2xl pb-[max(1rem,env(safe-area-inset-bottom))]">
+            <SheetContent
+              side="bottom"
+              className="rounded-t-2xl pb-[max(1rem,env(safe-area-inset-bottom))]"
+            >
               <SheetHeader>
                 <SheetTitle>{isFr ? 'Filtres & pagination' : 'Filters & paging'}</SheetTitle>
               </SheetHeader>

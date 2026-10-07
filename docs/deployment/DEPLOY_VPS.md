@@ -4,12 +4,12 @@ Pipeline CD : **push `main` → CI → Gitleaks → SonarQube → Trivy → buil
 Sur le VPS, **Watchtower** repull `latest` automatiquement.  
 TLS / routage : **Nginx Proxy Manager** sur le réseau Docker externe `web-proxy`.
 
-| | |
-|--|--|
-| Compte GitHub | `barthez-kenwou` (ex-`01Barthez`) |
-| Repo | **privé** - `github.com/barthez-kenwou/barthez-kenwou-porfolio` |
-| Image GHCR | `ghcr.io/barthez-kenwou/barthez-kenwou-porfolio` (**privée**) |
-| Conteneur | `barthez-portfolio-web:8080` sur `web-proxy` |
+|               |                                                                 |
+| ------------- | --------------------------------------------------------------- |
+| Compte GitHub | `barthez-kenwou` (ex-`01Barthez`)                               |
+| Repo          | **privé** - `github.com/barthez-kenwou/barthez-kenwou-porfolio` |
+| Image GHCR    | `ghcr.io/barthez-kenwou/barthez-kenwou-porfolio` (**privée**)   |
+| Conteneur     | `barthez-portfolio-web:8080` sur `web-proxy`                    |
 
 ---
 
@@ -39,14 +39,14 @@ OVH VPS
 
 ## Secrets GitHub
 
-| Secret | Rôle |
-|--------|------|
-| `OVH_SSH_HOST` / `OVH_SSH_USER` / `OVH_SSH_KEY` | Deploy SSH |
-| `OVH_SSH_PORT` | optionnel (`22`) |
-| `OVH_APP_DIR` | optionnel (`/srv/apps/barthez-kenwou-portfolio`) |
-| `GHCR_PULL_TOKEN` | **recommandé** - PAT `read:packages` (repo privé → package privé) |
-| `SONAR_TOKEN` / `SONAR_HOST_URL` | SonarQube |
-| `GITLEAKS_LICENSE` | optionnel |
+| Secret                                          | Rôle                                                              |
+| ----------------------------------------------- | ----------------------------------------------------------------- |
+| `OVH_SSH_HOST` / `OVH_SSH_USER` / `OVH_SSH_KEY` | Deploy SSH                                                        |
+| `OVH_SSH_PORT`                                  | optionnel (`22`)                                                  |
+| `OVH_APP_DIR`                                   | optionnel (`/srv/apps/barthez-kenwou-portfolio`)                  |
+| `GHCR_PULL_TOKEN`                               | **recommandé** - PAT `read:packages` (repo privé → package privé) |
+| `SONAR_TOKEN` / `SONAR_HOST_URL`                | SonarQube                                                         |
+| `GITLEAKS_LICENSE`                              | optionnel                                                         |
 
 Environment GitHub : `production`.
 
@@ -82,14 +82,14 @@ bash infra/scripts/bootstrap-vps.sh
 
 Créer un **Proxy Host** :
 
-| Champ | Valeur |
-|--------|--------|
-| Domain Names | `barthez-kenwou.dev` (+ `www` si besoin) |
-| Scheme | `http` |
-| Forward Hostname / IP | `barthez-portfolio-web` |
-| Forward Port | `8080` |
-| SSL | Let’s Encrypt (force SSL) |
-| Websockets | off (SPA statique) |
+| Champ                 | Valeur                                   |
+| --------------------- | ---------------------------------------- |
+| Domain Names          | `barthez-kenwou.dev` (+ `www` si besoin) |
+| Scheme                | `http`                                   |
+| Forward Hostname / IP | `barthez-portfolio-web`                  |
+| Forward Port          | `8080`                                   |
+| SSL                   | Let’s Encrypt (force SSL)                |
+| Websockets            | off (SPA statique)                       |
 
 Le conteneur n’expose **pas** de port hôte : NPM parle uniquement via `web-proxy`.
 
@@ -123,13 +123,13 @@ docker compose -f infra/docker/docker-compose.yml up -d --build
 
 ## Fichiers clés
 
-| Fichier | Rôle |
-|---------|------|
-| `.github/workflows/deploy-vps.yml` | CD |
-| `infra/docker/Dockerfile.runtime` | Image CI (nginx + dist) |
-| `infra/docker/docker-compose.prod.yml` | VPS + `web-proxy` |
-| `infra/docker/nginx.conf` | SPA `/health` |
-| `infra/scripts/bootstrap-vps.sh` | Bootstrap |
+| Fichier                                | Rôle                    |
+| -------------------------------------- | ----------------------- |
+| `.github/workflows/deploy-vps.yml`     | CD                      |
+| `infra/docker/Dockerfile.runtime`      | Image CI (nginx + dist) |
+| `infra/docker/docker-compose.prod.yml` | VPS + `web-proxy`       |
+| `infra/docker/nginx.conf`              | SPA `/health`           |
+| `infra/scripts/bootstrap-vps.sh`       | Bootstrap               |
 
 ---
 

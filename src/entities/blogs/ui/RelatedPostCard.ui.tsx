@@ -26,9 +26,7 @@ export const RelatedPostCard: React.FC<RelatedPostCardProps> = ({
       to={`/blog/${getBlogPathSlug(Blog)}`}
       className={cn(
         'group block shrink-0 overflow-hidden rounded-md border border-border/50 bg-card transition-all duration-300 hover:border-primary/40',
-        compact
-          ? 'w-[46vw] max-w-[190px] sm:w-[200px] sm:max-w-none md:w-[220px]'
-          : 'w-full',
+        compact ? 'w-[46vw] max-w-[190px] sm:w-[200px] sm:max-w-none md:w-[220px]' : 'w-full',
         className,
       )}
     >

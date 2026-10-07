@@ -7,21 +7,23 @@ import importPlugin from 'eslint-plugin-import';
 
 /** Flat config compatible with ESLint 8 + typescript-eslint */
 export default tseslint.config(
-  { ignores: [
-    'dist',
-    'coverage',
-    'cypress',
-    'node_modules',
-    '**/*.config.*',
-    'tailwind.config.ts',
-    'velite.config.ts',
-    '.velite/**',
-    // Large generated / WebGL widgets - lint noise; covered by typecheck + manual review
-    'src/shared/ui/splash-cursor.tsx',
-    'src/shared/ui/text-animate.tsx',
-    'src/shared/ui/retro-grid.tsx',
-    'src/entities/blogs/api/mock/blog.mocks.ts',
-  ] },
+  {
+    ignores: [
+      'dist',
+      'coverage',
+      'cypress',
+      'node_modules',
+      '**/*.config.*',
+      'tailwind.config.ts',
+      'velite.config.ts',
+      '.velite/**',
+      // Large generated / WebGL widgets - lint noise; covered by typecheck + manual review
+      'src/shared/ui/splash-cursor.tsx',
+      'src/shared/ui/text-animate.tsx',
+      'src/shared/ui/retro-grid.tsx',
+      'src/entities/blogs/api/mock/blog.mocks.ts',
+    ],
+  },
   {
     files: ['src/**/*.{ts,tsx}'],
     extends: [

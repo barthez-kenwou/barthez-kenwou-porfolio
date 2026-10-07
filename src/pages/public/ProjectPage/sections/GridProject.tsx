@@ -52,7 +52,7 @@ export const GridProject: React.FC<GridProjectProps> = ({ filterState }) => {
     setCurrentPage(page);
     setTimeout(() => {
       // Offset scrolling slightly higher if there is a fixed header
-      const yOffset = -20; 
+      const yOffset = -20;
       const element = sectionRef.current;
       if (element) {
         const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
@@ -128,10 +128,7 @@ export const GridProject: React.FC<GridProjectProps> = ({ filterState }) => {
               ? 'Essaiyez de modifier tes critères de recherche ou réinitialisez tous les filtres pour recommencer.'
               : 'Try adjusting your search criteria or reset all filters to start over.'}
           </p>
-          <Button
-            onClick={resetAllFilters}
-            className="rounded-sm px-4 shadow-xs shadow-primary/20"
-          >
+          <Button onClick={resetAllFilters} className="rounded-sm px-4 shadow-xs shadow-primary/20">
             {language === 'fr' ? 'Réinitialiser tous les filtres' : 'Reset all filters'}
           </Button>
         </div>
@@ -170,10 +167,10 @@ export const GridProject: React.FC<GridProjectProps> = ({ filterState }) => {
                       key={pageNumber}
                       onClick={() => handlePageChange(pageNumber)}
                       className={cn(
-                        "w-8 h-8 rounded-md text-sm font-bold transition-all cursor-pointer",
+                        'w-8 h-8 rounded-md text-sm font-bold transition-all cursor-pointer',
                         isActive
-                          ? "bg-primary text-primary-foreground shadow-sm shadow-primary/20 scale-105"
-                          : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                          ? 'bg-primary text-primary-foreground shadow-sm shadow-primary/20 scale-105'
+                          : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
                       )}
                     >
                       {pageNumber}

@@ -42,9 +42,9 @@ services:
     restart: unless-stopped
     ports:
       # Local default 8080; on VPS set WEB_HOST_PORT=80 (edge TLS elsewhere)
-      - "${WEB_HOST_PORT:-8080}:8080"
+      - '${WEB_HOST_PORT:-8080}:8080'
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8080/health"]
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://127.0.0.1:8080/health']
       interval: 30s
       timeout: 5s
       retries: 3
@@ -53,7 +53,7 @@ services:
       resources:
         limits:
           memory: 256M
-          cpus: "0.50"
+          cpus: '0.50'
     security_opt:
       - no-new-privileges:true
     read_only: true
@@ -63,9 +63,9 @@ services:
       - /tmp/nginx:mode=1777
       - /var/log/nginx:mode=1777
     labels:
-      - "com.barthez.service=portfolio-web"
-      - "com.barthez.version=${IMAGE_TAG:-latest}"
-      - "com.centurylinklabs.watchtower.enable=true"
+      - 'com.barthez.service=portfolio-web'
+      - 'com.barthez.version=${IMAGE_TAG:-latest}'
+      - 'com.centurylinklabs.watchtower.enable=true'
     networks:
       - portfolio
 
@@ -74,7 +74,7 @@ services:
     image: containrrr/watchtower:1.7.1
     container_name: barthez-portfolio-watchtower
     restart: unless-stopped
-    profiles: ["watchtower"]
+    profiles: ['watchtower']
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ${DOCKER_CONFIG_JSON:-~/.docker/config.json}:/config.json:ro
@@ -89,7 +89,7 @@ services:
       resources:
         limits:
           memory: 64M
-          cpus: "0.10"
+          cpus: '0.10'
     security_opt:
       - no-new-privileges:true
     networks:

@@ -48,9 +48,7 @@ const GalleryCell: React.FC<CellProps> = ({ item, fallbackAlt, isFr, onOpen }) =
             {isFr ? KIND_LABEL[item.kind].fr : KIND_LABEL[item.kind].en}
           </span>
         )}
-        {caption && (
-          <p className="text-xs text-white/90 line-clamp-2 leading-snug">{caption}</p>
-        )}
+        {caption && <p className="text-xs text-white/90 line-clamp-2 leading-snug">{caption}</p>}
       </div>
     </button>
   );

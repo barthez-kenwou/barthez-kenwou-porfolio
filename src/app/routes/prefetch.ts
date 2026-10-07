@@ -18,8 +18,11 @@ export function prefetchRoutes() {
   };
 
   const rIC =
-    (window as Window & { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number })
-      .requestIdleCallback ??
+    (
+      window as Window & {
+        requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      }
+    ).requestIdleCallback ??
     function (cb: () => void) {
       return window.setTimeout(cb, 300);
     };

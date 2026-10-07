@@ -12,9 +12,7 @@ export const ProjectLinksSection: React.FC<{ project: IProject }> = ({ project }
   if (links.length === 0) return null;
 
   return (
-    <ProjectSectionShell
-      title={isFr ? 'Liens utiles' : 'Useful links'}
-    >
+    <ProjectSectionShell title={isFr ? 'Liens utiles' : 'Useful links'}>
       <ul className="flex flex-wrap gap-2.5">
         {links.map((link, idx) => (
           <li key={`${link.url}-${idx}`}>

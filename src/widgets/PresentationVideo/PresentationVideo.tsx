@@ -45,9 +45,7 @@ export const PresentationVideo: React.FC = () => {
             videoSrc={video.embedSrc}
             thumbnailSrc={video.thumbnailSrc}
             thumbnailAlt={
-              language === 'fr'
-                ? 'Présentation - Barthez Kenwou'
-                : 'Presentation - Barthez Kenwou'
+              language === 'fr' ? 'Présentation - Barthez Kenwou' : 'Presentation - Barthez Kenwou'
             }
           />
         </div>

@@ -10,9 +10,9 @@ export const HeroSection: React.FC = () => {
     <section className="relative w-full pt-20 pb-10 md:py-14 mb-8 flex flex-col items-center justify-center animate-fade-in overflow-hidden">
       {/* Original MagicUI Ripple */}
       <Ripple />
-      
+
       {/* Clean Text Content */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -21,9 +21,7 @@ export const HeroSection: React.FC = () => {
         <h1 className="section-title mb-3">
           <span className="gradient-text drop-shadow-sm">{t('contact.title')}</span>
         </h1>
-        <p className="section-subtitle !mb-0 italic opacity-90">
-          {t('contact.subtitle')}
-        </p>
+        <p className="section-subtitle !mb-0 italic opacity-90">{t('contact.subtitle')}</p>
       </motion.div>
     </section>
   );

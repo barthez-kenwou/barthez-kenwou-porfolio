@@ -158,8 +158,8 @@ export function SplashCursor({
       const halfFloatTexType = isWebGL2
         ? (gl as WebGL2RenderingContext).HALF_FLOAT
         : halfFloat && 'HALF_FLOAT_OES' in halfFloat
-        ? (halfFloat as OES_texture_half_float).HALF_FLOAT_OES
-        : 0;
+          ? (halfFloat as OES_texture_half_float).HALF_FLOAT_OES
+          : 0;
 
       let formatRGBA: { internalFormat: number; format: number } | null;
       let formatRG: { internalFormat: number; format: number } | null;
@@ -1284,7 +1284,7 @@ export function SplashCursor({
       const isDark = document.documentElement.classList.contains('dark');
 
       // Curated amethyst / violet / silver - marries Pearl & Amethyst light + Brilliant Obscure dark
-      const hues = [0.70, 0.73, 0.76, 0.79, 0.68, 0.82];
+      const hues = [0.7, 0.73, 0.76, 0.79, 0.68, 0.82];
       const h = hues[Math.floor(Math.random() * hues.length)];
 
       // Occasional luminous silver streak
@@ -1298,12 +1298,8 @@ export function SplashCursor({
         };
       }
 
-      const s = isDark
-        ? 0.45 + Math.random() * 0.3
-        : 0.4 + Math.random() * 0.25;
-      const v = isDark
-        ? 0.75 + Math.random() * 0.15
-        : 0.65 + Math.random() * 0.18;
+      const s = isDark ? 0.45 + Math.random() * 0.3 : 0.4 + Math.random() * 0.25;
+      const v = isDark ? 0.75 + Math.random() * 0.15 : 0.65 + Math.random() * 0.18;
 
       const c = HSVtoRGB(h, s, v);
       // Fluid sim amplifies ~×10 on splat - keep subtle so text stays readable

@@ -32,7 +32,9 @@ export const ProjectDetailPage = () => {
   const searchId = projectID || id;
   const project = findByNumericId(projectsData, searchId);
   const { language } = useLanguageStore();
-  const projectPath = project ? `/projects/${getProjectPathSlug(project)}` : `/projects/${searchId}`;
+  const projectPath = project
+    ? `/projects/${getProjectPathSlug(project)}`
+    : `/projects/${searchId}`;
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -44,14 +46,16 @@ export const ProjectDetailPage = () => {
     <>
       <SEO
         path={projectPath}
-        title={`${language === 'fr'
+        title={`${
+          language === 'fr'
             ? truncateFonction(project?.titleFr || '', 60)
             : truncateFonction(project?.titleEn || '', 60)
-          }`}
-        description={`${language === 'fr'
+        }`}
+        description={`${
+          language === 'fr'
             ? truncateFonction(project.descriptionFr || '', 160)
             : truncateFonction(project.descriptionEn || '', 160)
-          }`}
+        }`}
         openGraph={{
           type: 'article',
           image: project.images?.[0] || project.preview,

@@ -52,9 +52,7 @@ export function ConfirmDeleteDialog({
           <AlertDialogDescription>{resolvedDescription}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={loading}>
-            {isFr ? 'Annuler' : 'Cancel'}
-          </AlertDialogCancel>
+          <AlertDialogCancel disabled={loading}>{isFr ? 'Annuler' : 'Cancel'}</AlertDialogCancel>
           <AlertDialogAction
             disabled={loading}
             className={cn(buttonVariants({ variant: 'destructive' }))}

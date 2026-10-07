@@ -17,7 +17,14 @@ import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
 
-const emptyItem = () => ({ id: createId('edu'), degreeFr: '', degreeEn: '', school: '', period: '', link: '' });
+const emptyItem = () => ({
+  id: createId('edu'),
+  degreeFr: '',
+  degreeEn: '',
+  school: '',
+  period: '',
+  link: '',
+});
 
 export const AdminEducationPage: React.FC = () => {
   const { language } = useLanguageStore();
@@ -62,12 +69,31 @@ export const AdminEducationPage: React.FC = () => {
           }
         >
           <div className="grid gap-4 md:grid-cols-2">
-            
-            <BilingualField label={fr ? 'Diplôme' : 'Degree'} valueFr={editing.degreeFr} valueEn={editing.degreeEn} onChangeFr={(v) => setEditing({ ...editing, degreeFr: v })} onChangeEn={(v) => setEditing({ ...editing, degreeEn: v })} />
-            <Field label={fr ? 'École' : 'School'}><Input value={editing.school} onChange={(e) => setEditing({ ...editing, school: e.target.value })} /></Field>
-            <Field label={fr ? 'Période' : 'Period'}><Input value={editing.period} onChange={(e) => setEditing({ ...editing, period: e.target.value })} /></Field>
-            <Field label="Link"><Input value={editing.link || ''} onChange={(e) => setEditing({ ...editing, link: e.target.value })} /></Field>
-  
+            <BilingualField
+              label={fr ? 'Diplôme' : 'Degree'}
+              valueFr={editing.degreeFr}
+              valueEn={editing.degreeEn}
+              onChangeFr={(v) => setEditing({ ...editing, degreeFr: v })}
+              onChangeEn={(v) => setEditing({ ...editing, degreeEn: v })}
+            />
+            <Field label={fr ? 'École' : 'School'}>
+              <Input
+                value={editing.school}
+                onChange={(e) => setEditing({ ...editing, school: e.target.value })}
+              />
+            </Field>
+            <Field label={fr ? 'Période' : 'Period'}>
+              <Input
+                value={editing.period}
+                onChange={(e) => setEditing({ ...editing, period: e.target.value })}
+              />
+            </Field>
+            <Field label="Link">
+              <Input
+                value={editing.link || ''}
+                onChange={(e) => setEditing({ ...editing, link: e.target.value })}
+              />
+            </Field>
           </div>
         </AdminSectionCard>
       ) : null}
@@ -75,7 +101,19 @@ export const AdminEducationPage: React.FC = () => {
       <AdminDataTable
         data={items}
         getRowId={(r: any) => String(r.id)}
-        searchKeys={['nameFr','nameEn','name','titleFr','titleEn','title','company','companyFr','companyEn','role','category']}
+        searchKeys={[
+          'nameFr',
+          'nameEn',
+          'name',
+          'titleFr',
+          'titleEn',
+          'title',
+          'company',
+          'companyFr',
+          'companyEn',
+          'role',
+          'category',
+        ]}
         emptyTitle={fr ? 'Aucun élément' : 'No items'}
         columns={[
           {
@@ -85,7 +123,7 @@ export const AdminEducationPage: React.FC = () => {
           },
           { key: 'school', header: fr ? 'École' : 'School' },
           { key: 'period', header: fr ? 'Période' : 'Period' },
-  ]}
+        ]}
         actions={(r: any) => (
           <>
             <Button size="icon-sm" variant="ghost" onClick={() => setEditing({ ...r })}>

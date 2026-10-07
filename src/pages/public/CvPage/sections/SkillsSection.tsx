@@ -1,6 +1,15 @@
 import React from 'react';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
-import { Building, Cloud, Code, Database, MonitorSmartphone, Server, Shield, ToolboxIcon } from 'lucide-react';
+import {
+  Building,
+  Cloud,
+  Code,
+  Database,
+  MonitorSmartphone,
+  Server,
+  Shield,
+  ToolboxIcon,
+} from 'lucide-react';
 import { SkillBadge } from '@/entities/skills/ui/SkillBadge.ui';
 import { ISkill } from '@/entities/skills';
 
@@ -27,7 +36,11 @@ export const SkillsSection: React.FC<SkillsProps> = ({ skills }) => {
       label: 'Tools & Environment',
       icon: <ToolboxIcon className="h-4 w-4 text-primary" />,
     },
-    { key: 'architecture', label: 'Architecture & Design', icon: <Building className="h-4 w-4 text-primary" /> }
+    {
+      key: 'architecture',
+      label: 'Architecture & Design',
+      icon: <Building className="h-4 w-4 text-primary" />,
+    },
   ];
 
   return (

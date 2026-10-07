@@ -16,22 +16,21 @@ export const ProjectPage = () => {
         title="Projets"
         description="Réalisations récentes - applications web, plateformes cloud et solutions DevOps conçues par Barthez Kenwou."
       />
-      <div className="min-h-screen py-10 md:py-16 lg:py-20 overflow-x-clip">
-        {/* Header - Centered */}
+      <div className="min-h-screen overflow-x-clip py-10 md:py-16 lg:py-20">
+        {/* 1. Frame the journey */}
         <HeroSection />
 
-        {/* Post-Marquee Content - Centered */}
         <div className="px-4 md:px-10 lg:px-14">
-          {/* Projects Grid with Filters */}
+          {/* 2. Explore the work */}
           <GridProject filterState={filterState} />
 
-          {/* Impact stays visible regardless of project filters */}
-          <ProjectStatsSection />
-
-          {/* Featured Projects Marquee - Full Width */}
+          {/* 3. Highlight featured case studies */}
           <FeaturedProjectsMarquee />
 
-          {/* New Strategic CTA */}
+          {/* 4. Credibility / impact */}
+          <ProjectStatsSection />
+
+          {/* 5. Convert: contact (prefilled) + GitHub */}
           <ProjectCTASection />
         </div>
       </div>

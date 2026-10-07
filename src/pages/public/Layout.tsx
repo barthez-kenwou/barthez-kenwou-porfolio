@@ -35,11 +35,7 @@ export const PublicLayout = () => {
               key=pathname resets the boundary when the user navigates elsewhere.
             */}
             <ErrorBoundary key={location.pathname}>
-              <Suspense
-                fallback={
-                  <RouteFallback className="flex-1 min-h-[calc(100svh-10rem)]" />
-                }
-              >
+              <Suspense fallback={<RouteFallback className="flex-1 min-h-[calc(100svh-10rem)]" />}>
                 <PageShell>
                   <Outlet />
                 </PageShell>
