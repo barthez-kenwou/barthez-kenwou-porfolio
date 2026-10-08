@@ -117,7 +117,7 @@ export function StackedTestimonialsCarousel({
   React.useEffect(() => {
     const unsub = scrollProgress.on('change', (v) => {
       const idx = ((Math.round(v) % total) + total) % total;
-      setActiveIndex(idx);
+      setActiveIndex((prev) => (prev === idx ? prev : idx));
     });
     return unsub;
   }, [scrollProgress, total]);

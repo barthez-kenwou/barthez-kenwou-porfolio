@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { BlobProvider } from '@react-pdf/renderer';
 import { CvPDFDocument } from '../PDF/PDFDocument';
 import { cvData } from '@/entities/cv/api/mock/cv-data';
@@ -14,17 +14,36 @@ interface CVPreviewModalProps {
 export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose }) => {
   const { language } = useLanguageStore();
   const [renderState, setRenderState] = useState(false);
+  const closeTimerRef = useRef<number | null>(null);
 
-  // Scale animation trick
+  const requestClose = useCallback(() => {
+    setRenderState(false);
+    if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = window.setTimeout(() => {
+      closeTimerRef.current = null;
+      onClose();
+    }, 500);
+  }, [onClose]);
+
+  // Scale animation trick + restore body scroll on unmount
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      // tiny delay allows CSS transition from 0.2 to 1
-      setTimeout(() => setRenderState(true), 10);
-    } else {
-      document.body.style.overflow = 'auto';
+    if (!isOpen) {
       setRenderState(false);
+      return;
     }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const openTimer = window.setTimeout(() => setRenderState(true), 10);
+
+    return () => {
+      window.clearTimeout(openTimer);
+      if (closeTimerRef.current) {
+        window.clearTimeout(closeTimerRef.current);
+        closeTimerRef.current = null;
+      }
+      document.body.style.overflow = previousOverflow || '';
+    };
   }, [isOpen]);
 
   if (!isOpen && !renderState) return null;
@@ -34,10 +53,7 @@ export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose 
       {/* Backdrop */}
       <div
         className={`fixed inset-0 bg-black/60 backdrop-blur-md transition-opacity duration-500 ease-out ${renderState ? 'opacity-100' : 'opacity-0'}`}
-        onClick={() => {
-          setRenderState(false);
-          setTimeout(onClose, 500); // Wait for scale down
-        }}
+        onClick={requestClose}
       />
 
       {/* Modal Container */}
@@ -67,10 +83,7 @@ export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose 
               </h3>
             </div>
             <button
-              onClick={() => {
-                setRenderState(false);
-                setTimeout(onClose, 500);
-              }}
+              onClick={requestClose}
               className="p-2 rounded-full bg-secondary/50 text-foreground hover:bg-destructive/20 hover:text-destructive hover:rotate-90 transition-all duration-300"
             >
               <X className="h-5 w-5" />

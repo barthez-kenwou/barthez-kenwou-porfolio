@@ -219,6 +219,16 @@ export function IconCloud({ icons, images, className, size = 460 }: IconCloudPro
     isDraggingRef.current = false;
   };
 
+  // End drag even if pointer is released outside the canvas
+  useEffect(() => {
+    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('blur', handleMouseUp);
+    return () => {
+      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('blur', handleMouseUp);
+    };
+  }, []);
+
   // Animation and rendering
   useEffect(() => {
     const canvas = canvasRef.current;
