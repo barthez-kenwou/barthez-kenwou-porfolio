@@ -19,8 +19,11 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        sans: ['Switzer', 'ui-sans-serif', 'sans-serif'],
+        display: ['Clash Display', 'ui-sans-serif', 'sans-serif'],
+        heading: ['Cabinet Grotesk', 'ui-sans-serif', 'sans-serif'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+        greeting: ['Allura', 'cursive'],
       },
       colors: {
         border: 'hsl(var(--border))',
@@ -31,6 +34,11 @@ export default {
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
+        },
+        brand: {
+          DEFAULT: 'hsl(var(--brand))',
+          foreground: 'hsl(var(--brand-foreground))',
+          hover: 'hsl(var(--brand-hover))',
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',

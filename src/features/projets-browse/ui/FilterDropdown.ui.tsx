@@ -45,7 +45,7 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({ label, activeCou
         <span>{label}</span>
 
         {isActive && (
-          <span className="flex items-center justify-center w-4 h-4 rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+          <span className="flex items-center justify-center w-4 h-4 rounded-full bg-brand text-[10px] font-bold text-brand-foreground">
             {activeCount}
           </span>
         )}

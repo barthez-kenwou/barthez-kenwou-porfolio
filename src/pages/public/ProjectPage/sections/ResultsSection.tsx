@@ -24,7 +24,7 @@ export const ResultsSection: React.FC = () => {
               key={i}
               className="p-4 rounded-md bg-primary/10 border border-primary/20 text-center"
             >
-              <span className="text-lg font-bold gradient-text">{result}</span>
+              <span className="text-lg font-bold text-foreground font-heading">{result}</span>
             </div>
           ),
         )}

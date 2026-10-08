@@ -126,7 +126,7 @@ export const SkillsSection: React.FC = () => {
             className={cn(
               'cursor-pointer rounded-sm border px-3 py-1 text-sm font-medium capitalize transition-colors duration-200',
               activeFilter === filter.id
-                ? 'border-primary bg-primary/90 text-primary-foreground'
+                ? 'border-brand bg-brand text-brand-foreground'
                 : 'border-border/50 bg-secondary/50 text-muted-foreground hover:border-primary/50 hover:text-foreground',
             )}
           >

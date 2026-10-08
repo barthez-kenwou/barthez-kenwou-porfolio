@@ -42,7 +42,7 @@ export const SidebarContentSection: React.FC = () => {
                 }}
                 className={`group relative flex items-center rounded-sm transition-all duration-300 ${
                   isActive
-                    ? 'bg-primary text-primary-foreground'
+                    ? 'bg-brand text-brand-foreground'
                     : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
                 } ${isExpanded ? 'gap-3 px-3 py-4' : 'justify-center px-3 py-3'}`}
                 aria-label={t(item.labelKey)}

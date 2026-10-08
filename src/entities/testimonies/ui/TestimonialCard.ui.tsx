@@ -30,7 +30,7 @@ export const TestimonialCard = ({
       </div>
 
       {/* testimonial Text */}
-      <blockquote className="text-muted-foreground mb-3 italic text-[13px] leading-relaxed">
+      <blockquote className="mb-3 text-[13px] leading-relaxed text-foreground/80 italic">
         "{language === 'fr' ? textFr : textEn}"
       </blockquote>
 

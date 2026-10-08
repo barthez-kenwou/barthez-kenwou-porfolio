@@ -88,30 +88,27 @@ export const HeroSection: React.FC = () => {
         )}
       />
 
-      {/* Flare is ambient decor: present immediately (no entrance fade with text) */}
-      <div className="pointer-events-none absolute inset-0 z-[5] overflow-hidden" aria-hidden>
-        <div className="absolute -right-[18%] bottom-[2%] w-[130%] max-w-none sm:-right-[14%] sm:bottom-[0%] sm:w-[115%] md:-right-[10%] md:bottom-[-2%] md:w-[95%] lg:-right-[6%] lg:w-[85%] xl:w-[78%]">
-          <img
-            src={HERO_FLARE}
-            alt=""
-            decoding="async"
-            // React 18 DOM: lowercase attribute (camelCase warn)
-            {...{ fetchpriority: 'high' }}
-            className={cn(
-              'hero-flare-pulse w-full h-auto select-none scale-110 sm:scale-125 -rotate-[3deg] sm:-rotate-[4deg] origin-bottom-right',
-              '[mask-image:linear-gradient(90deg,transparent_0%,black_18%,black_82%,transparent_100%),linear-gradient(180deg,transparent_0%,black_12%,black_88%,transparent_100%)]',
-              '[-webkit-mask-image:linear-gradient(90deg,transparent_0%,black_18%,black_82%,transparent_100%),linear-gradient(180deg,transparent_0%,black_12%,black_88%,transparent_100%)]',
-              '[mask-composite:intersect] [-webkit-mask-composite:source-in]',
-            )}
-            style={{
-              mixBlendMode: isDark ? 'screen' : 'multiply',
-              filter: isDark ? undefined : 'saturate(0.8) brightness(1.08)',
-            }}
-          />
+      {/* Flare — dark mode only (harsh / washed-out in light) */}
+      {isDark ? (
+        <div className="pointer-events-none absolute inset-0 z-[5] overflow-hidden" aria-hidden>
+          <div className="absolute -right-[18%] bottom-[2%] w-[130%] max-w-none sm:-right-[14%] sm:bottom-[0%] sm:w-[115%] md:-right-[10%] md:bottom-[-2%] md:w-[95%] lg:-right-[6%] lg:w-[85%] xl:w-[78%]">
+            <img
+              src={HERO_FLARE}
+              alt=""
+              decoding="async"
+              {...{ fetchpriority: 'high' }}
+              className={cn(
+                'hero-flare-pulse h-auto w-full origin-bottom-right scale-110 -rotate-[3deg] select-none sm:scale-125 sm:-rotate-[4deg]',
+                '[mask-image:linear-gradient(90deg,transparent_0%,black_18%,black_82%,transparent_100%),linear-gradient(180deg,transparent_0%,black_12%,black_88%,transparent_100%)]',
+                '[-webkit-mask-image:linear-gradient(90deg,transparent_0%,black_18%,black_82%,transparent_100%),linear-gradient(180deg,transparent_0%,black_12%,black_88%,transparent_100%)]',
+                '[mask-composite:intersect] [-webkit-mask-composite:source-in]',
+              )}
+              style={{ mixBlendMode: 'screen' }}
+            />
+          </div>
+          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-background to-transparent" />
         </div>
-
-        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-background to-transparent" />
-      </div>
+      ) : null}
 
       <section className="relative z-30 w-full px-4 md:px-10 lg:px-14 pt-24 md:pt-28 pb-20 md:pb-24 flex flex-col items-center text-center">
         {/* Greeting - script, discreet */}
@@ -120,7 +117,7 @@ export const HeroSection: React.FC = () => {
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="font-greeting text-lg sm:text-xl md:text-2xl text-muted-foreground/80 dark:text-muted-foreground/70 mb-2 leading-none"
+          className="mb-2 font-greeting text-lg leading-none text-foreground/70 sm:text-xl md:text-2xl dark:text-muted-foreground"
         >
           {t('hero.greeting')}
         </motion.p>
@@ -132,7 +129,7 @@ export const HeroSection: React.FC = () => {
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-3"
+          className="font-display mb-3 text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-foreground"
         >
           <TextAnimate
             key={`barthez-${nameEnterKey}`}
@@ -140,8 +137,8 @@ export const HeroSection: React.FC = () => {
             as="span"
             once={false}
             startOnView={false}
-            className="inline-block mr-2"
-            segmentClassName="gradient-text"
+            className="mr-2 inline-block"
+            segmentClassName="text-foreground"
           >
             Barthez
           </TextAnimate>
@@ -153,7 +150,7 @@ export const HeroSection: React.FC = () => {
             once={false}
             startOnView={false}
             className="inline-block uppercase"
-            segmentClassName="gradient-text"
+            segmentClassName="text-foreground"
           >
             Kenwou
           </TextAnimate>
@@ -167,7 +164,7 @@ export const HeroSection: React.FC = () => {
           animate="show"
           className="mb-4 flex min-h-[1.5em] items-center justify-center"
         >
-          <p className="text-base sm:text-xl md:text-2xl lg:text-3xl font-normal text-primary/85 dark:text-primary/90 tracking-wide leading-[1.35]">
+          <p className="font-heading text-base font-medium tracking-wide text-primary sm:text-xl md:text-2xl lg:text-3xl leading-[1.35]">
             <TypingAnimation
               key={language}
               words={roleWords}
@@ -187,7 +184,7 @@ export const HeroSection: React.FC = () => {
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="mx-auto max-w-lg text-sm leading-relaxed text-muted-foreground/90 mb-9"
+          className="mx-auto mb-9 max-w-lg text-sm leading-relaxed text-foreground/75"
         >
           {t('hero.description')}
         </motion.p>
@@ -200,7 +197,7 @@ export const HeroSection: React.FC = () => {
           animate="show"
           className="flex flex-col sm:flex-row items-center justify-center gap-3"
         >
-          <SpectrumButton asChild variant="solid" size="default">
+          <SpectrumButton asChild variant="spectrum" size="default">
             <Link to="/contact?from=home">
               {t('hero.cta.contact')}
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />

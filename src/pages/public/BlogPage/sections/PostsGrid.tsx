@@ -96,7 +96,7 @@ export const PostsGrid: React.FC = () => {
                 onClick={() => setActiveCategory(category)}
                 className={`rounded-md border px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all ${
                   activeCategory === category
-                    ? 'border-primary bg-primary text-primary-foreground'
+                    ? 'border-brand bg-brand text-brand-foreground'
                     : 'border-border/50 bg-secondary/30 text-muted-foreground hover:text-foreground'
                 }`}
               >

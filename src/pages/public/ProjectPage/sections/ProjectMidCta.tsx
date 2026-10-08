@@ -42,7 +42,7 @@ function MidCtaShell({
             className={cn(
               'group inline-flex shrink-0 items-center gap-0.5 pt-0.5',
               'text-[12px] font-medium text-primary sm:text-[13px]',
-              'underline-offset-4 transition-colors hover:underline',
+              'transition-colors',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35',
             )}
           >
@@ -50,7 +50,7 @@ function MidCtaShell({
             <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
         </div>
-        <p className="mt-1.5 max-w-xl text-[11px] leading-relaxed text-muted-foreground sm:mt-1 sm:text-xs">
+        <p className="mt-1.5 max-w-xl text-[11px] leading-relaxed text-foreground/75 sm:mt-1 sm:text-xs">
           {body}
         </p>
       </div>

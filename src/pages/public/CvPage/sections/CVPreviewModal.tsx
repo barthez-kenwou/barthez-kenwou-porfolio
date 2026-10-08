@@ -114,7 +114,7 @@ export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose 
                       <a
                         href={url}
                         download={`CV_Barthez_Kenwou_${language}.pdf`}
-                        className="group flex items-center gap-3 px-4 py-2 bg-primary text-primary-foreground rounded-full shadow-lg hover:shadow-primary/40 hover:-translate-y-1 transition-all duration-300 font-bold text-sm"
+                        className="group flex items-center gap-3 px-4 py-2 bg-brand text-brand-foreground hover:bg-brand-hover rounded-full shadow-sm hover:-translate-y-1 transition-all duration-300 font-bold text-sm"
                       >
                         <Download className="h-4 w-4 group-hover:scale-105 group-hover:-translate-y-1 transition-transform duration-300" />
                         {language === 'fr' ? 'Télécharger avec style !' : 'Download with style!'}

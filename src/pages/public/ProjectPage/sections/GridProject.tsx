@@ -84,7 +84,7 @@ export const GridProject: React.FC<GridProjectProps> = ({ filterState }) => {
               onClick={() => setCategory(filter.id)}
               className={`relative px-4 py-1 cursor-pointer rounded-full text-xs capitalize tracking-wide font-semibold transition-all duration-300 overflow-hidden group border ${
                 isActive
-                  ? 'bg-primary border-primary text-primary-foreground shadow-sm scale-105 shadow-primary/20'
+                  ? 'bg-brand border-brand text-brand-foreground shadow-none scale-105'
                   : 'bg-secondary/40 border-border/40 text-muted-foreground hover:text-foreground hover:border-primary/50 hover:bg-secondary/80'
               }`}
             >
@@ -169,7 +169,7 @@ export const GridProject: React.FC<GridProjectProps> = ({ filterState }) => {
                       className={cn(
                         'w-8 h-8 rounded-md text-sm font-bold transition-all cursor-pointer',
                         isActive
-                          ? 'bg-primary text-primary-foreground shadow-sm shadow-primary/20 scale-105'
+                          ? 'bg-brand text-brand-foreground shadow-none scale-105'
                           : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
                       )}
                     >

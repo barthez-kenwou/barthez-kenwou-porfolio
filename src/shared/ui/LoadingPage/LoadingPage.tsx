@@ -48,7 +48,7 @@ export const LoadingPage: React.FC = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="text-5xl font-black tracking-tighter text-foreground z-10 select-none"
           >
-            <span className="gradient-text">BK</span>
+            <span className="font-display text-foreground">BK</span>
           </motion.div>
         </div>
 

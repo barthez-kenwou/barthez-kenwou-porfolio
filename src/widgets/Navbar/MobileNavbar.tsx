@@ -32,6 +32,8 @@ export const MobileNavbar: React.FC = () => {
 
   // Bottom dock: Blog lives in the top bar; Skills stays in the sidebar.
   // Keep Contact as a one-tap destination.
+  // Visibility: xl:hidden — must stay in sync with PUBLIC_SHELL_BREAKPOINT (1280)
+  // so the docked AppSidebar never appears alongside this chrome.
   const bottomNavItems = navItems.filter((item) => item.id !== '/blog' && item.id !== '/skills');
 
   return (

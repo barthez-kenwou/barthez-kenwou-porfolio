@@ -1,5 +1,4 @@
 import React from 'react';
-import { Pointer } from '@/shared/ui/pointer';
 import { HeroSection } from './sections/HeroSection';
 import { ProfileCard } from '@/entities/userProfile/ui/ProfileCard.ui';
 import { BioSection } from './sections/BioSection';
@@ -36,9 +35,6 @@ export const AboutPage: React.FC = () => {
               <div className="lg:col-span-1">
                 {/* sticky needs a tall grid cell (default stretch) + no overflow clip on ancestors */}
                 <div className="glass relative sticky top-24 self-start rounded-md border border-border p-4 md:p-6">
-                  <div className="pointer-events-none absolute inset-0 z-10 rounded-md">
-                    <Pointer className="fill-primary" />
-                  </div>
                   <div className="relative z-20 w-full">
                     <ProfileCard />
                   </div>

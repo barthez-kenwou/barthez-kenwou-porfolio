@@ -14,7 +14,6 @@ import { LanguageToggle } from '@/shared/ui/LanguageToggle';
 import { ThemeToggle } from '@/shared/ui/ThemeToggle';
 import { Button } from '@/shared/ui/button';
 import { LoadingPage } from '@/shared/ui/LoadingPage/LoadingPage';
-import { cn } from '@/shared/lib/utils';
 
 type LocationState = { from?: string };
 
@@ -206,10 +205,7 @@ export function AdminLoginPage() {
             <Button
               type="submit"
               disabled={submitting}
-              className={cn(
-                'mt-2 h-12 w-full rounded-sm text-sm font-medium tracking-wide',
-                'shadow-[var(--glow-primary)]',
-              )}
+              className="mt-2 h-12 w-full rounded-sm text-sm font-medium tracking-wide"
             >
               {submitting ? (fr ? 'Ouverture…' : 'Opening…') : fr ? 'Entrer' : 'Enter'}
             </Button>

@@ -10,7 +10,7 @@ export const HeroSection: React.FC = () => {
       <div>
         <h1 className="section-title">
           {language === 'fr' ? 'Mes ' : 'My '}
-          <span className="gradient-text">Services</span>
+          <span className="font-display text-foreground">Services</span>
         </h1>
 
         <p className="section-subtitle">

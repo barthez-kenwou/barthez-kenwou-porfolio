@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { SpectrumButton } from '@/shared/ui/SpectrumButton';
-import { AuroraRibbons } from '@/shared/ui/aurora-ribbons';
+import { BrandAmbientField } from '@/shared/ui/BrandAmbientField';
 
 const CONTACT_FROM_ABOUT = '/contact?from=about';
 
@@ -12,19 +12,17 @@ export const AboutCTASection: React.FC = () => {
   const isFr = language === 'fr';
 
   return (
-    <section className="relative z-10 mx-4 mb-8 overflow-hidden rounded-lg border border-primary/25 shadow-[0_0_40px_-16px_hsla(268,52%,38%,0.35)] md:mx-10 md:mb-12 lg:mx-14">
-      <AuroraRibbons ribbonCount={6} />
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-background/15 via-transparent to-background/30" />
-
+    <section className="relative z-10 mx-4 mb-8 overflow-hidden rounded-lg border border-border md:mx-10 md:mb-12 lg:mx-14">
+      <BrandAmbientField intensity="soft" />
       <div className="relative z-10 mx-auto w-full p-5 text-center sm:p-6 md:p-8">
-        <div className="mx-auto flex max-w-xl flex-col items-center rounded-md border border-border/40 bg-background/55 px-4 py-5 shadow-sm backdrop-blur-lg dark:bg-background/50 sm:px-6 sm:py-6">
-          <h2 className="mb-2 text-lg font-bold text-foreground sm:mb-3 sm:text-xl md:text-2xl">
+        <div className="mx-auto flex max-w-xl flex-col items-center rounded-md border border-border/50 bg-background/70 px-4 py-5 shadow-sm backdrop-blur-md dark:bg-background/55 sm:px-6 sm:py-6">
+          <h2 className="mb-2 font-heading text-lg font-bold text-foreground sm:mb-3 sm:text-xl md:text-2xl">
             {isFr
               ? 'Un profil aligné avec votre besoin ?'
               : 'A profile that matches your need?'}
           </h2>
 
-          <p className="mb-5 max-w-md text-xs leading-relaxed text-muted-foreground sm:mb-6 sm:text-sm">
+          <p className="mb-5 max-w-md text-xs leading-relaxed text-foreground/75 sm:mb-6 sm:text-sm">
             {isFr
               ? "Vous avez un aperçu de mon parcours et de ma façon de travailler. Si vous cherchez un partenaire technique pour concevoir, livrer et opérer un produit fiable, poursuivons l'échange."
               : 'You now have a clear view of my background and how I work. If you need a technical partner to design, ship, and operate a reliable product, let us continue the conversation.'}
@@ -48,7 +46,7 @@ export const AboutCTASection: React.FC = () => {
 
             <Link
               to="/projects"
-              className="text-[12px] font-medium text-muted-foreground underline-offset-4 transition-colors hover:text-primary hover:underline sm:text-[13px]"
+              className="text-[12px] font-medium text-foreground/70 underline-offset-4 transition-colors hover:text-primary hover:underline sm:text-[13px]"
             >
               {isFr ? 'Ou voir les réalisations' : 'Or view the case studies'}
             </Link>

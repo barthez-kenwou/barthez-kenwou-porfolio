@@ -184,7 +184,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="absolute bottom-10 right-0 w-[min(18rem,calc(100vw-2rem))] max-h-[50vh] flex flex-col overflow-hidden rounded-md bg-background/90 backdrop-blur-2xl border border-primary/20 shadow-[0_20px_50px_hsla(268,52%,20%,0.35)]"
+              className="absolute bottom-10 right-0 flex max-h-[50vh] w-[min(18rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-md border border-border bg-background/95 shadow-sm backdrop-blur-2xl"
             >
               <div className="shrink-0 sticky top-0 z-10 bg-background/95 flex items-center justify-between py-2 px-3 border-b border-border/50">
                 <div className="flex items-center gap-2">
@@ -214,8 +214,8 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
           type="button"
           onClick={() => setIsOpen(!isOpen)}
           className={cn(
-            'size-9 rounded-md shadow-[0_10px_30px_hsla(268,52%,38%,0.35)] flex items-center justify-center transition-all active:scale-90 relative overflow-hidden group cursor-pointer',
-            isOpen ? 'bg-foreground text-background' : 'bg-primary text-primary-foreground',
+            'relative flex size-9 cursor-pointer items-center justify-center overflow-hidden rounded-md shadow-sm transition-all active:scale-90 group',
+            isOpen ? 'bg-foreground text-background' : 'bg-brand text-brand-foreground',
           )}
           aria-label={language === 'fr' ? 'Ouvrir le sommaire' : 'Open table of contents'}
         >
@@ -240,8 +240,8 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
           'hidden lg:flex lg:flex-col fixed z-20',
           'max-h-[calc(100vh-8.5rem)]',
           'rounded-md border border-border/50 bg-background/90 backdrop-blur-md',
-          'shadow-[0_8px_30px_-12px_hsla(268,52%,38%,0.2)]',
-          'ring-1 ring-primary/5',
+          'shadow-sm',
+          'ring-1 ring-border/60',
           !fixedBox && 'invisible',
         )}
         style={

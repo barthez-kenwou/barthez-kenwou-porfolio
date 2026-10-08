@@ -41,7 +41,7 @@ export const RouteFallback: React.FC<{ className?: string; fullScreen?: boolean 
           />
 
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="select-none font-black tracking-tighter text-xl sm:text-2xl gradient-text">
+            <span className="select-none font-black tracking-tighter text-xl sm:text-2xl font-display text-foreground">
               BK
             </span>
           </div>

@@ -340,7 +340,7 @@ export const ContactForm: React.FC = () => {
           <Button
             type="submit"
             disabled={isSubmitted}
-            className="mt-auto flex h-9 w-full cursor-pointer items-center justify-center rounded-sm border border-primary/20 bg-primary text-sm font-bold tracking-wide text-primary-foreground transition-all hover:bg-primary/90 disabled:cursor-not-allowed disabled:border-primary/10 disabled:bg-primary/50"
+            className="mt-auto flex h-9 w-full cursor-pointer items-center justify-center rounded-sm border border-brand/20 bg-brand text-sm font-bold tracking-wide text-brand-foreground transition-all hover:bg-brand-hover disabled:cursor-not-allowed disabled:border-brand/10 disabled:bg-brand/50"
           >
             {t('contact.form.send')}
             <HiOutlinePaperAirplane

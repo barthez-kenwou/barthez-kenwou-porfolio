@@ -174,7 +174,6 @@ export function TypingAnimation({
           'ml-px inline-block h-[1.15em] w-auto shrink-0 select-none align-baseline',
           'origin-[8%_92%]',
           'brightness-0 dark:brightness-100',
-          'dark:drop-shadow-[0_0_5px_hsla(268,70%,72%,0.35)]',
         )}
         animate={
           isWriting

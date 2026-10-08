@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { SpectrumButton } from '@/shared/ui/SpectrumButton';
-import { AuroraRibbons } from '@/shared/ui/aurora-ribbons';
+import { BrandAmbientField } from '@/shared/ui/BrandAmbientField';
 
 const CONTACT_FROM_SERVICES = '/contact?from=services';
 
@@ -13,16 +13,14 @@ export const ServicesCTASection: React.FC = () => {
 
   return (
     <section className="mb-8 px-4 md:mb-12 md:px-10 lg:px-14">
-      <div className="relative z-10 overflow-hidden rounded-lg border border-primary/25 shadow-[0_0_40px_-16px_hsla(268,52%,38%,0.35)]">
-        <AuroraRibbons ribbonCount={6} />
-        <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-background/15 via-transparent to-background/30" />
-
+      <div className="relative z-10 overflow-hidden rounded-lg border border-border">
+        <BrandAmbientField intensity="calm" />
         <div className="relative z-10 mx-auto w-full p-5 text-center sm:p-6 md:p-8">
-          <div className="mx-auto max-w-xl rounded-md border border-border/40 bg-background/55 px-4 py-5 shadow-sm backdrop-blur-lg dark:bg-background/50 sm:px-6 sm:py-6">
-            <h2 className="mb-2 text-lg font-bold text-foreground sm:mb-3 sm:text-xl md:text-2xl">
+          <div className="mx-auto max-w-xl rounded-md border border-border/50 bg-background/70 px-4 py-5 shadow-sm backdrop-blur-md dark:bg-background/55 sm:px-6 sm:py-6">
+            <h2 className="mb-2 font-heading text-lg font-bold text-foreground sm:mb-3 sm:text-xl md:text-2xl">
               {isFr ? 'Un service adapté à votre besoin ?' : 'A service that fits your need?'}
             </h2>
-            <p className="mb-5 text-xs font-medium leading-relaxed text-muted-foreground sm:mb-6 sm:text-sm">
+            <p className="mb-5 text-xs font-medium leading-relaxed text-foreground/75 sm:mb-6 sm:text-sm">
               {isFr
                 ? 'Cloud, DevOps ou full stack: décrivons le besoin et cadrons une proposition claire.'
                 : 'Cloud, DevOps, or full stack: let us define the need and frame a clear proposal.'}
@@ -46,7 +44,7 @@ export const ServicesCTASection: React.FC = () => {
 
               <Link
                 to="/projects"
-                className="text-[12px] font-medium text-muted-foreground underline-offset-4 transition-colors hover:text-primary hover:underline sm:text-[13px]"
+                className="text-[12px] font-medium text-foreground/70 underline-offset-4 transition-colors hover:text-primary hover:underline sm:text-[13px]"
               >
                 {isFr ? 'Ou voir les réalisations' : 'Or view the case studies'}
               </Link>

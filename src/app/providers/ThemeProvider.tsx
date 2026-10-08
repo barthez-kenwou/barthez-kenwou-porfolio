@@ -55,7 +55,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     if (typeof window === 'undefined') return;
     document.documentElement.classList.toggle('dark', theme === 'dark');
 
-    const color = theme === 'dark' ? '#1a1548' : '#ece8f7';
+    const color = theme === 'dark' ? '#050505' : '#FAFAFA';
     document.querySelectorAll('meta[name="theme-color"]').forEach((el) => {
       el.setAttribute('content', color);
     });

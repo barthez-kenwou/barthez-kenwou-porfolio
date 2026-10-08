@@ -9,7 +9,7 @@ export const HeroSection: React.FC = () => {
     <section className="relative mb-16 animate-fade-in pt-24 text-center">
       <div>
         <h1 className="section-title">
-          <span className="gradient-text">{t('projects.title')}</span>
+          <span className="font-display text-foreground">{t('projects.title')}</span>
         </h1>
 
         <p className="section-subtitle">{t('projects.subtitle')}</p>

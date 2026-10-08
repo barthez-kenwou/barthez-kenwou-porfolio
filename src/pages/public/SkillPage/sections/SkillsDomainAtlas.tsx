@@ -92,7 +92,7 @@ export function SkillsDomainAtlas({
   return (
     <nav
       aria-label={language === 'fr' ? 'Atlas des compétences' : 'Skills atlas'}
-      className="sticky top-28 relative isolate overflow-hidden rounded-md border border-border/70 bg-[linear-gradient(165deg,hsla(270,30%,98%,0.78)_0%,hsla(268,25%,96%,0.62)_48%,hsla(270,20%,94%,0.74)_100%)] shadow-[0_18px_50px_-28px_hsla(268,45%,18%,0.55),inset_0_1px_0_hsla(0,0%,100%,0.55)] backdrop-blur-xl dark:border-border/50 dark:bg-[linear-gradient(165deg,hsla(270,22%,10%,0.86)_0%,hsla(270,24%,8%,0.78)_50%,hsla(268,28%,7%,0.88)_100%)] dark:shadow-[0_18px_50px_-28px_hsla(268,60%,4%,0.85),inset_0_1px_0_hsla(268,40%,70%,0.08)]"
+      className="relative sticky top-28 isolate overflow-hidden rounded-md border border-border bg-card/95 shadow-sm backdrop-blur-xl dark:border-border/60 dark:bg-card/90"
     >
       <div
         aria-hidden
@@ -113,11 +113,11 @@ export function SkillsDomainAtlas({
         className="pointer-events-none absolute inset-0 opacity-[0.4] dark:opacity-[0.25]"
         style={{
           backgroundImage: `
-            radial-gradient(circle at 18% 22%, hsla(268,55%,55%,0.2) 0 1px, transparent 1.5px),
-            radial-gradient(circle at 72% 38%, hsla(268,55%,60%,0.16) 0 1px, transparent 1.5px),
-            radial-gradient(circle at 40% 70%, hsla(268,50%,50%,0.14) 0 1px, transparent 1.5px),
-            linear-gradient(to right, hsla(268,40%,45%,0.06) 1px, transparent 1px),
-            linear-gradient(to bottom, hsla(268,40%,45%,0.06) 1px, transparent 1px)
+            radial-gradient(circle at 18% 22%, hsl(var(--foreground) / 0.12) 0 1px, transparent 1.5px),
+            radial-gradient(circle at 72% 38%, hsl(var(--foreground) / 0.08) 0 1px, transparent 1.5px),
+            radial-gradient(circle at 40% 70%, hsl(var(--foreground) / 0.06) 0 1px, transparent 1.5px),
+            linear-gradient(to right, hsl(var(--border) / 0.7) 1px, transparent 1px),
+            linear-gradient(to bottom, hsl(var(--border) / 0.7) 1px, transparent 1px)
           `,
           backgroundSize: 'auto, auto, auto, 13px 13px, 13px 13px',
           maskImage: 'radial-gradient(ellipse 80% 70% at 25% 35%, black 10%, transparent 72%)',
@@ -125,15 +125,15 @@ export function SkillsDomainAtlas({
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-14 top-10 h-44 w-44 rounded-full bg-primary/15 blur-3xl"
+        className="pointer-events-none absolute -left-14 top-10 h-36 w-36 rounded-full bg-brand/[0.06] blur-3xl"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-10 bottom-0 h-36 w-36 rounded-full bg-primary/10 blur-3xl"
+        className="pointer-events-none absolute -right-10 bottom-0 h-28 w-28 rounded-full bg-brand/[0.04] blur-3xl"
       />
 
       {/* Header */}
-      <header className="absolute right-1 top-1 z-50 rounded-md border-b border-border/40 px-1 pb-.75 pt-1 bg-[linear-gradient(165deg,hsla(270,30%,98%,0.78)_0%,hsla(268,25%,96%,0.62)_48%,hsla(270,20%,94%,0.74)_100%)] shadow-[0_18px_50px_-28px_hsla(268,45%,18%,0.55),inset_0_1px_0_hsla(0,0%,100%,0.55)] backdrop-blur-xl dark:border-border/50 dark:bg-[linear-gradient(165deg,hsla(270,22%,10%,0.86)_0%,hsla(270,24%,8%,0.78)_50%,hsla(268,28%,7%,0.88)_100%)] dark:shadow-[0_18px_50px_-28px_hsla(268,60%,4%,0.85),inset_0_1px_0_hsla(268,40%,70%,0.08)]">
+      <header className="absolute right-1 top-1 z-50 rounded-md border border-border/50 bg-card/90 px-1 pt-1 pb-0.75 shadow-sm backdrop-blur-xl">
         <div className="flex items-start justify-between gap-3">
           <div className="relative h-12 w-12 shrink-0">
             <svg viewBox="0 0 48 48" className="h-full w-full" aria-hidden>

@@ -288,7 +288,7 @@ export const ProjectStatsSection: React.FC = () => {
       <div className="space-y-4 sm:space-y-5">
         <div className="space-y-1.5 text-center lg:text-left sm:space-y-2">
           <h2 className="section-title">
-            <span className="gradient-text text-2xl md:text-3xl">
+            <span className="text-foreground font-heading text-2xl md:text-3xl">
               {isFr ? 'Impact & Expertise Globale' : 'Global Impact & Expertise'}
             </span>
           </h2>

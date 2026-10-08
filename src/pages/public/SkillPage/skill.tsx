@@ -5,7 +5,6 @@ import { AchievmentSection } from './sections/AchievmentSection';
 import { CertificationSection } from './sections/CertificationSection';
 import { SkillsCTASection } from './sections/SkillsCTASection';
 import { SEO } from '@/shared/ui/SEO/SEO';
-import { SmoothCursor } from '@/shared/ui/smooth-cursor';
 import { RouteFallback } from '@/shared/ui/RouteFallback/RouteFallback';
 import { useSkillIconsStore } from '@/entities/skills/model/useSkillIconsStore';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
@@ -43,7 +42,6 @@ export const SkillPage: React.FC = () => {
           <CertificationSection />
           <AchievmentSection />
           <SkillsCTASection />
-          <SmoothCursor />
         </div>
       )}
     </>

@@ -4,6 +4,7 @@ import { HeroSection } from './sections/HeroSection';
 import { ServiceSection } from './sections/ServiceSection';
 import { WhyChooseMeSection } from './sections/WhyChooseMeSection';
 import { TestimonialsSection } from './sections/TestimonialsSection';
+import { DarkBrandParallaxBand } from './sections/DarkBrandParallaxBand';
 import { CTASection } from './sections/CTASection';
 import { DeferredMount } from '@/shared/ui/DeferredMount';
 import { ErrorBoundary } from '@/app/lib/ErrorBoundary';
@@ -104,8 +105,10 @@ export const HomePage: React.FC = () => {
         </DeferredMount>
 
         <ServiceSection />
+        <DarkBrandParallaxBand>
         <WhyChooseMeSection />
-        <TestimonialsSection />
+          <TestimonialsSection />
+        </DarkBrandParallaxBand>
         <CTASection />
       </div>
     </>

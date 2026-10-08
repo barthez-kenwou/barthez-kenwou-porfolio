@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { CheckCircle2, Loader2 } from 'lucide-react';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { Button } from '@/shared/ui/Button';
-import { GradientDots } from '@/shared/ui/gradient-dots';
+import { BrandAmbientField } from '@/shared/ui/BrandAmbientField';
 import { cn } from '@/shared/lib/utils';
 import {
   newsletterSubscribeSchema,
@@ -100,21 +100,17 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
       className={cn('mb-4 px-4 md:mb-2 md:px-10 lg:px-14', className)}
       aria-labelledby="newsletter-cta-title"
     >
-      <div className="relative z-10 overflow-hidden rounded-sm border border-primary/25 shadow-[0_0_40px_-16px_hsla(268,52%,38%,0.35)]">
-        <div className="absolute inset-0 z-0">
-          <GradientDots duration={20} colorCycleDuration={4} />
-        </div>
-        <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-background/20 via-transparent to-background/35" />
-
+      <div className="relative z-10 overflow-hidden rounded-sm border border-border">
+        <BrandAmbientField intensity="soft" />
         <div className="relative z-10 mx-auto w-full p-2 text-center sm:p-3 md:p-4">
-          <div className="mx-auto max-w-xl rounded-sm border border-border/40 bg-background/55 px-4 py-2 shadow-sm backdrop-blur-md dark:bg-background/50 sm:px-4 sm:py-3">
+          <div className="mx-auto max-w-xl rounded-sm border border-border/50 bg-background/70 px-4 py-2 shadow-sm backdrop-blur-md dark:bg-background/55 sm:px-4 sm:py-3">
             <h3
               id="newsletter-cta-title"
-              className="mb-2 text-base font-bold text-foreground sm:text-lg md:text-xl"
+              className="mb-2 font-heading text-base font-bold text-foreground sm:text-lg md:text-xl"
             >
               {isFr ? 'Restez informé' : 'Stay informed'}
             </h3>
-            <p className="mb-4 text-xs leading-relaxed text-muted-foreground sm:mb-5 sm:text-sm">
+            <p className="mb-4 text-xs leading-relaxed text-foreground/75 sm:mb-5 sm:text-sm">
               {isFr
                 ? 'Recevez les derniers articles et actualités directement dans votre boîte mail.'
                 : 'Receive the latest articles and news directly in your inbox.'}
@@ -130,7 +126,7 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
                   <p className="text-xs font-semibold text-foreground sm:text-sm">
                     {isFr ? 'Inscription confirmée' : 'Subscription confirmed'}
                   </p>
-                  <p className="mt-0.5 text-[11px] leading-relaxed text-muted-foreground sm:text-xs">
+                  <p className="mt-0.5 text-[11px] leading-relaxed text-foreground/75 sm:text-xs">
                     {isFr
                       ? 'Merci, vous recevrez les prochaines notes techniques.'
                       : 'Thanks, you will receive the next technical notes.'}
@@ -206,7 +202,7 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
             )}
 
             {contactTo && (
-              <p className="mt-4 text-[11px] text-muted-foreground sm:text-xs">
+              <p className="mt-4 text-[11px] text-foreground/70 sm:text-xs">
                 {isFr ? 'Un besoin concret ? ' : 'A concrete need? '}
                 <Link
                   to={contactTo}

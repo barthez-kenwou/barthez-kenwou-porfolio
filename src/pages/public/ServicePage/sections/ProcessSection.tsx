@@ -20,7 +20,7 @@ export const ProcessSection: React.FC = () => {
         >
           <h2 className="section-title">
             {language === 'fr' ? 'Mon Processus ' : 'My Work '}
-            <span className="gradient-text">{language === 'fr' ? 'de Travail' : 'Process'}</span>
+            <span className="font-heading text-foreground">{language === 'fr' ? 'de Travail' : 'Process'}</span>
           </h2>
           <div className="w-16 h-1 bg-primary/30 mx-auto rounded-full mb-4" />
           <p className="section-subtitle !mb-0 italic opacity-90">
@@ -96,7 +96,7 @@ export const ProcessSection: React.FC = () => {
                       <h3 className="text-sm md:text-base font-bold text-foreground mb-3 group-hover/card:text-primary transition-colors duration-300">
                         {language === 'fr' ? step.titleFr : step.titleEn}
                       </h3>
-                      <p className="text-muted-foreground text-xs leading-relaxed opacity-90">
+                      <p className="text-xs leading-relaxed text-foreground/75">
                         {language === 'fr' ? step.descFr : step.descEn}
                       </p>
                     </div>

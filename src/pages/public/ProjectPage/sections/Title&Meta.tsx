@@ -68,7 +68,7 @@ export const TitleMeta: React.FC = () => {
             to={project.demo}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground hover:glow-primary transition-all"
+            className="flex items-center gap-2 px-4 py-2 rounded-md bg-brand text-brand-foreground hover:bg-brand-hover transition-all"
           >
             <ExternalLink className="h-4 w-4" />
             {language === 'fr' ? 'Voir la Démo' : 'View Demo'}

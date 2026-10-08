@@ -1,6 +1,7 @@
 import { AppSidebar } from '@/widgets/AppSidebar';
 import { Header } from '@/widgets/Header';
 import { SidebarProvider } from '@/shared/ui/sidebar.tsx';
+import { PUBLIC_SHELL_BREAKPOINT } from '@/shared/hooks/use-mobile';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Footer } from '@/widgets/Footer';
 import { Suspense } from 'react';
@@ -21,7 +22,7 @@ export const PublicLayout = () => {
   const location = useLocation();
 
   return (
-    <SidebarProvider>
+    <SidebarProvider mobileBreakpoint={PUBLIC_SHELL_BREAKPOINT}>
       <div className="w-full flex min-h-screen">
         <AppSidebar />
 

@@ -4,8 +4,10 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 /**
- * Brand spectrum CTA - animated multi-stop border + underglow.
- * Fill stays dark/light so the moving spectrum rim stays readable.
+ * Brand CTA.
+ * - solid: brand fill, no motion
+ * - outline: quiet secondary
+ * - spectrum: disciplined violet→indigo rim (slow continuous + hover sheen)
  */
 const spectrumButtonVariants = cva(
   cn(
@@ -15,35 +17,45 @@ const spectrumButtonVariants = cva(
     'text-sm font-semibold whitespace-nowrap',
     'disabled:pointer-events-none disabled:opacity-50',
     '[&_svg]:pointer-events-none [&_svg:not([class*=size-])]:size-4 [&_svg]:shrink-0',
-    'animate-spectrum bg-[length:300%_100%]',
-    '[background-origin:border-box]',
-    '[background-clip:padding-box,border-box]',
-    '[border:2px_solid_transparent]',
-    // Underglow (spectrum smear under the button)
-    'before:pointer-events-none before:absolute before:inset-x-[12%] before:-bottom-[30%] before:z-[-1]',
-    'before:h-[55%] before:rounded-full before:opacity-90 before:blur-xl',
-    'before:animate-spectrum before:bg-[length:300%_100%]',
-    'before:bg-[linear-gradient(90deg,var(--spectrum-1),var(--spectrum-2),var(--spectrum-3),var(--spectrum-4),var(--spectrum-5),var(--spectrum-1))]',
+    'transition-[box-shadow,transform,filter] duration-300',
   ),
   {
     variants: {
       variant: {
-        /** Dark fill + vivid rim - primary CTA */
         solid: cn(
-          'text-white',
-          // Light: near-ink fill (kept as-is). Dark: darkviolet so it separates from secondary + page bg.
-          'bg-[linear-gradient(#121018,#121018),linear-gradient(90deg,var(--spectrum-1),var(--spectrum-2),var(--spectrum-3),var(--spectrum-4),var(--spectrum-5),var(--spectrum-1))]',
-          'dark:bg-[linear-gradient(#3b1f6e,#32185f),linear-gradient(90deg,var(--spectrum-1),var(--spectrum-2),var(--spectrum-3),var(--spectrum-4),var(--spectrum-5),var(--spectrum-1))]',
-          'shadow-[0_0_0_1px_hsla(268,70%,60%,0.18),0_8px_28px_-10px_hsla(268,80%,55%,0.55)]',
-          'dark:shadow-[0_0_0_1px_hsla(268,70%,55%,0.28),0_10px_32px_-8px_hsla(268,80%,50%,0.55)]',
-          'hover:shadow-[0_0_0_1px_hsla(268,70%,65%,0.28),0_10px_32px_-8px_hsla(268,80%,58%,0.7)]',
-          'transition-shadow duration-300',
+          'bg-brand text-brand-foreground',
+          'hover:bg-brand-hover',
+          'border border-transparent',
+          'shadow-none',
         ),
-        /** Soft surface + same rim */
         outline: cn(
-          'text-foreground',
-          'bg-[linear-gradient(hsl(var(--background)),hsl(var(--background))),linear-gradient(90deg,var(--spectrum-1),var(--spectrum-2),var(--spectrum-3),var(--spectrum-4),var(--spectrum-5),var(--spectrum-1))]',
-          'shadow-[0_0_0_1px_hsla(268,50%,50%,0.12),0_6px_22px_-12px_hsla(268,70%,50%,0.4)]',
+          'bg-background text-foreground',
+          'border border-border',
+          'hover:border-primary/40 hover:bg-accent/40',
+          'shadow-none',
+        ),
+        spectrum: cn(
+          'text-white',
+          '[border:2px_solid_transparent]',
+          '[background-origin:border-box]',
+          '[background-clip:padding-box,border-box]',
+          'bg-[length:220%_100%]',
+          // Deep ink / brand fill + disciplined violet→indigo rim (no cyan/magenta/gold)
+          'bg-[linear-gradient(#16101f,#120c1a),linear-gradient(105deg,var(--spectrum-from),var(--spectrum-sheen)_42%,var(--spectrum-to),var(--spectrum-from))]',
+          'dark:bg-[linear-gradient(#1f1233,#160e28),linear-gradient(105deg,var(--spectrum-from),var(--spectrum-sheen)_42%,var(--spectrum-to),var(--spectrum-from))]',
+          'animate-[spectrum-sweep_7.5s_ease-in-out_infinite]',
+          'shadow-[0_0_0_1px_hsla(265,50%,40%,0.22),0_10px_28px_-14px_hsla(265,58%,39%,0.55)]',
+          'hover:shadow-[0_0_0_1px_hsla(265,55%,50%,0.35),0_14px_34px_-12px_hsla(265,58%,39%,0.7)]',
+          'hover:brightness-[1.04]',
+          'active:scale-[0.985]',
+          'motion-reduce:animate-none',
+          // Soft brand underglow — single hue, restrained
+          'before:pointer-events-none before:absolute before:inset-x-[18%] before:-bottom-[28%] before:z-[-1]',
+          'before:h-[45%] before:rounded-full before:blur-2xl',
+          'before:bg-[radial-gradient(ellipse_at_center,hsla(265,58%,39%,0.55),transparent_70%)]',
+          'before:opacity-70 before:transition-opacity before:duration-300',
+          'hover:before:opacity-95',
+          'motion-reduce:before:hidden',
         ),
       },
       size: {
