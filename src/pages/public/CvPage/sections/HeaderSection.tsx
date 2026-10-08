@@ -24,30 +24,30 @@ export const HeaderSection: React.FC<HeaderProps> = ({ personalInfo }) => {
     : `https://${stripUrl(personalInfo.website)}`;
 
   return (
-    <section className="relative overflow-hidden border-b border-border/40 bg-gradient-to-br from-primary/15 via-primary/5 to-transparent px-5 py-7 sm:px-8 sm:py-8 print:p-6">
+    <section className="relative overflow-hidden border-b border-border/40 bg-gradient-to-br from-primary/15 via-primary/5 to-transparent px-5 py-6 sm:px-8 sm:py-7 print:p-6">
       <div
         aria-hidden
         className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-primary/10 blur-3xl"
       />
 
       <div className="relative text-center md:text-left">
-        <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.22em] text-primary/80">
+        <p className="mb-1.5 font-mono text-[10px] font-bold tracking-[0.18em] text-primary/80 uppercase">
           {language === 'fr' ? 'Curriculum Vitae' : 'Curriculum Vitae'}
         </p>
 
-        <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-[2.15rem] md:leading-tight">
+        <h1 className="font-heading text-xl font-bold tracking-tight text-foreground sm:text-2xl">
           {personalInfo.name}
         </h1>
 
-        <p className="mt-2 text-sm font-medium text-primary sm:text-[0.95rem] md:text-base">
+        <p className="mt-1.5 text-xs font-medium text-primary sm:text-sm">
           {language === 'fr' ? personalInfo.titleFr : personalInfo.titleEn}
         </p>
 
-        <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+        <p className="mt-1 text-xs leading-relaxed text-foreground/70">
           {language === 'fr' ? personalInfo.subtitleFr : personalInfo.subtitleEn}
         </p>
 
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-muted-foreground md:justify-start sm:text-[13px]">
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-xs text-foreground/70 md:justify-start">
           <span className="inline-flex items-center gap-1.5">
             <Mail className="h-3.5 w-3.5 shrink-0 text-primary/70" />
             {personalInfo.email}
@@ -62,13 +62,13 @@ export const HeaderSection: React.FC<HeaderProps> = ({ personalInfo }) => {
           </span>
         </div>
 
-        <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs md:justify-start sm:text-[13px]">
+        <div className="mt-2.5 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-xs md:justify-start">
           {personalInfo.website && (
             <a
               href={websiteHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline"
+              className="inline-flex items-center gap-1.5 font-medium text-primary transition-colors hover:text-primary/80"
             >
               <Globe className="h-3.5 w-3.5" />
               {formatPortfolioHost(personalInfo.website)}
@@ -78,7 +78,7 @@ export const HeaderSection: React.FC<HeaderProps> = ({ personalInfo }) => {
             to={personalInfo.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline"
+            className="inline-flex items-center gap-1.5 font-medium text-primary transition-colors hover:text-primary/80"
           >
             <Linkedin className="h-3.5 w-3.5" />
             LinkedIn
@@ -87,7 +87,7 @@ export const HeaderSection: React.FC<HeaderProps> = ({ personalInfo }) => {
             to={personalInfo.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline"
+            className="inline-flex items-center gap-1.5 font-medium text-primary transition-colors hover:text-primary/80"
           >
             <Github className="h-3.5 w-3.5" />
             GitHub

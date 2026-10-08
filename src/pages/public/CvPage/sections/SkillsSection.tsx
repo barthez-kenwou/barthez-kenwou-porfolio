@@ -46,18 +46,18 @@ export const SkillsSection: React.FC<SkillsProps> = ({ skills }) => {
   return (
     <section>
       {/* Title */}
-      <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-foreground sm:text-xl">
-        <div className="rounded-md bg-primary/10 p-2">
-          <Server className="h-4 w-4 text-primary sm:h-5 sm:w-5" />
+      <h2 className="mb-3 flex items-center gap-2 font-heading text-base font-bold text-foreground sm:mb-4">
+        <div className="rounded-md bg-primary/10 p-1.5">
+          <Server className="h-4 w-4 text-primary" />
         </div>
         {language === 'fr' ? 'Compétences Techniques' : 'Technical Skills'}
       </h2>
 
       {/* Content */}
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid gap-3 md:grid-cols-2 md:gap-4">
         {categories.map(({ key, label, icon }) => (
           <div key={key}>
-            <h4 className="mb-2 flex items-center gap-2 text-sm font-semibold text-foreground">
+            <h4 className="mb-1.5 flex items-center gap-2 text-xs font-semibold text-foreground sm:text-sm">
               {icon} {label}
             </h4>
 

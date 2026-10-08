@@ -14,18 +14,18 @@ export const SoftSkillsSection: React.FC<SoftSkillsProps> = ({ softSkills }) => 
 
   return (
     <section>
-      <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
-        <div className="p-2 rounded-md bg-muted">
-          <HeartHandshake className="h-5 w-5 text-muted-foreground" />
+      <h2 className="mb-3 flex items-center gap-2 font-heading text-base font-bold text-foreground sm:mb-4">
+        <div className="rounded-md bg-primary/10 p-1.5">
+          <HeartHandshake className="h-4 w-4 text-primary" />
         </div>
         {language === 'fr' ? 'Compétences Comportementales' : 'Soft Skills'}
       </h2>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-1.5">
         {softSkills.map((skill) => (
           <div
             key={skill.name}
-            className="px-4 py-2 bg-secondary text-secondary-foreground rounded-full text-sm font-medium border border-border shadow-sm"
+            className="rounded-md border border-border bg-secondary px-2.5 py-1 text-xs font-medium text-secondary-foreground sm:text-sm"
           >
             {skill.name}
           </div>

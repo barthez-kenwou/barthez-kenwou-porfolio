@@ -12,9 +12,9 @@ export const CertificationSection: React.FC<CertificationProps> = ({ education }
 
   return (
     <section>
-      <h2 className="mb-2.5 flex items-center gap-2 text-lg font-bold text-foreground sm:mb-4 sm:text-xl">
-        <div className="rounded-md bg-primary/10 p-1.5 sm:p-2">
-          <GraduationCap className="h-4 w-4 text-primary sm:h-5 sm:w-5" />
+      <h2 className="mb-3 flex items-center gap-2 font-heading text-base font-bold text-foreground sm:mb-4">
+        <div className="rounded-md bg-primary/10 p-1.5">
+          <GraduationCap className="h-4 w-4 text-primary" />
         </div>
         {language === 'fr' ? 'Formation & Certifications' : 'Education & Certifications'}
       </h2>

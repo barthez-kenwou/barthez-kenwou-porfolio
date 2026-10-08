@@ -78,7 +78,7 @@ export const CvPage = () => {
               &nbsp;CV
             </span>
           </h1>
-          <p className="section-subtitle relative z-10 mx-auto mt-2 max-w-lg !mb-0 text-sm">
+          <p className="section-subtitle relative z-10 mx-auto mt-2 max-w-lg !mb-0">
             {isFr
               ? 'Profil prêt à partager, téléchargez le PDF ou démarrons la conversation.'
               : 'A shareable profile, download the PDF or start the conversation.'}

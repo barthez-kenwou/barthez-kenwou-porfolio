@@ -8,18 +8,20 @@ export const CVExperienceCard: React.FC<{ Experience: IExperience }> = ({ Experi
     Experience;
 
   return (
-    <div className="border-l-2 border-primary/30 pl-4 ml-2">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
-        <h3 className="font-semibold text-foreground">{language === 'fr' ? titleFr : titleEn}</h3>
-        <span className="text-sm font-mono text-primary">{period}</span>
+    <div className="ml-2 border-l-2 border-primary/30 pl-4">
+      <div className="mb-1.5 flex flex-col gap-0.5 md:flex-row md:items-center md:justify-between">
+        <h3 className="text-sm font-semibold text-foreground">
+          {language === 'fr' ? titleFr : titleEn}
+        </h3>
+        <span className="font-mono text-xs text-primary">{period}</span>
       </div>
-      <p className="text-muted-foreground text-sm mb-2">
+      <p className="mb-2 text-xs text-foreground/70 sm:text-sm">
         {language === 'fr' ? companyFr : companyEn}
       </p>
 
-      <ul className="list-disc list-inside space-y-1">
+      <ul className="list-inside list-disc space-y-1">
         {(language === 'fr' ? descriptionFr : descriptionEn).map((desc: string, i: number) => (
-          <li key={i} className="text-sm text-muted-foreground">
+          <li key={i} className="text-xs leading-relaxed text-foreground/75 sm:text-sm">
             {desc}
           </li>
         ))}
