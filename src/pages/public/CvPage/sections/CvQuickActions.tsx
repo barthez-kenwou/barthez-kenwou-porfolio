@@ -29,8 +29,8 @@ export const CvQuickActions: React.FC<CvQuickActionsProps> = ({
         ? 'Télécharger'
         : 'Download'
       : isFr
-        ? 'Télécharger le CV'
-        : 'Download CV';
+        ? 'Télécharger maintenant'
+        : 'Download now';
 
   const contactLabel =
     variant === 'sticky'

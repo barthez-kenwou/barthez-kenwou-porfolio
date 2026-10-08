@@ -117,7 +117,19 @@ export const CvPage = () => {
       <CvMobileStickyBar onDownload={openPreview} visible={stickyVisible} />
 
       {isPreviewOpen && (
-        <Suspense fallback={null}>
+        <Suspense
+          fallback={
+            <div
+              className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+              role="status"
+              aria-live="polite"
+            >
+              <div className="rounded-md border border-border bg-background px-5 py-4 text-sm font-medium text-foreground shadow-lg">
+                {isFr ? 'Ouverture de l’aperçu…' : 'Opening preview…'}
+              </div>
+            </div>
+          }
+        >
           <CVPreviewModal isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)} />
         </Suspense>
       )}
