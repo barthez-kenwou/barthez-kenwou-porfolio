@@ -41,10 +41,6 @@ export const adminChildRoutes = [
     ),
   },
   {
-    path: 'services',
-    component: lazyPage(() => import('@/pages/app/Admin/ServicesPage'), 'AdminServicesPage'),
-  },
-  {
     path: 'skills',
     component: lazyPage(() => import('@/pages/app/Admin/SkillsPage'), 'AdminSkillsPage'),
   },
@@ -68,6 +64,17 @@ export const adminChildRoutes = [
     component: lazyPage(() => import('@/pages/app/Admin/ExperiencesPage'), 'AdminExperiencesPage'),
   },
   {
+    path: 'achievements',
+    component: lazyPage(
+      () => import('@/pages/app/Admin/AchievementsPage'),
+      'AdminAchievementsPage',
+    ),
+  },
+  {
+    path: 'languages',
+    component: lazyPage(() => import('@/pages/app/Admin/LanguagesPage'), 'AdminLanguagesPage'),
+  },
+  {
     path: 'testimonials',
     component: lazyPage(
       () => import('@/pages/app/Admin/TestimonialsPage'),
@@ -88,5 +95,9 @@ export const adminChildRoutes = [
       () => import('@/pages/app/Admin/ContactResponsesPage'),
       'AdminContactResponsesPage',
     ),
+  },
+  {
+    path: 'newsletter',
+    component: lazyPage(() => import('@/pages/app/Admin/NewsletterPage'), 'AdminNewsletterPage'),
   },
 ] as const;

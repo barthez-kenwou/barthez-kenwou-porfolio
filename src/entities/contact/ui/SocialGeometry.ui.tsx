@@ -1,38 +1,40 @@
 import React from 'react';
 import { FaGithub, FaLinkedin, FaFacebookF } from 'react-icons/fa6';
 import { cn } from '@/shared/lib/utils';
-import { contactsInfo } from '@/shared/mocks/constContactInfo.mocks';
+import { usePublicContactInfo } from '../hooks/useContact';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
-
-const networks = [
-  {
-    id: 'github',
-    label: 'GitHub',
-    href: () => contactsInfo.github,
-    Icon: FaGithub,
-    shape: 'square' as const,
-  },
-  {
-    id: 'linkedin',
-    label: 'LinkedIn',
-    href: () => contactsInfo.linkedin,
-    Icon: FaLinkedin,
-    shape: 'diamond' as const,
-  },
-  {
-    id: 'facebook',
-    label: 'Facebook',
-    href: () => contactsInfo.facebook,
-    Icon: FaFacebookF,
-    shape: 'circle' as const,
-  },
-];
 
 /**
  * Geometric social cluster - one shared handle, three shaped icons.
  */
 export function SocialGeometry() {
   const { language } = useLanguageStore();
+  const { data } = usePublicContactInfo();
+  const contactsInfo = data?.data;
+
+  const networks = [
+    {
+      id: 'github',
+      label: 'GitHub',
+      href: contactsInfo?.github ?? '#',
+      Icon: FaGithub,
+      shape: 'square' as const,
+    },
+    {
+      id: 'linkedin',
+      label: 'LinkedIn',
+      href: contactsInfo?.linkedin ?? '#',
+      Icon: FaLinkedin,
+      shape: 'diamond' as const,
+    },
+    {
+      id: 'facebook',
+      label: 'Facebook',
+      href: contactsInfo?.facebook ?? '#',
+      Icon: FaFacebookF,
+      shape: 'circle' as const,
+    },
+  ];
 
   return (
     <div className="rounded-sm border border-border/50 bg-card/40 p-3 backdrop-blur-sm">
@@ -45,7 +47,7 @@ export function SocialGeometry() {
           {networks.map(({ id, label, href, Icon, shape }) => (
             <a
               key={id}
-              href={href()}
+              href={href}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={label}
@@ -83,7 +85,7 @@ export function SocialGeometry() {
           <div className="relative mx-auto flex w-fit items-center gap-2 rounded-full border border-border/60 bg-background/80 px-3 py-1.5 shadow-sm backdrop-blur-sm">
             <span className="size-1.5 rounded-full bg-primary/70" />
             <span className="font-mono text-[11px] font-semibold tracking-tight text-foreground">
-              {contactsInfo.handle}
+              {contactsInfo?.handle ?? 'barthez-kenwou'}
             </span>
           </div>
         </div>

@@ -1,4 +1,12 @@
 export { useAdminCmsStore } from './model/useAdminCmsStore';
+export {
+  dashboardApi,
+  getDashboardSummary,
+  fetchAdminDashboard,
+} from './api/dashboard.api';
+export type { AdminDashboardDto } from './api/dashboard.api';
+export { useAdminDashboard } from './hooks/useAdminDashboard';
+export { useDashboardSummary } from './hooks/useDashboard';
 export type {
   IContactInfo,
   IContactResponse,

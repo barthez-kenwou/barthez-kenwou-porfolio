@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { contactsInfo } from '@/shared/mocks/constContactInfo.mocks';
+import { usePublicContactInfo } from '@/entities/contact/hooks/useContact';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { SpectrumButton } from '@/shared/ui/SpectrumButton';
 import { BrandAmbientField } from '@/shared/ui/BrandAmbientField';
@@ -11,6 +11,9 @@ const CONTACT_FROM_PROJECTS = '/contact?from=projects';
 export const ProjectCTASection: React.FC = () => {
   const { language } = useLanguageStore();
   const isFr = language === 'fr';
+  const { data } = usePublicContactInfo();
+  const repository =
+    data?.data.repository ?? 'https://github.com/barthez-kenwou?tab=repositories';
 
   return (
     <section className="relative z-10 mb-4 overflow-hidden rounded-lg border border-border">
@@ -44,7 +47,7 @@ export const ProjectCTASection: React.FC = () => {
             </SpectrumButton>
 
             <a
-              href={contactsInfo.repository}
+              href={repository}
               target="_blank"
               rel="noopener noreferrer"
               className="text-[12px] font-medium text-foreground/70 underline-offset-4 transition-colors hover:text-primary hover:underline sm:text-[13px]"

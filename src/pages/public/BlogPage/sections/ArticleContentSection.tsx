@@ -1,8 +1,7 @@
 import { FaMicroblog } from 'react-icons/fa';
-import { blogPostsData } from '@/entities/blogs/api/mock/blog.mocks';
+import type { IBlog } from '@/entities/blogs';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { CodeBlock } from '@/shared/ui/code-block';
@@ -18,7 +17,6 @@ import {
   Tag,
 } from 'lucide-react';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
-import { findByNumericId } from '@/shared/lib/entity-slug';
 
 const FAQItem: React.FC<{ question: string; answer: string }> = ({ question, answer }) => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -70,11 +68,9 @@ const FAQItem: React.FC<{ question: string; answer: string }> = ({ question, ans
   );
 };
 
-export const ArticleContentSection: React.FC = () => {
-  const { blogID } = useParams();
+export const ArticleContentSection: React.FC<{ post: IBlog }> = ({ post }) => {
   const { language } = useLanguageStore();
 
-  const post = findByNumericId(blogPostsData, blogID) || { contentFr: '', contentEn: '' };
   const content = language === 'fr' ? post.contentFr : post.contentEn;
 
   const { scrollYProgress } = useScroll();

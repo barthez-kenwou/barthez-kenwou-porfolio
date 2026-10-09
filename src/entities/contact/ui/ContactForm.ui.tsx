@@ -3,17 +3,17 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
-import { HiOutlinePaperAirplane, HiOutlineCheckCircle } from 'react-icons/hi2';
-import { motion } from 'framer-motion';
+import { HiOutlinePaperAirplane } from 'react-icons/hi2';
 
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/ui/form';
 import { contactSchema, type ContactFormValues } from '../model/contact.schema';
+import { useSubmitContactResponse } from '../hooks/useContact';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/lib';
 import { FloatingFillField } from './FloatingFillField.ui';
-
-const WHATSAPP_NUMBER = '237655646688';
+import { toast } from 'sonner';
+import { isApiError } from '@/shared/api';
 
 function buildContactPrefill(searchParams: URLSearchParams, language: string) {
   const service = searchParams.get('service');
@@ -177,6 +177,7 @@ export const ContactForm: React.FC = () => {
   const { language } = useLanguageStore();
   const [searchParams] = useSearchParams();
   const [isSubmitted, setIsSubmitted] = React.useState(false);
+  const submitContact = useSubmitContactResponse();
 
   const prefillKey = [
     searchParams.get('service'),
@@ -207,45 +208,36 @@ export const ContactForm: React.FC = () => {
     form.setValue('message', prefill.message, { shouldDirty: false });
   }, [prefillKey, prefill.subject, prefill.message, form]);
 
-  const onSubmit = (values: ContactFormValues) => {
+  const onSubmit = async (values: ContactFormValues) => {
     setIsSubmitted(true);
-
-    // Persist for the owner admin inbox (local CMS → future API)
-    void import('@/features/admin-cms').then(({ useAdminCmsStore }) => {
-      useAdminCmsStore.getState().addContactResponse({
-        name: values.name,
-        email: values.email,
-        subject: values.subject,
-        message: values.message,
-        status: 'new',
+    try {
+      await submitContact.mutateAsync(values);
+      toast.success(
+        language === 'fr'
+          ? 'Message envoyé. Je vous répondrai rapidement.'
+          : 'Message sent. I will get back to you soon.',
+      );
+      form.reset({
+        name: '',
+        email: '',
+        subject: '',
+        message: '',
       });
-    });
-
-    const formattedMessage = `*Nouveau message de contact (Portfolio)*\n\n*Nom:* ${values.name}\n*Email:* ${values.email}\n*Sujet:* ${values.subject}\n\n*Message:*\n${values.message}`;
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(formattedMessage)}`;
-
-    setTimeout(() => {
-      window.open(whatsappUrl, '_blank');
+    } catch (e) {
+      toast.error(
+        isApiError(e)
+          ? e.message
+          : language === 'fr'
+            ? 'Envoi impossible pour le moment'
+            : 'Could not send message right now',
+      );
+    } finally {
       setIsSubmitted(false);
-      form.reset();
-    }, 1500);
+    }
   };
 
   return (
     <div className="relative flex h-full flex-col">
-      {isSubmitted && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-sm border border-primary/20 bg-primary px-6 py-4 text-primary-foreground shadow-sm"
-        >
-          <HiOutlineCheckCircle className="h-4 w-4 animate-pulse" />
-          <p className="text-sm font-bold">
-            {language === 'fr' ? 'Redirection vers WhatsApp...' : 'Redirecting to WhatsApp...'}
-          </p>
-        </motion.div>
-      )}
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex h-full flex-col gap-4">
           <div className="grid gap-3 md:grid-cols-2">
@@ -339,14 +331,18 @@ export const ContactForm: React.FC = () => {
 
           <Button
             type="submit"
-            disabled={isSubmitted}
+            disabled={isSubmitted || submitContact.isPending}
             className="mt-auto flex h-9 w-full cursor-pointer items-center justify-center rounded-sm border border-brand/20 bg-brand text-sm font-bold tracking-wide text-brand-foreground transition-all hover:bg-brand-hover disabled:cursor-not-allowed disabled:border-brand/10 disabled:bg-brand/50"
           >
-            {t('contact.form.send')}
+            {submitContact.isPending
+              ? language === 'fr'
+                ? 'Envoi…'
+                : 'Sending…'
+              : t('contact.form.send')}
             <HiOutlinePaperAirplane
               className={cn(
                 'mr-2 h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1',
-                isSubmitted && 'animate-ping',
+                (isSubmitted || submitContact.isPending) && 'animate-pulse',
               )}
             />
           </Button>

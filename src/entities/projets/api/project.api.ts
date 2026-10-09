@@ -1,32 +1,37 @@
-import { apiClient } from '@/shared/api/client';
-import { PaginatedResponse } from '@/shared/types';
-import { IProject, ProjectStatus } from '../model/project.types';
+import { apiClient, type PaginatedData, type PaginationParams, toQueryParams } from '@/shared/api';
+import type { IProject } from '../model/project.types';
+
+export interface ProjectListParams extends PaginationParams {
+  isPublished?: boolean;
+  isFeatured?: boolean;
+  category?: string;
+  includeUnpublished?: boolean;
+}
+
+export async function listProjects(params?: ProjectListParams): Promise<PaginatedData<IProject>> {
+  return apiClient.get<PaginatedData<IProject>>('/projects', toQueryParams(params));
+}
+
+export async function getProject(id: string): Promise<IProject> {
+  return apiClient.get<IProject>(`/projects/${id}`);
+}
+
+export async function createProject(payload: Omit<IProject, 'id'>): Promise<IProject> {
+  return apiClient.post<IProject>('/projects', payload);
+}
+
+export async function updateProject(id: string, payload: Partial<IProject>): Promise<IProject> {
+  return apiClient.put<IProject>(`/projects/${id}`, payload);
+}
+
+export async function deleteProject(id: string): Promise<void> {
+  await apiClient.delete(`/projects/${id}`);
+}
 
 export const projectApi = {
-  // Récupérer les Projects de l'utilisateur
-  getProject: async (page = 1, limit = 10): Promise<PaginatedResponse<IProject>> => {
-    return apiClient.get(`/Project/my-Project?page=${page}&limit=${limit}`);
-  },
-
-  // Récupérer une Project par ID
-  getOrder: async (id: string): Promise<IProject> => {
-    return apiClient.get(`/Project/${id}`);
-  },
-
-  // Créer une nouvelle Project
-  createOrder: async (
-    order: Omit<IProject, 'id' | 'createdAt' | 'updatedAt' | 'status'>,
-  ): Promise<IProject> => {
-    return apiClient.post('/Project', order);
-  },
-
-  // Mettre à jour le statut d'une Project (admin seulement)
-  updateProjecttatus: async (id: string, status: ProjectStatus): Promise<IProject> => {
-    return apiClient.patch(`/Project/${id}/status`, { status });
-  },
-
-  // Suppriler un Project
-  DeleteProject: async (id: string): Promise<IProject> => {
-    return apiClient.delete(`/Project/${id}/delete`);
-  },
+  list: listProjects,
+  getById: getProject,
+  create: createProject,
+  update: updateProject,
+  delete: deleteProject,
 };

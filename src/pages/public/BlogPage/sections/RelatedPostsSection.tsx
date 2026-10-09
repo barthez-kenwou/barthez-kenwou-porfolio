@@ -1,21 +1,20 @@
 import { IBlog } from '@/entities/blogs';
-import { blogPostsData } from '@/entities/blogs/api/mock/blog.mocks';
 import { RelatedPostCard } from '@/entities/blogs/ui/RelatedPostCard.ui';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { HiOutlineBookOpen } from 'react-icons/hi2';
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import { findByNumericId } from '@/shared/lib/entity-slug';
+import React, { useMemo } from 'react';
 import { Marquee } from '@/shared/ui/marquee';
 
-export const RelatedPostsSection: React.FC = () => {
-  const { blogID } = useParams();
+export const RelatedPostsSection: React.FC<{ post: IBlog; posts: IBlog[] }> = ({
+  post,
+  posts,
+}) => {
   const { language } = useLanguageStore();
 
-  const post = findByNumericId(blogPostsData, blogID);
-  const relatedPosts = blogPostsData
-    .filter((p) => p.id !== post?.id && p.category === post?.category)
-    .slice(0, 8);
+  const relatedPosts = useMemo(
+    () => posts.filter((p) => p.id !== post.id && p.category === post.category).slice(0, 8),
+    [posts, post],
+  );
 
   if (relatedPosts.length === 0) return null;
 

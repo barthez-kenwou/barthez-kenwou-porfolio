@@ -1,4 +1,5 @@
-import { apiClient } from '@/shared/api/client';
+import { apiClient } from '@/shared/api';
+import type { PaginatedData } from '@/shared/api';
 import type { NewsletterSubscribeInput } from '../model/newsletter.schema';
 
 export type NewsletterSubscribeErrorCode =
@@ -12,10 +13,65 @@ export type NewsletterSubscribeResult =
   | { ok: true }
   | { ok: false; code: NewsletterSubscribeErrorCode };
 
+export type NewsletterSubscriber = {
+  id: string;
+  email: string;
+  locale: 'fr' | 'en' | string;
+  status: 'pending' | 'active' | 'unsubscribed' | 'bounced' | string;
+  source?: string | null;
+  confirmedAt?: string | null;
+  unsubscribedAt?: string | null;
+  lastEmailedAt?: string | null;
+  welcomeSentAt?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type NewsletterStats = {
+  total: number;
+  pending: number;
+  active: number;
+  unsubscribed: number;
+  bounced: number;
+};
+
+export type NewsletterCampaign = {
+  id: string;
+  type: string;
+  status: string;
+  subjectFr?: string;
+  subjectEn?: string;
+  previewFr?: string;
+  previewEn?: string;
+  template?: string;
+  blogId?: string | null;
+  createdById?: string | null;
+  totalRecipients?: number;
+  sentCount?: number;
+  failCount?: number;
+  startedAt?: string | null;
+  completedAt?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type BroadcastInput = {
+  subjectFr: string;
+  subjectEn: string;
+  headlineFr: string;
+  headlineEn: string;
+  bodyFr: string;
+  bodyEn: string;
+  previewFr?: string;
+  previewEn?: string;
+  ctaUrl?: string;
+  ctaLabelFr?: string;
+  ctaLabelEn?: string;
+};
+
 /**
- * Single entry point for newsletter signup.
+ * Public newsletter signup.
  * Backend: POST /newsletter/subscribe
- * Body: { email, locale, source? }
  */
 export async function subscribeNewsletter(
   input: NewsletterSubscribeInput,
@@ -52,4 +108,35 @@ export async function subscribeNewsletter(
 
     return { ok: false, code: 'unknown' };
   }
+}
+
+export async function getNewsletterStats(): Promise<NewsletterStats> {
+  return apiClient.get<NewsletterStats>('/newsletter/stats');
+}
+
+export async function listNewsletterSubscribers(params?: {
+  page?: number;
+  limit?: number;
+  status?: string;
+  locale?: string;
+  q?: string;
+}): Promise<PaginatedData<NewsletterSubscriber>> {
+  return apiClient.get<PaginatedData<NewsletterSubscriber>>('/newsletter/subscribers', params);
+}
+
+export async function deleteNewsletterSubscriber(id: string): Promise<unknown> {
+  return apiClient.delete(`/newsletter/subscribers/${id}`);
+}
+
+export async function listNewsletterCampaigns(params?: {
+  page?: number;
+  limit?: number;
+  type?: string;
+  status?: string;
+}): Promise<PaginatedData<NewsletterCampaign>> {
+  return apiClient.get<PaginatedData<NewsletterCampaign>>('/newsletter/campaigns', params);
+}
+
+export async function broadcastNewsletter(body: BroadcastInput): Promise<NewsletterCampaign> {
+  return apiClient.post<NewsletterCampaign>('/newsletter/campaigns/broadcast', body);
 }

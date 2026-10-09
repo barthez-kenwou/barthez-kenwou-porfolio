@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Menu, MessageSquareText, NotebookPen } from 'lucide-react';
 import { useSidebar } from '@/shared/ui/sidebar';
-import { useAdminCmsStore } from '@/features/admin-cms';
+import { useAdminDashboard } from '@/features/admin-cms';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { ADMIN_BASE, adminPath } from '@/shared/config/admin';
 import { cn } from '@/shared/lib/utils';
@@ -15,9 +15,8 @@ export function AdminMobileDock() {
   const { setOpenMobile } = useSidebar();
   const language = useLanguageStore((s) => s.language);
   const fr = language === 'fr';
-  const unread = useAdminCmsStore(
-    (s) => s.contactResponses.filter((m) => m.status === 'new').length,
-  );
+  const dashboard = useAdminDashboard();
+  const unread = dashboard.data?.newContactResponses ?? 0;
 
   const items = [
     {

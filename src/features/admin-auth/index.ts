@@ -3,6 +3,8 @@ export {
   loadSession,
   clearSession,
   persistSession,
+  logoutFromApi,
+  fetchCurrentUser,
   type AuthUser,
   type AuthSession,
 } from './api/auth.api';

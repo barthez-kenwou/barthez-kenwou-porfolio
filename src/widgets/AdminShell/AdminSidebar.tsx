@@ -131,8 +131,9 @@ export function AdminSidebar() {
           variant="ghost"
           className="h-11 w-full justify-start gap-2 rounded-lg px-2 text-muted-foreground hover:text-destructive group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
           onClick={() => {
-            logout();
-            navigate(ADMIN_LOGIN, { replace: true });
+            void Promise.resolve(logout()).finally(() => {
+              navigate(ADMIN_LOGIN, { replace: true });
+            });
           }}
         >
           <LogOut className="size-4 shrink-0" />

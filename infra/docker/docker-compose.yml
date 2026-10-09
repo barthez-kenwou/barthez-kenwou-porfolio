@@ -37,7 +37,7 @@ services:
         VITE_ENVIRONMENT: ${VITE_ENVIRONMENT:-production}
         VITE_ENABLE_PWA: ${VITE_ENABLE_PWA:-true}
         VITE_APP_TITLE: ${VITE_APP_TITLE:-Barthez Kenwou Portfolio}
-        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-}
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-https://api.barthez-kenwou.dev}
     container_name: barthez-portfolio-web
     restart: unless-stopped
     ports:

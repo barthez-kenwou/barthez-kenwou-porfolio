@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { projectsData } from '@/entities/projets/api/mocks/projectData.mocks';
+import { usePublicProjects } from '@/entities/projets/hooks/useProjects';
 import type { IProject, ProjectRole, ProjectStatus } from '@/entities/projets/model/project.types';
 
 // ─── Filter state ───────────────────────────────────────────────────────────────
@@ -74,25 +74,27 @@ const matchesCategoryFilter = (project: IProject, filterId: string): boolean => 
 
 export const useProjectFilters = () => {
   const [filters, setFilters] = useState<ProjectFilters>(INITIAL_FILTERS);
+  const projectsQuery = usePublicProjects();
+  const projects = projectsQuery.data?.data.items ?? [];
 
   const availableTechs = useMemo(
-    () => Array.from(new Set(projectsData.flatMap(getProjectTechs))).sort(),
-    [],
+    () => Array.from(new Set(projects.flatMap(getProjectTechs))).sort(),
+    [projects],
   );
 
   const availableRoles = useMemo(
-    () => Array.from(new Set(projectsData.map((p) => p.role).filter(Boolean))) as ProjectRole[],
-    [],
+    () => Array.from(new Set(projects.map((p) => p.role).filter(Boolean))) as ProjectRole[],
+    [projects],
   );
 
   const availableStatuses = useMemo(
-    () => Array.from(new Set(projectsData.map((p) => p.status).filter(Boolean))) as ProjectStatus[],
-    [],
+    () => Array.from(new Set(projects.map((p) => p.status).filter(Boolean))) as ProjectStatus[],
+    [projects],
   );
 
   const filteredProjects = useMemo(
     () =>
-      projectsData.filter((project) => {
+      projects.filter((project) => {
         if (project.isPublished === false) return false;
         const matchCategory = matchesCategoryFilter(project, filters.category);
         const matchTech =
@@ -102,7 +104,7 @@ export const useProjectFilters = () => {
         const matchStatus = !filters.status || project.status === filters.status;
         return matchCategory && matchTech && matchRole && matchStatus;
       }),
-    [filters],
+    [filters, projects],
   );
 
   // ── Derived counts ────────────────────────────────────────────────────────
@@ -142,5 +144,9 @@ export const useProjectFilters = () => {
     setStatus,
     resetSecondaryFilters,
     resetAllFilters,
+    isPending: projectsQuery.isPending,
+    isError: projectsQuery.isError,
+    error: projectsQuery.error,
+    source: projectsQuery.data?.source,
   };
 };

@@ -1,16 +1,20 @@
-import { services } from '@/entities/services/api/mock/services.mocks';
+import { usePublicServices, mapServiceDtoToCard, ServiceCard2 } from '@/entities/services';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
+import { QueryState } from '@/shared/ui/QueryState';
 import { ArrowRight } from 'lucide-react';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatedList } from '@/shared/ui/animated-list';
-import { ServiceCard2 } from '@/entities/services';
 
 export const ServiceSection: React.FC = () => {
   const { language } = useLanguageStore();
   const isFr = language === 'fr';
+  const { data, isPending, isError, error } = usePublicServices();
 
-  const previewServices = services.slice(0, 5);
+  const previewServices = useMemo(() => {
+    const items = data?.data.items ?? [];
+    return items.slice(0, 5).map(mapServiceDtoToCard);
+  }, [data]);
 
   return (
     <section className="relative z-10 overflow-x-clip px-4 py-8 md:px-10 lg:px-14 lg:py-0">
@@ -60,16 +64,28 @@ export const ServiceSection: React.FC = () => {
         </div>
 
         <div className="relative mx-auto h-[420px] w-full max-w-[450px] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_8%,black_92%,transparent)] md:h-[540px] lg:ml-auto">
-          <AnimatedList
-            className="mx-auto flex h-full flex-col items-center bg-transparent px-3 py-6 sm:px-4 sm:py-8"
-            delay={2000}
-            maxVisible={3}
-            pauseOnHover
+          <QueryState
+            isPending={isPending}
+            isError={isError}
+            errorMessage={error instanceof Error ? error.message : undefined}
+            source={data?.source}
+            empty={!isPending && previewServices.length === 0}
           >
-            {previewServices.map((service, index) => (
-              <ServiceCard2 key={index} service={service} language={language} />
-            ))}
-          </AnimatedList>
+            <AnimatedList
+              className="mx-auto flex h-full flex-col items-center bg-transparent px-3 py-6 sm:px-4 sm:py-8"
+              delay={2000}
+              maxVisible={3}
+              pauseOnHover
+            >
+              {previewServices.map((service, index) => (
+                <ServiceCard2
+                  key={service.id ?? index}
+                  service={service}
+                  language={language}
+                />
+              ))}
+            </AnimatedList>
+          </QueryState>
         </div>
       </div>
     </section>

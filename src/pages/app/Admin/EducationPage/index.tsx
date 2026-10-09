@@ -2,44 +2,65 @@ import React from 'react';
 import { Pencil, Plus, Trash2, Save, X } from 'lucide-react';
 import { toast } from 'sonner';
 import {
+  useAdminEducation,
+  useCreateEducation,
+  useUpdateEducation,
+  useDeleteEducation,
+} from '@/entities/education/hooks/useEducation';
+import type { IEducationDto } from '@/entities/education/api/education.api';
+import {
   AdminPageHeader,
   AdminDataTable,
   AdminSectionCard,
   ConfirmDeleteDialog,
   BilingualField,
   Field,
-  StringListEditor,
-  createId,
-  useAdminCmsStore,
 } from '@/features/admin-cms';
+import { isApiError } from '@/shared/api';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
-import { Textarea } from '@/shared/ui/textarea';
+import { QueryState } from '@/shared/ui/QueryState';
 
-const emptyItem = () => ({
-  id: createId('edu'),
+type EduDraft = Omit<IEducationDto, 'id'> & { id?: string };
+
+const emptyItem = (): EduDraft => ({
   degreeFr: '',
   degreeEn: '',
   school: '',
   period: '',
   link: '',
+  isPublished: true,
 });
+
+const isPersistedId = (id?: string) =>
+  Boolean(id && !id.startsWith('tmp') && !id.startsWith('new'));
 
 export const AdminEducationPage: React.FC = () => {
   const { language } = useLanguageStore();
   const fr = language === 'fr';
-  const items = useAdminCmsStore((s) => s.education);
-  const upsert = useAdminCmsStore((s) => s.upsertEducation);
-  const remove = useAdminCmsStore((s) => s.deleteEducation);
-  const [editing, setEditing] = React.useState<any | null>(null);
-  const [pending, setPending] = React.useState<any | null>(null);
+  const { data, isPending, isError, error } = useAdminEducation();
+  const create = useCreateEducation();
+  const update = useUpdateEducation();
+  const remove = useDeleteEducation();
+  const items = data?.items ?? [];
+  const [editing, setEditing] = React.useState<EduDraft | null>(null);
+  const [pending, setPending] = React.useState<IEducationDto | null>(null);
 
-  const save = () => {
+  const save = async () => {
     if (!editing) return;
-    upsert(editing);
-    toast.success(fr ? 'Enregistré' : 'Saved');
-    setEditing(null);
+    const { id, ...payload } = editing;
+    try {
+      if (isPersistedId(id)) {
+        await update.mutateAsync({ id: id!, payload });
+      } else {
+        await create.mutateAsync(payload);
+      }
+      toast.success(fr ? 'Enregistré' : 'Saved');
+      setEditing(null);
+    } catch (e) {
+      toast.error(isApiError(e) ? e.message : fr ? 'Échec de l’enregistrement' : 'Save failed');
+    }
   };
 
   return (
@@ -62,7 +83,7 @@ export const AdminEducationPage: React.FC = () => {
               <Button variant="outline" size="sm" onClick={() => setEditing(null)}>
                 <X className="size-3.5" /> {fr ? 'Fermer' : 'Close'}
               </Button>
-              <Button size="sm" onClick={save}>
+              <Button size="sm" onClick={() => void save()} disabled={create.isPending || update.isPending}>
                 <Save className="size-3.5" /> {fr ? 'Enregistrer' : 'Save'}
               </Button>
             </div>
@@ -98,52 +119,53 @@ export const AdminEducationPage: React.FC = () => {
         </AdminSectionCard>
       ) : null}
 
-      <AdminDataTable
-        data={items}
-        getRowId={(r: any) => String(r.id)}
-        searchKeys={[
-          'nameFr',
-          'nameEn',
-          'name',
-          'titleFr',
-          'titleEn',
-          'title',
-          'company',
-          'companyFr',
-          'companyEn',
-          'role',
-          'category',
-        ]}
-        emptyTitle={fr ? 'Aucun élément' : 'No items'}
-        columns={[
-          {
-            key: 'degree',
-            header: fr ? 'Diplôme' : 'Degree',
-            render: (r: any) => <span className="font-medium">{fr ? r.degreeFr : r.degreeEn}</span>,
-          },
-          { key: 'school', header: fr ? 'École' : 'School' },
-          { key: 'period', header: fr ? 'Période' : 'Period' },
-        ]}
-        actions={(r: any) => (
-          <>
-            <Button size="icon-sm" variant="ghost" onClick={() => setEditing({ ...r })}>
-              <Pencil className="size-3.5" />
-            </Button>
-            <Button size="icon-sm" variant="ghost" onClick={() => setPending(r)}>
-              <Trash2 className="size-3.5 text-destructive" />
-            </Button>
-          </>
-        )}
-      />
+      <QueryState
+        isPending={isPending}
+        isError={isError}
+        errorMessage={isApiError(error) ? error.message : fr ? 'Chargement impossible' : 'Failed to load'}
+        variant="page"
+      >
+        <AdminDataTable
+          data={items}
+          getRowId={(r) => String(r.id)}
+          searchKeys={['degreeFr', 'degreeEn', 'school', 'period']}
+          emptyTitle={fr ? 'Aucun élément' : 'No items'}
+          columns={[
+            {
+              key: 'degree',
+              header: fr ? 'Diplôme' : 'Degree',
+              render: (r) => <span className="font-medium">{fr ? r.degreeFr : r.degreeEn}</span>,
+            },
+            { key: 'school', header: fr ? 'École' : 'School' },
+            { key: 'period', header: fr ? 'Période' : 'Period' },
+          ]}
+          actions={(r) => (
+            <>
+              <Button size="icon-sm" variant="ghost" onClick={() => setEditing({ ...r })}>
+                <Pencil className="size-3.5" />
+              </Button>
+              <Button size="icon-sm" variant="ghost" onClick={() => setPending(r)}>
+                <Trash2 className="size-3.5 text-destructive" />
+              </Button>
+            </>
+          )}
+        />
+      </QueryState>
 
       <ConfirmDeleteDialog
         open={!!pending}
         onOpenChange={(o) => !o && setPending(null)}
         onConfirm={() => {
           if (!pending) return;
-          remove(pending.id);
-          toast.success(fr ? 'Supprimé' : 'Deleted');
-          setPending(null);
+          void (async () => {
+            try {
+              await remove.mutateAsync(pending.id);
+              toast.success(fr ? 'Supprimé' : 'Deleted');
+              setPending(null);
+            } catch (e) {
+              toast.error(isApiError(e) ? e.message : fr ? 'Suppression impossible' : 'Delete failed');
+            }
+          })();
         }}
       />
     </div>

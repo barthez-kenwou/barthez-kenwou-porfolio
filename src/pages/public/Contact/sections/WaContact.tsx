@@ -12,7 +12,7 @@ import {
   FaMobileAlt,
 } from 'react-icons/fa';
 import { cn } from '@/lib/utils';
-import { contactsInfo } from '@/shared/mocks/constContactInfo.mocks';
+import { usePublicContactInfo } from '@/entities/contact/hooks/useContact';
 
 const Circle = forwardRef<HTMLDivElement, { className?: string; children?: React.ReactNode }>(
   ({ className, children }, ref) => {
@@ -36,6 +36,8 @@ Circle.displayName = 'Circle';
 
 export const WaContact = () => {
   const { language } = useLanguageStore();
+  const { data } = usePublicContactInfo();
+  const whatsappLink = data?.data.whatsappLink ?? 'https://wa.me/237655646688';
 
   const containerRef = useRef<HTMLDivElement>(null);
   const div1Ref = useRef<HTMLDivElement>(null);
@@ -48,7 +50,7 @@ export const WaContact = () => {
 
   return (
     <Link
-      to={contactsInfo.whatsappLink}
+      to={whatsappLink}
       target="_blank"
       rel="noopener noreferrer"
       className="group relative flex w-full flex-col items-center justify-center overflow-hidden rounded-sm border border-border/60 bg-card/50 p-3 shadow-sm backdrop-blur-sm transition-all duration-500 hover:border-primary/30 hover:bg-card/70 hover:shadow-[0_0_40px_-12px_hsla(268,52%,38%,0.2)]"

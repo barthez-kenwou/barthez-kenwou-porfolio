@@ -1,7 +1,6 @@
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { Mail, MapPin, Phone, Linkedin, Github, Globe } from 'lucide-react';
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 interface HeaderProps {
   personalInfo: any;
@@ -19,9 +18,14 @@ const formatPortfolioHost = (url?: string) => {
 export const HeaderSection: React.FC<HeaderProps> = ({ personalInfo }) => {
   const { language } = useLanguageStore();
 
-  const websiteHref = personalInfo.website?.startsWith('http')
-    ? personalInfo.website
-    : `https://${stripUrl(personalInfo.website)}`;
+  if (!personalInfo) return null;
+
+  const website = personalInfo.website as string | undefined;
+  const websiteHref = website
+    ? website.startsWith('http')
+      ? website
+      : `https://${stripUrl(website)}`
+    : undefined;
 
   return (
     <section className="relative overflow-hidden border-b border-border/40 bg-gradient-to-br from-primary/15 via-primary/5 to-transparent px-5 py-6 sm:px-8 sm:py-7 print:p-6">
@@ -48,22 +52,28 @@ export const HeaderSection: React.FC<HeaderProps> = ({ personalInfo }) => {
         </p>
 
         <div className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-xs text-foreground/70 md:justify-start">
-          <span className="inline-flex items-center gap-1.5">
-            <Mail className="h-3.5 w-3.5 shrink-0 text-primary/70" />
-            {personalInfo.email}
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <Phone className="h-3.5 w-3.5 shrink-0 text-primary/70" />
-            {personalInfo.phone}
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <MapPin className="h-3.5 w-3.5 shrink-0 text-primary/70" />
-            {personalInfo.location}
-          </span>
+          {personalInfo.email ? (
+            <span className="inline-flex items-center gap-1.5">
+              <Mail className="h-3.5 w-3.5 shrink-0 text-primary/70" />
+              {personalInfo.email}
+            </span>
+          ) : null}
+          {personalInfo.phone ? (
+            <span className="inline-flex items-center gap-1.5">
+              <Phone className="h-3.5 w-3.5 shrink-0 text-primary/70" />
+              {personalInfo.phone}
+            </span>
+          ) : null}
+          {personalInfo.location ? (
+            <span className="inline-flex items-center gap-1.5">
+              <MapPin className="h-3.5 w-3.5 shrink-0 text-primary/70" />
+              {personalInfo.location}
+            </span>
+          ) : null}
         </div>
 
         <div className="mt-2.5 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-xs md:justify-start">
-          {personalInfo.website && (
+          {website && websiteHref ? (
             <a
               href={websiteHref}
               target="_blank"
@@ -71,27 +81,31 @@ export const HeaderSection: React.FC<HeaderProps> = ({ personalInfo }) => {
               className="inline-flex items-center gap-1.5 font-medium text-primary transition-colors hover:text-primary/80"
             >
               <Globe className="h-3.5 w-3.5" />
-              {formatPortfolioHost(personalInfo.website)}
+              {formatPortfolioHost(website)}
             </a>
-          )}
-          <Link
-            to={personalInfo.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 font-medium text-primary transition-colors hover:text-primary/80"
-          >
-            <Linkedin className="h-3.5 w-3.5" />
-            LinkedIn
-          </Link>
-          <Link
-            to={personalInfo.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 font-medium text-primary transition-colors hover:text-primary/80"
-          >
-            <Github className="h-3.5 w-3.5" />
-            GitHub
-          </Link>
+          ) : null}
+          {personalInfo.linkedin ? (
+            <a
+              href={personalInfo.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 font-medium text-primary transition-colors hover:text-primary/80"
+            >
+              <Linkedin className="h-3.5 w-3.5" />
+              LinkedIn
+            </a>
+          ) : null}
+          {personalInfo.github ? (
+            <a
+              href={personalInfo.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 font-medium text-primary transition-colors hover:text-primary/80"
+            >
+              <Github className="h-3.5 w-3.5" />
+              GitHub
+            </a>
+          ) : null}
         </div>
       </div>
     </section>

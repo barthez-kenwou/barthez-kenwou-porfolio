@@ -15,7 +15,23 @@ export type {
 } from './model/project.types';
 export { ProjectSchema, TechStackSchema, ProjectStatusSchema } from './model/project.schema';
 export type { ProjectInput, TechStackInput } from './model/project.schema';
-export { projectApi } from './api/project.api';
+export {
+  projectApi,
+  listProjects,
+  getProject,
+  createProject,
+  updateProject,
+  deleteProject,
+  type ProjectListParams,
+} from './api/project.api';
+export {
+  usePublicProjects,
+  useAdminProjects,
+  useProject,
+  useCreateProject,
+  useUpdateProject,
+  useDeleteProject,
+} from './hooks/useProjects';
 export {
   PROJECT_STATUS_CONFIG,
   PROJECT_ROLE_ICONS,

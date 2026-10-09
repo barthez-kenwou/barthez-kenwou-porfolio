@@ -1,8 +1,5 @@
-import {
-  skillsByCategory,
-  skillsData,
-  imageIcon,
-} from '@/entities/skills/api/mocks/skillsData.mocks';
+import { usePublicSkills } from '@/entities/skills/hooks/useSkills';
+import type { ISkill } from '@/entities/skills/model/Skill.types';
 import React, { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'motion/react';
@@ -10,6 +7,7 @@ import { SkillCard } from '@/entities/skills/ui/SkillCard.ui';
 import { IconCloud } from '@/shared/ui/icon-cloud';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { cn } from '@/shared/lib/utils';
+import { QueryState } from '@/shared/ui/QueryState';
 import { SkillsDomainAtlas } from './SkillsDomainAtlas';
 
 /** 1 = down the list (swipe L→R), -1 = up the list (swipe R→L) */
@@ -71,10 +69,40 @@ const cardVariants = {
   }),
 };
 
+function toSkillCard(skill: { name: string; category: string; level: number; icon: string }): ISkill {
+  return {
+    name: skill.name,
+    category: skill.category,
+    level: skill.level,
+    icon: skill.icon,
+  };
+}
+
 export const SkillsSection: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [swipeDir, setSwipeDir] = useState<SwipeDir>(1);
   const prevIndexRef = useRef(0);
+  const { data, isPending, isError, error } = usePublicSkills();
+  const skillsData = useMemo(
+    () => (data?.data.items ?? []).map(toSkillCard),
+    [data],
+  );
+
+  const skillsByCategory = useMemo(() => {
+    return skillsData.reduce<Record<string, ISkill[]>>((acc, skill) => {
+      if (!acc[skill.category]) acc[skill.category] = [];
+      acc[skill.category].push(skill);
+      return acc;
+    }, {});
+  }, [skillsData]);
+
+  const imageIcon = useMemo(
+    () =>
+      Array.from(
+        new Set(skillsData.map((skill) => skill.icon).filter((icon) => icon.startsWith('http'))),
+      ),
+    [skillsData],
+  );
 
   const filteredSkills =
     activeFilter === 'all'
@@ -89,10 +117,10 @@ export const SkillsSection: React.FC = () => {
       ...Object.keys(skillsByCategory).map((category) => ({
         id: category,
         labelKey: `${category}`,
-        count: (skillsByCategory[category] as unknown[]).length,
+        count: skillsByCategory[category].length,
       })),
     ],
-    [],
+    [skillsData.length, skillsByCategory],
   );
 
   const atlasFilters = useMemo(
@@ -117,88 +145,96 @@ export const SkillsSection: React.FC = () => {
 
   return (
     <section className="relative mx-auto w-full max-w-7xl py-12">
-      <div className="mb-6 flex flex-wrap justify-center gap-3 md:hidden">
-        {filters.map((filter) => (
-          <button
-            key={filter.id}
-            type="button"
-            onClick={() => selectDomain(filter.id)}
-            className={cn(
-              'cursor-pointer rounded-sm border px-3 py-1 text-sm font-medium capitalize transition-colors duration-200',
-              activeFilter === filter.id
-                ? 'border-brand bg-brand text-brand-foreground'
-                : 'border-border/50 bg-secondary/50 text-muted-foreground hover:border-primary/50 hover:text-foreground',
-            )}
-          >
-            {t(filter.labelKey)}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex flex-col gap-6 px-4 md:flex-row md:px-10 lg:px-14">
-        <aside className="hidden w-full flex-shrink-0 md:block md:w-[13.5rem] lg:w-[15rem]">
-          <SkillsDomainAtlas
-            filters={atlasFilters}
-            activeId={activeFilter}
-            onSelect={selectDomain}
-            language={language}
-          />
-        </aside>
-
-        <div className="relative min-h-[320px] flex-1 overflow-hidden pt-6 md:pt-0">
-          <AnimatePresence mode="wait" custom={swipeDir} initial={false}>
-            {activeFilter === 'all' ? (
-              <motion.div
-                key="cloud"
-                custom={swipeDir}
-                variants={panelVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                className="relative mx-auto mb-0 flex min-h-[280px] w-full max-w-[300px] items-center justify-center sm:min-h-[300px] sm:max-w-[320px] lg:min-h-[320px] lg:max-w-[340px] xl:max-w-[360px]"
-              >
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute left-1/2 top-1/2 h-[78%] w-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/15 opacity-70 blur-3xl"
-                />
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute left-1/2 top-1/2 h-[52%] w-[52%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 opacity-80 blur-2xl"
-                />
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(circle_at_center,transparent_42%,hsl(var(--background)/0.55)_78%,hsl(var(--background)/0.85)_100%)]"
-                />
-
-                <div className="relative z-10 flex w-full justify-center">
-                  <IconCloud images={imageIcon} size={360} className="w-full" />
-                </div>
-              </motion.div>
-            ) : (
-              <motion.div
-                key={activeFilter}
-                custom={swipeDir}
-                variants={panelVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                className="mb-20 grid grid-cols-3 items-stretch gap-2 sm:grid-cols-4 sm:gap-2 md:gap-5 lg:grid-cols-5 xl:grid-cols-6"
-              >
-                {filteredSkills.map((skill) => (
-                  <motion.div
-                    key={skill.name}
-                    custom={swipeDir}
-                    variants={cardVariants}
-                    className="h-full min-h-0"
-                  >
-                    <SkillCard Skill={skill} />
-                  </motion.div>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
+      <QueryState
+        isPending={isPending}
+        isError={isError}
+        errorMessage={error instanceof Error ? error.message : undefined}
+        source={data?.source}
+        empty={!isPending && skillsData.length === 0}
+      >
+        <div className="mb-6 flex flex-wrap justify-center gap-3 md:hidden">
+          {filters.map((filter) => (
+            <button
+              key={filter.id}
+              type="button"
+              onClick={() => selectDomain(filter.id)}
+              className={cn(
+                'cursor-pointer rounded-sm border px-3 py-1 text-sm font-medium capitalize transition-colors duration-200',
+                activeFilter === filter.id
+                  ? 'border-brand bg-brand text-brand-foreground'
+                  : 'border-border/50 bg-secondary/50 text-muted-foreground hover:border-primary/50 hover:text-foreground',
+              )}
+            >
+              {t(filter.labelKey)}
+            </button>
+          ))}
         </div>
-      </div>
+
+        <div className="flex flex-col gap-6 px-4 md:flex-row md:px-10 lg:px-14">
+          <aside className="hidden w-full flex-shrink-0 md:block md:w-[13.5rem] lg:w-[15rem]">
+            <SkillsDomainAtlas
+              filters={atlasFilters}
+              activeId={activeFilter}
+              onSelect={selectDomain}
+              language={language}
+            />
+          </aside>
+
+          <div className="relative min-h-[320px] flex-1 overflow-hidden pt-6 md:pt-0">
+            <AnimatePresence mode="wait" custom={swipeDir} initial={false}>
+              {activeFilter === 'all' ? (
+                <motion.div
+                  key="cloud"
+                  custom={swipeDir}
+                  variants={panelVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  className="relative mx-auto mb-0 flex min-h-[280px] w-full max-w-[300px] items-center justify-center sm:min-h-[300px] sm:max-w-[320px] lg:min-h-[320px] lg:max-w-[340px] xl:max-w-[360px]"
+                >
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute left-1/2 top-1/2 h-[78%] w-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/15 opacity-70 blur-3xl"
+                  />
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute left-1/2 top-1/2 h-[52%] w-[52%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 opacity-80 blur-2xl"
+                  />
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(circle_at_center,transparent_42%,hsl(var(--background)/0.55)_78%,hsl(var(--background)/0.85)_100%)]"
+                  />
+
+                  <div className="relative z-10 flex w-full justify-center">
+                    <IconCloud images={imageIcon} size={360} className="w-full" />
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key={activeFilter}
+                  custom={swipeDir}
+                  variants={panelVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  className="mb-20 grid grid-cols-3 items-stretch gap-2 sm:grid-cols-4 sm:gap-2 md:gap-5 lg:grid-cols-5 xl:grid-cols-6"
+                >
+                  {filteredSkills.map((skill) => (
+                    <motion.div
+                      key={skill.name}
+                      custom={swipeDir}
+                      variants={cardVariants}
+                      className="h-full min-h-0"
+                    >
+                      <SkillCard Skill={skill} />
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+      </QueryState>
     </section>
   );
 };

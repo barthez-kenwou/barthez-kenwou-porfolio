@@ -1,10 +1,13 @@
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import React from 'react';
-import { education, EducationCard, IEducation } from '@/entities/education';
+import { EducationCard, usePublicEducation } from '@/entities/education';
+import { QueryState } from '@/shared/ui/QueryState';
 import { AboutSectionIcon } from './AboutSectionIcon';
 
 export const EducationSection: React.FC = () => {
   const { language } = useLanguageStore();
+  const { data, isPending, isError, error } = usePublicEducation();
+  const education = data?.data.items ?? [];
 
   return (
     <section className="glass rounded-md p-4 md:p-6 border border-border animate-fade-in">
@@ -17,11 +20,19 @@ export const EducationSection: React.FC = () => {
       </div>
 
       {/* content */}
-      <div className="space-y-1.5">
-        {education.map((edu: IEducation, index: number) => (
-          <EducationCard key={index * 3} Education={edu} />
-        ))}
-      </div>
+      <QueryState
+        isPending={isPending}
+        isError={isError}
+        errorMessage={error instanceof Error ? error.message : undefined}
+        source={data?.source}
+        empty={!isPending && education.length === 0}
+      >
+        <div className="space-y-1.5">
+          {education.map((edu, index) => (
+            <EducationCard key={edu.id ?? index * 3} Education={edu} />
+          ))}
+        </div>
+      </QueryState>
     </section>
   );
 };

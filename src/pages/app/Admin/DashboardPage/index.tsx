@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
-import { AdminPageHeader, useAdminCmsStore } from '@/features/admin-cms';
+import { AdminPageHeader, useAdminDashboard } from '@/features/admin-cms';
+import { isApiError } from '@/shared/api';
+import { QueryState } from '@/shared/ui/QueryState';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { adminPath } from '@/shared/config/admin';
 import { Badge } from '@/shared/ui/badge';
@@ -31,19 +33,19 @@ const analyticsMock = {
 export function AdminDashboardPage() {
   const { language } = useLanguageStore();
   const fr = language === 'fr';
-  const store = useAdminCmsStore();
+  const { data, isPending, isError, error } = useAdminDashboard();
 
-  const publishedProjects = store.projects.filter((p) => p.isPublished !== false).length;
-  const publishedBlogs = store.blogs.filter((b) => b.isPublished !== false).length;
-  const unread = store.contactResponses.filter((m) => m.status === 'new').length;
-  const pendingTestimonials = store.testimonials.filter((t) => t.status === 'pending').length;
+  const publishedProjects = data?.publishedProjects ?? 0;
+  const publishedBlogs = data?.publishedBlogs ?? 0;
+  const newContactResponses = data?.newContactResponses ?? 0;
+  const pendingTestimonials = data?.pendingTestimonials ?? 0;
 
   const attention = [
-    unread > 0
+    newContactResponses > 0
       ? {
           href: adminPath('contact-responses'),
           title: fr ? 'Messages à traiter' : 'Messages to triage',
-          detail: `${unread} ${fr ? 'non lus' : 'unread'}`,
+          detail: `${newContactResponses} ${fr ? 'non lus' : 'unread'}`,
           tone: 'warning' as const,
         }
       : null,
@@ -65,18 +67,20 @@ export function AdminDashboardPage() {
   const pulse = [
     {
       label: fr ? 'Projets live' : 'Live projects',
-      value: `${publishedProjects}/${store.projects.length}`,
+      value: String(publishedProjects),
       href: adminPath('projects'),
     },
     {
       label: fr ? 'Articles live' : 'Live articles',
-      value: `${publishedBlogs}/${store.blogs.length}`,
+      value: String(publishedBlogs),
       href: adminPath('blogs'),
     },
     {
       label: fr ? 'Messages' : 'Inbox',
-      value: String(store.contactResponses.length),
-      hint: unread ? `${unread} ${fr ? 'nouveaux' : 'new'}` : undefined,
+      value: String(newContactResponses),
+      hint: newContactResponses
+        ? `${newContactResponses} ${fr ? 'nouveaux' : 'new'}`
+        : undefined,
       href: adminPath('contact-responses'),
     },
     {
@@ -90,201 +94,157 @@ export function AdminDashboardPage() {
     <div className="space-y-8 md:space-y-10">
       <AdminPageHeader title={fr ? 'Tableau de bord' : 'Dashboard'} />
 
-      {/* Mobile-first: what needs you now */}
-      {attention.length > 0 ? (
-        <section className="space-y-2 md:hidden">
-          <h2 className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-            {fr ? 'À traiter' : 'Needs you'}
-          </h2>
-          <div className="space-y-2">
-            {attention.map((item) => (
-              <Link
-                key={item.href}
-                to={item.href}
-                className={cn(
-                  'flex min-h-14 items-center justify-between gap-3 rounded-xl border px-4 py-3',
-                  'active:scale-[0.99] transition-transform',
-                  item.tone === 'warning'
-                    ? 'border-amber-500/30 bg-amber-500/10'
-                    : 'border-primary/30 bg-primary/10',
-                )}
-              >
-                <div>
-                  <p className="text-sm font-semibold">{item.title}</p>
-                  <p className="text-xs text-muted-foreground">{item.detail}</p>
-                </div>
-                <span className="text-lg text-muted-foreground">→</span>
-              </Link>
-            ))}
-          </div>
-        </section>
-      ) : null}
-
-      {/* Quiet pulse strip */}
-      <section className="grid gap-px overflow-hidden rounded-xl border border-border/70 bg-border/70 grid-cols-2 lg:grid-cols-4">
-        {pulse.map((item) => (
-          <Link
-            key={item.href}
-            to={item.href}
-            className="min-h-[5.5rem] bg-card px-4 py-4 transition-colors active:bg-muted/40 sm:px-5 sm:py-5 hover:bg-muted/30"
-          >
-            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground sm:text-[11px]">
-              {item.label}
-            </p>
-            <p className="mt-2 text-xl font-semibold tracking-tight tabular-nums sm:text-2xl">
-              {item.value}
-            </p>
-            {item.hint ? (
-              <Badge variant="warning" className="mt-2">
-                {item.hint}
-              </Badge>
-            ) : (
-              <p className="mt-2 text-xs text-muted-foreground/80">→</p>
-            )}
-          </Link>
-        ))}
-      </section>
-
-      {/* Analytics */}
-      <section className="grid gap-4 sm:gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="rounded-xl border border-border/70 bg-card/50 p-4 sm:p-6">
-          <div className="flex items-baseline justify-between gap-3">
-            <h2 className="text-sm font-semibold tracking-tight">
-              {fr ? 'Audience · 7 jours' : 'Audience · 7 days'}
+      <QueryState
+        isPending={isPending}
+        isError={isError}
+        errorMessage={isApiError(error) ? error.message : undefined}
+        variant="page"
+      >
+        {attention.length > 0 ? (
+          <section className="mb-8 space-y-2 md:hidden">
+            <h2 className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+              {fr ? 'À traiter' : 'Needs you'}
             </h2>
-            <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
-              Plausible CE
-            </span>
-          </div>
-
-          <div className="mt-5 grid grid-cols-3 gap-3 sm:mt-6 sm:gap-4">
-            {[
-              { k: fr ? 'Visiteurs' : 'Visitors', v: analyticsMock.visitors7d },
-              { k: fr ? 'Pages vues' : 'Pageviews', v: analyticsMock.pageviews7d },
-              { k: 'Bounce', v: analyticsMock.bounce },
-            ].map((m) => (
-              <div key={m.k}>
-                <p className="text-[10px] text-muted-foreground sm:text-[11px]">{m.k}</p>
-                <p className="mt-1 text-lg font-semibold tabular-nums tracking-tight sm:text-xl">
-                  {m.v}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-6 grid gap-5 sm:mt-8 sm:grid-cols-2 sm:gap-6">
-            <div>
-              <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-                {fr ? 'Articles' : 'Articles'}
-              </p>
-              <ul className="mt-3 space-y-2.5">
-                {analyticsMock.topBlogs.map((row) => (
-                  <li key={row.slug} className="flex items-center justify-between gap-3 text-sm">
-                    <Link
-                      to={adminPath('blogs')}
-                      className="truncate py-0.5 text-foreground/90 hover:text-primary"
-                    >
-                      {row.slug}
-                    </Link>
-                    <span className="tabular-nums text-muted-foreground">{row.views}</span>
-                  </li>
-                ))}
-              </ul>
+            <div className="space-y-2">
+              {attention.map((item) => (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className={cn(
+                    'flex min-h-14 items-center justify-between gap-3 rounded-xl border px-4 py-3',
+                    'active:scale-[0.99] transition-transform',
+                    item.tone === 'warning'
+                      ? 'border-amber-500/30 bg-amber-500/10'
+                      : 'border-primary/30 bg-primary/10',
+                  )}
+                >
+                  <div>
+                    <p className="text-sm font-semibold">{item.title}</p>
+                    <p className="text-xs text-muted-foreground">{item.detail}</p>
+                  </div>
+                  <span className="text-lg text-muted-foreground">→</span>
+                </Link>
+              ))}
             </div>
-            <div>
-              <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-                {fr ? 'Projets' : 'Projects'}
-              </p>
-              <ul className="mt-3 space-y-2.5">
-                {analyticsMock.topProjects.map((row) => (
-                  <li key={row.id} className="flex items-center justify-between gap-3 text-sm">
-                    <Link
-                      to={adminPath('projects', String(row.id))}
-                      className="truncate py-0.5 text-foreground/90 hover:text-primary"
-                    >
-                      {row.label}
-                    </Link>
-                    <span className="tabular-nums text-muted-foreground">{row.views}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+          </section>
+        ) : null}
 
-          <p className="mt-5 text-[11px] leading-relaxed text-muted-foreground sm:mt-6">
-            {fr
-              ? 'Chiffres illustratifs. Brancher l’API Plausible CE pour du live.'
-              : 'Illustrative figures. Wire Plausible CE API for live data.'}
-          </p>
-        </div>
-
-        <div className="rounded-xl border border-border/70 bg-card/50 p-4 sm:p-6">
-          <h2 className="text-sm font-semibold tracking-tight">
-            {fr ? 'Pages fortes' : 'Top pages'}
-          </h2>
-          <ul className="mt-4 space-y-3">
-            {analyticsMock.top.map((row, i) => (
-              <li key={row.path} className="flex items-center justify-between gap-3 text-sm">
-                <span className="flex min-w-0 items-center gap-2">
-                  <span className="font-mono text-[10px] text-muted-foreground">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <span className="truncate">{row.path}</span>
-                </span>
-                <span className="tabular-nums text-muted-foreground">{row.views}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* Compact inventory: larger chips on mobile */}
-      <section>
-        <h2 className="mb-3 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-          {fr ? 'Inventaire' : 'Inventory'}
-        </h2>
-        <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
-          {[
-            { href: adminPath('skills'), n: store.skills.length, fr: 'Compétences', en: 'Skills' },
-            {
-              href: adminPath('certifications'),
-              n: store.certifications.length,
-              fr: 'Certifs',
-              en: 'Certs',
-            },
-            {
-              href: adminPath('experiences'),
-              n: store.experiences.length,
-              fr: 'Expériences',
-              en: 'Experience',
-            },
-            {
-              href: adminPath('references'),
-              n: store.references.length,
-              fr: 'Références',
-              en: 'References',
-            },
-            {
-              href: adminPath('testimonials'),
-              n: store.testimonials.length,
-              fr: 'Témoignages',
-              en: 'Testimonials',
-            },
-          ].map((item) => (
+        <section className="grid gap-px overflow-hidden rounded-xl border border-border/70 bg-border/70 grid-cols-2 lg:grid-cols-4">
+          {pulse.map((item) => (
             <Link
               key={item.href}
               to={item.href}
-              className={cn(
-                'inline-flex min-h-12 items-center justify-between gap-2 rounded-xl border border-border/70 bg-card/60 px-3 py-2.5 text-xs sm:min-h-0 sm:rounded-lg sm:py-1.5',
-                'transition-colors active:bg-muted/50 hover:border-primary/35 hover:bg-muted/40',
-              )}
+              className="min-h-[5.5rem] bg-card px-4 py-4 transition-colors active:bg-muted/40 sm:px-5 sm:py-5 hover:bg-muted/30"
             >
-              <span className="text-muted-foreground">{fr ? item.fr : item.en}</span>
-              <span className="font-semibold tabular-nums">{item.n}</span>
+              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground sm:text-[11px]">
+                {item.label}
+              </p>
+              <p className="mt-2 text-xl font-semibold tracking-tight tabular-nums sm:text-2xl">
+                {item.value}
+              </p>
+              {item.hint ? (
+                <Badge variant="warning" className="mt-2">
+                  {item.hint}
+                </Badge>
+              ) : (
+                <p className="mt-2 text-xs text-muted-foreground/80">→</p>
+              )}
             </Link>
           ))}
-        </div>
-      </section>
+        </section>
+
+        <section className="mt-8 grid gap-4 sm:gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="rounded-xl border border-border/70 bg-card/50 p-4 sm:p-6">
+            <div className="flex items-baseline justify-between gap-3">
+              <h2 className="text-sm font-semibold tracking-tight">
+                {fr ? 'Audience · 7 jours' : 'Audience · 7 days'}
+              </h2>
+              <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+                Plausible CE
+              </span>
+            </div>
+
+            <div className="mt-5 grid grid-cols-3 gap-3 sm:mt-6 sm:gap-4">
+              {[
+                { k: fr ? 'Visiteurs' : 'Visitors', v: analyticsMock.visitors7d },
+                { k: fr ? 'Pages vues' : 'Pageviews', v: analyticsMock.pageviews7d },
+                { k: 'Bounce', v: analyticsMock.bounce },
+              ].map((m) => (
+                <div key={m.k}>
+                  <p className="text-[10px] text-muted-foreground sm:text-[11px]">{m.k}</p>
+                  <p className="mt-1 text-lg font-semibold tabular-nums tracking-tight sm:text-xl">
+                    {m.v}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 grid gap-5 sm:mt-8 sm:grid-cols-2 sm:gap-6">
+              <div>
+                <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                  {fr ? 'Articles' : 'Articles'}
+                </p>
+                <ul className="mt-3 space-y-2.5">
+                  {analyticsMock.topBlogs.map((row) => (
+                    <li key={row.slug} className="flex items-center justify-between gap-3 text-sm">
+                      <Link
+                        to={adminPath('blogs')}
+                        className="truncate py-0.5 text-foreground/90 hover:text-primary"
+                      >
+                        {row.slug}
+                      </Link>
+                      <span className="tabular-nums text-muted-foreground">{row.views}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                  {fr ? 'Projets' : 'Projects'}
+                </p>
+                <ul className="mt-3 space-y-2.5">
+                  {analyticsMock.topProjects.map((row) => (
+                    <li key={row.id} className="flex items-center justify-between gap-3 text-sm">
+                      <Link
+                        to={adminPath('projects', String(row.id))}
+                        className="truncate py-0.5 text-foreground/90 hover:text-primary"
+                      >
+                        {row.label}
+                      </Link>
+                      <span className="tabular-nums text-muted-foreground">{row.views}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <p className="mt-5 text-[11px] leading-relaxed text-muted-foreground sm:mt-6">
+              {fr
+                ? 'Chiffres illustratifs. Brancher l’API Plausible CE pour du live.'
+                : 'Illustrative figures. Wire Plausible CE API for live data.'}
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-border/70 bg-card/50 p-4 sm:p-6">
+            <h2 className="text-sm font-semibold tracking-tight">
+              {fr ? 'Pages fortes' : 'Top pages'}
+            </h2>
+            <ul className="mt-4 space-y-3">
+              {analyticsMock.top.map((row, i) => (
+                <li key={row.path} className="flex items-center justify-between gap-3 text-sm">
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span className="font-mono text-[10px] text-muted-foreground">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span className="truncate">{row.path}</span>
+                  </span>
+                  <span className="tabular-nums text-muted-foreground">{row.views}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      </QueryState>
     </div>
   );
 }

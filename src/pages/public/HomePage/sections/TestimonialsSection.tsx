@@ -1,13 +1,15 @@
-import { usePublicTestimonials } from '@/entities/testimonies/hooks/usePublicTestimonials';
+import { usePublicTestimonialsQuery } from '@/entities/testimonies/hooks/useTestimonials';
 import { StackedTestimonialsCarousel } from '@/entities/testimonies/ui/StackedTestimonialsCarousel';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
+import { QueryState } from '@/shared/ui/QueryState';
 import React from 'react';
 
 export const TestimonialsSection: React.FC = () => {
   const { language } = useLanguageStore();
-  const testimonials = usePublicTestimonials();
+  const { data, isPending, isError, error } = usePublicTestimonialsQuery();
+  const testimonials = data?.data ?? [];
 
-  if (testimonials.length === 0) return null;
+  if (!isPending && !isError && testimonials.length === 0) return null;
 
   return (
     <section className="relative z-10 mx-auto max-w-7xl overflow-hidden px-4 py-12 md:px-10 md:py-16 lg:px-14 lg:py-20">
@@ -20,7 +22,15 @@ export const TestimonialsSection: React.FC = () => {
       </div>
 
       <div className="relative z-10 mx-auto flex w-full justify-center">
-        <StackedTestimonialsCarousel testimonials={testimonials} />
+        <QueryState
+          isPending={isPending}
+          isError={isError}
+          errorMessage={error instanceof Error ? error.message : undefined}
+          source={data?.source}
+          empty={!isPending && testimonials.length === 0}
+        >
+          <StackedTestimonialsCarousel testimonials={testimonials} />
+        </QueryState>
       </div>
     </section>
   );

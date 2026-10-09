@@ -4,10 +4,11 @@ import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { cn } from '@/shared/lib/utils';
-import { skillsByCategory } from '@/entities/skills/api/mocks/skillsData.mocks';
+import { usePublicSkills } from '@/entities/skills/hooks/useSkills';
 import { ProjectCard } from '@/entities/projets';
 import { ProjectFilterBar, useProjectFilters } from '@/features/projets-browse';
 import { Button } from '@/shared/ui/button';
+import { QueryState } from '@/shared/ui/QueryState';
 import { FaSearch } from 'react-icons/fa';
 
 // ─── Props ──────────────────────────────────────────────────────────────────────
@@ -23,6 +24,7 @@ interface GridProjectProps {
 export const GridProject: React.FC<GridProjectProps> = ({ filterState }) => {
   const { t } = useTranslation();
   const { language } = useLanguageStore();
+  const skillsQuery = usePublicSkills();
 
   const {
     filters,
@@ -37,6 +39,10 @@ export const GridProject: React.FC<GridProjectProps> = ({ filterState }) => {
     setStatus,
     resetSecondaryFilters,
     resetAllFilters,
+    isPending,
+    isError,
+    error,
+    source,
   } = filterState;
 
   // ─── Pagination Logic ────────────────────────────────────────────────────────
@@ -66,9 +72,12 @@ export const GridProject: React.FC<GridProjectProps> = ({ filterState }) => {
   const paginatedProjects = filteredProjects.slice(startIndex, startIndex + PROJECTS_PER_PAGE);
 
   // ─── Filter Options ──────────────────────────────────────────────────────────
+  const skillCategories = Array.from(
+    new Set((skillsQuery.data?.data.items ?? []).map((s) => s.category)),
+  );
   const categoryFilters = [
     { id: 'all', labelKey: 'all' },
-    ...Object.keys(skillsByCategory).map((cat) => ({ id: cat, labelKey: cat })),
+    ...skillCategories.map((cat) => ({ id: cat, labelKey: cat })),
   ];
 
   return (
@@ -114,6 +123,12 @@ export const GridProject: React.FC<GridProjectProps> = ({ filterState }) => {
         onReset={resetSecondaryFilters}
       />
 
+      <QueryState
+        isPending={isPending}
+        isError={isError}
+        errorMessage={error instanceof Error ? error.message : undefined}
+        source={source}
+      >
       {/* ── Project Grid ─────────────────────────────────────────────────────── */}
       {filteredProjects.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-8 text-center animate-fade-in">
@@ -192,6 +207,7 @@ export const GridProject: React.FC<GridProjectProps> = ({ filterState }) => {
           )}
         </>
       )}
+      </QueryState>
     </section>
   );
 };

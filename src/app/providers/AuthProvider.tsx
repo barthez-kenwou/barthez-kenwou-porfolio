@@ -1,17 +1,22 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import {
   clearSession,
+  fetchCurrentUser,
   loadSession,
   loginWithCredentials,
+  logoutFromApi,
+  persistSession,
   type AuthSession,
   type AuthUser,
 } from '@/features/admin-auth';
+import { env } from '@/app/config/env';
+import { getAccessToken } from '@/shared/api';
 
 interface AuthContextType {
   user: AuthUser | null;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   loading: boolean;
   session: AuthSession | null;
 }
@@ -35,19 +40,71 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setSession(loadSession());
-    setLoading(false);
+    let cancelled = false;
+
+    async function bootstrap() {
+      const stored = loadSession();
+      if (!stored) {
+        if (!cancelled) {
+          setSession(null);
+          setLoading(false);
+        }
+        return;
+      }
+
+      // Offline UI mode: trust local session without calling /auth/me
+      if (!env.ADMIN_USE_API) {
+        if (!cancelled) {
+          setSession(stored);
+          setLoading(false);
+        }
+        return;
+      }
+
+      if (!stored.viaApi || !getAccessToken()) {
+        clearSession();
+        if (!cancelled) {
+          setSession(null);
+          setLoading(false);
+        }
+        return;
+      }
+
+      try {
+        const user = await fetchCurrentUser();
+        const next: AuthSession = {
+          ...stored,
+          user,
+          viaApi: true,
+          token: getAccessToken() || stored.token,
+          expiresAt: Date.now() + 1000 * 60 * 60 * 12,
+        };
+        persistSession(next);
+        if (!cancelled) setSession(next);
+      } catch {
+        // Invalid / expired API session — force re-login
+        clearSession();
+        if (!cancelled) setSession(null);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    void bootstrap();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = useCallback(async (email: string, password: string) => {
     const next = await loginWithCredentials(email, password);
     setSession(next);
-  };
+  }, []);
 
-  const logout = () => {
-    clearSession();
+  const logout = useCallback(async () => {
+    await logoutFromApi();
     setSession(null);
-  };
+  }, []);
 
   const value = useMemo<AuthContextType>(
     () => ({
@@ -58,7 +115,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       loading,
       session,
     }),
-    [session, loading],
+    [session, loading, login, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

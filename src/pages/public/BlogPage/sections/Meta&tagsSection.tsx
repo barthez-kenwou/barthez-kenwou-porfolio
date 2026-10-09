@@ -1,23 +1,11 @@
-import { blogPostsData } from '@/entities/blogs/api/mock/blog.mocks';
+import type { IBlog } from '@/entities/blogs';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { HiOutlineCalendar, HiOutlineClock, HiOutlineUser } from 'react-icons/hi2';
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { findByNumericId } from '@/shared/lib/entity-slug';
 
-export const MetaTagsSection: React.FC = () => {
-  const { blogID } = useParams();
+export const MetaTagsSection: React.FC<{ post: IBlog }> = ({ post }) => {
   const { language } = useLanguageStore();
-
-  const post = findByNumericId(blogPostsData, blogID) || {
-    author: 'Barthez Kenwou',
-    date: new Date().toISOString(),
-    readTime: '5 min',
-    titleFr: '',
-    titleEn: '',
-    tags: [],
-  };
 
   const formattedDate = new Date(post.date).toLocaleDateString(
     language === 'fr' ? 'fr-FR' : 'en-US',

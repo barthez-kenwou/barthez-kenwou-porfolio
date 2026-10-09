@@ -1,17 +1,11 @@
-import { blogPostsData } from '@/entities/blogs/api/mock/blog.mocks';
+import type { IBlog } from '@/entities/blogs';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { Image } from '@/shared/ui/Image';
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { findByNumericId } from '@/shared/lib/entity-slug';
 
-export const HeroDetailSection: React.FC = () => {
-  const { blogID } = useParams();
+export const HeroDetailSection: React.FC<{ post: IBlog }> = ({ post }) => {
   const { language } = useLanguageStore();
-  const post = findByNumericId(blogPostsData, blogID);
-
-  if (!post) return null;
 
   return (
     <section className="mb-8 relative group">

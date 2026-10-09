@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { BlobProvider } from '@react-pdf/renderer';
 import { CvPDFDocument } from '../PDF/PDFDocument';
-import { cvData } from '@/entities/cv/api/mock/cv-data';
+import { usePublicCvData } from '@/entities/cv/hooks/useCv';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { X, Download, Loader2, FileText, CheckCircle2 } from 'lucide-react';
 import { createPortal } from 'react-dom';
@@ -32,6 +32,8 @@ function useIsCoarseOrNarrow() {
 export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose }) => {
   const { language } = useLanguageStore();
   const isFr = language === 'fr';
+  const { data } = usePublicCvData();
+  const cvData = data?.data;
   const mobileLike = useIsCoarseOrNarrow();
   const [renderState, setRenderState] = useState(false);
   const closeTimerRef = useRef<number | null>(null);
@@ -142,6 +144,14 @@ export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose 
         </div>
 
         <div className="relative flex min-h-0 flex-1 flex-col bg-background/40">
+          {!cvData ? (
+            <div className="flex flex-1 flex-col items-center justify-center gap-3 p-6 text-primary">
+              <Loader2 className="h-9 w-9 animate-spin" />
+              <p className="text-sm font-semibold text-foreground/80">
+                {isFr ? 'Chargement du CV…' : 'Loading CV…'}
+              </p>
+            </div>
+          ) : (
           <BlobProvider document={<CvPDFDocument data={cvData} language={language === 'fr' ? 'fr' : 'en'} />}>
             {({ url, loading, error }) => {
               if (error) {
@@ -219,6 +229,7 @@ export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose 
               );
             }}
           </BlobProvider>
+          )}
         </div>
       </div>
     </div>,

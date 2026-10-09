@@ -12,9 +12,10 @@ import { FeaturedProjectsSection } from './sections/FeaturedProjectsSection';
 import { ProfileSection } from './sections/ProfileSection';
 import { HeaderSection } from './sections/HeaderSection';
 import { SEO } from '@/shared/ui/SEO/SEO';
-import { cvData } from '@/entities/cv/api/mock/cv-data';
+import { usePublicCvData } from '@/entities/cv/hooks/useCv';
 import { RetroGrid } from '@/shared/ui/retro-grid';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
+import { QueryState } from '@/shared/ui/QueryState';
 
 const CVPreviewModal = lazy(() =>
   import('./sections/CVPreviewModal').then((m) => ({ default: m.CVPreviewModal })),
@@ -23,6 +24,8 @@ const CVPreviewModal = lazy(() =>
 export const CvPage = () => {
   const { language } = useLanguageStore();
   const isFr = language === 'fr';
+  const { data, isPending, isError, error } = usePublicCvData();
+  const cvData = data?.data;
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [pastHero, setPastHero] = useState(false);
   const [endCtaInView, setEndCtaInView] = useState(false);
@@ -52,7 +55,7 @@ export const CvPage = () => {
     observer.observe(heroEl);
     observer.observe(endEl);
     return () => observer.disconnect();
-  }, []);
+  }, [cvData]);
 
   const stickyVisible = pastHero && !endCtaInView;
 
@@ -95,22 +98,35 @@ export const CvPage = () => {
         </section>
 
         <div className="px-4 md:px-10 lg:px-14">
-          <section className="relative z-10 mx-auto mb-8 max-w-4xl overflow-hidden rounded-md border border-border bg-card shadow-md print:border-none print:shadow-none md:mb-10">
-            <HeaderSection personalInfo={cvData.personalInfo} />
+          <QueryState
+            variant="page"
+            isPending={isPending}
+            isError={isError}
+            errorMessage={error instanceof Error ? error.message : undefined}
+            source={data?.source}
+            empty={!isPending && !cvData}
+          >
+            {cvData ? (
+              <>
+                <section className="relative z-10 mx-auto mb-8 max-w-4xl overflow-hidden rounded-md border border-border bg-card shadow-md print:border-none print:shadow-none md:mb-10">
+                  <HeaderSection personalInfo={cvData.personalInfo} />
 
-            <div className="space-y-5 p-3.5 sm:space-y-6 sm:p-6 md:space-y-8 md:p-8 print:p-6">
-              <ProfileSection />
-              <ExperienceSection experiences={cvData.experiences} />
-              <FeaturedProjectsSection projects={cvData.featuredProjects} />
-              <SkillsSection skills={cvData.skills} />
-              <SoftSkillsSection softSkills={(cvData.skills as any)?.softSkills} />
-              <CertificationSection education={cvData.education} />
-              <LanguageSection languages={cvData.languages} />
-              <ReferencesSection references={(cvData as any)?.references} />
-            </div>
-          </section>
+                  <div className="space-y-5 p-3.5 sm:space-y-6 sm:p-6 md:space-y-8 md:p-8 print:p-6">
+                    <ProfileSection />
+                    <ExperienceSection experiences={cvData.experiences} />
+                    <FeaturedProjectsSection projects={cvData.featuredProjects} />
+                    <SkillsSection skills={cvData.skills} />
+                    <SoftSkillsSection softSkills={cvData.skills?.softSkills} />
+                    <CertificationSection education={cvData.education} />
+                    <LanguageSection languages={cvData.languages} />
+                    <ReferencesSection references={cvData.references} />
+                  </div>
+                </section>
 
-          <CTASection onDownload={openPreview} sectionRef={endCtaRef} />
+                <CTASection onDownload={openPreview} sectionRef={endCtaRef} />
+              </>
+            ) : null}
+          </QueryState>
         </div>
       </div>
 

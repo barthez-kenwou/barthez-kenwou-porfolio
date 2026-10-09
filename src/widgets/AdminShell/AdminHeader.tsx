@@ -54,8 +54,9 @@ export function AdminHeader() {
   const mobileParent = crumbs.length > 1 ? crumbs[crumbs.length - 2]?.label : null;
 
   const handleLogout = () => {
-    logout();
-    navigate(ADMIN_LOGIN, { replace: true });
+    void Promise.resolve(logout()).finally(() => {
+      navigate(ADMIN_LOGIN, { replace: true });
+    });
   };
 
   return (

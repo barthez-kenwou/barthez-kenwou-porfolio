@@ -12,14 +12,34 @@ import { TableOfContents } from './sections/TableOfContents';
 import { SEO } from '@/shared/ui/SEO/SEO';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { truncateFonction } from '@/shared/ui/utils/truncateText/helpers';
-import { blogPostsData } from '@/entities/blogs/api/mock/blog.mocks';
+import { useBlogBySlug, usePublicBlogs } from '@/entities/blogs';
 import { motion } from 'framer-motion';
-import { findByNumericId, getBlogPathSlug } from '@/shared/lib/entity-slug';
+import { getBlogPathSlug } from '@/shared/lib/entity-slug';
+import { QueryState } from '@/shared/ui/QueryState';
 
 export const BlogDetailPage = () => {
   const { blogID } = useParams();
-  const post = findByNumericId(blogPostsData, blogID);
   const { language } = useLanguageStore();
+  const { data, isPending, isError, error } = useBlogBySlug(blogID);
+  const postsQuery = usePublicBlogs();
+  const post = data?.data;
+  const allPosts = postsQuery.data?.data.items ?? [];
+
+  if (isPending || isError) {
+    return (
+      <div className="min-h-screen px-4 py-24 md:px-10 lg:px-14">
+        <QueryState
+          variant="page"
+          isPending={isPending}
+          isError={isError}
+          errorMessage={error instanceof Error ? error.message : undefined}
+          source={data?.source}
+        >
+          {null}
+        </QueryState>
+      </div>
+    );
+  }
 
   if (!post || post.isPublished === false) return <NotFoundPost />;
 
@@ -96,17 +116,17 @@ export const BlogDetailPage = () => {
                   <BackSection />
                 </div>
 
-                <HeroDetailSection />
-                <MetaTagsSection />
+                <HeroDetailSection post={post} />
+                <MetaTagsSection post={post} />
 
                 <div className="mt-8 border-t border-border/40 pt-0">
-                  <ArticleContentSection />
+                  <ArticleContentSection post={post} />
                 </div>
 
                 <div className="mt-10 space-y-12">
-                  <ShareSection />
-                  <NavigationSection />
-                  <RelatedPostsSection />
+                  <ShareSection post={post} />
+                  <NavigationSection post={post} posts={allPosts} />
+                  <RelatedPostsSection post={post} posts={allPosts} />
                   <NewsletterCTA
                     source="blog-article"
                     contactTo={`/contact?from=blog&article=${encodeURIComponent(

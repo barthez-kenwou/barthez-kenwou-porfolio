@@ -1,10 +1,10 @@
-import { BlogCard, IBlog } from '@/entities/blogs';
-import { blogPostsData } from '@/entities/blogs/api/mock/blog.mocks';
+import { BlogCard, IBlog, usePublicBlogs } from '@/entities/blogs';
 import { EmptyBlogCard } from '@/entities/blogs/ui/EmptyBlogCard.ui';
 import { categories } from '@/shared/constants/blogCategories.const';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
+import { QueryState } from '@/shared/ui/QueryState';
 import { HiOutlineMagnifyingGlass } from 'react-icons/hi2';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { cn } from '@/shared/lib/utils';
 
 export const PostsGrid: React.FC = () => {
@@ -12,16 +12,22 @@ export const PostsGrid: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
+  const { data, isPending, isError, error } = usePublicBlogs();
+  const posts = data?.data.items ?? [];
 
-  const filteredPosts = blogPostsData.filter((post) => {
-    if (post.isPublished === false) return false;
-    const matchesCategory = activeCategory === 'All' || post.category === activeCategory;
-    const title = language === 'fr' ? post.titleFr : post.titleEn;
-    const matchesSearch =
-      title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesCategory && matchesSearch;
-  });
+  const filteredPosts = useMemo(
+    () =>
+      posts.filter((post) => {
+        if (post.isPublished === false) return false;
+        const matchesCategory = activeCategory === 'All' || post.category === activeCategory;
+        const title = language === 'fr' ? post.titleFr : post.titleEn;
+        const matchesSearch =
+          title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+        return matchesCategory && matchesSearch;
+      }),
+    [posts, activeCategory, searchQuery, language],
+  );
 
   const isExpanded = searchFocused || searchQuery.length > 0;
 
@@ -106,24 +112,31 @@ export const PostsGrid: React.FC = () => {
           </div>
         </section>
 
-        <section className="space-y-4 md:space-y-8">
-          {filteredPosts.length > 0 && activeCategory === 'All' && searchQuery === '' && (
-            <div>
-              <BlogCard Blog={filteredPosts[0]} isFeatured />
+        <QueryState
+          isPending={isPending}
+          isError={isError}
+          errorMessage={error instanceof Error ? error.message : undefined}
+          source={data?.source}
+        >
+          <section className="space-y-4 md:space-y-8">
+            {filteredPosts.length > 0 && activeCategory === 'All' && searchQuery === '' && (
+              <div>
+                <BlogCard Blog={filteredPosts[0]} isFeatured />
+              </div>
+            )}
+
+            <div className="mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {(activeCategory === 'All' && searchQuery === ''
+                ? filteredPosts.slice(1)
+                : filteredPosts
+              ).map((blog: IBlog) => (
+                <BlogCard key={blog.id} Blog={blog} />
+              ))}
             </div>
-          )}
 
-          <div className="mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {(activeCategory === 'All' && searchQuery === ''
-              ? filteredPosts.slice(1)
-              : filteredPosts
-            ).map((blog: IBlog) => (
-              <BlogCard key={blog.id} Blog={blog} />
-            ))}
-          </div>
-
-          {filteredPosts.length === 0 && <EmptyBlogCard />}
-        </section>
+            {filteredPosts.length === 0 && <EmptyBlogCard />}
+          </section>
+        </QueryState>
       </div>
     </>
   );

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { IconCloud } from '@/shared/ui/icon-cloud';
-import { imageIcon } from '@/entities/skills/api/mocks/skillsData.mocks';
+import { usePublicSkills } from '@/entities/skills/hooks/useSkills';
 import { DeferredMount } from '@/shared/ui/DeferredMount';
 import { SparklesCore } from '@/shared/ui/sparkles';
 import { cn } from '@/shared/lib/utils';
@@ -222,6 +222,18 @@ export const ProjectStatsSection: React.FC = () => {
   const isFr = i18n.language === 'fr';
   const theme = useThemeStore((s) => s.theme);
   const isDark = theme === 'dark';
+  const skillsQuery = usePublicSkills();
+  const imageIcon = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          (skillsQuery.data?.data.items ?? [])
+            .map((skill) => skill.icon)
+            .filter((icon) => icon.startsWith('http')),
+        ),
+      ),
+    [skillsQuery.data],
+  );
 
   const metrics = [
     {

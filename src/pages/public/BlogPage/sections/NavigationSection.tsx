@@ -1,21 +1,21 @@
-import { blogPostsData } from '@/entities/blogs/api/mock/blog.mocks';
+import type { IBlog } from '@/entities/blogs';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { HiOutlineArrowLeft, HiOutlineArrowRight } from 'react-icons/hi2';
-import React from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { findByNumericId, getBlogPathSlug } from '@/shared/lib/entity-slug';
+import React, { useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { getBlogPathSlug } from '@/shared/lib/entity-slug';
 
-export const NavigationSection: React.FC = () => {
-  const { blogID } = useParams();
+export const NavigationSection: React.FC<{ post: IBlog; posts: IBlog[] }> = ({ post, posts }) => {
   const { language } = useLanguageStore();
 
-  const current = findByNumericId(blogPostsData, blogID);
-  const currentIndex = current ? blogPostsData.findIndex((p) => p.id === current.id) : -1;
-  const prevPost = currentIndex > 0 ? blogPostsData[currentIndex - 1] : null;
-  const nextPost =
-    currentIndex >= 0 && currentIndex < blogPostsData.length - 1
-      ? blogPostsData[currentIndex + 1]
-      : null;
+  const { prevPost, nextPost } = useMemo(() => {
+    const currentIndex = posts.findIndex((p) => p.id === post.id);
+    return {
+      prevPost: currentIndex > 0 ? posts[currentIndex - 1] : null,
+      nextPost:
+        currentIndex >= 0 && currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null,
+    };
+  }, [posts, post.id]);
 
   return (
     <div className="flex justify-between items-center border-t border-border/50 pt-4 mb-8">

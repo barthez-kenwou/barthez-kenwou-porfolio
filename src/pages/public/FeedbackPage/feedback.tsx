@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { HiOutlineCheckCircle, HiOutlinePaperAirplane } from 'react-icons/hi2';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/ui/form';
 import { FloatingFillField } from '@/entities/contact/ui/FloatingFillField.ui';
-import { useAdminCmsStore, createId } from '@/features/admin-cms';
+import { useSubmitPublicTestimonial } from '@/entities/testimonies/hooks/useTestimonials';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { Button } from '@/shared/ui/button';
 import { SEO } from '@/shared/ui/SEO/SEO';
@@ -26,8 +26,9 @@ type FeedbackValues = z.infer<typeof feedbackSchema>;
 export function FeedbackPage() {
   const { language } = useLanguageStore();
   const fr = language === 'fr';
-  const upsert = useAdminCmsStore((s) => s.upsertTestimonial);
+  const submitFeedback = useSubmitPublicTestimonial();
   const [done, setDone] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState<string | null>(null);
 
   const form = useForm<FeedbackValues>({
     resolver: zodResolver(feedbackSchema),
@@ -41,33 +42,37 @@ export function FeedbackPage() {
     },
   });
 
-  const onSubmit = (values: FeedbackValues) => {
+  const onSubmit = async (values: FeedbackValues) => {
     const rating = Math.min(5, Math.max(1, Number(values.rating) || 5));
-    upsert({
-      id: createId('tst'),
-      nameFr: values.name,
-      nameEn: values.name,
-      roleFr: values.role,
-      roleEn: values.role,
-      textFr: values.message,
-      textEn: values.message,
-      rating,
-      company: values.company || '',
-      email: values.email,
-      isPublished: false,
-      status: 'pending',
-      source: 'public-form',
-      createdAt: new Date().toISOString(),
-    });
-    setDone(true);
-    form.reset({
-      name: '',
-      email: '',
-      company: '',
-      role: '',
-      rating: '5',
-      message: '',
-    });
+    setSubmitError(null);
+    try {
+      await submitFeedback.mutateAsync({
+        nameFr: values.name,
+        nameEn: values.name,
+        roleFr: values.role,
+        roleEn: values.role,
+        textFr: values.message,
+        textEn: values.message,
+        rating,
+        company: values.company || '',
+        email: values.email,
+      });
+      setDone(true);
+      form.reset({
+        name: '',
+        email: '',
+        company: '',
+        role: '',
+        rating: '5',
+        message: '',
+      });
+    } catch {
+      setSubmitError(
+        fr
+          ? "Impossible d'envoyer l'avis pour le moment. Réessaie plus tard."
+          : 'Unable to submit feedback right now. Please try again later.',
+      );
+    }
   };
 
   return (
@@ -267,10 +272,16 @@ export function FeedbackPage() {
                     )}
                   />
 
+                  {submitError ? (
+                    <p className="text-sm text-destructive" role="alert">
+                      {submitError}
+                    </p>
+                  ) : null}
+
                   <Button
                     type="submit"
                     className="mt-2 w-full gap-2 sm:w-auto"
-                    disabled={form.formState.isSubmitting}
+                    disabled={form.formState.isSubmitting || submitFeedback.isPending}
                   >
                     <HiOutlinePaperAirplane className="size-4" />
                     {fr ? 'Envoyer pour validation' : 'Submit for review'}

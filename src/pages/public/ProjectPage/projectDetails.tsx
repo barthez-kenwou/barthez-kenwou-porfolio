@@ -24,14 +24,16 @@ import { CTADetailsSection } from './sections/CTADetailsSection';
 import { useParams } from 'react-router-dom';
 import { SEO } from '@/shared/ui/SEO/SEO';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
-import { projectsData } from '@/entities/projets/api/mocks/projectData.mocks';
+import { useProject } from '@/entities/projets/hooks/useProjects';
 import { truncateFonction } from '@/shared/ui/utils/truncateText/helpers';
-import { findByNumericId, getProjectPathSlug } from '@/shared/lib/entity-slug';
+import { getProjectPathSlug, parseEntityIdFromParam } from '@/shared/lib/entity-slug';
+import { QueryState } from '@/shared/ui/QueryState';
 
 export const ProjectDetailPage = () => {
   const { id, projectID } = useParams();
   const searchId = projectID || id;
-  const project = findByNumericId(projectsData, searchId);
+  const projectId = parseEntityIdFromParam(searchId) ?? undefined;
+  const { data: project, isPending, isError, error } = useProject(projectId);
   const { language } = useLanguageStore();
   const projectPath = project
     ? `/projects/${getProjectPathSlug(project)}`
@@ -40,6 +42,21 @@ export const ProjectDetailPage = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [searchId]);
+
+  if (isPending || isError) {
+    return (
+      <div className="min-h-screen px-4 py-24 md:px-10 lg:px-14">
+        <QueryState
+          variant="page"
+          isPending={isPending}
+          isError={isError}
+          errorMessage={error instanceof Error ? error.message : undefined}
+        >
+          {null}
+        </QueryState>
+      </div>
+    );
+  }
 
   if (!project || project.isPublished === false) return <ProjectNotFound />;
 

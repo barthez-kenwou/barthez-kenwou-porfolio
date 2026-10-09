@@ -21,7 +21,7 @@ export const Providers: React.FC<ProvidersProps> = ({ children }) => {
             <ThemeProvider>
               <SEOProvider>
                 {children}
-                <Toaster richColors closeButton position="top-right" />
+                <Toaster />
               </SEOProvider>
             </ThemeProvider>
           </I18nProvider>

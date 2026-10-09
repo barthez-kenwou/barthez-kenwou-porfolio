@@ -2,43 +2,63 @@ import React from 'react';
 import { Pencil, Plus, Trash2, Save, X } from 'lucide-react';
 import { toast } from 'sonner';
 import {
+  useAdminSkills,
+  useCreateSkill,
+  useUpdateSkill,
+  useDeleteSkill,
+} from '@/entities/skills/hooks/useSkills';
+import type { ISkillDto } from '@/entities/skills/api/Skill.api';
+import {
   AdminPageHeader,
   AdminDataTable,
   AdminSectionCard,
   ConfirmDeleteDialog,
-  BilingualField,
   Field,
-  StringListEditor,
-  createId,
-  useAdminCmsStore,
 } from '@/features/admin-cms';
+import { isApiError } from '@/shared/api';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
-import { Textarea } from '@/shared/ui/textarea';
+import { QueryState } from '@/shared/ui/QueryState';
 
-const emptyItem = () => ({
-  id: createId('skill'),
+type SkillDraft = Omit<ISkillDto, 'id'> & { id?: string };
+
+const emptyItem = (): SkillDraft => ({
   name: '',
   category: 'cloud',
   level: 80,
   icon: '',
+  isPublished: true,
 });
+
+const isPersistedId = (id?: string) =>
+  Boolean(id && !id.startsWith('tmp') && !id.startsWith('new'));
 
 export const AdminSkillsPage: React.FC = () => {
   const { language } = useLanguageStore();
   const fr = language === 'fr';
-  const items = useAdminCmsStore((s) => s.skills);
-  const upsert = useAdminCmsStore((s) => s.upsertSkill);
-  const remove = useAdminCmsStore((s) => s.deleteSkill);
-  const [editing, setEditing] = React.useState<any | null>(null);
-  const [pending, setPending] = React.useState<any | null>(null);
+  const { data, isPending, isError, error } = useAdminSkills();
+  const create = useCreateSkill();
+  const update = useUpdateSkill();
+  const remove = useDeleteSkill();
+  const items = data?.items ?? [];
+  const [editing, setEditing] = React.useState<SkillDraft | null>(null);
+  const [pending, setPending] = React.useState<ISkillDto | null>(null);
 
-  const save = () => {
+  const save = async () => {
     if (!editing) return;
-    upsert(editing);
-    toast.success(fr ? 'Enregistré' : 'Saved');
-    setEditing(null);
+    const { id, ...payload } = editing;
+    try {
+      if (isPersistedId(id)) {
+        await update.mutateAsync({ id: id!, payload });
+      } else {
+        await create.mutateAsync(payload);
+      }
+      toast.success(fr ? 'Enregistré' : 'Saved');
+      setEditing(null);
+    } catch (e) {
+      toast.error(isApiError(e) ? e.message : fr ? 'Échec de l’enregistrement' : 'Save failed');
+    }
   };
 
   return (
@@ -61,7 +81,7 @@ export const AdminSkillsPage: React.FC = () => {
               <Button variant="outline" size="sm" onClick={() => setEditing(null)}>
                 <X className="size-3.5" /> {fr ? 'Fermer' : 'Close'}
               </Button>
-              <Button size="sm" onClick={save}>
+              <Button size="sm" onClick={() => void save()} disabled={create.isPending || update.isPending}>
                 <Save className="size-3.5" /> {fr ? 'Enregistrer' : 'Save'}
               </Button>
             </div>
@@ -99,61 +119,62 @@ export const AdminSkillsPage: React.FC = () => {
         </AdminSectionCard>
       ) : null}
 
-      <AdminDataTable
-        data={items}
-        getRowId={(r: any) => String(r.id)}
-        searchKeys={[
-          'nameFr',
-          'nameEn',
-          'name',
-          'titleFr',
-          'titleEn',
-          'title',
-          'company',
-          'companyFr',
-          'companyEn',
-          'role',
-          'category',
-        ]}
-        emptyTitle={fr ? 'Aucun élément' : 'No items'}
-        columns={[
-          {
-            key: 'name',
-            header: fr ? 'Nom' : 'Name',
-            render: (r: any) => (
-              <div className="flex items-center gap-2">
-                {r.icon ? <img src={r.icon} alt="" className="size-5" /> : null}
-                <span className="font-medium">{r.name}</span>
-              </div>
-            ),
-          },
-          { key: 'category', header: fr ? 'Catégorie' : 'Category' },
-          {
-            key: 'level',
-            header: fr ? 'Niveau' : 'Level',
-            render: (r: any) => `${r.level}%`,
-          },
-        ]}
-        actions={(r: any) => (
-          <>
-            <Button size="icon-sm" variant="ghost" onClick={() => setEditing({ ...r })}>
-              <Pencil className="size-3.5" />
-            </Button>
-            <Button size="icon-sm" variant="ghost" onClick={() => setPending(r)}>
-              <Trash2 className="size-3.5 text-destructive" />
-            </Button>
-          </>
-        )}
-      />
+      <QueryState
+        isPending={isPending}
+        isError={isError}
+        errorMessage={isApiError(error) ? error.message : fr ? 'Chargement impossible' : 'Failed to load'}
+        variant="page"
+      >
+        <AdminDataTable
+          data={items}
+          getRowId={(r) => String(r.id)}
+          searchKeys={['name', 'category']}
+          emptyTitle={fr ? 'Aucun élément' : 'No items'}
+          columns={[
+            {
+              key: 'name',
+              header: fr ? 'Nom' : 'Name',
+              render: (r) => (
+                <div className="flex items-center gap-2">
+                  {r.icon ? <img src={r.icon} alt="" className="size-5" /> : null}
+                  <span className="font-medium">{r.name}</span>
+                </div>
+              ),
+            },
+            { key: 'category', header: fr ? 'Catégorie' : 'Category' },
+            {
+              key: 'level',
+              header: fr ? 'Niveau' : 'Level',
+              render: (r) => `${r.level}%`,
+            },
+          ]}
+          actions={(r) => (
+            <>
+              <Button size="icon-sm" variant="ghost" onClick={() => setEditing({ ...r })}>
+                <Pencil className="size-3.5" />
+              </Button>
+              <Button size="icon-sm" variant="ghost" onClick={() => setPending(r)}>
+                <Trash2 className="size-3.5 text-destructive" />
+              </Button>
+            </>
+          )}
+        />
+      </QueryState>
 
       <ConfirmDeleteDialog
         open={!!pending}
         onOpenChange={(o) => !o && setPending(null)}
         onConfirm={() => {
           if (!pending) return;
-          remove(pending.id);
-          toast.success(fr ? 'Supprimé' : 'Deleted');
-          setPending(null);
+          void (async () => {
+            try {
+              await remove.mutateAsync(pending.id);
+              toast.success(fr ? 'Supprimé' : 'Deleted');
+              setPending(null);
+            } catch (e) {
+              toast.error(isApiError(e) ? e.message : fr ? 'Suppression impossible' : 'Delete failed');
+            }
+          })();
         }}
       />
     </div>

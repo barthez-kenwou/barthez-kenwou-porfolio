@@ -1,22 +1,27 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
-import { projectsData } from '@/entities/projets/api/mocks/projectData.mocks';
+import { usePublicProjects } from '@/entities/projets/hooks/useProjects';
 import { ProjectCard } from '@/entities/projets';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/shared/ui/button';
 import { Marquee } from '@/shared/ui/marquee';
+import { QueryState } from '@/shared/ui/QueryState';
 
 export const OtherProjectSection: React.FC<{ currentProjectId: string | number }> = ({
   currentProjectId,
 }) => {
   const { language } = useLanguageStore();
+  const { data, isPending, isError, error } = usePublicProjects();
 
-  const relatedProjects = projectsData
-    .filter((p) => p.id !== currentProjectId && p.isPublished !== false)
-    .slice(0, 6);
+  const relatedProjects = useMemo(() => {
+    const items = data?.data.items ?? [];
+    return items
+      .filter((p) => p.id !== currentProjectId && p.isPublished !== false)
+      .slice(0, 6);
+  }, [data, currentProjectId]);
 
-  if (relatedProjects.length === 0) return null;
+  if (!isPending && !isError && relatedProjects.length === 0) return null;
 
   const useMarquee = relatedProjects.length > 1;
 
@@ -45,23 +50,30 @@ export const OtherProjectSection: React.FC<{ currentProjectId: string | number }
         </Button>
       </div>
 
-      {useMarquee ? (
-        <div className="relative overflow-hidden">
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-4 bg-gradient-to-r from-background to-transparent md:w-16" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-4 bg-gradient-to-l from-background to-transparent md:w-16" />
-          <Marquee pauseOnHover repeat={3} className="[--duration:32s] [--gap:1rem] p-1">
-            {relatedProjects.map((project) => (
-              <div key={project.id} className="w-[min(88vw,380px)] shrink-0 md:w-[400px]">
-                <ProjectCard project={project} />
-              </div>
-            ))}
-          </Marquee>
-        </div>
-      ) : (
-        <div className="mx-auto max-w-md">
-          <ProjectCard project={relatedProjects[0]} />
-        </div>
-      )}
+      <QueryState
+        isPending={isPending}
+        isError={isError}
+        errorMessage={error instanceof Error ? error.message : undefined}
+        source={data?.source}
+      >
+        {useMarquee ? (
+          <div className="relative overflow-hidden">
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-4 bg-gradient-to-r from-background to-transparent md:w-16" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-4 bg-gradient-to-l from-background to-transparent md:w-16" />
+            <Marquee pauseOnHover repeat={3} className="[--duration:32s] [--gap:1rem] p-1">
+              {relatedProjects.map((project) => (
+                <div key={project.id} className="w-[min(88vw,380px)] shrink-0 md:w-[400px]">
+                  <ProjectCard project={project} />
+                </div>
+              ))}
+            </Marquee>
+          </div>
+        ) : relatedProjects[0] ? (
+          <div className="mx-auto max-w-md">
+            <ProjectCard project={relatedProjects[0]} />
+          </div>
+        ) : null}
+      </QueryState>
 
       <Button
         variant="outline"
