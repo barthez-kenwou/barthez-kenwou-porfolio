@@ -8,10 +8,12 @@ import {
   ConfirmDeleteDialog,
 } from '@/features/admin-cms';
 import type { IBlog } from '@/entities/blogs/model/blog.type';
+import { getBlogBySlug } from '@/entities/blogs/api/blog.api';
 import {
   useAdminBlogs,
   useCreateBlog,
   usePublishBlog,
+  useUpdateBlog,
   useDeleteBlog,
 } from '@/entities/blogs/hooks/useBlogs';
 import { isApiError } from '@/shared/api';
@@ -29,13 +31,25 @@ export function AdminBlogsPage() {
   const { data, isPending, isError, error } = useAdminBlogs();
   const create = useCreateBlog();
   const publish = usePublishBlog();
+  const update = useUpdateBlog();
   const remove = useDeleteBlog();
   const [pending, setPending] = React.useState<IBlog | null>(null);
+  const [togglingId, setTogglingId] = React.useState<string | null>(null);
   const blogs = data?.items ?? [];
 
   const setPublished = async (row: IBlog, value: boolean) => {
+    setTogglingId(row.id);
     try {
-      await publish.mutateAsync({ id: row.id, isPublished: value });
+      // PUT /blogs/:id respects isPublished. Legacy PATCH /publish only forced true.
+      if (value) {
+        try {
+          await publish.mutateAsync({ id: row.id, isPublished: true });
+        } catch {
+          await update.mutateAsync({ id: row.id, payload: { isPublished: true } });
+        }
+      } else {
+        await update.mutateAsync({ id: row.id, payload: { isPublished: false } });
+      }
       toast.success(
         value
           ? fr
@@ -47,21 +61,25 @@ export function AdminBlogsPage() {
       );
     } catch (e) {
       toast.error(isApiError(e) ? e.message : fr ? 'Échec' : 'Failed');
+    } finally {
+      setTogglingId(null);
     }
   };
 
   const duplicate = async (row: IBlog) => {
-    const { id: _id, ...rest } = row;
     try {
+      // List payloads may omit markdown bodies — reload full post before copying.
+      const full = await getBlogBySlug(row.slug || row.id);
+      const { id: _id, ...rest } = full;
       const copy = await create.mutateAsync({
         ...rest,
-        slug: row.slug ? `${row.slug}-copy` : undefined,
-        titleFr: `${row.titleFr} (copie)`,
-        titleEn: `${row.titleEn} (copy)`,
+        slug: `${full.slug || 'article'}-copy-${Date.now().toString(36)}`,
+        titleFr: `${full.titleFr} (copie)`,
+        titleEn: `${full.titleEn} (copy)`,
         isPublished: false,
       });
       toast.success(fr ? 'Copie créée' : 'Copy created');
-      navigate(adminPath('blogs', String(copy.id)));
+      navigate(adminPath('blogs', copy.slug || String(copy.id)));
     } catch (e) {
       toast.error(isApiError(e) ? e.message : fr ? 'Échec' : 'Failed');
     }
@@ -112,7 +130,7 @@ export function AdminBlogsPage() {
           searchPlaceholder={fr ? 'Titre, slug, tags…' : 'Title, slug, tags…'}
           emptyTitle={fr ? 'Aucun article' : 'No articles'}
           emptyDescription={fr ? 'Crée ton premier article.' : 'Create your first article.'}
-          onRowClick={(r) => navigate(adminPath('blogs', r.id))}
+          onRowClick={(r) => navigate(adminPath('blogs', r.slug || r.id))}
           filters={[
             {
               key: 'isPublished',
@@ -164,6 +182,7 @@ export function AdminBlogsPage() {
                 <div onClick={(e) => e.stopPropagation()}>
                   <Switch
                     checked={r.isPublished !== false}
+                    disabled={togglingId === r.id}
                     onCheckedChange={(v) => void setPublished(r, v)}
                     aria-label={fr ? 'Visibilité publique' : 'Public visibility'}
                   />
@@ -203,7 +222,7 @@ export function AdminBlogsPage() {
                 <Plus className="size-3.5" />
               </Button>
               <Button size="icon-sm" variant="ghost" className="size-11 md:size-8" asChild>
-                <Link to={adminPath('blogs', r.id)}>
+                <Link to={adminPath('blogs', r.slug || r.id)}>
                   <Pencil className="size-3.5" />
                 </Link>
               </Button>

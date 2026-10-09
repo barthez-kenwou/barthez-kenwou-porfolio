@@ -17,26 +17,28 @@ function AlertDialogPortal(props: React.ComponentProps<typeof AlertDialogPrimiti
   return <AlertDialogPrimitive.Portal data-slot="alert-dialog-portal" {...props} />;
 }
 
-function AlertDialogOverlay({
-  className,
-  ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Overlay>) {
+const AlertDialogOverlay = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Overlay>
+>(function AlertDialogOverlay({ className, ...props }, ref) {
   return (
     <AlertDialogPrimitive.Overlay
+      ref={ref}
       className={cn('fixed inset-0 z-50 bg-black/50 backdrop-blur-[2px]', className)}
       {...props}
     />
   );
-}
+});
 
-function AlertDialogContent({
-  className,
-  ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Content>) {
+const AlertDialogContent = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content>
+>(function AlertDialogContent({ className, ...props }, ref) {
   return (
     <AlertDialogPortal>
       <AlertDialogOverlay />
       <AlertDialogPrimitive.Content
+        ref={ref}
         className={cn(
           'bg-background fixed top-1/2 left-1/2 z-50 grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl border p-6 shadow-lg',
           className,
@@ -45,7 +47,7 @@ function AlertDialogContent({
       />
     </AlertDialogPortal>
   );
-}
+});
 
 function AlertDialogHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (

@@ -4,7 +4,7 @@ import { ArrowLeft, Loader2, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import type { IBlog } from '@/entities/blogs/model/blog.type';
 import {
-  useBlogBySlug,
+  useAdminBlog,
   useCreateBlog,
   useUpdateBlog,
 } from '@/entities/blogs/hooks/useBlogs';
@@ -33,15 +33,15 @@ const emptyBlog = (): Omit<IBlog, 'id'> & { id?: string } => ({
   titleEn: '',
   excerptFr: '',
   excerptEn: '',
-  contentFr: '',
-  contentEn: '',
-  image: '',
+  contentFr: 'Rédige ton contenu ici…',
+  contentEn: 'Write your content here…',
+  image: 'https://barthez-kenwou.dev/og-image.jpg',
   category: 'Engineering',
   date: new Date().toISOString().slice(0, 10),
   readTime: '5 min',
   author: 'Barthez Kenwou',
   tags: [],
-  isPublished: true,
+  isPublished: false,
 });
 
 export const AdminBlogEditorPage: React.FC = () => {
@@ -57,7 +57,7 @@ export const AdminBlogEditorPage: React.FC = () => {
     isPending,
     isError,
     error,
-  } = useBlogBySlug(!isNew ? blogId : undefined, !isNew);
+  } = useAdminBlog(!isNew ? blogId : undefined, !isNew);
 
   const [draft, setDraft] = React.useState(emptyBlog());
   const [hydrated, setHydrated] = React.useState(isNew);
@@ -69,7 +69,7 @@ export const AdminBlogEditorPage: React.FC = () => {
       setHydrated(true);
       return;
     }
-    const blog = blogResult?.data;
+    const blog = blogResult;
     if (blog) {
       setDraft({ ...blog });
       setHydrated(true);
@@ -84,6 +84,18 @@ export const AdminBlogEditorPage: React.FC = () => {
       toast.error(fr ? 'Titres FR et EN requis' : 'FR and EN titles required');
       return;
     }
+    if (!draft.excerptFr.trim() || !draft.excerptEn.trim()) {
+      toast.error(fr ? 'Extraits FR et EN requis' : 'FR and EN excerpts required');
+      return;
+    }
+    if ((draft.contentFr || '').trim().length < 10 || (draft.contentEn || '').trim().length < 10) {
+      toast.error(
+        fr
+          ? 'Le contenu FR/EN doit faire au moins 10 caractères'
+          : 'FR/EN content must be at least 10 characters',
+      );
+      return;
+    }
     const slug =
       draft.slug?.trim() ||
       draft.titleEn
@@ -94,11 +106,11 @@ export const AdminBlogEditorPage: React.FC = () => {
       slug,
       titleFr: draft.titleFr.trim(),
       titleEn: draft.titleEn.trim(),
-      excerptFr: draft.excerptFr,
-      excerptEn: draft.excerptEn,
+      excerptFr: draft.excerptFr.trim(),
+      excerptEn: draft.excerptEn.trim(),
       contentFr: draft.contentFr,
       contentEn: draft.contentEn,
-      image: draft.image,
+      image: draft.image?.trim() || 'https://barthez-kenwou.dev/og-image.jpg',
       category: draft.category,
       date: draft.date,
       readTime: draft.readTime,
@@ -110,10 +122,13 @@ export const AdminBlogEditorPage: React.FC = () => {
       if (isNew || !draft.id) {
         const created = await create.mutateAsync(payload);
         toast.success(fr ? 'Article enregistré' : 'Article saved');
-        navigate(adminPath('blogs', created.id), { replace: true });
+        navigate(adminPath('blogs', created.slug || created.id), { replace: true });
       } else {
-        await update.mutateAsync({ id: draft.id, payload });
+        const saved = await update.mutateAsync({ id: draft.id, payload });
         toast.success(fr ? 'Article enregistré' : 'Article saved');
+        if (saved.slug && saved.slug !== blogId) {
+          navigate(adminPath('blogs', saved.slug), { replace: true });
+        }
       }
     } catch (e) {
       toast.error(isApiError(e) ? e.message : fr ? 'Échec de la sauvegarde' : 'Save failed');

@@ -6,6 +6,8 @@
 let accessToken: string | null = null;
 
 const SESSION_ACCESS_KEY = 'bk-admin-access-token';
+/** Keep in sync with features/admin-auth AuthSession storage key. */
+const ADMIN_SESSION_KEY = 'bk-admin-session';
 
 export function getAccessToken(): string | null {
   if (accessToken) return accessToken;
@@ -26,6 +28,17 @@ export function setAccessToken(token: string | null): void {
   try {
     if (token) {
       sessionStorage.setItem(SESSION_ACCESS_KEY, token);
+      // Silent refresh updates the bearer store; keep the admin session blob aligned
+      // so reload does not rehydrate a stale JWT and force a 401→refresh loop.
+      const raw = sessionStorage.getItem(ADMIN_SESSION_KEY);
+      if (raw) {
+        const session = JSON.parse(raw) as { token?: string; expiresAt?: number };
+        if (session && typeof session === 'object') {
+          session.token = token;
+          session.expiresAt = Date.now() + 1000 * 60 * 60 * 12;
+          sessionStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(session));
+        }
+      }
     } else {
       sessionStorage.removeItem(SESSION_ACCESS_KEY);
     }

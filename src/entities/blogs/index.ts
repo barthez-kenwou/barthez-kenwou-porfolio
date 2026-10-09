@@ -12,6 +12,7 @@ export {
   usePublicBlogs,
   useAdminBlogs,
   useBlogBySlug,
+  useAdminBlog,
   useCreateBlog,
   useUpdateBlog,
   usePublishBlog,

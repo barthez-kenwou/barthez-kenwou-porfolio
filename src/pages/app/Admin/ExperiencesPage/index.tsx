@@ -69,7 +69,13 @@ export const AdminExperiencesPage: React.FC = () => {
       descriptionFr: editing.descriptionFr,
       descriptionEn: editing.descriptionEn,
     };
-    if (!payload.titleFr || !payload.titleEn || !payload.companyFr) {
+    if (
+      !payload.titleFr ||
+      !payload.titleEn ||
+      !payload.companyFr ||
+      !payload.companyEn ||
+      !payload.period
+    ) {
       toast.error(fr ? 'Champs requis manquants' : 'Required fields missing');
       return;
     }

@@ -34,6 +34,7 @@ export function useAdminBlogs(params?: BlogListParams) {
   });
 }
 
+/** Public site: API with mock fallback on network/5xx. */
 export function useBlogBySlug(slug: string | undefined, enabled = true) {
   return useQuery({
     queryKey: queryKeys.blogs.detail(slug ?? ''),
@@ -51,6 +52,15 @@ export function useBlogBySlug(slug: string | undefined, enabled = true) {
         },
       ),
     enabled: Boolean(slug) && enabled,
+  });
+}
+
+/** Admin CMS: never hydrate mocks — fail loud so we don't save mock numeric ids. */
+export function useAdminBlog(slugOrId: string | undefined, enabled = true) {
+  return useQuery({
+    queryKey: queryKeys.blogs.detail(slugOrId ?? ''),
+    queryFn: () => getBlogBySlug(slugOrId!),
+    enabled: Boolean(slugOrId) && enabled,
   });
 }
 
