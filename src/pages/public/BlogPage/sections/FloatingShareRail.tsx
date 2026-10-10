@@ -94,34 +94,34 @@ export const FloatingShareRail: React.FC<{ post: IBlog }> = ({ post }) => {
   return (
     <aside
       className={cn(
-        'pointer-events-none fixed z-30 print:hidden',
-        // Desktop: vertical rail, upper-right, clear of main chrome
-        'right-3 top-28 sm:right-4 md:top-32',
+        'pointer-events-none fixed z-40 print:hidden',
+        'right-2 top-28 sm:right-3 md:top-32 md:right-4',
         'xl:right-5 xl:top-[9.5rem]',
       )}
       aria-label={isFr ? "Partager l'article" : 'Share article'}
     >
       <div
         className={cn(
-          'pointer-events-auto flex flex-col items-center gap-1 rounded-md border border-border bg-background/95 p-1 shadow-md backdrop-blur-md',
-          'supports-backdrop-filter:bg-background/88',
+          'pointer-events-auto flex flex-col items-center gap-0.5 rounded-sm border border-border/50 p-1 shadow-sm',
+          'bg-background/55 backdrop-blur-md supports-backdrop-filter:bg-background/40',
+          'dark:bg-background/45 dark:supports-backdrop-filter:bg-background/35',
         )}
       >
         <span
-          className="flex size-8 items-center justify-center rounded-sm text-primary"
+          className="flex size-8 items-center justify-center text-foreground/55"
           title={isFr ? 'Partager' : 'Share'}
         >
           <Share2 className="size-3.5" aria-hidden />
           <span className="sr-only">{isFr ? 'Partager' : 'Share'}</span>
         </span>
 
-        <div className="h-px w-5 bg-border" aria-hidden />
+        <div className="h-px w-4 bg-border" aria-hidden />
 
         {items.map((item) => {
           const className = cn(
-            'flex size-8 items-center justify-center rounded-sm text-foreground/80',
-            'transition-colors hover:bg-secondary hover:text-primary',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
+            'flex size-8 items-center justify-center rounded-sm text-foreground/75',
+            'transition-colors hover:bg-muted hover:text-foreground',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35',
           );
 
           if (item.href) {
@@ -132,7 +132,9 @@ export const FloatingShareRail: React.FC<{ post: IBlog }> = ({ post }) => {
                 target={item.id === 'email' ? undefined : '_blank'}
                 rel={item.id === 'email' ? undefined : 'noopener noreferrer'}
                 className={className}
-                aria-label={item.label}
+                aria-label={
+                  isFr ? `Partager sur ${item.label}` : `Share on ${item.label}`
+                }
                 title={item.label}
                 onClick={() => onChannel(item.id)}
               >
@@ -146,7 +148,9 @@ export const FloatingShareRail: React.FC<{ post: IBlog }> = ({ post }) => {
               key={item.id}
               type="button"
               className={className}
-              aria-label={item.label}
+              aria-label={
+                isFr ? `Partager sur ${item.label}` : `Share on ${item.label}`
+              }
               title={item.label}
               onClick={() => item.onClick?.()}
             >

@@ -1,7 +1,6 @@
 import type { IBlog } from '@/entities/blogs';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { HiOutlineArrowLeft, HiOutlineArrowRight } from 'react-icons/hi2';
-import { LayoutGrid } from 'lucide-react';
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { getBlogPathSlug } from '@/shared/lib/entity-slug';
@@ -32,17 +31,17 @@ export const NavigationSection: React.FC<{ post: IBlog; posts: IBlog[] }> = ({ p
 
   return (
     <nav
-      className="grid grid-cols-1 gap-2 border-t border-border/40 pt-5 sm:grid-cols-3 sm:items-stretch sm:gap-3"
+      className="grid grid-cols-1 gap-2 border-t border-border/50 pt-5 sm:grid-cols-3 sm:items-stretch sm:gap-3"
       aria-label={isFr ? 'Navigation entre articles' : 'Article navigation'}
     >
       {prevPost ? (
         <Link
           to={`/blog/${getBlogPathSlug(prevPost)}`}
-          className="group flex min-w-0 items-center gap-2 rounded-md border border-border bg-card px-3 py-2.5 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary"
+          className="group flex min-w-0 items-center gap-2 rounded-sm border border-border bg-card px-3 py-2.5 text-foreground/85 transition-colors hover:border-foreground/25 hover:text-foreground"
         >
           <HiOutlineArrowLeft className="size-4 shrink-0 transition-transform group-hover:-translate-x-0.5" />
           <span className="min-w-0">
-            <span className="block text-[10px] font-semibold uppercase tracking-[0.12em] text-foreground/60">
+            <span className="block text-[11px] text-foreground/55">
               {isFr ? 'Précédent' : 'Previous'}
             </span>
             <span className="block truncate text-sm font-medium">{prevTitle}</span>
@@ -54,21 +53,18 @@ export const NavigationSection: React.FC<{ post: IBlog; posts: IBlog[] }> = ({ p
 
       <Link
         to="/blog"
-        className="group flex min-w-0 items-center justify-center gap-2 rounded-md border border-primary/30 bg-primary/8 px-3 py-2.5 text-center text-primary transition-colors hover:border-primary/50 hover:bg-primary/12"
+        className="flex min-w-0 items-center justify-center rounded-sm border border-border bg-muted/40 px-3 py-2.5 text-center text-sm font-medium text-foreground transition-colors hover:bg-muted/70"
       >
-        <LayoutGrid className="size-4 shrink-0" />
-        <span className="text-sm font-semibold">
-          {isFr ? 'Tous les articles' : 'All articles'}
-        </span>
+        {isFr ? 'Tous les articles' : 'All articles'}
       </Link>
 
       {nextPost ? (
         <Link
           to={`/blog/${getBlogPathSlug(nextPost)}`}
-          className="group flex min-w-0 items-center justify-end gap-2 rounded-md border border-border bg-card px-3 py-2.5 text-right text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary"
+          className="group flex min-w-0 items-center justify-end gap-2 rounded-sm border border-border bg-card px-3 py-2.5 text-right text-foreground/85 transition-colors hover:border-foreground/25 hover:text-foreground"
         >
           <span className="min-w-0">
-            <span className="block text-[10px] font-semibold uppercase tracking-[0.12em] text-foreground/60">
+            <span className="block text-[11px] text-foreground/55">
               {isFr ? 'Suivant' : 'Next'}
             </span>
             <span className="block truncate text-sm font-medium">{nextTitle}</span>

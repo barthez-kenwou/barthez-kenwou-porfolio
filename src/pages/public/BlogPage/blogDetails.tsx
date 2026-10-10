@@ -7,12 +7,12 @@ import { NewsletterCTA } from './sections/NewsletterCTA';
 import { NavigationSection } from './sections/NavigationSection';
 import { FloatingShareRail } from './sections/FloatingShareRail';
 import { ArticleContentSection } from './sections/ArticleContentSection';
+import { ArticleEndTags } from './sections/ArticleEndTags';
 import { TableOfContents } from './sections/TableOfContents';
 import { SEO } from '@/shared/ui/SEO/SEO';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { truncateFonction } from '@/shared/ui/utils/truncateText/helpers';
 import { useBlogBySlug, usePublicBlogs } from '@/entities/blogs';
-import { motion } from 'framer-motion';
 import { getBlogPathSlug } from '@/shared/lib/entity-slug';
 import { QueryState } from '@/shared/ui/QueryState';
 import { useEffect, useRef } from 'react';
@@ -131,50 +131,38 @@ export const BlogDetailPage = () => {
         }}
       />
 
-      <div className="min-h-screen bg-background relative overflow-x-clip">
-        <div className="pointer-events-none absolute inset-0 overflow-hidden -z-10" aria-hidden>
-          <div className="absolute top-0 right-0 w-[min(400px,70vw)] h-[min(400px,70vw)] bg-primary/5 rounded-full blur-[100px] translate-x-1/3 -translate-y-1/3" />
-          <div className="absolute bottom-0 left-0 w-[min(400px,70vw)] h-[min(400px,70vw)] bg-primary/5 rounded-full blur-[100px] -translate-x-1/3 translate-y-1/3" />
-        </div>
-
+      <div className="relative min-h-screen bg-background overflow-x-clip">
         <FloatingShareRail post={post} />
 
-        {/* pr clears the fixed share rail on narrow viewports */}
-        <div className="mx-auto max-w-6xl px-4 pr-12 pt-28 pb-36 sm:px-6 sm:pr-14 md:pt-32 md:pb-20 lg:px-8 lg:pr-16">
+        <div className="mx-auto max-w-6xl px-4 pt-28 pb-36 sm:px-6 md:pt-32 md:pb-20 lg:px-8">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12 xl:gap-14">
             <aside className="relative hidden min-w-0 lg:col-span-4 lg:block xl:col-span-3">
               <TableOfContents content={content} variant="desktop" />
             </aside>
 
-            <main className="min-w-0 lg:col-span-8 xl:col-span-9">
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                className="space-y-5 md:space-y-7"
-              >
-                <BackSection />
+            <main className="min-w-0 space-y-5 lg:col-span-8 md:space-y-6 xl:col-span-9">
+              <BackSection />
 
-                <div ref={heroRef}>
-                  <HeroDetailSection post={post} />
-                </div>
+              <div ref={heroRef}>
+                <HeroDetailSection post={post} />
+              </div>
 
-                <MetaTagsSection post={post} />
+              <MetaTagsSection post={post} />
 
-                <div className="border-t border-border/40 pt-5 md:pt-7">
-                  <ArticleContentSection post={post} />
-                </div>
+              <div className="border-t border-border/50 pt-5 md:pt-6">
+                <ArticleContentSection post={post} />
+              </div>
 
-                <div className="space-y-6 border-t border-border/40 pt-6 md:space-y-8 md:pt-8">
-                  <NavigationSection post={post} posts={allPosts} />
-                  <NewsletterCTA
-                    source="blog-article"
-                    contactTo={contactTo}
-                    sectionRef={endCtaRef}
-                    className="!px-0"
-                  />
-                </div>
-              </motion.div>
+              <div className="space-y-6 border-t border-border/50 pt-6 md:space-y-7 md:pt-7">
+                <ArticleEndTags post={post} />
+                <NavigationSection post={post} posts={allPosts} />
+                <NewsletterCTA
+                  source="blog-article"
+                  contactTo={contactTo}
+                  sectionRef={endCtaRef}
+                  className="!px-0"
+                />
+              </div>
             </main>
           </div>
 
