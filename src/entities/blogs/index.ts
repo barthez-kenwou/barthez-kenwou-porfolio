@@ -18,6 +18,7 @@ export {
   usePublishBlog,
   useDeleteBlog,
 } from './hooks/useBlogs';
+export { sortBlogsByArrival, pickMostReadBlog, filterPublicBlogs } from './lib/blogListing';
 export { blogPostsData } from './api/mock/blog.mocks';
 export type { IBlog } from './model/blog.type';
 export { BlogSchema } from './model/blog.schema';

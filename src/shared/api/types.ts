@@ -38,6 +38,8 @@ export interface ApiError {
 export interface PaginationParams {
   page?: number;
   limit?: number;
+  /** Absolute skip — preferred for variable page sizes (e.g. 8 then +6). */
+  offset?: number;
 }
 
 /** Backend paginated `data` payload. */

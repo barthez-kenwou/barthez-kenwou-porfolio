@@ -5,6 +5,7 @@ export interface BlogListParams extends PaginationParams {
   isPublished?: boolean;
   category?: string;
   tag?: string;
+  search?: string;
   includeUnpublished?: boolean;
 }
 

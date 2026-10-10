@@ -1,7 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys, withPublicFallback, type PaginatedData, type ResourceResult } from '@/shared/api';
 import { paginateMock } from '@/shared/api/http';
-import { findByNumericId } from '@/shared/lib/entity-slug';
+import {
+  findByNumericId,
+  getBlogPathSlug,
+  isMongoObjectId,
+  stripTrailingPathIdSuffix,
+} from '@/shared/lib/entity-slug';
+import { isApiError } from '@/shared/api/errors';
 import { blogPostsData } from '../api/mock/blog.mocks';
 import {
   createBlog,
@@ -13,8 +19,26 @@ import {
   type BlogListParams,
 } from '../api/blog.api';
 import type { IBlog } from '../model/blog.type';
+import { withMockViewCount } from '../lib/blogListing';
 
 const PUBLIC_LIST: BlogListParams = { limit: 100, isPublished: true };
+
+async function fetchPublicBlogBySlug(slug: string): Promise<IBlog> {
+  try {
+    return await getBlogBySlug(slug);
+  } catch (error) {
+    const stripped = stripTrailingPathIdSuffix(slug);
+    if (
+      isApiError(error) &&
+      error.statusCode === 404 &&
+      stripped !== slug &&
+      !isMongoObjectId(slug)
+    ) {
+      return getBlogBySlug(stripped);
+    }
+    throw error;
+  }
+}
 
 export function usePublicBlogs() {
   return useQuery({
@@ -22,7 +46,7 @@ export function usePublicBlogs() {
     queryFn: async (): Promise<ResourceResult<PaginatedData<IBlog>>> =>
       withPublicFallback(
         () => listBlogs(PUBLIC_LIST),
-        () => paginateMock(blogPostsData),
+        () => paginateMock(blogPostsData.map(withMockViewCount)),
       ),
   });
 }
@@ -34,22 +58,36 @@ export function useAdminBlogs(params?: BlogListParams) {
   });
 }
 
-/** Public site: API with mock fallback on network/5xx. */
+function findMockBlog(slug: string | undefined): IBlog | undefined {
+  if (!slug) return undefined;
+  const stripped = stripTrailingPathIdSuffix(slug);
+  return (
+    findByNumericId(blogPostsData, slug) ||
+    blogPostsData.find(
+      (b) =>
+        b.slug === slug ||
+        b.slug === stripped ||
+        b.id === slug ||
+        getBlogPathSlug(b) === slug,
+    )
+  );
+}
+
+/** Public site: API first, mocks on network/5xx/404. */
 export function useBlogBySlug(slug: string | undefined, enabled = true) {
   return useQuery({
     queryKey: queryKeys.blogs.detail(slug ?? ''),
     queryFn: async (): Promise<ResourceResult<IBlog>> =>
       withPublicFallback(
-        () => getBlogBySlug(slug!),
+        () => fetchPublicBlogBySlug(slug!),
         () => {
-          const found =
-            findByNumericId(blogPostsData, slug) ||
-            blogPostsData.find((b) => b.slug === slug || b.id === slug);
+          const found = findMockBlog(slug);
           if (!found) {
             throw new Error('Blog post not found');
           }
           return found;
         },
+        { fallbackOnNotFound: true },
       ),
     enabled: Boolean(slug) && enabled,
   });

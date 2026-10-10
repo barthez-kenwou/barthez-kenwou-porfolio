@@ -25,7 +25,11 @@ export function isServerError(error: unknown): boolean {
   return typeof error.statusCode === 'number' && error.statusCode >= 500;
 }
 
-/** True when public pages should fall back to mocks. */
+export function isNotFoundError(error: unknown): boolean {
+  return isApiError(error) && error.statusCode === 404;
+}
+
+/** True when public pages should fall back to mocks (network / 5xx). */
 export function shouldUsePublicFallback(error: unknown): boolean {
   return isNetworkError(error) || isServerError(error);
 }

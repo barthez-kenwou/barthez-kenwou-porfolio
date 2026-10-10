@@ -1,11 +1,46 @@
 import type { PaginatedData } from './types';
 
-export function paginateMock<T>(items: readonly T[]): PaginatedData<T> {
+type PaginateMockParams = {
+  page?: number;
+  limit?: number;
+  offset?: number;
+};
+
+/**
+ * Slice a mock collection like a real paginated API.
+ * When no limit/offset/page is passed, returns the full list (legacy behavior).
+ */
+export function paginateMock<T>(
+  items: readonly T[],
+  params?: PaginateMockParams,
+): PaginatedData<T> {
+  const totalItems = items.length;
+  const hasPaging =
+    params?.limit !== undefined || params?.offset !== undefined || params?.page !== undefined;
+
+  if (!hasPaging) {
+    return {
+      items: [...items],
+      totalItems,
+      totalPages: 1,
+      currentPage: 1,
+    };
+  }
+
+  const limit = Math.max(1, params?.limit ?? (totalItems || 1));
+  const offset =
+    params?.offset ??
+    (params?.page && params.page > 0 ? (params.page - 1) * limit : 0);
+  const safeOffset = Math.max(0, offset);
+  const slice = items.slice(safeOffset, safeOffset + limit);
+  const totalPages = Math.max(1, Math.ceil(totalItems / limit));
+  const currentPage = Math.floor(safeOffset / limit) + 1;
+
   return {
-    items: [...items],
-    totalItems: items.length,
-    totalPages: 1,
-    currentPage: 1,
+    items: slice,
+    totalItems,
+    totalPages,
+    currentPage,
   };
 }
 

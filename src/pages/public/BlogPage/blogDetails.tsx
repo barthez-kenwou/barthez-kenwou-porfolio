@@ -50,14 +50,32 @@ export const BlogDetailPage = () => {
     );
   }, [post]);
 
-  if (isPending || isError) {
+  const notFound =
+    !isPending &&
+    (Boolean(
+      error &&
+        typeof error === 'object' &&
+        'message' in error &&
+        String((error as { message: string }).message)
+          .toLowerCase()
+          .includes('not found'),
+    ) ||
+      (!isError && !post));
+
+  if (isPending || (isError && !notFound)) {
     return (
       <div className="min-h-screen px-4 py-24 md:px-10 lg:px-14">
         <QueryState
           variant="page"
           isPending={isPending}
           isError={isError}
-          errorMessage={error instanceof Error ? error.message : undefined}
+          errorMessage={
+            error instanceof Error
+              ? error.message
+              : error && typeof error === 'object' && 'message' in error
+                ? String((error as { message: string }).message)
+                : undefined
+          }
           source={data?.source}
         >
           {null}
@@ -66,7 +84,7 @@ export const BlogDetailPage = () => {
     );
   }
 
-  if (!post || post.isPublished === false) return <NotFoundPost />;
+  if (notFound || !post || post.isPublished === false) return <NotFoundPost />;
 
   const content = language === 'fr' ? post.contentFr : post.contentEn;
   const blogPath = `/blog/${getBlogPathSlug(post)}`;

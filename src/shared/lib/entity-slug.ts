@@ -19,6 +19,10 @@ export function formatId4(id: string | number): string {
   return digits.padStart(4, '0').slice(-4);
 }
 
+export function isMongoObjectId(id: string | number): boolean {
+  return typeof id === 'string' && /^[a-f0-9]{24}$/i.test(id);
+}
+
 export function buildEntityPathSlug(
   name: string,
   id: string | number,
@@ -34,6 +38,7 @@ export function getProjectPathSlug(project: {
   titleEn: string;
   titleFr?: string;
 }): string {
+  if (isMongoObjectId(project.id)) return String(project.id);
   return buildEntityPathSlug(project.titleEn || project.titleFr || 'project', project.id);
 }
 
@@ -43,15 +48,23 @@ export function getBlogPathSlug(blog: {
   titleFr?: string;
   slug?: string;
 }): string {
+  const cmsSlug = blog.slug?.trim();
+  if (cmsSlug && isMongoObjectId(blog.id)) return cmsSlug;
   return buildEntityPathSlug(blog.titleEn || blog.titleFr || 'post', blog.id, blog.slug);
+}
+
+/** Strip `{slug}-0001` suffix for API lookups (CMS stores slug without suffix). */
+export function stripTrailingPathIdSuffix(param: string): string {
+  return param.replace(/-\d{4}$/, '');
 }
 
 /**
  * Resolve entity id from a route param.
- * Accepts legacy `/projects/12` and slug form `/projects/name-0012`.
+ * Accepts Mongo ObjectId, legacy `/projects/12`, and slug form `/projects/name-0012`.
  */
 export function parseEntityIdFromParam(param: string | undefined): string | null {
   if (!param) return null;
+  if (isMongoObjectId(param)) return param;
   if (/^\d+$/.test(param)) return String(Number(param));
   const match = param.match(/-(\d{4})$/);
   if (match) return String(Number(match[1]));

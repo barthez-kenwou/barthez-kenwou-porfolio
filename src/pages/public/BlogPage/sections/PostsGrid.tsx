@@ -1,33 +1,44 @@
 import { BlogCard, IBlog, usePublicBlogs } from '@/entities/blogs';
+import { filterPublicBlogs, pickMostReadBlog, sortBlogsByArrival } from '@/entities/blogs/lib/blogListing';
 import { EmptyBlogCard } from '@/entities/blogs/ui/EmptyBlogCard.ui';
 import { categories } from '@/shared/constants/blogCategories.const';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { QueryState } from '@/shared/ui/QueryState';
 import { HiOutlineMagnifyingGlass } from 'react-icons/hi2';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useTransition } from 'react';
 import { cn } from '@/shared/lib/utils';
 
 export const PostsGrid: React.FC = () => {
   const { language } = useLanguageStore();
+  const fr = language === 'fr';
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
-  const { data, isPending, isError, error } = usePublicBlogs();
+  const [isPending, startTransition] = useTransition();
+  const { data, isPending: listPending, isError, error } = usePublicBlogs();
   const posts = data?.data.items ?? [];
 
-  const filteredPosts = useMemo(
-    () =>
-      posts.filter((post) => {
-        if (post.isPublished === false) return false;
-        const matchesCategory = activeCategory === 'All' || post.category === activeCategory;
-        const title = language === 'fr' ? post.titleFr : post.titleEn;
-        const matchesSearch =
-          title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          post.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-        return matchesCategory && matchesSearch;
+  const filteredPosts = useMemo(() => {
+    return sortBlogsByArrival(
+      filterPublicBlogs(posts, {
+        category: activeCategory,
+        search: searchQuery,
+        language,
       }),
-    [posts, activeCategory, searchQuery, language],
-  );
+    );
+  }, [posts, activeCategory, searchQuery, language]);
+
+  const showFeatured = activeCategory === 'All' && searchQuery.trim() === '';
+
+  const featuredPost = useMemo(() => {
+    if (!showFeatured) return null;
+    return pickMostReadBlog(filteredPosts);
+  }, [filteredPosts, showFeatured]);
+
+  const gridPosts = useMemo(() => {
+    if (!featuredPost) return filteredPosts;
+    return filteredPosts.filter((p) => p.id !== featuredPost.id);
+  }, [filteredPosts, featuredPost]);
 
   const isExpanded = searchFocused || searchQuery.length > 0;
 
@@ -76,7 +87,7 @@ export const PostsGrid: React.FC = () => {
 
               <input
                 type="search"
-                placeholder={language === 'fr' ? 'Rechercher…' : 'Search…'}
+                placeholder={fr ? 'Rechercher…' : 'Search…'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setSearchFocused(true)}
@@ -85,56 +96,58 @@ export const PostsGrid: React.FC = () => {
                   'relative z-10 w-full bg-transparent py-2.5 pl-9 pr-4 text-sm text-foreground outline-none',
                   'placeholder:text-muted-foreground/55',
                 )}
-                aria-label={language === 'fr' ? 'Rechercher un article' : 'Search articles'}
+                aria-label={fr ? 'Rechercher un article' : 'Search articles'}
               />
             </div>
           </div>
 
           <div
-            className="flex flex-wrap justify-center gap-2 md:justify-start"
+            className={cn(
+              'flex flex-wrap justify-center gap-2 md:justify-start',
+              isPending && 'opacity-80',
+            )}
             role="group"
-            aria-label={language === 'fr' ? 'Catégories' : 'Categories'}
+            aria-label={fr ? 'Catégories' : 'Categories'}
           >
             {categories.map((category) => (
               <button
                 key={category}
                 type="button"
-                onClick={() => setActiveCategory(category)}
+                onClick={() => startTransition(() => setActiveCategory(category))}
                 className={`rounded-md border px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all ${
                   activeCategory === category
                     ? 'border-brand bg-brand text-brand-foreground'
                     : 'border-border/50 bg-secondary/30 text-muted-foreground hover:text-foreground'
                 }`}
               >
-                {category === 'All' ? (language === 'fr' ? 'Tous' : 'All') : category}
+                {category === 'All' ? (fr ? 'Tous' : 'All') : category}
               </button>
             ))}
           </div>
         </section>
 
         <QueryState
-          isPending={isPending}
+          isPending={listPending}
           isError={isError}
           errorMessage={error instanceof Error ? error.message : undefined}
           source={data?.source}
         >
-          <section className="space-y-4 md:space-y-8">
-            {filteredPosts.length > 0 && activeCategory === 'All' && searchQuery === '' && (
+          <section className="space-y-4 pb-10 md:space-y-6 md:pb-14">
+            {featuredPost ? (
               <div>
-                <BlogCard Blog={filteredPosts[0]} isFeatured />
+                <BlogCard Blog={featuredPost} isFeatured />
               </div>
-            )}
+            ) : null}
 
-            <div className="mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {(activeCategory === 'All' && searchQuery === ''
-                ? filteredPosts.slice(1)
-                : filteredPosts
-              ).map((blog: IBlog) => (
-                <BlogCard key={blog.id} Blog={blog} />
+            <div className="grid auto-rows-fr gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
+              {gridPosts.map((blog: IBlog) => (
+                <div key={blog.id} className="h-full min-h-0">
+                  <BlogCard Blog={blog} />
+                </div>
               ))}
             </div>
 
-            {filteredPosts.length === 0 && <EmptyBlogCard />}
+            {filteredPosts.length === 0 ? <EmptyBlogCard /> : null}
           </section>
         </QueryState>
       </div>

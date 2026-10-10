@@ -44,6 +44,7 @@ const emptyBlog = (): Omit<IBlog, 'id'> & { id?: string } => ({
   author: 'Barthez Kenwou',
   tags: [],
   isPublished: false,
+  viewCount: 0,
 });
 
 export const AdminBlogEditorPage: React.FC = () => {

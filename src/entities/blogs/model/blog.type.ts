@@ -15,4 +15,11 @@ export interface IBlog {
   tags: string[];
   /** When false, hidden from the public blog listing. */
   isPublished?: boolean;
+  /** Cumulative public reads — drives the “most read” hero slot. */
+  viewCount?: number;
+  /**
+   * Optional admin pin for the listing hero.
+   * When unset, the hero falls back to the highest `viewCount`.
+   */
+  isFeatured?: boolean;
 }

@@ -26,7 +26,7 @@ import { SEO } from '@/shared/ui/SEO/SEO';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { useProject } from '@/entities/projets/hooks/useProjects';
 import { truncateFonction } from '@/shared/ui/utils/truncateText/helpers';
-import { getProjectPathSlug, parseEntityIdFromParam } from '@/shared/lib/entity-slug';
+import { getProjectPathSlug } from '@/shared/lib/entity-slug';
 import { QueryState } from '@/shared/ui/QueryState';
 import { MobileStickyCtaBar } from '@/shared/ui/MobileStickyCtaBar';
 import { useStickyCtaVisibility } from '@/shared/hooks/useStickyCtaVisibility';
@@ -34,8 +34,7 @@ import { useStickyCtaVisibility } from '@/shared/hooks/useStickyCtaVisibility';
 export const ProjectDetailPage = () => {
   const { id, projectID } = useParams();
   const searchId = projectID || id;
-  const projectId = parseEntityIdFromParam(searchId) ?? undefined;
-  const { data: project, isPending, isError, error } = useProject(projectId);
+  const { data: project, isPending, isError, error } = useProject(searchId);
   const { language } = useLanguageStore();
   const isFr = language === 'fr';
   const heroRef = useRef<HTMLDivElement | null>(null);
@@ -65,14 +64,32 @@ export const ProjectDetailPage = () => {
     );
   }, [project]);
 
-  if (isPending || isError) {
+  const notFound =
+    !isPending &&
+    (Boolean(
+      error &&
+        typeof error === 'object' &&
+        'message' in error &&
+        String((error as { message: string }).message)
+          .toLowerCase()
+          .includes('not found'),
+    ) ||
+      (!isError && !project));
+
+  if (isPending || (isError && !notFound)) {
     return (
       <div className="min-h-screen px-4 py-24 md:px-10 lg:px-14">
         <QueryState
           variant="page"
           isPending={isPending}
           isError={isError}
-          errorMessage={error instanceof Error ? error.message : undefined}
+          errorMessage={
+            error instanceof Error
+              ? error.message
+              : error && typeof error === 'object' && 'message' in error
+                ? String((error as { message: string }).message)
+                : undefined
+          }
         >
           {null}
         </QueryState>
@@ -80,7 +97,7 @@ export const ProjectDetailPage = () => {
     );
   }
 
-  if (!project || project.isPublished === false) return <ProjectNotFound />;
+  if (notFound || !project || project.isPublished === false) return <ProjectNotFound />;
 
   return (
     <>

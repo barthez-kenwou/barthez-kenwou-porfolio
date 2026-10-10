@@ -83,18 +83,10 @@ export function AdminLoginPage() {
           initial={{ opacity: 0, x: -12 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          className="relative hidden flex-col justify-between border-r border-border/40 px-10 py-12 lg:flex xl:px-14"
+          className="relative hidden flex-col gap-24 border-r border-border/40 px-10 py-12 lg:flex xl:px-14"
         >
           <div>
-            <img
-              src="/icons/logo-mark.png"
-              alt="Barthez Kenwou"
-              className="size-12 rounded-xl object-cover ring-1 ring-border/50"
-            />
-            <p className="mt-8 text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
-              Private workspace
-            </p>
-            <h1 className="mt-3 max-w-sm text-3xl font-semibold tracking-tight text-foreground xl:text-4xl">
+            <h1 className="mt-25 max-w-sm text-3xl font-semibold tracking-tight text-foreground xl:text-4xl">
               {fr ? (
                 <>
                   Le studio derrière
@@ -107,11 +99,6 @@ export function AdminLoginPage() {
                 </>
               )}
             </h1>
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
-              {fr
-                ? 'Accès propriétaire uniquement. Contenu, case studies, messages: un seul endroit, sans bruit.'
-                : 'Owner-only access. Content, case studies, inbox: one quiet surface.'}
-            </p>
           </div>
 
           <div className="space-y-3 text-xs text-muted-foreground">
@@ -126,99 +113,103 @@ export function AdminLoginPage() {
           </div>
         </motion.aside>
 
-        {/* Form column */}
+        {/* Form column — centered single-column below lg; left-aligned in the split layout */}
         <motion.section
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-col justify-center px-5 py-16 sm:px-10 lg:px-12 xl:px-16"
+          className="flex flex-col items-center justify-center px-5 py-12 sm:px-8 sm:py-16 lg:items-stretch lg:px-12 lg:py-16 xl:px-16"
         >
-          <div className="mb-10 flex items-center gap-3 lg:hidden">
-            <img
-              src="/icons/logo-mark.png"
-              alt=""
-              className="size-10 rounded-lg object-cover ring-1 ring-border/40"
-            />
-            <div>
-              <p className="text-sm font-semibold">Barthez Kenwou</p>
-              <p className="text-[11px] text-muted-foreground">Portfolio Admin</p>
-            </div>
-          </div>
-
-          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
-            {fr ? 'Connexion' : 'Sign in'}
-          </p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
-            {fr ? 'Bon retour.' : 'Welcome back.'}
-          </h2>
-          <p className="mt-2 max-w-md text-sm text-muted-foreground">
-            {fr
-              ? 'Identifie-toi pour ouvrir le panneau. Aucune inscription publique.'
-              : 'Authenticate to open the panel. No public registration.'}
-          </p>
-
-          <form onSubmit={form.handleSubmit(onSubmit)} className="mt-10 max-w-md space-y-5">
-            <div>
-              <FloatingFillField
-                label={fr ? 'Email' : 'Email'}
-                type="email"
-                name="email"
-                value={form.watch('email')}
-                onChange={(e) => form.setValue('email', e.target.value, { shouldValidate: true })}
-                onBlur={() => form.trigger('email')}
-                invalid={!!form.formState.errors.email}
+          <div className="w-full max-w-[22.5rem] sm:max-w-md lg:max-w-md">
+            <div className="mb-8 flex items-center gap-3 sm:mb-10 lg:hidden">
+              <img
+                src="/icons/logo-mark.png"
+                alt=""
+                className="size-10 rounded-lg object-cover ring-1 ring-border/40"
               />
-              {form.formState.errors.email ? (
-                <p className="mt-1.5 text-xs text-destructive">
-                  {form.formState.errors.email.message}
-                </p>
-              ) : null}
+              <div>
+                <p className="text-sm font-semibold">Barthez Kenwou</p>
+                <p className="text-[11px] text-muted-foreground">Portfolio Admin</p>
+              </div>
             </div>
 
-            <div className="relative">
-              <FloatingFillField
-                label={fr ? 'Mot de passe' : 'Password'}
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                value={form.watch('password')}
-                onChange={(e) =>
-                  form.setValue('password', e.target.value, { shouldValidate: true })
-                }
-                onBlur={() => form.trigger('password')}
-                invalid={!!form.formState.errors.password}
-              />
-              <button
-                type="button"
-                className="absolute right-1.5 top-[1.55rem] z-30 flex size-11 items-center justify-center rounded-md text-muted-foreground hover:text-foreground"
-                onClick={() => setShowPassword((v) => !v)}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+              {fr ? 'Connexion' : 'Sign in'}
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
+              {fr ? 'Bon retour.' : 'Welcome back.'}
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {fr
+                ? 'Identifie-toi pour ouvrir le panneau. Aucune inscription publique.'
+                : 'Authenticate to open the panel. No public registration.'}
+            </p>
+
+            <form onSubmit={form.handleSubmit(onSubmit)} className="mt-8 space-y-5 sm:mt-10">
+              <div>
+                <FloatingFillField
+                  label={fr ? 'Email' : 'Email'}
+                  type="email"
+                  name="email"
+                  value={form.watch('email')}
+                  onChange={(e) => form.setValue('email', e.target.value, { shouldValidate: true })}
+                  onBlur={() => form.trigger('email')}
+                  invalid={!!form.formState.errors.email}
+                />
+                {form.formState.errors.email ? (
+                  <p className="mt-1.5 text-xs text-destructive">
+                    {form.formState.errors.email.message}
+                  </p>
+                ) : null}
+              </div>
+
+              <div>
+                <FloatingFillField
+                  label={fr ? 'Mot de passe' : 'Password'}
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={form.watch('password')}
+                  onChange={(e) =>
+                    form.setValue('password', e.target.value, { shouldValidate: true })
+                  }
+                  onBlur={() => form.trigger('password')}
+                  invalid={!!form.formState.errors.password}
+                  endAdornment={
+                    <button
+                      type="button"
+                      className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground"
+                      onClick={() => setShowPassword((v) => !v)}
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                    </button>
+                  }
+                />
+                {form.formState.errors.password ? (
+                  <p className="mt-1.5 text-xs text-destructive">
+                    {form.formState.errors.password.message}
+                  </p>
+                ) : null}
+              </div>
+
+              <Button
+                type="submit"
+                disabled={submitting}
+                className="mt-2 h-12 w-full rounded-sm text-sm font-medium tracking-wide"
               >
-                {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-              </button>
-              {form.formState.errors.password ? (
-                <p className="mt-1.5 text-xs text-destructive">
-                  {form.formState.errors.password.message}
-                </p>
-              ) : null}
-            </div>
+                {submitting ? (fr ? 'Ouverture…' : 'Opening…') : fr ? 'Entrer' : 'Enter'}
+              </Button>
+            </form>
 
-            <Button
-              type="submit"
-              disabled={submitting}
-              className="mt-2 h-12 w-full rounded-sm text-sm font-medium tracking-wide"
-            >
-              {submitting ? (fr ? 'Ouverture…' : 'Opening…') : fr ? 'Entrer' : 'Enter'}
-            </Button>
-          </form>
-
-          <p className="mt-10 text-center text-xs text-muted-foreground lg:text-left">
-            <Link
-              to="/"
-              className="underline-offset-4 hover:text-foreground hover:underline lg:hidden"
-            >
-              {fr ? 'Retour au site public' : 'Back to public site'}
-            </Link>
-          </p>
+            <p className="mt-8 text-center text-xs text-muted-foreground sm:mt-10 lg:text-left">
+              <Link
+                to="/"
+                className="underline-offset-4 hover:text-foreground hover:underline lg:hidden"
+              >
+                {fr ? 'Retour au site public' : 'Back to public site'}
+              </Link>
+            </p>
+          </div>
         </motion.section>
       </div>
     </div>

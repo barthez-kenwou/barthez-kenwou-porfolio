@@ -13,6 +13,10 @@ type FloatingFillFieldProps = {
   rows?: number;
   invalid?: boolean;
   className?: string;
+  /** Extra classes on the input/textarea (e.g. reserved padding for an end control). */
+  inputClassName?: string;
+  /** Optional control rendered inside the field box (right side), e.g. show-password. */
+  endAdornment?: React.ReactNode;
 };
 
 /**
@@ -35,6 +39,8 @@ export const FloatingFillField = React.forwardRef<
     rows = 4,
     invalid = false,
     className,
+    inputClassName,
+    endAdornment,
   },
   ref,
 ) {
@@ -42,6 +48,7 @@ export const FloatingFillField = React.forwardRef<
   const [focused, setFocused] = useState(false);
   const hasValue = value.trim().length > 0;
   const floated = focused || hasValue;
+  const hasEndAdornment = Boolean(endAdornment) && !multiline;
 
   const fieldClass = cn(
     'relative z-20 w-full bg-transparent px-3 text-sm text-foreground',
@@ -53,6 +60,8 @@ export const FloatingFillField = React.forwardRef<
     '[&:-webkit-autofill]:[-webkit-text-fill-color:hsl(var(--foreground))]',
     '[&:-webkit-autofill]:[transition:background-color_9999s_ease-out_0s]',
     multiline ? 'min-h-[7.5rem] resize-none pt-5 pb-3' : 'h-12 pt-4 pb-2',
+    hasEndAdornment && 'pr-12',
+    inputClassName,
   );
 
   return (
@@ -157,6 +166,12 @@ export const FloatingFillField = React.forwardRef<
           aria-invalid={invalid || undefined}
         />
       )}
+
+      {hasEndAdornment ? (
+        <div className="absolute top-2.5 right-0 z-40 flex h-12 w-11 items-center justify-center">
+          {endAdornment}
+        </div>
+      ) : null}
     </div>
   );
 });
