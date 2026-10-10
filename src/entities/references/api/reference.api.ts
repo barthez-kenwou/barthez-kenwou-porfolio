@@ -1,6 +1,6 @@
 import { apiClient, type PaginatedData, type PaginationParams, toQueryParams } from '@/shared/api';
-import type { IProfessionalReference } from '@/features/admin-cms/model/cms.types';
 import { cvData } from '@/entities/cv/api/mock/cv-data';
+import type { IProfessionalReference } from '../model/reference.types';
 
 export type ReferenceListParams = PaginationParams;
 

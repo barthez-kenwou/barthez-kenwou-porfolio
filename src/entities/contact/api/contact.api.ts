@@ -3,7 +3,7 @@ import type {
   ContactResponseStatus,
   IContactInfo,
   IContactResponse,
-} from '@/features/admin-cms/model/cms.types';
+} from '../model/contact.types';
 import type { ContactFormValues } from '../model/contact.schema';
 import { contactsInfo } from '@/shared/mocks/constContactInfo.mocks';
 

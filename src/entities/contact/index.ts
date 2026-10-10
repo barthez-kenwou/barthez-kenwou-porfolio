@@ -11,3 +11,8 @@ export {
   useDeleteContactResponse,
 } from './hooks/useContact';
 export { contactSchema, type ContactFormValues } from './model/contact.schema';
+export type {
+  IContactInfo,
+  IContactResponse,
+  ContactResponseStatus,
+} from './model/contact.types';

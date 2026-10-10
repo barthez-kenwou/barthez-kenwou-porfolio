@@ -7,9 +7,6 @@ import {
   ArrowUpRight,
   Clock,
   Users,
-  Zap,
-  Shield,
-  Layout,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -20,17 +17,9 @@ import { cn } from '@/shared/lib/utils';
 import { getProjectPathSlug } from '@/shared/lib/entity-slug';
 import { Button } from '@/shared/ui/button';
 
-import type { IProject, ProjectComplexity } from '../model/project.types';
+import type { IProject } from '../model/project.types';
 import { ProjectStatusBadge } from './ProjectStatusBadge.ui';
 import { TechBadge } from './TechBadge.ui';
-
-// ─── Constants ──────────────────────────────────────────────────────────────────
-
-const COMPLEXITY_CONFIG: Record<ProjectComplexity, { icon: any; color: string }> = {
-  Avancé: { icon: Zap, color: 'text-primary' },
-  Intermédiaire: { icon: Layout, color: 'text-muted-foreground' },
-  Débutant: { icon: Shield, color: 'text-foreground/50' },
-};
 
 // ─── Props ──────────────────────────────────────────────────────────────────────
 
@@ -52,8 +41,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   const title = language === 'fr' ? project.titleFr : project.titleEn;
   const description = language === 'fr' ? project.descriptionFr : project.descriptionEn;
   const projectHref = `/projects/${getProjectPathSlug(project)}`;
-  const complexityKey = (project.complexity as ProjectComplexity) || 'Intermédiaire';
-  const ComplexityIcon = COMPLEXITY_CONFIG[complexityKey]?.icon || Shield;
 
   const allTechs = [
     ...(project.techStack?.frontend || []),

@@ -14,3 +14,4 @@ export {
   useUpdateReference,
   useDeleteReference,
 } from './hooks/useReferences';
+export type { IProfessionalReference } from './model/reference.types';

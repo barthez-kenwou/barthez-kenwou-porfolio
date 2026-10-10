@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys, withPublicFallback, type PaginatedData, type ResourceResult } from '@/shared/api';
 import { paginateMock } from '@/shared/api/http';
-import type { IProfessionalReference } from '@/features/admin-cms/model/cms.types';
 import {
   createReference,
   deleteReference,
@@ -10,6 +9,7 @@ import {
   updateReference,
   type ReferenceListParams,
 } from '../api/reference.api';
+import type { IProfessionalReference } from '../model/reference.types';
 
 export function usePublicReferences() {
   return useQuery({

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys, withPublicFallback, type ResourceResult } from '@/shared/api';
-import type { IContactInfo, IContactResponse } from '@/features/admin-cms/model/cms.types';
+import type { IContactInfo, IContactResponse } from '../model/contact.types';
 import type { ContactFormValues } from '../model/contact.schema';
 import {
   contactInfoMock,
