@@ -277,14 +277,23 @@ export const AdminServicesPage: React.FC = () => {
           isPending={isPending}
           isError={isError}
           errorMessage={isApiError(error) ? error.message : undefined}
-          empty={!isPending && !isError && items.length === 0}
-          emptyTitle={fr ? 'Aucun service' : 'No services'}
         >
           <AdminDataTable
             data={items}
             getRowId={(r) => r.id}
             searchKeys={['titleFr', 'titleEn', 'iconKey']}
             emptyTitle={fr ? 'Aucun service' : 'No services'}
+            filters={[
+              {
+                key: 'isPublished',
+                label: fr ? 'Visibilité' : 'Visibility',
+                options: [
+                  { value: 'true', label: fr ? 'Publié' : 'Published' },
+                  { value: 'false', label: fr ? 'Brouillon' : 'Draft' },
+                ],
+                match: (row, selected) => String(row.isPublished !== false) === selected,
+              },
+            ]}
             columns={[
               {
                 key: 'title',

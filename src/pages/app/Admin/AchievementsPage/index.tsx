@@ -195,14 +195,12 @@ export const AdminAchievementsPage: React.FC = () => {
           isPending={isPending}
           isError={isError}
           errorMessage={isApiError(error) ? error.message : undefined}
-          empty={!isPending && !isError && items.length === 0}
-          emptyTitle={fr ? 'Aucune réalisation' : 'No achievements'}
         >
           <AdminDataTable
             data={items}
             getRowId={(r) => String(r.id)}
             searchKeys={['value', 'labelFr', 'labelEn', 'iconKey']}
-            emptyTitle={fr ? 'Aucun élément' : 'No items'}
+            emptyTitle={fr ? 'Aucune réalisation' : 'No achievements'}
             columns={[
               {
                 key: 'value',

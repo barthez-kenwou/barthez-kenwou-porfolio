@@ -17,8 +17,8 @@ export function AdminStickyActions({ children, className }: AdminStickyActionsPr
         'flex w-full items-center justify-end gap-2 md:w-auto',
         // Mobile: docked above the bottom nav
         'max-md:fixed max-md:inset-x-0 max-md:z-30 max-md:border-t max-md:border-border/70',
-        'max-md:bg-background/95 max-md:p-3 max-md:backdrop-blur-md',
-        'max-md:bottom-[calc(3.5rem+env(safe-area-inset-bottom))]',
+        'max-md:bg-background/95 max-md:px-4 max-md:py-3 max-md:backdrop-blur-md',
+        'max-md:bottom-[calc(3.65rem+env(safe-area-inset-bottom))]',
         className,
       )}
     >

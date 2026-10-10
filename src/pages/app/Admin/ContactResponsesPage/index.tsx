@@ -7,7 +7,6 @@ import {
   Layers,
   Mail,
   MailOpen,
-  MessageSquareText,
   Reply,
   Trash2,
 } from 'lucide-react';
@@ -15,7 +14,6 @@ import { toast } from 'sonner';
 import {
   AdminPageHeader,
   AdminDataTable,
-  AdminEmptyState,
   AdminSectionCard,
   ConfirmDeleteDialog,
   Field,
@@ -391,124 +389,115 @@ export const AdminContactResponsesPage: React.FC = () => {
                 isError={isError}
                 errorMessage={isApiError(error) ? error.message : undefined}
               >
-                {tabItems.length === 0 && !isPending && !isError ? (
-                  <AdminEmptyState
-                    icon={MessageSquareText}
-                    title={empty.title}
-                    description={empty.description}
-                    className="rounded-md shadow-none"
-                  />
-                ) : (
-                  <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-                    <AdminDataTable<IContactResponse>
-                      data={tabItems}
-                      getRowId={(r) => r.id}
-                      searchKeys={['name', 'email', 'subject', 'message']}
-                      searchPlaceholder={fr ? 'Nom, email, sujet…' : 'Name, email, subject…'}
-                      emptyTitle={empty.title}
-                      emptyDescription={empty.description}
-                      filters={
-                        statusFilterOptions.length > 1
-                          ? [
-                              {
-                                key: 'status',
-                                label: 'Status',
-                                options: statusFilterOptions,
-                              },
-                            ]
-                          : []
-                      }
-                      onRowClick={openMessage}
-                      columns={[
-                        {
-                          key: 'name',
-                          header: fr ? 'Expéditeur' : 'From',
-                          render: (r) => (
-                            <div className="min-w-0">
-                              <p
-                                className={cn(
-                                  'truncate font-medium',
-                                  r.status === 'new' && 'text-foreground',
-                                )}
-                              >
-                                {r.name}
-                                {r.status === 'new' ? (
-                                  <span className="ml-2 inline-block size-1.5 rounded-full bg-amber-400 align-middle" />
-                                ) : null}
-                              </p>
-                              <p className="truncate text-xs text-muted-foreground">{r.email}</p>
-                              <p className="mt-1 line-clamp-1 text-sm text-muted-foreground md:hidden">
-                                {r.subject}
-                              </p>
-                            </div>
-                          ),
-                        },
-                        {
-                          key: 'subject',
-                          header: fr ? 'Sujet' : 'Subject',
-                          hideOnMobile: true,
-                          render: (r) => (
-                            <span className="line-clamp-1 max-w-[200px]">{r.subject}</span>
-                          ),
-                        },
-                        {
-                          key: 'status',
-                          header: 'Status',
-                          render: (r) => (
-                            <Badge
-                              variant={statusVariant[r.status]}
-                              className="max-w-[7.5rem] truncate"
+                <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+                  <AdminDataTable<IContactResponse>
+                    data={tabItems}
+                    getRowId={(r) => r.id}
+                    searchKeys={['name', 'email', 'subject', 'message']}
+                    searchPlaceholder={fr ? 'Nom, email, sujet…' : 'Name, email, subject…'}
+                    emptyTitle={empty.title}
+                    emptyDescription={empty.description}
+                    filters={
+                      statusFilterOptions.length > 1
+                        ? [
+                            {
+                              key: 'status',
+                              label: fr ? 'Statut' : 'Status',
+                              options: statusFilterOptions,
+                            },
+                          ]
+                        : []
+                    }
+                    onRowClick={openMessage}
+                    columns={[
+                      {
+                        key: 'name',
+                        header: fr ? 'Expéditeur' : 'From',
+                        render: (r) => (
+                          <div className="min-w-0">
+                            <p
+                              className={cn(
+                                'truncate font-medium',
+                                r.status === 'new' && 'text-foreground',
+                              )}
                             >
-                              {statusLabel(r.status, fr)}
-                            </Badge>
-                          ),
-                        },
-                        {
-                          key: 'createdAt',
-                          header: fr ? 'Reçu' : 'Received',
-                          render: (r) => (
-                            <span className="line-clamp-1 whitespace-nowrap text-muted-foreground">
-                              {formatAdminDate(r.createdAt, language, { withTime: true })}
-                            </span>
-                          ),
-                        },
-                      ]}
-                      actions={(r) => (
-                        <Button
-                          size="icon-sm"
-                          variant="ghost"
-                          className="size-11 cursor-pointer md:size-8"
-                          onClick={() => setPending(r)}
-                        >
-                          <Trash2 className="size-3.5 text-destructive" />
-                        </Button>
-                      )}
-                    />
+                              {r.name}
+                              {r.status === 'new' ? (
+                                <span className="ml-2 inline-block size-1.5 rounded-full bg-amber-400 align-middle" />
+                              ) : null}
+                            </p>
+                            <p className="truncate text-xs text-muted-foreground">{r.email}</p>
+                            <p className="mt-1 line-clamp-1 text-sm text-muted-foreground md:hidden">
+                              {r.subject}
+                            </p>
+                          </div>
+                        ),
+                      },
+                      {
+                        key: 'subject',
+                        header: fr ? 'Sujet' : 'Subject',
+                        hideOnMobile: true,
+                        render: (r) => (
+                          <span className="line-clamp-1 max-w-[200px]">{r.subject}</span>
+                        ),
+                      },
+                      {
+                        key: 'status',
+                        header: fr ? 'Statut' : 'Status',
+                        render: (r) => (
+                          <Badge
+                            variant={statusVariant[r.status]}
+                            className="max-w-[7.5rem] truncate"
+                          >
+                            {statusLabel(r.status, fr)}
+                          </Badge>
+                        ),
+                      },
+                      {
+                        key: 'createdAt',
+                        header: fr ? 'Reçu' : 'Received',
+                        render: (r) => (
+                          <span className="line-clamp-1 whitespace-nowrap text-muted-foreground">
+                            {formatAdminDate(r.createdAt, language, { withTime: true })}
+                          </span>
+                        ),
+                      },
+                    ]}
+                    actions={(r) => (
+                      <Button
+                        size="icon-sm"
+                        variant="ghost"
+                        className="size-11 cursor-pointer md:size-8"
+                        onClick={() => setPending(r)}
+                      >
+                        <Trash2 className="size-3.5 text-destructive" />
+                      </Button>
+                    )}
+                  />
 
-                    <AdminSectionCard
-                      title={selectedInTab ? selectedInTab.subject : fr ? 'Détail' : 'Detail'}
-                      className="hidden lg:sticky lg:top-4 lg:block lg:self-start"
-                    >
-                      {!selectedInTab ? (
-                        <div className="flex min-h-[220px] flex-col items-center justify-center rounded-md border border-dashed border-border/70 bg-muted/15 px-6 text-center">
-                          <MailOpen className="mb-3 size-5 text-muted-foreground/70" />
-                          <p className="cursor-default text-sm text-muted-foreground">
-                            {fr
-                              ? 'Sélectionne un message pour le lire et le traiter.'
-                              : 'Select a message to read and triage.'}
-                          </p>
-                        </div>
-                      ) : (
-                        <MessageDetail
-                          selected={selectedInTab}
-                          fr={fr}
-                          language={language}
-                          onUpdate={onUpdate}
-                        />
-                      )}
-                    </AdminSectionCard>
-                  </div>
-                )}
+                  <AdminSectionCard
+                    title={selectedInTab ? selectedInTab.subject : fr ? 'Détail' : 'Detail'}
+                    className="hidden lg:sticky lg:top-4 lg:block lg:self-start"
+                  >
+                    {!selectedInTab ? (
+                      <div className="flex min-h-[220px] flex-col items-center justify-center rounded-md border border-dashed border-border/70 bg-muted/15 px-6 text-center">
+                        <MailOpen className="mb-3 size-5 text-muted-foreground/70" />
+                        <p className="cursor-default text-sm text-muted-foreground">
+                          {fr
+                            ? 'Sélectionne un message pour le lire et le traiter.'
+                            : 'Select a message to read and triage.'}
+                        </p>
+                      </div>
+                    ) : (
+                      <MessageDetail
+                        selected={selectedInTab}
+                        fr={fr}
+                        language={language}
+                        onUpdate={onUpdate}
+                      />
+                    )}
+                  </AdminSectionCard>
+                </div>
               </QueryState>
             </TabsContent>
           );

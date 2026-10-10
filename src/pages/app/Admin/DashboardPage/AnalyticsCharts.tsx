@@ -114,10 +114,10 @@ export function VisitorsLineChart({
   const pageviewsLabel = fr ? 'Pages vues' : 'Pageviews';
 
   return (
-    <div className={cn('w-full', className)}>
-      <div className="h-48 w-full sm:h-56">
+    <div className={cn('min-w-0 w-full overflow-hidden', className)}>
+      <div className="h-48 w-full min-w-0 sm:h-56">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+          <AreaChart data={data} margin={{ top: 8, right: 4, left: 0, bottom: 4 }}>
             <defs>
               <linearGradient id="visitorsFill" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor={CHART.visitors} stopOpacity={0.28} />
@@ -203,28 +203,29 @@ export function SourcesBarChart({
   }
 
   const data = rows.map((row) => ({
-    name: row.label.length > 14 ? `${row.label.slice(0, 12)}…` : row.label,
+    name: row.label.length > 10 ? `${row.label.slice(0, 8)}…` : row.label,
     fullName: row.label,
     value: row.value,
   }));
 
   return (
-    <div className={cn('w-full', className)}>
-      <div className="h-44 w-full sm:h-48">
+    <div className={cn('min-w-0 w-full overflow-hidden', className)}>
+      <div className="h-44 w-full min-w-0 sm:h-48">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 8, right: 4, left: 0, bottom: 4 }} barCategoryGap="28%">
+          <BarChart data={data} margin={{ top: 8, right: 2, left: 0, bottom: 8 }} barCategoryGap="22%">
             <CartesianGrid stroke={CHART.grid} strokeDasharray="3 3" vertical={false} />
             <XAxis
               dataKey="name"
-              tick={{ fill: CHART.tick, fontSize: 11 }}
+              tick={{ fill: CHART.tick, fontSize: 10 }}
               tickLine={false}
               axisLine={false}
               interval={0}
+              height={36}
             />
             <YAxis
               allowDecimals={false}
               width={28}
-              tick={{ fill: CHART.tick, fontSize: 11 }}
+              tick={{ fill: CHART.tick, fontSize: 10 }}
               tickLine={false}
               axisLine={false}
             />
@@ -242,9 +243,9 @@ export function SourcesBarChart({
                 );
               }}
             />
-            <Bar dataKey="value" name={fr ? 'Visiteurs' : 'Visitors'} radius={[6, 6, 0, 0]} maxBarSize={48}>
+            <Bar dataKey="value" name={fr ? 'Visiteurs' : 'Visitors'} radius={[6, 6, 0, 0]} maxBarSize={40}>
               {data.map((_, index) => (
-                <Cell key={data[index].name} fill={SOURCE_COLORS[index % SOURCE_COLORS.length]} />
+                <Cell key={`${data[index].fullName}-${index}`} fill={SOURCE_COLORS[index % SOURCE_COLORS.length]} />
               ))}
             </Bar>
           </BarChart>
@@ -275,16 +276,16 @@ export function SignalsBarChart({
   }
 
   const data = rows.map((row) => ({
-    name: row.label.length > 12 ? `${row.label.slice(0, 10)}…` : row.label,
+    name: row.label.length > 10 ? `${row.label.slice(0, 8)}…` : row.label,
     fullName: row.label,
     value: row.value,
   }));
 
   return (
-    <div className={cn('w-full', className)}>
-      <div className="h-44 w-full">
+    <div className={cn('min-w-0 w-full overflow-hidden', className)}>
+      <div className="h-44 w-full min-w-0">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 8, right: 4, left: 0, bottom: 4 }} barCategoryGap="24%">
+          <BarChart data={data} margin={{ top: 8, right: 2, left: 0, bottom: 8 }} barCategoryGap="22%">
             <CartesianGrid stroke={CHART.grid} strokeDasharray="3 3" vertical={false} />
             <XAxis
               dataKey="name"
@@ -292,11 +293,12 @@ export function SignalsBarChart({
               tickLine={false}
               axisLine={false}
               interval={0}
+              height={36}
             />
             <YAxis
               allowDecimals={false}
               width={28}
-              tick={{ fill: CHART.tick, fontSize: 11 }}
+              tick={{ fill: CHART.tick, fontSize: 10 }}
               tickLine={false}
               axisLine={false}
             />

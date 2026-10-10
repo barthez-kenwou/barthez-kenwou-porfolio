@@ -20,17 +20,25 @@ export function AdminSectionCard({
   contentClassName,
 }: AdminSectionCardProps) {
   return (
-    <Card className={cn('overflow-hidden rounded-md shadow-none', className)}>
-      <CardHeader className="flex flex-row items-start justify-between gap-4 space-y-0">
-        <div className="min-w-0 space-y-1.5">
-          <CardTitle>{title}</CardTitle>
-          {description ? <CardDescription>{description}</CardDescription> : null}
+    <Card className={cn('min-w-0 overflow-hidden rounded-xl shadow-none', className)}>
+      <CardHeader className="flex flex-col gap-3 space-y-0 px-4 pt-4 sm:flex-row sm:items-start sm:justify-between sm:gap-4 sm:px-5 sm:pt-5">
+        <div className="min-w-0 space-y-1">
+          <CardTitle className="text-[15px] sm:text-base">{title}</CardTitle>
+          {description ? (
+            <CardDescription className="text-[12px] leading-relaxed sm:text-sm">
+              {description}
+            </CardDescription>
+          ) : null}
         </div>
         {actions ? (
-          <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div>
+          <div className="flex w-full shrink-0 flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
+            {actions}
+          </div>
         ) : null}
       </CardHeader>
-      <CardContent className={cn('space-y-4', contentClassName)}>{children}</CardContent>
+      <CardContent className={cn('space-y-4 px-4 pb-4 sm:px-5 sm:pb-5', contentClassName)}>
+        {children}
+      </CardContent>
     </Card>
   );
 }

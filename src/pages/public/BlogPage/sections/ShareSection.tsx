@@ -1,10 +1,13 @@
 import type { IBlog } from '@/entities/blogs';
+import { trackShare } from '@/app/lib/analytics';
+import { getBlogPathSlug } from '@/shared/lib/entity-slug';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { Share2, Twitter, Linkedin } from 'lucide-react';
 import React from 'react';
 
 export const ShareSection: React.FC<{ post: IBlog }> = ({ post }) => {
   const { language } = useLanguageStore();
+  const slug = getBlogPathSlug(post);
 
   const shareUrl = window.location.href;
   const shareText = language === 'fr' ? post.titleFr : post.titleEn;
@@ -34,6 +37,7 @@ export const ShareSection: React.FC<{ post: IBlog }> = ({ post }) => {
           target="_blank"
           rel="noopener noreferrer"
           className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-sm bg-sky-500 text-white font-bold text-[11px] hover:bg-sky-600 transition-all shadow-sm active:scale-95"
+          onClick={() => trackShare('twitter', 'blog', slug)}
         >
           <Twitter className="h-3.5 w-3.5" />
           Twitter
@@ -44,6 +48,7 @@ export const ShareSection: React.FC<{ post: IBlog }> = ({ post }) => {
           target="_blank"
           rel="noopener noreferrer"
           className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-sm bg-[#0077b5] text-white font-bold text-[11px] hover:bg-[#0077b5]/90 transition-all shadow-sm active:scale-95"
+          onClick={() => trackShare('linkedin', 'blog', slug)}
         >
           <Linkedin className="h-3.5 w-3.5" />
           LinkedIn

@@ -8,28 +8,16 @@ import { usePublicContactInfo } from '@/entities/contact/hooks/useContact';
 /**
  * Presentation video on Home / About.
  * Source of truth: contact-info.presentationVideoUrl (CMS).
- * Optional env fallback only for local/offline until CMS is filled.
  */
 export const PresentationVideo: React.FC = () => {
   const { language } = useLanguageStore();
   const { data, isPending } = usePublicContactInfo();
 
-  const cmsUrl = data?.data?.presentationVideoUrl?.trim() ?? '';
-  const envFallback =
-    (import.meta.env.VITE_PRESENTATION_YOUTUBE_URL as string | undefined)?.trim() || '';
-  const rawUrl = cmsUrl || envFallback;
+  const rawUrl = data?.data?.presentationVideoUrl?.trim() ?? '';
   const video = parseVideoUrl(rawUrl);
 
   if (isPending && !rawUrl) return null;
-
-  if (!video) {
-    if (import.meta.env.DEV && rawUrl) {
-      console.warn(
-        '[PresentationVideo] Lien invalide — renseigne une URL YouTube valide dans Contact info → Réseaux.',
-      );
-    }
-    return null;
-  }
+  if (!video) return null;
 
   return (
     <section className="relative z-10 px-4 py-6 md:px-10 md:py-10 lg:px-14">

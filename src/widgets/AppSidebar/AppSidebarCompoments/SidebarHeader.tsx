@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { PhotoGallery } from './ui/PhotoGallery';
 import { ArrowRight } from 'lucide-react';
 import { useSidebar } from '@/shared/ui/sidebar';
-import { PixelImage } from '@/shared/ui/pixel-image';
+import { Image } from '@/shared/ui/Image';
+import { cn } from '@/shared/lib/utils';
 
 /**
  * SidebarHeaderSection Component
@@ -23,30 +24,35 @@ export const SidebarHeaderSection: React.FC = () => {
 
   return (
     <div className={`border-b transition-all duration-300 ${isExpanded ? 'p-3' : 'p-2'}`}>
-      <div className="flex items-center gap-3 cursor-default">
+      <div className="flex cursor-default items-center gap-3">
         {/* Profile Section */}
         <div
           className={`flex flex-col items-center gap-3 transition-all duration-300 ${
-            isExpanded ? 'px-4' : 'px-0 w-full'
+            isExpanded ? 'px-4' : 'w-full px-0'
           }`}
         >
           <button
+            type="button"
             onClick={() => setIsGalleryOpen(true)}
-            className={`group/picture cursor-pointer relative overflow-hidden flex items-center justify-center rounded-md border-2 border-primary/50 hover:border-primary transition-all duration-300 hover:glow-primary ${
-              isExpanded ? 'min-w-28 min-h-28 lg:min-w-40 lg:min-h-40' : 'w-10 h-10'
-            }`}
+            className={cn(
+              'group/picture relative overflow-hidden rounded-md border-2 border-primary/50',
+              'transition-all duration-300 hover:border-primary hover:glow-primary',
+              isExpanded ? 'size-28 lg:size-40' : 'size-10',
+            )}
             aria-label="View profile photos"
             title={isExpanded ? 'View profile photos' : 'Barthez Kenwou - View profile'}
           >
-            <PixelImage
+            <Image
               src={profilePhotos[0]}
-              customGrid={{ rows: 8, cols: 8 }}
-              grayscaleAnimation
-              pixelFadeInDuration={800}
-              className="object-cover object-[center_60%] transition-all duration-300 scale-100 group-hover/picture:scale-110 h-full w-full"
+              alt="Barthez Kenwou"
+              lazy={false}
+              showSkeleton
+              showSpinner={false}
+              className="absolute inset-0 size-full transition-transform duration-300 group-hover/picture:scale-105"
+              style={{ objectFit: 'cover', objectPosition: 'top center' }}
             />
             {isExpanded && (
-              <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover/picture:opacity-100 transition-opacity flex items-center justify-center gap-1">
+              <div className="absolute inset-0 z-10 flex items-center justify-center gap-1 bg-primary/20 opacity-0 transition-opacity group-hover/picture:opacity-100">
                 <span className="text-xs font-medium text-primary-foreground">
                   {t('sidebar.see_more')}
                 </span>

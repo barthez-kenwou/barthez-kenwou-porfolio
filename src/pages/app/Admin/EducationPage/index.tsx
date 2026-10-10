@@ -167,7 +167,7 @@ export const AdminEducationPage: React.FC = () => {
             data={items}
             getRowId={(r) => String(r.id)}
             searchKeys={['degreeFr', 'degreeEn', 'school', 'period']}
-            emptyTitle={fr ? 'Aucun élément' : 'No items'}
+            emptyTitle={fr ? 'Aucune formation' : 'No education entries'}
             columns={[
               {
                 key: 'degree',

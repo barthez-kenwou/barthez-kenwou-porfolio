@@ -22,8 +22,13 @@ export const AnalyticsEvents = {
   CtaClick: 'cta_click',
   CvDownload: 'cv_download',
   ContactClick: 'contact_click',
+  ContactStart: 'contact_start',
   NewsletterSubscribe: 'newsletter_subscribe',
   OutboundClick: 'outbound_click',
+  SocialClick: 'social_click',
+  LocaleSwitch: 'locale_switch',
+  ProjectFilter: 'project_filter',
+  Share: 'share',
   ScrollDepth: 'scroll_depth',
   EngagementTime: 'engagement_time',
   VideoPlay: 'video_play',
@@ -110,12 +115,49 @@ export function trackContactClick(channel: string): void {
   track(AnalyticsEvents.ContactClick, { channel });
 }
 
+/** First focus on the contact form — once per session (funnel top). */
+export function trackContactStart(source = 'contact_form'): void {
+  trackOnce(AnalyticsEvents.ContactStart, source, { source });
+}
+
 export function trackNewsletterSubscribe(source: string, locale: string): void {
   track(AnalyticsEvents.NewsletterSubscribe, { source, locale });
 }
 
 export function trackOutboundClick(url: string, label?: string): void {
   track(AnalyticsEvents.OutboundClick, { url: url.slice(0, 120), label });
+}
+
+export function trackSocialClick(network: string, location?: string): void {
+  track(AnalyticsEvents.SocialClick, {
+    network: network.toLowerCase(),
+    location,
+  });
+}
+
+export function trackLocaleSwitch(from: string, to: string): void {
+  if (from === to) return;
+  track(AnalyticsEvents.LocaleSwitch, { from, to });
+}
+
+/** Project list filters — category / tech / role / status. */
+export function trackProjectFilter(filter: string, tag: string): void {
+  track(AnalyticsEvents.ProjectFilter, {
+    filter,
+    tag: tag.slice(0, 80),
+  });
+}
+
+export function trackShare(
+  channel: string,
+  content: 'blog' | 'project',
+  slug?: string,
+): void {
+  track(AnalyticsEvents.Share, {
+    channel: channel.toLowerCase(),
+    content,
+    slug: slug?.slice(0, 80),
+  });
 }
 
 export function trackScrollDepth(path: string, depth: 25 | 50 | 75 | 100): void {

@@ -6,6 +6,7 @@ type FloatingFillFieldProps = {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   name?: string;
   type?: string;
   multiline?: boolean;
@@ -27,6 +28,7 @@ export const FloatingFillField = React.forwardRef<
     value,
     onChange,
     onBlur,
+    onFocus,
     name,
     type = 'text',
     multiline = false,
@@ -46,6 +48,10 @@ export const FloatingFillField = React.forwardRef<
     'border-0 outline-none ring-0 shadow-none',
     'focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0',
     'placeholder:text-transparent caret-primary',
+    // Keep dark/light theme when the browser paints autofill yellow/blue.
+    '[&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_hsl(var(--card))]',
+    '[&:-webkit-autofill]:[-webkit-text-fill-color:hsl(var(--foreground))]',
+    '[&:-webkit-autofill]:[transition:background-color_9999s_ease-out_0s]',
     multiline ? 'min-h-[7.5rem] resize-none pt-5 pb-3' : 'h-12 pt-4 pb-2',
   );
 
@@ -120,7 +126,10 @@ export const FloatingFillField = React.forwardRef<
           rows={rows}
           value={value}
           onChange={onChange}
-          onFocus={() => setFocused(true)}
+          onFocus={(e) => {
+            setFocused(true);
+            onFocus?.(e);
+          }}
           onBlur={(e) => {
             setFocused(false);
             onBlur?.(e);
@@ -136,7 +145,10 @@ export const FloatingFillField = React.forwardRef<
           ref={ref as React.Ref<HTMLInputElement>}
           value={value}
           onChange={onChange}
-          onFocus={() => setFocused(true)}
+          onFocus={(e) => {
+            setFocused(true);
+            onFocus?.(e);
+          }}
           onBlur={(e) => {
             setFocused(false);
             onBlur?.(e);

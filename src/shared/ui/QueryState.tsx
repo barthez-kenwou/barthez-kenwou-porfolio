@@ -2,12 +2,14 @@ import React from 'react';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
 import type { DataSource } from '@/shared/api';
+import { useLanguageStore } from '@/shared/state/useLanguageStore';
 
 type QueryStateProps = {
   isPending?: boolean;
   isError?: boolean;
   errorMessage?: string;
   source?: DataSource;
+  /** Prefer leaving empty handling to AdminDataTable / AdminEmptyState in the CMS. */
   empty?: boolean;
   emptyTitle?: string;
   className?: string;
@@ -20,13 +22,15 @@ export function QueryState({
   isPending,
   isError,
   errorMessage,
-  source,
   empty,
-  emptyTitle = 'Nothing here yet',
+  emptyTitle,
   className,
   children,
   variant = 'section',
 }: QueryStateProps) {
+  const language = useLanguageStore((s) => s.language);
+  const fr = language === 'fr';
+
   if (isPending) {
     return (
       <div
@@ -39,7 +43,7 @@ export function QueryState({
         aria-live="polite"
       >
         <Loader2 className="size-5 animate-spin" />
-        <span className="text-sm">Loading…</span>
+        <span className="text-sm">{fr ? 'Chargement…' : 'Loading…'}</span>
       </div>
     );
   }
@@ -53,7 +57,7 @@ export function QueryState({
         )}
         role="alert"
       >
-        {errorMessage || 'Failed to load data'}
+        {errorMessage || (fr ? 'Impossible de charger les données' : 'Failed to load data')}
       </div>
     );
   }
@@ -61,18 +65,10 @@ export function QueryState({
   if (empty) {
     return (
       <div className={cn('py-10 text-center text-sm text-muted-foreground', className)}>
-        {emptyTitle}
+        {emptyTitle || (fr ? 'Rien ici pour le moment' : 'Nothing here yet')}
       </div>
     );
   }
 
-  return (
-    <div className={cn('relative', className)}>
-      {source === 'mock' ? (          
-        <>
-        </>
-      ) : null}
-      {children}
-    </div>
-  );
+  return <div className={cn('relative', className)}>{children}</div>;
 }

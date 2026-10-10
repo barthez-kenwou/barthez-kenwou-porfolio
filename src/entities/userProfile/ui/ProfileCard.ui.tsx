@@ -12,7 +12,7 @@ export const ProfileCard: React.FC = () => {
     <div className="relative glass rounded-md p-0 border border-border">
       <div className="relative  text-center mb-2 h-64 sm:h-68 md:h-72 lg:h-78 w-full overflow-hidden rounded-sm bg-muted/40">
         <Image
-          src="https://jebiwuygwtpmdnhhzsbw.supabase.co/storage/v1/object/public/Portfolio-Barthez/Profile/barthez-type-2.jpeg"
+          src="https://jebiwuygwtpmdnhhzsbw.supabase.co/storage/v1/object/public/Portfolio-Barthez/Profile/profile.jpeg"
           alt="Barthez Kenwou"
           className="w-full text-center object-cover object-top rounded-sm"
           showSkeleton

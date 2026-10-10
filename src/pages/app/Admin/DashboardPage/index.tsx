@@ -17,17 +17,23 @@ import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/lib/utils';
 import { SignalsBarChart, SourcesBarChart, VisitorsLineChart } from './AnalyticsCharts';
 
-type DashboardPeriod = Extract<AnalyticsPeriod, 'day' | '7d' | '30d'>;
+type DashboardPeriod = AnalyticsPeriod;
 
 const PERIODS: Array<{ value: DashboardPeriod; fr: string; en: string }> = [
   { value: 'day', fr: '24h', en: '24h' },
   { value: '7d', fr: '7j', en: '7d' },
   { value: '30d', fr: '30j', en: '30d' },
+  { value: 'month', fr: 'Mois', en: 'Month' },
+  { value: '6mo', fr: '6 mois', en: '6mo' },
+  { value: '12mo', fr: '12 mois', en: '12mo' },
 ];
 
 function periodLabel(period: DashboardPeriod, fr: boolean): string {
   if (period === 'day') return fr ? '24 heures' : '24 hours';
   if (period === '30d') return fr ? '30 jours' : '30 days';
+  if (period === 'month') return fr ? 'mois en cours' : 'this month';
+  if (period === '6mo') return fr ? '6 mois' : '6 months';
+  if (period === '12mo') return fr ? '12 mois' : '12 months';
   return fr ? '7 jours' : '7 days';
 }
 
@@ -48,10 +54,14 @@ function formatBounce(rate: number): string {
 const PRODUCT_SIGNALS = [
   { id: 'cta_click', fr: 'Clics CTA', en: 'CTA clicks' },
   { id: 'cv_download', fr: 'Téléch. CV', en: 'CV downloads' },
+  { id: 'contact_start', fr: 'Form commencé', en: 'Form started' },
   { id: 'contact_click', fr: 'Contact', en: 'Contact' },
   { id: 'newsletter_subscribe', fr: 'Newsletter', en: 'Newsletter' },
+  { id: 'social_click', fr: 'Réseaux', en: 'Social' },
+  { id: 'share', fr: 'Partages', en: 'Shares' },
+  { id: 'locale_switch', fr: 'Langue', en: 'Locale' },
+  { id: 'project_filter', fr: 'Filtres projets', en: 'Project filters' },
   { id: 'video_complete', fr: 'Vidéo finie', en: 'Video complete' },
-  { id: 'scroll_depth', fr: 'Scroll', en: 'Scroll depth' },
   { id: 'blog_read', fr: 'Lecture blog', en: 'Blog reads' },
   { id: 'project_view', fr: 'Vue projet', en: 'Project views' },
 ] as const;
@@ -214,14 +224,14 @@ export function AdminDashboardPage() {
                 key={item.href}
                 to={item.href}
                 className={cn(
-                  'cursor-pointer rounded-md border px-4 py-3 transition-colors',
+                  'cursor-pointer rounded-xl border px-4 py-3.5 transition-colors [&_*]:cursor-pointer',
                   item.tone === 'warning'
                     ? 'border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/10'
                     : 'border-primary/30 bg-primary/5 hover:bg-primary/10',
                 )}
               >
-                <p className="cursor-default text-sm font-medium">{item.title}</p>
-                <p className="mt-0.5 cursor-default text-xs text-muted-foreground">{item.detail}</p>
+                <p className="text-sm font-medium">{item.title}</p>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{item.detail}</p>
               </Link>
             ))}
           </section>
@@ -232,18 +242,18 @@ export function AdminDashboardPage() {
             <Link
               key={item.href}
               to={item.href}
-              className="cursor-pointer rounded-md border border-border/70 bg-card/50 p-2.5 transition-colors hover:border-primary/40 hover:bg-card sm:p-3 lg:px-3 lg:py-2.5 [&_*]:cursor-pointer"
+              className="cursor-pointer rounded-xl border border-border/70 bg-card/50 p-2.5 transition-colors hover:border-primary/40 hover:bg-card sm:p-3 lg:px-3 lg:py-2.5 [&_*]:cursor-pointer"
             >
-              <p className="truncate text-[9px] uppercase tracking-[0.1em] text-muted-foreground sm:text-[10px] sm:tracking-[0.12em]">
+              <p className="truncate text-[10px] uppercase tracking-[0.1em] text-muted-foreground sm:tracking-[0.12em]">
                 {item.label}
               </p>
-              <p className="mt-1 text-base font-semibold tracking-tight tabular-nums sm:text-lg lg:text-xl">
+              <p className="mt-1.5 text-base font-semibold tracking-tight tabular-nums sm:text-lg lg:text-xl">
                 {item.value}
               </p>
               {item.hint ? (
                 <Badge
                   variant="warning"
-                  className="mt-1 max-w-full truncate text-[9px] sm:mt-1.5 sm:text-[10px]"
+                  className="mt-1.5 max-w-full truncate text-[10px]"
                 >
                   {item.hint}
                 </Badge>
@@ -254,16 +264,16 @@ export function AdminDashboardPage() {
           ))}
         </section>
 
-        <section className="mt-8 grid gap-4 sm:gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-md border border-border/70 bg-card/50 p-4 sm:p-6">
-            <div className="flex flex-wrap items-center justify-between gap-3">
+        <section className="mt-8 grid min-w-0 gap-4 sm:gap-5 lg:grid-cols-[1.2fr_0.8fr] lg:gap-6">
+          <div className="min-w-0 overflow-hidden rounded-xl border border-border/70 bg-card/50 p-4 sm:p-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
               <div className="min-w-0">
-                <h2 className="cursor-default text-sm font-semibold tracking-tight">
+                <h2 className="cursor-default text-[15px] font-semibold tracking-tight sm:text-sm">
                   {fr ? `Audience · ${periodLabel(period, true)}` : `Audience · ${periodLabel(period, false)}`}
                 </h2>
               </div>
               <div
-                className="inline-flex rounded-md border border-border/70 bg-muted/30 p-0.5"
+                className="inline-flex w-full max-w-full rounded-lg border border-border/70 bg-muted/30 p-1 sm:w-auto"
                 role="group"
                 aria-label={fr ? 'Période' : 'Period'}
               >
@@ -273,7 +283,7 @@ export function AdminDashboardPage() {
                     type="button"
                     onClick={() => setPeriod(p.value)}
                     className={cn(
-                      'cursor-pointer rounded-md px-2.5 py-1 text-[11px] font-medium transition-colors',
+                      'min-h-9 flex-1 cursor-pointer rounded-md px-2.5 text-[11px] font-medium transition-colors sm:flex-none sm:px-3',
                       period === p.value
                         ? 'bg-background text-foreground shadow-sm'
                         : 'text-muted-foreground hover:text-foreground',
@@ -306,7 +316,7 @@ export function AdminDashboardPage() {
               </p>
             ) : (
               <>
-                <div className="mt-5 grid grid-cols-2 gap-3 sm:mt-6 sm:grid-cols-4 sm:gap-4">
+                <div className="mt-5 grid grid-cols-2 gap-x-3 gap-y-4 sm:mt-6 sm:grid-cols-4 sm:gap-4">
                   {[
                     { k: fr ? 'Visiteurs' : 'Visitors', v: overview?.visitors ?? 0 },
                     { k: fr ? 'Pages vues' : 'Pageviews', v: overview?.pageviews ?? 0 },
@@ -316,18 +326,16 @@ export function AdminDashboardPage() {
                       v: formatDuration(overview?.visitDuration ?? 0, fr),
                     },
                   ].map((m) => (
-                    <div key={m.k}>
-                      <p className="cursor-default text-[10px] text-muted-foreground sm:text-[11px]">
-                        {m.k}
-                      </p>
-                      <p className="mt-1 cursor-default text-lg font-semibold tabular-nums tracking-tight sm:text-xl">
+                    <div key={m.k} className="min-w-0">
+                      <p className="cursor-default text-[11px] text-muted-foreground">{m.k}</p>
+                      <p className="mt-1 cursor-default text-xl font-semibold tabular-nums tracking-tight sm:text-xl">
                         {m.v}
                       </p>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-6 sm:mt-7">
+                <div className="mt-6 min-w-0 sm:mt-7">
                   <p className="cursor-default text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
                     {fr ? 'Tendance' : 'Trend'}
                   </p>
@@ -338,12 +346,12 @@ export function AdminDashboardPage() {
                   />
                 </div>
 
-                <div className="mt-6 grid gap-5 sm:mt-8 sm:grid-cols-2 sm:gap-6">
-                  <div>
+                <div className="mt-6 grid min-w-0 gap-6 sm:mt-8 sm:grid-cols-2 sm:gap-6">
+                  <div className="min-w-0">
                     <p className="cursor-default text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
                       {fr ? 'Articles' : 'Articles'}
                     </p>
-                    <ul className="mt-3 space-y-2.5">
+                    <ul className="mt-3 space-y-3">
                       {(overview?.topBlogs ?? []).length === 0 ? (
                         <li className="cursor-default text-xs text-muted-foreground">
                           {fr ? 'Pas encore de données' : 'No data yet'}
@@ -352,15 +360,15 @@ export function AdminDashboardPage() {
                         overview!.topBlogs.map((row) => (
                           <li
                             key={row.path}
-                            className="flex items-center justify-between gap-3 text-sm"
+                            className="flex min-w-0 items-center justify-between gap-3 text-sm"
                           >
                             <Link
                               to={adminPath('blogs')}
-                              className="cursor-pointer truncate py-0.5 text-foreground/90 hover:text-primary"
+                              className="min-w-0 cursor-pointer truncate py-0.5 text-foreground/90 hover:text-primary"
                             >
                               {row.slug}
                             </Link>
-                            <span className="cursor-default tabular-nums text-muted-foreground">
+                            <span className="shrink-0 cursor-default tabular-nums text-muted-foreground">
                               {row.views}
                             </span>
                           </li>
@@ -368,11 +376,11 @@ export function AdminDashboardPage() {
                       )}
                     </ul>
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="cursor-default text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
                       {fr ? 'Projets' : 'Projects'}
                     </p>
-                    <ul className="mt-3 space-y-2.5">
+                    <ul className="mt-3 space-y-3">
                       {(overview?.topProjects ?? []).length === 0 ? (
                         <li className="cursor-default text-xs text-muted-foreground">
                           {fr ? 'Pas encore de données' : 'No data yet'}
@@ -381,12 +389,15 @@ export function AdminDashboardPage() {
                         overview!.topProjects.map((row) => (
                           <li
                             key={row.path}
-                            className="flex items-center justify-between gap-3 text-sm"
+                            className="flex min-w-0 items-center justify-between gap-3 text-sm"
                           >
-                            <span className="cursor-default truncate py-0.5 text-foreground/90">
+                            <Link
+                              to={adminPath('projects')}
+                              className="min-w-0 cursor-pointer truncate py-0.5 text-foreground/90 hover:text-primary"
+                            >
                               {row.slug}
-                            </span>
-                            <span className="cursor-default tabular-nums text-muted-foreground">
+                            </Link>
+                            <span className="shrink-0 cursor-default tabular-nums text-muted-foreground">
                               {row.views}
                             </span>
                           </li>
@@ -396,7 +407,7 @@ export function AdminDashboardPage() {
                   </div>
                 </div>
 
-                <div className="mt-6">
+                <div className="mt-6 min-w-0">
                   <p className="cursor-default text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
                     {fr ? 'Sources' : 'Sources'}
                   </p>
@@ -406,24 +417,27 @@ export function AdminDashboardPage() {
             )}
           </div>
 
-          <div className="space-y-4 sm:space-y-6">
-            <div className="rounded-md border border-border/70 bg-card/50 p-4 sm:p-6">
-              <h2 className="cursor-default text-sm font-semibold tracking-tight">
+          <div className="min-w-0 space-y-4 sm:space-y-5">
+            <div className="min-w-0 overflow-hidden rounded-xl border border-border/70 bg-card/50 p-4 sm:p-6">
+              <h2 className="cursor-default text-[15px] font-semibold tracking-tight sm:text-sm">
                 {fr ? 'Pages fortes' : 'Top pages'}
               </h2>
               {analytics.isPending ? (
                 <p className="mt-4 cursor-default text-xs text-muted-foreground">…</p>
               ) : (
-                <ul className="mt-4 space-y-3">
+                <ul className="mt-4 space-y-3.5">
                   {(overview?.topPages ?? []).slice(0, 6).map((row, i) => (
-                    <li key={row.path} className="flex items-center justify-between gap-3 text-sm">
-                      <span className="flex min-w-0 items-center gap-2">
-                        <span className="cursor-default font-mono text-[10px] text-muted-foreground">
+                    <li
+                      key={row.path}
+                      className="flex min-w-0 items-center justify-between gap-3 text-sm"
+                    >
+                      <span className="flex min-w-0 items-center gap-2.5">
+                        <span className="w-5 shrink-0 cursor-default font-mono text-[10px] tabular-nums text-muted-foreground">
                           {String(i + 1).padStart(2, '0')}
                         </span>
-                        <span className="cursor-default truncate">{row.path}</span>
+                        <span className="min-w-0 cursor-default truncate">{row.path}</span>
                       </span>
-                      <span className="cursor-default tabular-nums text-muted-foreground">
+                      <span className="shrink-0 cursor-default tabular-nums text-muted-foreground">
                         {row.pageviews}
                       </span>
                     </li>
@@ -437,16 +451,16 @@ export function AdminDashboardPage() {
               )}
             </div>
 
-            <div className="rounded-md border border-border/70 bg-card/50 p-4 sm:p-6">
+            <div className="min-w-0 overflow-hidden rounded-xl border border-border/70 bg-card/50 p-4 sm:p-6">
               <div className="flex items-baseline justify-between gap-3">
-                <h2 className="cursor-default text-sm font-semibold tracking-tight">
+                <h2 className="cursor-default text-[15px] font-semibold tracking-tight sm:text-sm">
                   {fr ? 'Signaux produit' : 'Product signals'}
                 </h2>
-                <span className="cursor-default text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+                <span className="shrink-0 cursor-default text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
                   {PERIODS.find((p) => p.value === period)?.[fr ? 'fr' : 'en']}
                 </span>
               </div>
-              <p className="mt-1 cursor-default text-[11px] text-muted-foreground">
+              <p className="mt-1.5 cursor-default text-[12px] leading-relaxed text-muted-foreground">
                 {fr
                   ? 'Actions clés du site public — hors pageviews auto.'
                   : 'Key public-site actions — excluding auto pageviews.'}
@@ -455,7 +469,7 @@ export function AdminDashboardPage() {
               {analytics.isPending ? (
                 <p className="mt-4 cursor-default text-xs text-muted-foreground">…</p>
               ) : !hasProductSignal && otherProductEvents.length === 0 ? (
-                <p className="mt-5 cursor-default text-xs text-muted-foreground">
+                <p className="mt-4 cursor-default text-xs leading-relaxed text-muted-foreground">
                   {fr
                     ? `Pas encore de signal produit sur ${periodLabel(period, true)}.`
                     : `No product signals in the last ${periodLabel(period, false)}.`}

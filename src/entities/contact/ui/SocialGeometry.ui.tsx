@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaGithub, FaLinkedin, FaFacebookF, FaYoutube } from 'react-icons/fa6';
+import { trackSocialClick } from '@/app/lib/analytics';
 import { cn } from '@/shared/lib/utils';
 import { usePublicContactInfo } from '../hooks/useContact';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
@@ -77,6 +78,7 @@ export function SocialGeometry() {
               aria-label={label}
               title={label}
               className="group relative flex flex-col items-center gap-2"
+              onClick={() => trackSocialClick(id, 'contact_social')}
             >
               <span
                 className={cn(

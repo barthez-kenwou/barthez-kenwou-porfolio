@@ -210,14 +210,12 @@ export const AdminExperiencesPage: React.FC = () => {
           isPending={isPending}
           isError={isError}
           errorMessage={isApiError(error) ? error.message : undefined}
-          empty={!isPending && !isError && items.length === 0}
-          emptyTitle={fr ? 'Aucune expérience' : 'No experiences'}
         >
           <AdminDataTable
             data={items}
             getRowId={(r) => String(r.id)}
             searchKeys={['titleFr', 'titleEn', 'companyFr', 'companyEn', 'period']}
-            emptyTitle={fr ? 'Aucun élément' : 'No items'}
+            emptyTitle={fr ? 'Aucune expérience' : 'No experiences'}
             columns={[
               {
                 key: 'title',

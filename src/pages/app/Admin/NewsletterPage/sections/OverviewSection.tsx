@@ -183,38 +183,38 @@ export function OverviewSection({ fr, onNavigate }: Props) {
               ? recentCampaignsQuery.error.message
               : undefined
           }
-          empty={
-            !recentCampaignsQuery.isPending &&
-            !recentCampaignsQuery.isError &&
-            recent.length === 0
-          }
-          emptyTitle={fr ? 'Aucune campagne' : 'No campaigns yet'}
         >
-          <ul className="divide-y divide-border/60">
-            {recent.map((c) => (
-              <li
-                key={c.id}
-                className="flex flex-wrap items-center justify-between gap-2 py-3 first:pt-0 last:pb-0"
-              >
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium">
-                    {fr ? c.subjectFr || c.subjectEn : c.subjectEn || c.subjectFr}
-                  </p>
-                  <p className="mt-0.5 text-xs text-muted-foreground">
-                    {campaignTypeLabel(c.type, fr)} · {formatDate(c.createdAt, fr)}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs tabular-nums text-muted-foreground">
-                    {c.sentCount ?? 0}/{c.totalRecipients ?? 0}
-                  </span>
-                  <Badge variant={campaignStatusVariant(c.status)}>
-                    {campaignStatusLabel(c.status, fr)}
-                  </Badge>
-                </div>
-              </li>
-            ))}
-          </ul>
+          {recent.length === 0 ? (
+            <p className="cursor-default py-6 text-center text-sm text-muted-foreground">
+              {fr ? 'Aucune campagne récente.' : 'No recent campaigns.'}
+            </p>
+          ) : (
+            <ul className="divide-y divide-border/60">
+              {recent.map((c) => (
+                <li
+                  key={c.id}
+                  className="flex flex-wrap items-center justify-between gap-2 py-3 first:pt-0 last:pb-0"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium">
+                      {fr ? c.subjectFr || c.subjectEn : c.subjectEn || c.subjectFr}
+                    </p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      {campaignTypeLabel(c.type, fr)} · {formatDate(c.createdAt, fr)}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs tabular-nums text-muted-foreground">
+                      {c.sentCount ?? 0}/{c.totalRecipients ?? 0}
+                    </span>
+                    <Badge variant={campaignStatusVariant(c.status)}>
+                      {campaignStatusLabel(c.status, fr)}
+                    </Badge>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </QueryState>
       </AdminSectionCard>
     </div>

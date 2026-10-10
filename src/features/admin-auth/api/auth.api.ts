@@ -207,6 +207,69 @@ export async function fetchCurrentUser(): Promise<AuthUser> {
   return toAuthUser(me);
 }
 
+export type UpdateOwnProfileInput = {
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  avatarFile?: File;
+};
+
+export async function updateOwnProfile(input: UpdateOwnProfileInput): Promise<AuthUser> {
+  const { avatarFile, ...fields } = input;
+
+  if (avatarFile) {
+    const form = new FormData();
+    if (fields.firstName !== undefined) form.append('firstName', fields.firstName);
+    if (fields.lastName !== undefined) form.append('lastName', fields.lastName);
+    if (fields.phone !== undefined) form.append('phone', fields.phone);
+    form.append('avatar', avatarFile);
+    const me = await apiClient.put<MeProfile>('/users/profile', form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return toAuthUser(me);
+  }
+
+  const me = await apiClient.put<MeProfile>('/users/profile', fields);
+  return toAuthUser(me);
+}
+
+export async function deleteOwnAvatar(): Promise<AuthUser> {
+  const me = await apiClient.delete<MeProfile>('/users/profile/avatar');
+  return toAuthUser(me);
+}
+
+export async function changePassword(input: {
+  currentPassword: string;
+  newPassword: string;
+}): Promise<void> {
+  await apiClient.post('/auth/change-password', input);
+}
+
+export type TotpEnrollResult = {
+  secret?: string;
+  qrCode?: string;
+  qrCodeDataUrl?: string;
+  otpauthUrl?: string;
+  provisioningUri?: string;
+};
+
+export async function enrollTotp(): Promise<TotpEnrollResult> {
+  return apiClient.post<TotpEnrollResult>('/auth/totp/enroll');
+}
+
+export async function confirmTotp(code: string): Promise<AuthUser> {
+  const me = await apiClient.post<MeProfile>('/auth/totp/confirm', { totpCode: code });
+  return toAuthUser(me);
+}
+
+export async function disableTotp(input: {
+  password: string;
+  totpCode: string;
+}): Promise<AuthUser> {
+  const me = await apiClient.post<MeProfile>('/auth/totp/disable', input);
+  return toAuthUser(me);
+}
+
 export async function logoutFromApi(): Promise<void> {
   try {
     const session = loadSession();

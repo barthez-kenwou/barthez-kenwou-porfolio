@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { trackProjectFilter } from '@/app/lib/analytics';
 import { usePublicProjects } from '@/entities/projets/hooks/useProjects';
 import type { IProject, ProjectRole, ProjectStatus } from '@/entities/projets/model/project.types';
 
@@ -112,19 +113,30 @@ export const useProjectFilters = () => {
     filters.techs.length + (filters.role ? 1 : 0) + (filters.status ? 1 : 0);
 
   // ── Actions ───────────────────────────────────────────────────────────────
-  const setCategory = (category: string) => setFilters((prev) => ({ ...prev, category }));
+  const setCategory = (category: string) => {
+    trackProjectFilter('category', category);
+    setFilters((prev) => ({ ...prev, category }));
+  };
 
-  const toggleTech = (tech: string) =>
+  const toggleTech = (tech: string) => {
+    trackProjectFilter('tech', tech);
     setFilters((prev) => ({
       ...prev,
       techs: prev.techs.includes(tech)
         ? prev.techs.filter((t) => t !== tech)
         : [...prev.techs, tech],
     }));
+  };
 
-  const setRole = (role: ProjectRole | null) => setFilters((prev) => ({ ...prev, role }));
+  const setRole = (role: ProjectRole | null) => {
+    if (role) trackProjectFilter('role', role);
+    setFilters((prev) => ({ ...prev, role }));
+  };
 
-  const setStatus = (status: ProjectStatus | null) => setFilters((prev) => ({ ...prev, status }));
+  const setStatus = (status: ProjectStatus | null) => {
+    if (status) trackProjectFilter('status', status);
+    setFilters((prev) => ({ ...prev, status }));
+  };
 
   const resetSecondaryFilters = () =>
     setFilters((prev) => ({ ...prev, techs: [], role: null, status: null }));

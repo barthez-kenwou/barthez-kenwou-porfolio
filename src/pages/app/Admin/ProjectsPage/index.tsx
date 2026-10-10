@@ -105,8 +105,6 @@ export function AdminProjectsPage() {
         isPending={isPending}
         isError={isError}
         errorMessage={isApiError(error) ? error.message : undefined}
-        empty={!isPending && !isError && projects.length === 0}
-        emptyTitle={fr ? 'Aucun projet' : 'No projects'}
       >
         <AdminDataTable<IProject>
           data={projects}

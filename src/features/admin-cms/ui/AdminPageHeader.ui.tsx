@@ -17,11 +17,11 @@ export function AdminPageHeader({ title, actions, className }: AdminPageHeaderPr
   return (
     <div
       className={cn(
-        'mb-5 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-center sm:justify-between sm:gap-4',
+        'mb-5 flex flex-col gap-3.5 sm:mb-7 sm:flex-row sm:items-center sm:justify-between sm:gap-4',
         className,
       )}
     >
-      <h1 className="text-[1.35rem] font-semibold tracking-tight text-foreground sm:text-[1.65rem]">
+      <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-[1.65rem]">
         {title}
       </h1>
       {actions ? (

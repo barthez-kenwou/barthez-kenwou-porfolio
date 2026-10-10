@@ -186,8 +186,6 @@ export function CampaignsSection({ fr }: Props) {
         errorMessage={
           isApiError(campaignsQuery.error) ? campaignsQuery.error.message : undefined
         }
-        empty={!campaignsQuery.isPending && !campaignsQuery.isError && campaigns.length === 0}
-        emptyTitle={fr ? 'Aucune campagne' : 'No campaigns'}
       >
         <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <AdminDataTable

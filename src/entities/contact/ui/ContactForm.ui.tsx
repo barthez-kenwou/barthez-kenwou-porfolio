@@ -208,6 +208,10 @@ export const ContactForm: React.FC = () => {
     form.setValue('message', prefill.message, { shouldDirty: false });
   }, [prefillKey, prefill.subject, prefill.message, form]);
 
+  const onFormFieldFocus = () => {
+    void import('@/app/lib/analytics').then((m) => m.trackContactStart('contact_form'));
+  };
+
   const onSubmit = async (values: ContactFormValues) => {
     setIsSubmitted(true);
     try {
@@ -254,6 +258,7 @@ export const ContactForm: React.FC = () => {
                       value={field.value}
                       onChange={field.onChange}
                       onBlur={field.onBlur}
+                      onFocus={onFormFieldFocus}
                       name={field.name}
                       invalid={Boolean(fieldState.error)}
                       ref={field.ref}
@@ -275,6 +280,7 @@ export const ContactForm: React.FC = () => {
                       value={field.value}
                       onChange={field.onChange}
                       onBlur={field.onBlur}
+                      onFocus={onFormFieldFocus}
                       name={field.name}
                       invalid={Boolean(fieldState.error)}
                       ref={field.ref}
@@ -297,6 +303,7 @@ export const ContactForm: React.FC = () => {
                     value={field.value}
                     onChange={field.onChange}
                     onBlur={field.onBlur}
+                    onFocus={onFormFieldFocus}
                     name={field.name}
                     invalid={Boolean(fieldState.error)}
                     ref={field.ref}
@@ -320,6 +327,7 @@ export const ContactForm: React.FC = () => {
                     value={field.value}
                     onChange={field.onChange}
                     onBlur={field.onBlur}
+                    onFocus={onFormFieldFocus}
                     name={field.name}
                     invalid={Boolean(fieldState.error)}
                     ref={field.ref}

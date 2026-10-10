@@ -1,5 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react';
-import { ChevronLeft, ChevronRight, Search, SlidersHorizontal } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Search, SlidersHorizontal, X } from 'lucide-react';
 import { Input } from '@/shared/ui/input';
 import { Button } from '@/shared/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
@@ -61,10 +61,10 @@ function rowMatchesQuery<T>(row: T, query: string, searchKeys?: string[]) {
   }
 }
 
-function readCellValue<T>(row: T, key: string): ReactNode {
+function readCellValue<T>(row: T, key: string, isFr: boolean): ReactNode {
   const value = (row as Record<string, unknown>)[key];
   if (value == null) return '-';
-  if (typeof value === 'boolean') return value ? 'Yes' : 'No';
+  if (typeof value === 'boolean') return value ? (isFr ? 'Oui' : 'Yes') : isFr ? 'Non' : 'No';
   if (typeof value === 'object') return JSON.stringify(value);
   return String(value);
 }
@@ -86,6 +86,7 @@ export function AdminDataTable<T>({
 }: AdminDataTableProps<T>) {
   const language = useLanguageStore((s) => s.language);
   const isFr = language === 'fr';
+  const allLabel = isFr ? 'Tous' : 'All';
   const [query, setQuery] = useState('');
   const [pageSize, setPageSize] = useState<number>(defaultPageSize);
   const [page, setPage] = useState(1);
@@ -115,6 +116,13 @@ export function AdminDataTable<T>({
   const primaryCol = columns[0];
   const mobileMetaCols = columns.slice(1).filter((c) => !c.hideOnMobile);
   const activeFilterCount = Object.values(filterValues).filter((v) => v && v !== 'all').length;
+  const hasActiveFilters = activeFilterCount > 0 || query.trim().length > 0;
+
+  const clearFilters = () => {
+    setFilterValues({});
+    setQuery('');
+    setPage(1);
+  };
 
   const filterSelects = filters.map((f) => (
     <Select
@@ -125,11 +133,13 @@ export function AdminDataTable<T>({
         setPage(1);
       }}
     >
-      <SelectTrigger className="h-10 w-full min-w-0 md:h-9 md:w-[9.5rem]">
+      <SelectTrigger className="h-10 w-full min-w-0 md:h-9 md:w-[9.5rem]" aria-label={f.label}>
         <SelectValue placeholder={f.label} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="all">{f.label}</SelectItem>
+        <SelectItem value="all">
+          {allLabel} · {f.label}
+        </SelectItem>
         {f.options.map((o) => (
           <SelectItem key={o.value} value={o.value} className="max-w-[18rem]">
             <span className="truncate">{o.label}</span>
@@ -164,10 +174,24 @@ export function AdminDataTable<T>({
     </Select>
   );
 
+  const clearButton =
+    hasActiveFilters || activeFilterCount > 0 ? (
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        className="h-10 shrink-0 cursor-pointer gap-1.5 px-2 text-muted-foreground md:h-9"
+        onClick={clearFilters}
+      >
+        <X className="size-3.5" />
+        {isFr ? 'Effacer' : 'Clear'}
+      </Button>
+    ) : null;
+
   return (
-    <div className={cn('space-y-3', className)}>
-      <div className="flex flex-col gap-2">
-        <div className="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
+    <div className={cn('min-w-0 space-y-3.5', className)}>
+      <div className="flex flex-col gap-2.5">
+        <div className="grid gap-2.5 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
           <div className="relative min-w-0">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground md:left-2.5 md:size-3.5" />
             <Input
@@ -184,13 +208,14 @@ export function AdminDataTable<T>({
           <div className="hidden items-center gap-2 md:flex">
             {filterSelects}
             {pageSizeSelect}
+            {clearButton}
             {toolbar}
           </div>
 
           <div className="flex items-center gap-2 md:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button type="button" variant="outline" className="h-11 flex-1 gap-2 shadow-none">
+                <Button type="button" variant="outline" className="h-11 flex-1 cursor-pointer gap-2 shadow-none">
                   <SlidersHorizontal className="size-4" />
                   {isFr ? 'Filtres' : 'Filters'}
                   {activeFilterCount > 0 ? (
@@ -219,6 +244,17 @@ export function AdminDataTable<T>({
                     </p>
                     <div className="max-w-[6.5rem]">{pageSizeSelect}</div>
                   </div>
+                  {hasActiveFilters ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="h-11 w-full cursor-pointer gap-2"
+                      onClick={clearFilters}
+                    >
+                      <X className="size-4" />
+                      {isFr ? 'Effacer filtres' : 'Clear filters'}
+                    </Button>
+                  ) : null}
                 </div>
               </SheetContent>
             </Sheet>
@@ -231,12 +267,12 @@ export function AdminDataTable<T>({
         <AdminEmptyState title={emptyTitle} description={emptyDescription ?? ''} />
       ) : (
         <>
-          <div className="space-y-2.5 md:hidden">
+          <div className="space-y-3 md:hidden">
             {pageRows.map((row) => (
               <article
                 key={getRowId(row)}
                 className={cn(
-                  'rounded-md border border-border/60 bg-card/40 p-3.5',
+                  'min-w-0 overflow-hidden rounded-xl border border-border/60 bg-card/40 p-4',
                   onRowClick && 'cursor-pointer active:bg-muted/40',
                 )}
                 onClick={() => onRowClick?.(row)}
@@ -250,27 +286,27 @@ export function AdminDataTable<T>({
                 role={onRowClick ? 'button' : undefined}
                 tabIndex={onRowClick ? 0 : undefined}
               >
-                <div className="min-w-0 overflow-hidden">
+                <div className="min-w-0 overflow-hidden break-words text-[15px] font-medium leading-snug [&_*]:break-words">
                   {primaryCol?.render
                     ? primaryCol.render(row)
                     : primaryCol
-                      ? readCellValue(row, primaryCol.key)
+                      ? readCellValue(row, primaryCol.key, isFr)
                       : null}
                 </div>
 
                 {mobileMetaCols.length > 0 ? (
-                  <dl className="mt-3 space-y-2 border-t border-border/50 pt-3">
+                  <dl className="mt-3.5 space-y-2.5 border-t border-border/50 pt-3.5">
                     {mobileMetaCols.map((col) => (
-                      <div key={col.key} className="flex items-start justify-between gap-3">
-                        <dt className="shrink-0 cursor-default text-[11px] text-muted-foreground">
+                      <div key={col.key} className="grid gap-0.5">
+                        <dt className="cursor-default text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
                           {col.header}
                         </dt>
                         <dd
-                          className="min-w-0 max-w-[70%] overflow-hidden text-right text-sm"
+                          className="min-w-0 overflow-hidden break-all text-sm leading-snug"
                           onClick={(e) => e.stopPropagation()}
                           onKeyDown={(e) => e.stopPropagation()}
                         >
-                          {col.render ? col.render(row) : readCellValue(row, col.key)}
+                          {col.render ? col.render(row) : readCellValue(row, col.key, isFr)}
                         </dd>
                       </div>
                     ))}
@@ -279,7 +315,7 @@ export function AdminDataTable<T>({
 
                 {actions ? (
                   <div
-                    className="mt-3 flex flex-wrap justify-end gap-1 border-t border-border/50 pt-3"
+                    className="mt-3.5 flex flex-wrap justify-end gap-1.5 border-t border-border/50 pt-3.5 [&_button]:size-10 [&_a]:size-10"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {actions(row)}
@@ -289,7 +325,7 @@ export function AdminDataTable<T>({
             ))}
           </div>
 
-          <div className="hidden overflow-hidden rounded-md border border-border/60 bg-card/30 md:block">
+          <div className="hidden overflow-hidden rounded-xl border border-border/60 bg-card/30 md:block">
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
@@ -319,7 +355,7 @@ export function AdminDataTable<T>({
                       {columns.map((col) => (
                         <TableCell key={col.key} className={cn('max-w-[18rem]', col.className)}>
                           <div className="min-w-0 overflow-hidden">
-                            {col.render ? col.render(row) : readCellValue(row, col.key)}
+                            {col.render ? col.render(row) : readCellValue(row, col.key, isFr)}
                           </div>
                         </TableCell>
                       ))}
@@ -346,7 +382,7 @@ export function AdminDataTable<T>({
                 type="button"
                 size="icon"
                 variant="outline"
-                className="size-11 shadow-none md:size-8"
+                className="size-11 cursor-pointer shadow-none md:size-8"
                 disabled={safePage <= 1}
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
               >
@@ -356,7 +392,7 @@ export function AdminDataTable<T>({
                 type="button"
                 size="icon"
                 variant="outline"
-                className="size-11 shadow-none md:size-8"
+                className="size-11 cursor-pointer shadow-none md:size-8"
                 disabled={safePage >= totalPages}
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               >

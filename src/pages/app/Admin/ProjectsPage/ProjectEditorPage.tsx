@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Loader2, Plus, Save, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import type {
@@ -24,6 +24,8 @@ import {
   MediaUrlListEditor,
   MermaidEditor,
   StringListEditor,
+  useDraftDirtyFlag,
+  useUnsavedChangesGuard,
 } from '@/features/admin-cms';
 import { isApiError } from '@/shared/api';
 import { QueryState } from '@/shared/ui/QueryState';
@@ -110,18 +112,26 @@ export const AdminProjectEditorPage: React.FC = () => {
   const [draft, setDraft] = React.useState<ProjectDraft>(emptyProject());
   const [hydrated, setHydrated] = React.useState(isNew);
   const saving = create.isPending || update.isPending;
+  const { isDirty, markClean, resetBaseline } = useDraftDirtyFlag(draft);
+  const { dialog: unsavedDialog, allowNextNavigation } = useUnsavedChangesGuard(
+    isDirty && hydrated && !saving,
+  );
 
   React.useEffect(() => {
     if (isNew) {
-      setDraft(emptyProject());
+      const initial = emptyProject();
+      setDraft(initial);
       setHydrated(true);
+      resetBaseline(initial);
       return;
     }
     if (project) {
-      setDraft({ ...project });
+      const next = { ...project };
+      setDraft(next);
       setHydrated(true);
+      resetBaseline(next);
     }
-  }, [isNew, project]);
+  }, [isNew, project, resetBaseline]);
 
   const patch = <K extends keyof IProject>(key: K, value: IProject[K]) =>
     setDraft((d) => ({ ...d, [key]: value }));
@@ -135,10 +145,13 @@ export const AdminProjectEditorPage: React.FC = () => {
     try {
       if (isNew || draft.id === undefined || draft.id === null || draft.id === '') {
         const created = await create.mutateAsync(payload);
+        markClean({ ...draft, id: created.id });
+        allowNextNavigation();
         toast.success(fr ? 'Projet enregistré' : 'Project saved');
         navigate(adminPath('projects', String(created.id)), { replace: true });
       } else {
         await update.mutateAsync({ id: String(draft.id), payload });
+        markClean(draft);
         toast.success(fr ? 'Projet enregistré' : 'Project saved');
       }
     } catch (e) {
@@ -151,22 +164,26 @@ export const AdminProjectEditorPage: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-24 md:pb-0">
+      {unsavedDialog}
       <AdminPageHeader
         title={
           isNew ? (fr ? 'Nouveau projet' : 'New project') : fr ? 'Éditer le projet' : 'Edit project'
         }
         actions={
           <AdminStickyActions>
-            <Button variant="outline" asChild className="flex-1 md:flex-none">
-              <Link to={adminPath('projects')}>
-                <ArrowLeft className="size-4" />
-                {fr ? 'Retour' : 'Back'}
-              </Link>
+            <Button
+              type="button"
+              variant="outline"
+              className="flex-1 cursor-pointer md:flex-none"
+              onClick={() => navigate(adminPath('projects'))}
+            >
+              <ArrowLeft className="size-4" />
+              {fr ? 'Retour' : 'Back'}
             </Button>
             <Button
               onClick={() => void save()}
               disabled={saving || (!isNew && !hydrated)}
-              className="flex-[1.4] md:flex-none"
+              className="flex-[1.4] cursor-pointer md:flex-none"
             >
               {saving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
               {fr ? 'Enregistrer' : 'Save'}

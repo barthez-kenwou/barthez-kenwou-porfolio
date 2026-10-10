@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Loader2, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import type { IBlog } from '@/entities/blogs/model/blog.type';
@@ -17,6 +17,8 @@ import {
   MarkdownEditor,
   MediaCoverField,
   StringListEditor,
+  useDraftDirtyFlag,
+  useUnsavedChangesGuard,
 } from '@/features/admin-cms';
 import { isApiError } from '@/shared/api';
 import { QueryState } from '@/shared/ui/QueryState';
@@ -62,19 +64,27 @@ export const AdminBlogEditorPage: React.FC = () => {
   const [draft, setDraft] = React.useState(emptyBlog());
   const [hydrated, setHydrated] = React.useState(isNew);
   const saving = create.isPending || update.isPending;
+  const { isDirty, markClean, resetBaseline } = useDraftDirtyFlag(draft);
+  const { dialog: unsavedDialog, allowNextNavigation } = useUnsavedChangesGuard(
+    isDirty && hydrated && !saving,
+  );
 
   React.useEffect(() => {
     if (isNew) {
-      setDraft(emptyBlog());
+      const initial = emptyBlog();
+      setDraft(initial);
       setHydrated(true);
+      resetBaseline(initial);
       return;
     }
     const blog = blogResult;
     if (blog) {
-      setDraft({ ...blog });
+      const next = { ...blog };
+      setDraft(next);
       setHydrated(true);
+      resetBaseline(next);
     }
-  }, [isNew, blogResult]);
+  }, [isNew, blogResult, resetBaseline]);
 
   const patch = <K extends keyof IBlog>(key: K, value: IBlog[K]) =>
     setDraft((d) => ({ ...d, [key]: value }));
@@ -121,12 +131,16 @@ export const AdminBlogEditorPage: React.FC = () => {
     try {
       if (isNew || !draft.id) {
         const created = await create.mutateAsync(payload);
+        markClean({ ...draft, ...payload, id: created.id });
+        allowNextNavigation();
         toast.success(fr ? 'Article enregistré' : 'Article saved');
         navigate(adminPath('blogs', created.slug || created.id), { replace: true });
       } else {
         const saved = await update.mutateAsync({ id: draft.id, payload });
+        markClean({ ...draft, ...payload, ...saved });
         toast.success(fr ? 'Article enregistré' : 'Article saved');
         if (saved.slug && saved.slug !== blogId) {
+          allowNextNavigation();
           navigate(adminPath('blogs', saved.slug), { replace: true });
         }
       }
@@ -137,22 +151,26 @@ export const AdminBlogEditorPage: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-24 md:pb-0">
+      {unsavedDialog}
       <AdminPageHeader
         title={
           isNew ? (fr ? 'Nouvel article' : 'New article') : fr ? 'Éditer l’article' : 'Edit article'
         }
         actions={
           <AdminStickyActions>
-            <Button variant="outline" asChild className="flex-1 md:flex-none">
-              <Link to={adminPath('blogs')}>
-                <ArrowLeft className="size-4" />
-                {fr ? 'Retour' : 'Back'}
-              </Link>
+            <Button
+              type="button"
+              variant="outline"
+              className="flex-1 cursor-pointer md:flex-none"
+              onClick={() => navigate(adminPath('blogs'))}
+            >
+              <ArrowLeft className="size-4" />
+              {fr ? 'Retour' : 'Back'}
             </Button>
             <Button
               onClick={() => void save()}
               disabled={saving || (!isNew && !hydrated)}
-              className="flex-[1.4] md:flex-none"
+              className="flex-[1.4] cursor-pointer md:flex-none"
             >
               {saving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
               {fr ? 'Enregistrer' : 'Save'}

@@ -300,18 +300,14 @@ export const AdminContactInfoPage: React.FC = () => {
               </div>
             </AdminSectionCard>
 
-            <AdminSectionCard
-              title={fr ? 'Vidéo de présentation' : 'Presentation video'}
-              description=""
-            >
-              <Field label="">
-                <Input
-                  value={draft.presentationVideoUrl}
-                  onChange={(e) => patch('presentationVideoUrl', e.target.value)}
-                  className="cursor-text"
-                  placeholder="https://www.youtube.com/watch?v=…"
-                />
-              </Field>
+            <AdminSectionCard title={fr ? 'Vidéo de présentation' : 'Presentation video'}>
+              <Input
+                value={draft.presentationVideoUrl}
+                onChange={(e) => patch('presentationVideoUrl', e.target.value)}
+                className="cursor-text"
+                placeholder="https://www.youtube.com/watch?v=…"
+                aria-label={fr ? 'URL YouTube de présentation' : 'Presentation YouTube URL'}
+              />
             </AdminSectionCard>
           </TabsContent>
         </Tabs>

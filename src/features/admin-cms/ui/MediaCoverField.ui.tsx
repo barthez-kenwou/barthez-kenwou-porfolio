@@ -83,7 +83,7 @@ export function MediaCoverField({ label, value, onChange, className }: MediaCove
             disabled={uploading}
             onClick={() => inputRef.current?.click()}
             className={cn(
-              'flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-dashed border-border/70',
+              'flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border/70',
               'bg-muted/15 px-4 py-7 text-sm text-muted-foreground transition-colors hover:border-primary/35 hover:bg-muted/30',
               'disabled:cursor-not-allowed disabled:opacity-60',
             )}
@@ -117,7 +117,7 @@ export function MediaCoverField({ label, value, onChange, className }: MediaCove
       </Tabs>
 
       {value ? (
-        <div className="relative mt-3 overflow-hidden rounded-md border border-border/60">
+        <div className="relative mt-3 overflow-hidden rounded-xl border border-border/60">
           <img src={value} alt="" className="h-36 w-full object-cover" />
           <Button
             type="button"

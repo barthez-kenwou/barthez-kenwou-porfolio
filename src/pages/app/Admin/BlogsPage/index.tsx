@@ -121,8 +121,6 @@ export function AdminBlogsPage() {
         isPending={isPending}
         isError={isError}
         errorMessage={isApiError(error) ? error.message : undefined}
-        empty={!isPending && !isError && blogs.length === 0}
-        emptyTitle={fr ? 'Aucun article' : 'No articles'}
       >
         <AdminDataTable<IBlog>
           data={blogs}

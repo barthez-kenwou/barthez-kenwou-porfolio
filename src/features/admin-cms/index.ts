@@ -1,4 +1,3 @@
-export { useAdminCmsStore } from './model/useAdminCmsStore';
 export {
   dashboardApi,
   getDashboardSummary,
@@ -8,7 +7,6 @@ export type { AdminDashboardDto } from './api/dashboard.api';
 export { filesApi, uploadAdminImage, createPresignedUpload } from './api/files.api';
 export type { PresignedUpload } from './api/files.api';
 export { useAdminDashboard } from './hooks/useAdminDashboard';
-export { useDashboardSummary } from './hooks/useDashboard';
 export { useAdminAnalytics } from './hooks/useAdminAnalytics';
 export { useAdminAudit } from './hooks/useAdminAudit';
 export {
@@ -36,6 +34,10 @@ export { formatAdminDate } from './lib/formatAdminDate';
 export { getReorderTargets, sortBySortOrder } from './lib/reorder';
 export type { ReorderDirection, ReorderPatch, SortableItem } from './lib/reorder';
 export { useScrollToEditor } from './hooks/useScrollToEditor';
+export {
+  useUnsavedChangesGuard,
+  useDraftDirtyFlag,
+} from './hooks/useUnsavedChangesGuard';
 
 export { AdminPageHeader } from './ui/AdminPageHeader.ui';
 export type { AdminPageHeaderProps } from './ui/AdminPageHeader.ui';

@@ -3,6 +3,7 @@ import { Loader2, Send } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   AdminSectionCard,
+  AdminStickyActions,
   BilingualField,
   Field,
 } from '@/features/admin-cms';
@@ -116,24 +117,32 @@ export function ComposeSection({ fr, onSent }: Props) {
     }
   };
 
+  const sendButton = (
+    <Button
+      type="button"
+      className="cursor-pointer flex-1 md:flex-none"
+      onClick={openConfirm}
+      disabled={broadcast.isPending}
+    >
+      {broadcast.isPending ? (
+        <Loader2 className="size-4 animate-spin" />
+      ) : (
+        <Send className="size-4" />
+      )}
+      {fr ? 'Préparer l’envoi' : 'Prepare send'}
+    </Button>
+  );
+
   return (
-    <>
+    <div className="space-y-4 pb-20 md:pb-0">
+      <AdminStickyActions className="md:justify-end">{sendButton}</AdminStickyActions>
+
       <AdminSectionCard
         title={fr ? 'Composer une diffusion' : 'Compose broadcast'}
         description={
           fr
             ? `Envoi bilingue vers les abonnés actifs. Segment optionnel par locale.`
             : `Bilingual send to active subscribers. Optional locale segment.`
-        }
-        actions={
-          <Button size="sm" onClick={openConfirm} disabled={broadcast.isPending}>
-            {broadcast.isPending ? (
-              <Loader2 className="size-3.5 animate-spin" />
-            ) : (
-              <Send className="size-3.5" />
-            )}
-            {fr ? 'Préparer l’envoi' : 'Prepare send'}
-          </Button>
         }
       >
         <div className="mb-4 rounded-lg border border-border/60 bg-muted/15 px-3 py-2.5 text-sm">
@@ -272,6 +281,6 @@ export function ComposeSection({ fr, onSent }: Props) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </div>
   );
 }

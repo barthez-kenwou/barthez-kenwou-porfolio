@@ -167,7 +167,20 @@ export const AdminSkillsPage: React.FC = () => {
             data={items}
             getRowId={(r) => String(r.id)}
             searchKeys={['name', 'category']}
-            emptyTitle={fr ? 'Aucun élément' : 'No items'}
+            emptyTitle={fr ? 'Aucune compétence' : 'No skills'}
+            filters={
+              Array.from(new Set(items.map((i) => i.category).filter(Boolean))).length
+                ? [
+                    {
+                      key: 'category',
+                      label: fr ? 'Catégorie' : 'Category',
+                      options: Array.from(
+                        new Set(items.map((i) => i.category).filter(Boolean)),
+                      ).map((c) => ({ value: String(c), label: String(c) })),
+                    },
+                  ]
+                : []
+            }
             columns={[
               {
                 key: 'name',

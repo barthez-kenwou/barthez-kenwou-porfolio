@@ -22,7 +22,7 @@ export function AdminLayout() {
     <SidebarProvider defaultOpen>
       <CloseMobileNavOnRouteChange />
       <AdminSidebar />
-      <SidebarInset className="flex h-svh max-h-svh flex-col overflow-hidden bg-background">
+      <SidebarInset className="flex h-svh max-h-svh min-w-0 flex-col overflow-hidden bg-background">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 -z-10 opacity-40 dark:opacity-30"
@@ -36,8 +36,8 @@ export function AdminLayout() {
 
         <AdminHeader />
 
-        <main className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain">
-          <div className="mx-auto w-full max-w-6xl px-4 py-5 pb-[calc(6.5rem+env(safe-area-inset-bottom))] sm:px-6 md:py-6 md:pb-8 lg:px-8 lg:py-8">
+        <main className="relative min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain">
+          <div className="mx-auto w-full max-w-6xl px-4 py-5 pb-[calc(7rem+env(safe-area-inset-bottom))] sm:px-6 md:py-6 md:pb-8 lg:px-8 lg:py-8">
             <Outlet />
           </div>
         </main>

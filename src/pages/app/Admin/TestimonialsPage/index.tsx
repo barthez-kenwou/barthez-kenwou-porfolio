@@ -324,8 +324,6 @@ export const AdminTestimonialsPage: React.FC = () => {
           isPending={isPending}
           isError={isError}
           errorMessage={isApiError(error) ? error.message : undefined}
-          empty={!isPending && !isError && items.length === 0}
-          emptyTitle={fr ? 'Aucun témoignage' : 'No testimonials'}
         >
           <AdminDataTable<ITestimonial>
             data={items}

@@ -197,14 +197,12 @@ export const AdminReferencesPage: React.FC = () => {
           isPending={isPending}
           isError={isError}
           errorMessage={isApiError(error) ? error.message : undefined}
-          empty={!isPending && !isError && items.length === 0}
-          emptyTitle={fr ? 'Aucune référence' : 'No references'}
         >
           <AdminDataTable
             data={items}
             getRowId={(r) => String(r.id)}
             searchKeys={['name', 'company', 'roleFr', 'roleEn', 'email']}
-            emptyTitle={fr ? 'Aucun élément' : 'No items'}
+            emptyTitle={fr ? 'Aucune référence' : 'No references'}
             columns={[
               {
                 key: 'name',

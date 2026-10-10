@@ -9,6 +9,7 @@ import { CvButton } from '@/shared/ui/CvButton/CvButton';
 import { useNavbarPosition } from './hooks';
 import { motion } from 'framer-motion';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/ui/tooltip';
+import { trackSocialClick } from '@/app/lib/analytics';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { useThemeStore } from '@/shared/state/useThemeStore';
 
@@ -131,6 +132,7 @@ export const Navbar: React.FC = () => {
                       aria-label={link.label}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => trackSocialClick(link.label, 'navbar')}
                     >
                       <Icon className="h-4 w-4" />
                     </Link>

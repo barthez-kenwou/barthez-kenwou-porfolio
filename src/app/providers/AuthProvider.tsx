@@ -17,6 +17,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
   loading: boolean;
   session: AuthSession | null;
 }
@@ -106,16 +107,43 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setSession(null);
   }, []);
 
+  const refreshUser = useCallback(async () => {
+    const stored = loadSession();
+    if (!stored?.user) return;
+
+    if (!env.ADMIN_USE_API || !stored.viaApi) {
+      setSession(stored);
+      return;
+    }
+
+    try {
+      const user = await fetchCurrentUser();
+      const next: AuthSession = {
+        ...stored,
+        user,
+        viaApi: true,
+        token: getAccessToken() || stored.token,
+        expiresAt: Date.now() + 1000 * 60 * 60 * 12,
+      };
+      persistSession(next);
+      setSession(next);
+    } catch {
+      clearSession();
+      setSession(null);
+    }
+  }, []);
+
   const value = useMemo<AuthContextType>(
     () => ({
       user: session?.user ?? null,
       isAuthenticated: !!session?.user && session.user.role === 'admin',
       login,
       logout,
+      refreshUser,
       loading,
       session,
     }),
-    [session, loading, login, logout],
+    [session, loading, login, logout, refreshUser],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

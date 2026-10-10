@@ -9,7 +9,7 @@ export type AdminNavItem = {
 };
 
 export type AdminNavGroup = {
-  id: 'contenu' | 'profil' | 'communication';
+  id: 'contenu' | 'profil' | 'communication' | 'compte';
   labelFr: string;
   labelEn: string;
   items: AdminNavItem[];
@@ -105,6 +105,19 @@ export const adminNavGroups: AdminNavGroup[] = [
         labelFr: 'Newsletter',
         labelEn: 'Newsletter',
         mark: '14',
+      },
+    ],
+  },
+  {
+    id: 'compte',
+    labelFr: 'Compte',
+    labelEn: 'Account',
+    items: [
+      {
+        path: adminPath('account'),
+        labelFr: 'Espace compte',
+        labelEn: 'Account space',
+        mark: '15',
       },
     ],
   },

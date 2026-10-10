@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { trackLocaleSwitch } from '@/app/lib/analytics';
 
 export type Language = 'fr' | 'en';
 
@@ -10,9 +11,14 @@ type LanguageState = {
 
 export const useLanguageStore = create<LanguageState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       language: 'en',
-      toggleLanguage: () => set((state) => ({ language: state.language === 'en' ? 'fr' : 'en' })),
+      toggleLanguage: () => {
+        const from = get().language;
+        const to: Language = from === 'en' ? 'fr' : 'en';
+        trackLocaleSwitch(from, to);
+        set({ language: to });
+      },
     }),
     {
       name: 'language-storage',

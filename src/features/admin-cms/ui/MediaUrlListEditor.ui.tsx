@@ -122,7 +122,7 @@ export function MediaUrlListEditor({
       </div>
 
       {urls.length === 0 ? (
-        <p className="rounded-md border border-dashed border-border/60 bg-card/20 px-4 py-5 text-center text-sm text-muted-foreground">
+        <p className="rounded-xl border border-dashed border-border/60 bg-card/20 px-4 py-5 text-center text-sm text-muted-foreground">
           {isFr ? 'Aucune image.' : 'No images yet.'}
         </p>
       ) : (
@@ -130,7 +130,7 @@ export function MediaUrlListEditor({
           {urls.map((url, index) => (
             <li
               key={index}
-              className="flex items-center gap-2 rounded-md border border-border/50 bg-card/40 p-2"
+              className="flex items-center gap-2 rounded-xl border border-border/50 bg-card/40 p-2.5"
             >
               <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-sm border border-border/40 bg-muted/30">
                 {showImagePreview(url) ? (

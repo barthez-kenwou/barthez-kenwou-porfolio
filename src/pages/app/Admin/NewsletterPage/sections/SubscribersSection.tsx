@@ -106,10 +106,6 @@ export function SubscribersSection({ fr }: Props) {
         errorMessage={
           isApiError(subscribersQuery.error) ? subscribersQuery.error.message : undefined
         }
-        empty={
-          !subscribersQuery.isPending && !subscribersQuery.isError && subscribers.length === 0
-        }
-        emptyTitle={fr ? 'Aucun abonné' : 'No subscribers'}
       >
         <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <AdminDataTable

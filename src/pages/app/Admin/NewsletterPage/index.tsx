@@ -55,7 +55,7 @@ export const AdminNewsletterPage: React.FC = () => {
         }}
         className="gap-5"
       >
-        <TabsList className="h-auto w-full flex-wrap justify-start gap-1 p-1 sm:w-fit">
+        <TabsList className="h-auto w-full flex-wrap justify-start gap-1 rounded-xl p-1 sm:w-fit">
           {(Object.keys(TAB_META) as NewsletterTab[]).map((key) => {
             const meta = TAB_META[key];
             const Icon = meta.icon;
@@ -63,10 +63,12 @@ export const AdminNewsletterPage: React.FC = () => {
               <TabsTrigger
                 key={key}
                 value={key}
-                className={cn('gap-1.5 px-3 py-2')}
+                className={cn(
+                  'min-h-10 flex-1 cursor-pointer gap-1.5 rounded-lg px-2.5 py-2 text-[13px] sm:flex-none sm:px-3 sm:text-sm',
+                )}
               >
-                <Icon className="size-3.5 opacity-80" />
-                {fr ? meta.fr : meta.en}
+                <Icon className="size-3.5 shrink-0 opacity-80" />
+                <span className="truncate">{fr ? meta.fr : meta.en}</span>
               </TabsTrigger>
             );
           })}

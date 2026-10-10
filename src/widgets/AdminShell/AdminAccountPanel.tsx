@@ -67,7 +67,7 @@ export function AdminAccountPanel({ onClose }: Props) {
         </p>
       </div>
 
-      <nav className="flex flex-col gap-0.5 p-1" aria-label={fr ? 'Compte' : 'Account'}>
+      <nav className="flex flex-col gap-0.5 p-1.5" aria-label={fr ? 'Compte' : 'Account'}>
         {MENU.map((item) => {
           const Icon = item.icon;
           return (
@@ -76,11 +76,11 @@ export function AdminAccountPanel({ onClose }: Props) {
               to={item.href}
               onClick={onClose}
               className={cn(
-                'flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm',
+                'flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2.5 text-sm',
                 'text-foreground transition-colors hover:bg-muted/60',
               )}
             >
-              <Icon className="size-3.5 shrink-0 text-muted-foreground" />
+              <Icon className="size-4 shrink-0 text-muted-foreground" />
               {fr ? item.fr : item.en}
             </Link>
           );
@@ -90,7 +90,7 @@ export function AdminAccountPanel({ onClose }: Props) {
           type="button"
           onClick={handleLogout}
           className={cn(
-            'flex w-full cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm',
+            'flex w-full cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2.5 text-sm',
             'text-destructive transition-colors hover:bg-destructive/10',
           )}
         >
