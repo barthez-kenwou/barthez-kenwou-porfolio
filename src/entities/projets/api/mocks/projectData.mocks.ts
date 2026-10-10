@@ -7598,9 +7598,9 @@ Recruiter message: I master event-driven distributed systems and industrialize t
     titleEn: 'backend-init - Enterprise Backend Template (Auth, Security, Obs, Queues)',
 
     descriptionFr:
-      'Template backend Express/TypeScript production-grade : JWT/OAuth, RBAC, Prisma/Mongo, Redis, MinIO, ClamAV, queues, OpenAPI, Prometheus/Loki/Grafana - base du blog, du portfolio et des backends ZENORA.',
+      'Template backend Express/TypeScript production-grade : JWT/OAuth, RBAC, Prisma/Mongo, Redis, MinIO, ClamAV, queues, OpenAPI, Prometheus, Loki, Grafana - base du blog, du portfolio et des backends ZENORA.',
     descriptionEn:
-      'Production-grade Express/TypeScript backend template: JWT/OAuth, RBAC, Prisma/Mongo, Redis, MinIO, ClamAV, queues, OpenAPI, Prometheus/Loki/Grafana - foundation for the blog, portfolio and ZENORA backends.',
+      'Production-grade Express/TypeScript backend template: JWT/OAuth, RBAC, Prisma/Mongo, Redis, MinIO, ClamAV, queues, OpenAPI, Prometheus, Loki, Grafana - foundation for the blog, portfolio and ZENORA backends.',
 
     fullDescriptionFr: `Ce n'est pas « un CRUD blog ». C'est le laboratoire où j'ai systématisé tout ce qu'un backend moderne doit maîtriser - puis le template public (backend-init) dont je réutilise le squelette pour le blog, le backend du portfolio, le site ZENORA et les prochains produits.
 
@@ -7652,7 +7652,7 @@ Recruiter message: I do not ship a demo API; I ship an enterprise backend founda
       'Auth JWT + OAuth + OTP cohérents sans failles de session',
       'Cache Redis multi-niveaux avec invalidation explicite (blogs/users)',
       'Uploads sûrs : MinIO + scan ClamAV + politiques MIME',
-      'Monitoring local fidèle à une prod (Prometheus/Loki/Grafana)',
+      'Monitoring local fidèle à une prod (Prometheus, Loki, Grafana)',
       "Maintenir le template vivant pendant qu'il sert plusieurs produits",
     ],
     challengesEn: [
@@ -7660,7 +7660,7 @@ Recruiter message: I do not ship a demo API; I ship an enterprise backend founda
       'Coherent JWT + OAuth + OTP without session holes',
       'Multi-level Redis cache with explicit invalidation (blogs/users)',
       'Safe uploads: MinIO + ClamAV scan + MIME policies',
-      'Local monitoring faithful to prod (Prometheus/Loki/Grafana)',
+      'Local monitoring faithful to prod (Prometheus, Loki, Grafana)',
       'Keep the template alive while it powers multiple products',
     ],
 
