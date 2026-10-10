@@ -1,6 +1,6 @@
 Contact: mailto:kenwoubarthez@gmail.com
 Contact: https://linkedin.com/in/barthez-kenwou
-Expires: 2027-08-27T02:48:37.206Z
+Expires: 2027-10-10T09:26:50.637Z
 Preferred-Languages: fr, en
 Canonical: https://barthez-kenwou.dev/.well-known/security.txt
 Policy: https://barthez-kenwou.dev/contact

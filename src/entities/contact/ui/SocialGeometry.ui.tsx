@@ -28,7 +28,7 @@ export function SocialGeometry() {
   const { data } = usePublicContactInfo();
   const contactsInfo = data?.data;
 
-  const networks: SocialNetwork[] = [
+  const allNetworks: SocialNetwork[] = [
     {
       id: 'github',
       label: 'GitHub',
@@ -57,7 +57,8 @@ export function SocialGeometry() {
       Icon: FaYoutube,
       shape: 'hexagon',
     },
-  ].filter((network) => isActiveHref(network.href));
+  ];
+  const networks = allNetworks.filter((network) => isActiveHref(network.href));
 
   return (
     <div className="rounded-sm border border-border/50 bg-card/40 p-4 backdrop-blur-sm md:p-5">

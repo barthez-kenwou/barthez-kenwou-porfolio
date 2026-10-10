@@ -9,7 +9,8 @@ try {
   dotenvSafe.config({
     example,
     path: envPath,
-    allowEmptyValues: false,
+    // VITE_API_BASE_URL may be empty (same-origin / Vite proxy in local & some deploys).
+    allowEmptyValues: true,
   });
   console.log('[env] .env validated against .env.example');
 } catch (err) {

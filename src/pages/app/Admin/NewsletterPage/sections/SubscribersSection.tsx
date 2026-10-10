@@ -71,7 +71,7 @@ export function SubscribersSection({ fr }: Props) {
 
   const subscribers = subscribersQuery.data?.items ?? [];
   const selected = subscribers.find((s) => s.id === selectedId) ?? null;
-  const total = subscribersQuery.data?.total ?? subscribers.length;
+  const total = subscribersQuery.data?.totalItems ?? subscribers.length;
 
   const confirmDelete = async () => {
     if (!pending) return;

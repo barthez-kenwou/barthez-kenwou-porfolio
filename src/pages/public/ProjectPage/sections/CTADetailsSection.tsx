@@ -66,7 +66,11 @@ export const CTADetailsSection: React.FC<CTADetailsSectionProps> = ({
                   href={project.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={() => trackOutboundClick(project.github, 'project_detail_github')}
+                  onClick={() => {
+                    if (project.github) {
+                      trackOutboundClick(project.github, 'project_detail_github');
+                    }
+                  }}
                   className="text-[12px] font-medium text-foreground/70 underline-offset-4 transition-colors hover:text-primary hover:underline sm:text-[13px]"
                 >
                   {isFr ? 'Ou voir sur GitHub' : 'Or view on GitHub'}

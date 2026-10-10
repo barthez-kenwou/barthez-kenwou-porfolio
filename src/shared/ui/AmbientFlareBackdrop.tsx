@@ -51,7 +51,7 @@ export const AmbientFlareBackdrop: React.FC<AmbientFlareBackdropProps> = ({
         width={612}
         height={459}
         decoding="async"
-        fetchpriority="high"
+        fetchPriority="high"
         loading="eager"
         onLoad={markReady}
         onError={(e) => {

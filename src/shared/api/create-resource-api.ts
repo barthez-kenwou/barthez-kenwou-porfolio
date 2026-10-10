@@ -33,9 +33,9 @@ export function createResourceApi<TItem, TCreate = Partial<TItem>, TUpdate = Par
 }
 
 /** Fetch all pages up to a safety cap (admin inventories). */
-export async function fetchAllPages<T>(
-  listFn: (params: ListParams) => Promise<PaginatedData<T>>,
-  params: ListParams = {},
+export async function fetchAllPages<T, P extends PaginationParams>(
+  listFn: (params: P) => Promise<PaginatedData<T>>,
+  params: P,
   pageSize = 100,
   maxPages = 20,
 ): Promise<T[]> {

@@ -154,7 +154,7 @@ export function CampaignsSection({ fr }: Props) {
   const detailQuery = useNewsletterCampaign(selectedId);
   const selected =
     detailQuery.data ?? campaigns.find((c) => c.id === selectedId) ?? null;
-  const total = campaignsQuery.data?.total ?? campaigns.length;
+  const total = campaignsQuery.data?.totalItems ?? campaigns.length;
 
   const confirmCancel = async () => {
     if (!pendingCancel) return;
