@@ -133,17 +133,9 @@ export function AdminLoginPage() {
               </div>
             </div>
 
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
-              {fr ? 'Connexion' : 'Sign in'}
-            </p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
               {fr ? 'Bon retour.' : 'Welcome back.'}
             </h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {fr
-                ? 'Identifie-toi pour ouvrir le panneau. Aucune inscription publique.'
-                : 'Authenticate to open the panel. No public registration.'}
-            </p>
 
             <form onSubmit={form.handleSubmit(onSubmit)} className="mt-8 space-y-5 sm:mt-10">
               <div>

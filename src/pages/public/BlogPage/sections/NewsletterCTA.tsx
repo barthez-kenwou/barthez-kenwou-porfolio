@@ -117,21 +117,21 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
     >
       <div className="relative z-10 overflow-hidden rounded-sm border border-border">
         <BrandAmbientField intensity="soft" />
-        <div className="relative z-10 mx-auto w-full p-2 text-center md:p-3">
-          <div className="mx-auto max-w-xl rounded-sm border border-border/50 bg-background/70 px-4 py-4 shadow-sm backdrop-blur-md dark:bg-background/55 sm:px-5 sm:py-5">
+        <div className="relative z-10 mx-auto w-full p-3 text-center sm:p-3 md:p-4">
+          <div className="mx-auto max-w-xl rounded-sm border border-border/50 bg-background/70 px-4 py-6 shadow-sm backdrop-blur-md dark:bg-background/55 sm:px-5 sm:py-6 md:px-6 md:py-7">
             <h3
               id="newsletter-cta-title"
-              className="mb-1.5 font-heading text-base font-bold text-foreground sm:text-lg md:text-xl"
+              className="mb-2 font-heading text-base font-bold text-foreground sm:text-lg md:text-xl"
             >
               {isFr ? 'Restez informé' : 'Stay informed'}
             </h3>
-            <p className="mb-4 text-[11px] leading-relaxed text-foreground/85 sm:text-xs">
+            <p className="mb-5 text-[12px] leading-relaxed text-foreground/85 sm:mb-5 sm:text-xs md:mb-6">
               {isFr
                 ? 'Recevez les derniers articles et actualités directement dans votre boîte mail.'
                 : 'Receive the latest articles and news directly in your inbox.'}
             </p>
 
-            <form onSubmit={onSubmit} noValidate className="mx-auto max-w-md space-y-2">
+            <form onSubmit={onSubmit} noValidate className="mx-auto max-w-md space-y-3">
               <input
                 type="text"
                 name="website"
@@ -143,7 +143,7 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
                 aria-hidden
               />
 
-              <div className="flex flex-col gap-2.5 sm:flex-row sm:gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:gap-3">
                 <label className="sr-only" htmlFor={`newsletter-email-${source}`}>
                   Email
                 </label>
@@ -165,7 +165,7 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
                   }}
                   placeholder="Email"
                   className={cn(
-                    'min-w-0 flex-1 rounded-md border bg-background/90 px-3 py-2 text-sm text-foreground',
+                    'min-w-0 flex-1 rounded-md border bg-background/90 px-3 py-2.5 text-sm text-foreground',
                     'border-border transition-colors placeholder:text-muted-foreground/70',
                     'focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
                     'disabled:cursor-not-allowed disabled:opacity-60',
@@ -175,7 +175,7 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
                 <Button
                   type="submit"
                   disabled={isLoading || email.trim().length === 0}
-                  className="h-auto shrink-0 px-4 py-2 text-sm font-medium"
+                  className="h-auto shrink-0 px-4 py-2.5 text-sm font-medium"
                 >
                   {isLoading ? (
                     <>
@@ -198,7 +198,7 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
             </form>
 
             {contactTo && (
-              <p className="mt-4 text-[11px] text-foreground/85 sm:text-xs">
+              <p className="mt-5 text-[12px] leading-relaxed text-foreground/85 sm:mt-5 sm:text-xs">
                 {isFr ? 'Un besoin concret ? ' : 'A concrete need? '}
                 <Link
                   to={contactTo}

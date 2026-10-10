@@ -31,20 +31,20 @@ export const NavigationSection: React.FC<{ post: IBlog; posts: IBlog[] }> = ({ p
 
   return (
     <nav
-      className="grid grid-cols-1 gap-2 border-t border-border/50 pt-5 sm:grid-cols-3 sm:items-stretch sm:gap-3"
+      className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:items-stretch sm:gap-3 md:gap-4"
       aria-label={isFr ? 'Navigation entre articles' : 'Article navigation'}
     >
       {prevPost ? (
         <Link
           to={`/blog/${getBlogPathSlug(prevPost)}`}
-          className="group flex min-w-0 items-center gap-2 rounded-sm border border-border bg-card px-3 py-2.5 text-foreground/85 transition-colors hover:border-foreground/25 hover:text-foreground"
+          className="group flex min-w-0 items-center gap-2.5 rounded-sm border border-border bg-card px-3.5 py-3.5 text-foreground/85 transition-colors hover:border-foreground/25 hover:text-foreground sm:py-3"
         >
           <HiOutlineArrowLeft className="size-4 shrink-0 transition-transform group-hover:-translate-x-0.5" />
           <span className="min-w-0">
-            <span className="block text-[11px] text-foreground/55">
+            <span className="mb-0.5 block text-[11px] text-foreground/55">
               {isFr ? 'Précédent' : 'Previous'}
             </span>
-            <span className="block truncate text-sm font-medium">{prevTitle}</span>
+            <span className="block truncate text-sm font-medium leading-snug">{prevTitle}</span>
           </span>
         </Link>
       ) : (
@@ -53,7 +53,7 @@ export const NavigationSection: React.FC<{ post: IBlog; posts: IBlog[] }> = ({ p
 
       <Link
         to="/blog"
-        className="flex min-w-0 items-center justify-center rounded-sm border border-border bg-muted/40 px-3 py-2.5 text-center text-sm font-medium text-foreground transition-colors hover:bg-muted/70"
+        className="flex min-w-0 items-center justify-center rounded-sm border border-border bg-muted/40 px-3.5 py-3.5 text-center text-sm font-medium text-foreground transition-colors hover:bg-muted/70 sm:py-3"
       >
         {isFr ? 'Tous les articles' : 'All articles'}
       </Link>
@@ -61,13 +61,13 @@ export const NavigationSection: React.FC<{ post: IBlog; posts: IBlog[] }> = ({ p
       {nextPost ? (
         <Link
           to={`/blog/${getBlogPathSlug(nextPost)}`}
-          className="group flex min-w-0 items-center justify-end gap-2 rounded-sm border border-border bg-card px-3 py-2.5 text-right text-foreground/85 transition-colors hover:border-foreground/25 hover:text-foreground"
+          className="group flex min-w-0 items-center justify-end gap-2.5 rounded-sm border border-border bg-card px-3.5 py-3.5 text-right text-foreground/85 transition-colors hover:border-foreground/25 hover:text-foreground sm:py-3"
         >
           <span className="min-w-0">
-            <span className="block text-[11px] text-foreground/55">
+            <span className="mb-0.5 block text-[11px] text-foreground/55">
               {isFr ? 'Suivant' : 'Next'}
             </span>
-            <span className="block truncate text-sm font-medium">{nextTitle}</span>
+            <span className="block truncate text-sm font-medium leading-snug">{nextTitle}</span>
           </span>
           <HiOutlineArrowRight className="size-4 shrink-0 transition-transform group-hover:translate-x-0.5" />
         </Link>

@@ -1,5 +1,5 @@
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { cn } from '@/shared/lib/utils';
 import { List, X } from 'lucide-react';
 
@@ -11,13 +11,14 @@ interface TOCItem {
 
 interface TableOfContentsProps {
   content: string;
-  /** desktop = fixed sidebar panel; mobile = FAB only */
+  /** desktop = in-flow sticky panel; mobile = FAB only */
   variant?: 'desktop' | 'mobile';
   /** Lift FAB above the mobile sticky CTA when that bar is visible */
   clearStickyCta?: boolean;
 }
 
-const TOC_TOP_PX = 95;
+/** Clears fixed public header / navbar */
+const TOC_TOP_CLASS = 'top-24';
 
 export const TableOfContents: React.FC<TableOfContentsProps> = ({
   content,
@@ -27,8 +28,6 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
   const [toc, setToc] = useState<TOCItem[]>([]);
   const [activeId, setActiveId] = useState<string>('');
   const [isOpen, setIsOpen] = useState(false);
-  const [fixedBox, setFixedBox] = useState<{ left: number; width: number } | null>(null);
-  const anchorRef = useRef<HTMLDivElement>(null);
   const { language } = useLanguageStore();
 
   const slugify = (text: string) =>
@@ -69,41 +68,11 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
       { rootMargin: '-20% 0% -35% 0%' },
     );
 
-    const headers = document.querySelectorAll('h2, h3');
+    const headers = document.querySelectorAll('article h2, article h3, main h2, main h3');
     headers.forEach((header) => observer.observe(header));
 
     return () => observer.disconnect();
   }, [toc]);
-
-  useLayoutEffect(() => {
-    if (variant !== 'desktop') return;
-
-    const anchor = anchorRef.current;
-    if (!anchor) return;
-
-    const sync = () => {
-      const rect = anchor.getBoundingClientRect();
-      const next = {
-        left: Math.round(rect.left),
-        width: Math.round(rect.width),
-      };
-      setFixedBox((prev) =>
-        prev && prev.left === next.left && prev.width === next.width ? prev : next,
-      );
-    };
-
-    sync();
-
-    const ro = new ResizeObserver(sync);
-    ro.observe(anchor);
-    if (anchor.parentElement) ro.observe(anchor.parentElement);
-    window.addEventListener('resize', sync);
-
-    return () => {
-      ro.disconnect();
-      window.removeEventListener('resize', sync);
-    };
-  }, [variant, toc.length]);
 
   if (toc.length === 0) return null;
 
@@ -138,40 +107,27 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
     </nav>
   );
 
-  const panel = (
-    <>
-      <div className="flex shrink-0 items-center gap-2 border-b border-border/50 px-3 py-2.5">
-        <List className="size-3.5 text-foreground/55" aria-hidden />
-        <span className="text-xs font-medium text-foreground/80">
-          {language === 'fr' ? 'Sommaire' : 'Contents'}
-        </span>
-      </div>
-
-      <div className="premium-scrollbar min-h-0 flex-1 overflow-y-auto overscroll-contain px-1.5 py-2">
-        <NavContent />
-      </div>
-    </>
-  );
-
   if (variant === 'mobile') {
     return (
       <div
         className={cn(
-          'pointer-events-none fixed right-3 z-[45] xl:hidden',
+          'pointer-events-none fixed z-[99] lg:hidden',
+          // Keep a clear inset so the control never looks clipped by the screen edge
+          'right-1 bottom-24 sm:right-1',
           'transition-[bottom] duration-200 ease-out',
-          clearStickyCta ? 'bottom-[10.75rem]' : 'bottom-24',
+          clearStickyCta && 'bottom-[10.75rem]',
         )}
       >
         {isOpen ? (
-          <div className="pointer-events-auto absolute right-0 bottom-12 flex max-h-[45vh] w-[min(17rem,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-sm border border-border/50 bg-background/70 shadow-sm backdrop-blur-md supports-backdrop-filter:bg-background/55">
-            <div className="sticky top-0 z-10 flex shrink-0 items-center justify-between border-b border-border/40 bg-background/60 px-3 py-2 backdrop-blur-md">
+          <div className="pointer-events-auto absolute right-0 bottom-12 flex max-h-[45vh] w-[min(17rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-md border border-border/60 bg-background/80 shadow-sm backdrop-blur-md supports-backdrop-filter:bg-background/60">
+            <div className="sticky top-0 z-10 flex shrink-0 items-center justify-between border-b border-border/40 bg-background/70 px-3 py-2 backdrop-blur-md">
               <span className="text-xs font-medium text-foreground/85">
                 {language === 'fr' ? 'Sommaire' : 'Contents'}
               </span>
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="rounded-sm p-1 text-foreground/60 transition-colors hover:bg-muted/60 hover:text-foreground"
+                className="cursor-pointer rounded-sm p-1 text-foreground/60 transition-colors hover:bg-muted/60 hover:text-foreground"
                 aria-label={language === 'fr' ? 'Fermer' : 'Close'}
               >
                 <X className="size-4" />
@@ -187,10 +143,10 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
           type="button"
           onClick={() => setIsOpen(!isOpen)}
           className={cn(
-            'pointer-events-auto flex size-10 items-center justify-center rounded-sm border border-border/50 shadow-sm backdrop-blur-md transition-colors',
+            'pointer-events-auto flex size-10 cursor-pointer items-center justify-center rounded-md border border-border/60 shadow-sm backdrop-blur-md transition-colors',
             isOpen
-              ? 'bg-foreground/85 text-background'
-              : 'bg-background/55 text-foreground supports-backdrop-filter:bg-background/40 hover:bg-background/70',
+              ? 'bg-foreground/90 text-background'
+              : 'bg-background/65 text-foreground supports-backdrop-filter:bg-background/50 hover:bg-background/80',
           )}
           aria-label={language === 'fr' ? 'Ouvrir le sommaire' : 'Open table of contents'}
           aria-expanded={isOpen}
@@ -201,28 +157,26 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
     );
   }
 
+  // Desktop: sticky inside the grid column — no fixed left/width sync.
+  // Survives AppSidebar open/close and all intermediate breakpoints.
   return (
-    <>
-      <div ref={anchorRef} className="h-0 w-full" aria-hidden />
-
-      <div
-        className={cn(
-          'fixed z-20 hidden max-h-[calc(100vh-8.5rem)] flex-col border border-border/60 bg-background/95 backdrop-blur-md lg:flex',
-          'rounded-sm',
-          !fixedBox && 'invisible',
-        )}
-        style={
-          fixedBox
-            ? {
-                top: TOC_TOP_PX,
-                left: fixedBox.left,
-                width: fixedBox.width,
-              }
-            : undefined
-        }
-      >
-        {panel}
+    <div
+      className={cn(
+        'sticky z-10 flex max-h-[calc(100vh-7.5rem)] flex-col overflow-hidden',
+        'rounded-sm border border-border/60 bg-background/95 backdrop-blur-md',
+        TOC_TOP_CLASS,
+      )}
+    >
+      <div className="flex shrink-0 items-center gap-2 border-b border-border/50 px-3 py-2.5">
+        <List className="size-3.5 text-foreground/55" aria-hidden />
+        <span className="text-xs font-medium text-foreground/80">
+          {language === 'fr' ? 'Sommaire' : 'Contents'}
+        </span>
       </div>
-    </>
+
+      <div className="premium-scrollbar min-h-0 flex-1 overflow-y-auto overscroll-contain px-1.5 py-2">
+        <NavContent />
+      </div>
+    </div>
   );
 };

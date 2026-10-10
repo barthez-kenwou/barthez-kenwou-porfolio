@@ -11,8 +11,17 @@ import {
   SITE_URL,
   SOCIAL,
   absoluteUrl,
+  DEFAULT_OG_IMAGE as SITE_DEFAULT_OG,
 } from '@/shared/config/site';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
+
+function toAbsoluteOgImage(url?: string): string {
+  if (!url?.trim()) return SITE_DEFAULT_OG;
+  const u = url.trim();
+  if (u.startsWith('https://') || u.startsWith('http://')) return u;
+  if (u.startsWith('//')) return `https:${u}`;
+  return absoluteUrl(u.startsWith('/') ? u : `/${u}`);
+}
 
 export type OpenGraph = {
   title?: string;
@@ -170,7 +179,7 @@ export const SEO: React.FC<SEOProps> = ({
   const pageUrl = canonical || (path ? absoluteUrl(path) : absoluteUrl('/'));
   const ogTitle = openGraph?.title || pageTitle;
   const ogDescription = openGraph?.description || description;
-  const ogImage = openGraph?.image || DEFAULT_OG_IMAGE;
+  const ogImage = toAbsoluteOgImage(openGraph?.image || DEFAULT_OG_IMAGE);
   const ogImageAlt = openGraph?.imageAlt || DEFAULT_OG_IMAGE_ALT;
   const ogType = openGraph?.type || 'website';
   const ogUrl = openGraph?.url || pageUrl;

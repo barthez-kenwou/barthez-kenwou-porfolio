@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { NotFoundPost } from './sections/NotFoundPost';
 import { BackSection } from './sections/BackSection';
 import { HeroDetailSection } from './sections/HeroDetailSection';
-import { MetaTagsSection } from './sections/Meta&tagsSection';
+import { ArticleMeta, MetaTagsSection } from './sections/Meta&tagsSection';
 import { NewsletterCTA } from './sections/NewsletterCTA';
 import { NavigationSection } from './sections/NavigationSection';
 import { FloatingShareRail } from './sections/FloatingShareRail';
@@ -14,6 +14,8 @@ import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { truncateFonction } from '@/shared/ui/utils/truncateText/helpers';
 import { useBlogBySlug, usePublicBlogs } from '@/entities/blogs';
 import { getBlogPathSlug } from '@/shared/lib/entity-slug';
+import { absoluteUrl } from '@/shared/config/site';
+import { toAbsoluteMediaUrl } from '@/shared/lib/blogShare';
 import { QueryState } from '@/shared/ui/QueryState';
 import { useEffect, useRef } from 'react';
 import { MobileStickyCtaBar } from '@/shared/ui/MobileStickyCtaBar';
@@ -85,25 +87,31 @@ export const BlogDetailPage = () => {
 
   const content = language === 'fr' ? post.contentFr : post.contentEn;
   const blogPath = `/blog/${getBlogPathSlug(post)}`;
+  const pageTitle =
+    language === 'fr'
+      ? post.titleFr
+      : post.titleEn || post.titleFr;
+  const pageDescription = truncateFonction(
+    language === 'fr'
+      ? post.excerptFr || post.contentFr || ''
+      : post.excerptEn || post.excerptFr || post.contentEn || '',
+    160,
+  );
+  const coverImage = toAbsoluteMediaUrl(post.image);
 
   return (
     <>
       <SEO
         path={blogPath}
-        title={`${
-          language === 'fr'
-            ? truncateFonction(post?.titleFr || '', 60)
-            : truncateFonction(post?.titleEn || post?.titleFr || '', 60)
-        }`}
-        description={`${
-          language === 'fr'
-            ? truncateFonction(post?.excerptFr || post?.contentFr || '', 160)
-            : truncateFonction(post?.excerptEn || post?.excerptFr || post?.contentEn || '', 160)
-        }`}
+        title={truncateFonction(pageTitle || '', 60)}
+        description={pageDescription}
         openGraph={{
           type: 'article',
-          image: post.image,
-          imageAlt: language === 'fr' ? post.titleFr : post.titleEn || post.titleFr,
+          title: pageTitle,
+          description: pageDescription,
+          image: coverImage,
+          imageAlt: pageTitle,
+          url: absoluteUrl(blogPath),
         }}
         additionalMeta={[
           { property: 'article:published_time', content: post.date },
@@ -116,44 +124,56 @@ export const BlogDetailPage = () => {
         ]}
         jsonLd={{
           '@type': 'BlogPosting',
-          headline: language === 'fr' ? post.titleFr : post.titleEn || post.titleFr,
-          description: language === 'fr' ? post.excerptFr : post.excerptEn || post.excerptFr,
-          image: post.image,
+          headline: pageTitle,
+          description: pageDescription,
+          image: coverImage,
           datePublished: post.date,
           author: {
             '@type': 'Person',
             name: post.author,
-            url: 'https://barthez-kenwou.dev',
+            url: absoluteUrl('/'),
           },
-          mainEntityOfPage: `https://barthez-kenwou.dev${blogPath}`,
+          mainEntityOfPage: absoluteUrl(blogPath),
           keywords: post.tags.join(', '),
           articleSection: post.category,
         }}
       />
 
-      <div className="relative min-h-screen bg-background overflow-x-clip">
+      <div className="relative min-h-screen bg-background">
         <FloatingShareRail post={post} />
 
-        <div className="mx-auto max-w-6xl px-4 pt-28 pb-36 sm:px-6 md:pt-32 md:pb-20 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12 xl:gap-14">
+        <div className="mx-auto max-w-6xl px-3 pt-28 pb-44 sm:px-5 md:px-6 md:pt-32 md:pb-24 lg:px-8">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10 xl:gap-12">
             <aside className="relative hidden min-w-0 lg:col-span-4 lg:block xl:col-span-3">
               <TableOfContents content={content} variant="desktop" />
             </aside>
 
-            <main className="min-w-0 space-y-5 lg:col-span-8 md:space-y-6 xl:col-span-9">
-              <BackSection />
+            <main className="min-w-0 lg:col-span-8 xl:col-span-9">
+              {/*
+                Header rhythm:
+                [Back —— date · read time] → H1 → banner → prose.
+                Meta shares the Back row so secondary info doesn’t stack.
+              */}
+              <header className="flex flex-col">
+                <div className="flex items-center justify-between gap-3">
+                  <BackSection />
+                  <ArticleMeta post={post} />
+                </div>
 
-              <div ref={heroRef}>
-                <HeroDetailSection post={post} />
-              </div>
+                <div className="mt-4 md:mt-5">
+                  <MetaTagsSection post={post} />
+                </div>
 
-              <MetaTagsSection post={post} />
+                <div ref={heroRef} className="mt-5 md:mt-6 lg:mt-7">
+                  <HeroDetailSection post={post} />
+                </div>
+              </header>
 
-              <div className="border-t border-border/50 pt-5 md:pt-6">
+              <div className="mt-7 border-t border-border/40 pt-6 md:mt-9 md:pt-8">
                 <ArticleContentSection post={post} />
               </div>
 
-              <div className="space-y-6 border-t border-border/50 pt-6 md:space-y-7 md:pt-7">
+              <div className="mt-10 space-y-8 border-t border-border/50 pt-8 pb-2 md:mt-12 md:space-y-10 md:pt-10">
                 <ArticleEndTags post={post} />
                 <NavigationSection post={post} posts={allPosts} />
                 <NewsletterCTA
@@ -166,6 +186,7 @@ export const BlogDetailPage = () => {
             </main>
           </div>
 
+          {/* Mobile TOC only below lg — desktop sticky lives in the aside column */}
           <div className="lg:hidden">
             <TableOfContents
               content={content}

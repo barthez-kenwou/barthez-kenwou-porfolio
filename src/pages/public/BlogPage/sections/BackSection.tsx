@@ -7,14 +7,12 @@ export const BackSection: React.FC = () => {
   const { language } = useLanguageStore();
 
   return (
-    <div className="relative z-10 flex items-center justify-between">
-      <Link
-        to="/blog"
-        className="inline-flex items-center gap-1.5 text-[12px] font-medium text-foreground/70 transition-colors hover:text-primary"
-      >
-        <HiOutlineArrowLeft className="size-3.5 shrink-0" />
-        {language === 'fr' ? 'Retour' : 'Back'}
-      </Link>
-    </div>
+    <Link
+      to="/blog"
+      className="inline-flex items-center gap-1.5 text-[12px] font-medium text-foreground/60 transition-colors hover:text-foreground"
+    >
+      <HiOutlineArrowLeft className="size-3.5 shrink-0" />
+      {language === 'fr' ? 'Retour' : 'Back'}
+    </Link>
   );
 };

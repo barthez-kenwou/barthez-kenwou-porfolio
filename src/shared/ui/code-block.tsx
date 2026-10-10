@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createHighlighter, Highlighter } from 'shiki';
 import { transformerNotationDiff, transformerNotationHighlight } from '@shikijs/transformers';
 import { Check, Copy } from 'lucide-react';
@@ -45,7 +45,7 @@ async function getHighlighter() {
   return highlighterReady;
 }
 
-export const CodeBlock: React.FC<CodeBlockProps> = ({ language, value, filename, className }) => {
+export const CodeBlock: React.FC<CodeBlockProps> = React.memo(({ language, value, filename, className }) => {
   const theme = useThemeStore((s) => s.theme);
   const isDark = theme === 'dark';
   const shikiTheme = isDark ? DARK_THEME : LIGHT_THEME;
@@ -53,12 +53,15 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ language, value, filename,
   const [html, setHtml] = useState<string>('');
   const [copied, setCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const hasRenderedRef = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
 
     async function highlight() {
-      setIsLoading(true);
+      // First paint only: avoid swapping to a spinner on re-highlight (theme/parent
+      // re-render), which collapses document height and jumps the scroll position.
+      if (!hasRenderedRef.current) setIsLoading(true);
       try {
         const highlighter = await getHighlighter();
         const highlighted = highlighter.codeToHtml(value, {
@@ -68,6 +71,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ language, value, filename,
         });
         if (!cancelled) {
           setHtml(highlighted);
+          hasRenderedRef.current = true;
           setIsLoading(false);
         }
       } catch {
@@ -78,6 +82,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ language, value, filename,
               .replace(/</g, '&lt;')
               .replace(/>/g, '&gt;')}</code></pre>`,
           );
+          hasRenderedRef.current = true;
           setIsLoading(false);
         }
       }
@@ -138,7 +143,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ language, value, filename,
           isDark ? 'bg-[#22272e]' : 'bg-[#f6f8fa]',
         )}
       >
-        {isLoading ? (
+        {isLoading && !html ? (
           <div className="flex min-h-[100px] items-center justify-center">
             <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
           </div>
@@ -149,7 +154,6 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ language, value, filename,
               'text-[13px] leading-relaxed md:text-sm',
               '[&>pre]:!m-0 [&>pre]:!bg-transparent [&>pre]:!p-0',
               '[&_code]:!bg-transparent [&_code]:!text-[inherit]',
-              // Light mode: keep token contrast; never wash colors with low opacity
               !isDark && '[&_.line]:text-[#24292f]',
             )}
           />
@@ -157,4 +161,6 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ language, value, filename,
       </div>
     </div>
   );
-};
+});
+
+CodeBlock.displayName = 'CodeBlock';
