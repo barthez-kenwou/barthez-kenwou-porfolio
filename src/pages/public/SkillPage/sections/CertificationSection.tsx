@@ -11,9 +11,9 @@ export const CertificationSection: React.FC = () => {
   const certifications = data?.data.items ?? [];
 
   return (
-    <section className="mb-6 px-4 md:px-10 lg:px-14">
-      <div className="glass rounded-md border border-border p-3">
-        <div className="mb-6 flex items-center gap-3">
+    <section className="mb-10 px-4 md:mb-14 md:px-10 lg:px-14">
+      <div className="glass rounded-md border border-border p-5 md:p-6">
+        <div className="mb-8 flex items-center gap-3">
           <div className="rounded-sm bg-primary/10 p-2">
             <FaAward className="h-4 w-4 text-primary" />
           </div>
@@ -27,7 +27,7 @@ export const CertificationSection: React.FC = () => {
           source={data?.source}
           empty={!isPending && certifications.length === 0}
         >
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-3 md:gap-5 lg:grid-cols-5 lg:gap-6">
             {certifications.map((cert, index) => (
               <CertificationCard key={cert.id ?? index * 5} Certification={cert} />
             ))}

@@ -110,104 +110,123 @@ export const HeroSection: React.FC = () => {
         </div>
       ) : null}
 
-      <section className="relative z-30 w-full px-4 md:px-10 lg:px-14 pt-24 md:pt-28 pb-20 md:pb-24 flex flex-col items-center text-center">
-        {/* Greeting - script, discreet */}
-        <motion.p
-          custom={0}
-          variants={fadeUp}
-          initial="hidden"
-          animate="show"
-          className="mb-2 font-greeting text-lg leading-none text-foreground/70 sm:text-xl md:text-2xl dark:text-muted-foreground"
-        >
-          {t('hero.greeting')}
-        </motion.p>
-
-        {/* Name - blurIn replays on each re-appearance */}
-        <motion.h1
-          ref={nameWrapRef}
-          custom={1}
-          variants={fadeUp}
-          initial="hidden"
-          animate="show"
-          className="font-display mb-3 text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-foreground"
-        >
-          <TextAnimate
-            key={`barthez-${nameEnterKey}`}
-            animation="blurIn"
-            as="span"
-            once={false}
-            startOnView={false}
-            className="mr-2 inline-block"
-            segmentClassName="text-foreground"
+      <section className="relative z-30 flex w-full flex-col items-center px-4 pt-[350px] pb-2 text-center md:px-10 md:pt-[350px] md:pb-4 lg:px-14">
+        <div className="relative z-10 flex w-full max-w-3xl flex-col items-center -mt-40 md:-mt-44">
+          {/* Greeting - script, discreet */}
+          <motion.p
+            custom={0}
+            variants={fadeUp}
+            initial="hidden"
+            animate="show"
+            className="mb-2 font-greeting text-lg leading-none text-foreground/70 sm:text-xl md:text-2xl dark:text-muted-foreground"
           >
-            Barthez
-          </TextAnimate>
-          <TextAnimate
-            key={`kenwou-${nameEnterKey}`}
-            animation="blurIn"
-            by="character"
-            duration={1}
-            once={false}
-            startOnView={false}
-            className="inline-block uppercase"
-            segmentClassName="text-foreground"
-          >
-            Kenwou
-          </TextAnimate>
-        </motion.h1>
+            {t('hero.greeting')}
+          </motion.p>
 
-        {/* Role - hand writing cursor (height reserved by TypingAnimation sizer) */}
-        <motion.div
-          custom={2}
-          variants={fadeUp}
-          initial="hidden"
-          animate="show"
-          className="mb-4 flex min-h-[1.5em] items-center justify-center"
-        >
-          <p className="font-heading text-base font-medium tracking-wide text-primary sm:text-xl md:text-2xl lg:text-3xl leading-[1.35]">
-            <TypingAnimation
-              key={language}
-              words={roleWords}
-              loop
+          {/* Name - blurIn replays on each re-appearance */}
+          <motion.h1
+            ref={nameWrapRef}
+            custom={1}
+            variants={fadeUp}
+            initial="hidden"
+            animate="show"
+            className="font-display mb-3 text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-foreground"
+          >
+            <TextAnimate
+              key={`barthez-${nameEnterKey}`}
+              animation="blurIn"
+              as="span"
+              once={false}
               startOnView={false}
-              typeSpeed={55}
-              duration={70}
-              pauseDelay={1400}
-              cursorStyle="hand"
-            />
-          </p>
-        </motion.div>
+              className="mr-2 inline-block"
+              segmentClassName="text-foreground"
+            >
+              Barthez
+            </TextAnimate>
+            <TextAnimate
+              key={`kenwou-${nameEnterKey}`}
+              animation="blurIn"
+              by="character"
+              duration={1}
+              once={false}
+              startOnView={false}
+              className="inline-block uppercase"
+              segmentClassName="text-foreground"
+            >
+              Kenwou
+            </TextAnimate>
+          </motion.h1>
 
-        {/* Pitch - tighter type */}
-        <motion.p
-          custom={3}
-          variants={fadeUp}
-          initial="hidden"
-          animate="show"
-          className="mx-auto mb-9 max-w-lg text-sm leading-relaxed text-foreground/75"
-        >
-          {t('hero.description')}
-        </motion.p>
+          {/* Role - hand writing cursor (height reserved by TypingAnimation sizer) */}
+          <motion.div
+            custom={2}
+            variants={fadeUp}
+            initial="hidden"
+            animate="show"
+            className="mb-4 flex min-h-[1.5em] items-center justify-center"
+          >
+            <p className="font-heading text-base font-medium tracking-wide text-primary sm:text-xl md:text-2xl lg:text-3xl leading-[1.35]">
+              <TypingAnimation
+                key={language}
+                words={roleWords}
+                loop
+                startOnView={false}
+                typeSpeed={55}
+                duration={70}
+                pauseDelay={1400}
+                cursorStyle="hand"
+              />
+            </p>
+          </motion.div>
 
-        {/* CTAs - Contact (spectrum, sole rainbow) + Projects (outline) */}
-        <motion.div
-          custom={4}
-          variants={fadeUp}
-          initial="hidden"
-          animate="show"
-          className="flex flex-col sm:flex-row items-center justify-center gap-3"
-        >
-          <SpectrumButton asChild variant="spectrum" size="default">
-            <Link to="/contact?from=home">
-              {t('hero.cta.contact')}
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
-          </SpectrumButton>
+          {/* Pitch - tighter type */}
+          <motion.p
+            custom={3}
+            variants={fadeUp}
+            initial="hidden"
+            animate="show"
+            className="mx-auto mb-9 max-w-lg text-sm leading-relaxed text-foreground/75"
+          >
+            {t('hero.description')}
+          </motion.p>
 
-          <Button asChild variant="outline" size="lg" className="min-h-10 px-6">
-            <Link to="/projects">{t('hero.cta.projects')}</Link>
-          </Button>
-        </motion.div>
+          {/* CTAs - Contact (spectrum, sole rainbow) + Projects (outline) */}
+          <motion.div
+            custom={4}
+            variants={fadeUp}
+            initial="hidden"
+            animate="show"
+            className="flex flex-col sm:flex-row items-center justify-center gap-3"
+          >
+            <SpectrumButton asChild variant="spectrum" size="default">
+              <Link
+                to="/contact?from=home"
+                onClick={() => {
+                  void import('@/app/lib/analytics').then((m) => {
+                    m.trackContactClick('home_hero');
+                    m.trackCtaClick('contact', 'home_hero', '/contact?from=home');
+                  });
+                }}
+              >
+                {t('hero.cta.contact')}
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            </SpectrumButton>
+
+            <Button asChild variant="outline" size="lg" className="min-h-10 px-6">
+              <Link
+                to="/projects"
+                onClick={() => {
+                  void import('@/app/lib/analytics').then((m) =>
+                    m.trackCtaClick('projects', 'home_hero', '/projects'),
+                  );
+                }}
+              >
+                {t('hero.cta.projects')}
+              </Link>
+            </Button>
+          </motion.div>
+        </div>
       </section>
     </AuroraBackground>
   );

@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useEffect, useState } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { SEO } from '@/shared/ui/SEO/SEO';
 import { HeroSection } from './sections/HeroSection';
 import { ServiceSection } from './sections/ServiceSection';
@@ -7,67 +7,13 @@ import { TestimonialsSection } from './sections/TestimonialsSection';
 import { DarkBrandParallaxBand } from './sections/DarkBrandParallaxBand';
 import { CTASection } from './sections/CTASection';
 import { DeferredMount } from '@/shared/ui/DeferredMount';
-import { ErrorBoundary } from '@/app/lib/ErrorBoundary';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
-
-const SplashCursor = lazy(() =>
-  import('@/shared/ui/splash-cursor').then((m) => ({ default: m.SplashCursor })),
-);
 
 const PresentationVideo = lazy(() =>
   import('@/widgets/PresentationVideo/PresentationVideo').then((m) => ({
     default: m.PresentationVideo,
   })),
 );
-
-function canUseWebGL(): boolean {
-  try {
-    const canvas = document.createElement('canvas');
-    return !!(
-      window.WebGLRenderingContext &&
-      (canvas.getContext('webgl2') ||
-        canvas.getContext('webgl') ||
-        canvas.getContext('experimental-webgl'))
-    );
-  } catch {
-    return false;
-  }
-}
-
-function DeferredSplash() {
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const coarse = window.matchMedia('(pointer: coarse)').matches;
-    if (reduced || coarse || !canUseWebGL()) return;
-
-    const schedule =
-      (
-        window as Window & {
-          requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
-        }
-      ).requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 400));
-
-    const id = schedule(() => setReady(true), { timeout: 1800 });
-    return () => {
-      const cancel =
-        (window as Window & { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback ??
-        clearTimeout;
-      cancel(id as number);
-    };
-  }, []);
-
-  if (!ready) return null;
-
-  return (
-    <ErrorBoundary fallback={null}>
-      <Suspense fallback={null}>
-        <SplashCursor />
-      </Suspense>
-    </ErrorBoundary>
-  );
-}
 
 export const HomePage: React.FC = () => {
   const { language } = useLanguageStore();
@@ -90,8 +36,6 @@ export const HomePage: React.FC = () => {
       />
 
       <div className="relative min-h-screen overflow-x-clip">
-        <DeferredSplash />
-
         <HeroSection />
 
         <DeferredMount
@@ -104,9 +48,9 @@ export const HomePage: React.FC = () => {
           </Suspense>
         </DeferredMount>
 
-        <ServiceSection />
         <DarkBrandParallaxBand>
-        <WhyChooseMeSection />
+          <ServiceSection />
+          <WhyChooseMeSection />
           <TestimonialsSection />
         </DarkBrandParallaxBand>
         <CTASection />

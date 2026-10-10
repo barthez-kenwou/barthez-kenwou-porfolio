@@ -79,48 +79,60 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   const renderMedia = (media: string, isActive: boolean) => {
     if (!media) return null;
     const isVideo = media.endsWith('.mp4') || media.endsWith('.webm') || media.endsWith('.ogg');
-    const baseClasses = 'w-full h-full object-cover transition-transform duration-500';
+    const fillClasses = 'absolute inset-0 h-full w-full';
     if (isVideo) {
       return (
-        <video src={media} autoPlay={isActive} loop muted playsInline className={baseClasses} />
+        <video
+          src={media}
+          autoPlay={isActive}
+          loop
+          muted
+          playsInline
+          className={cn(fillClasses, 'object-cover')}
+        />
       );
     }
-    return <Image src={media} alt={title} className={baseClasses} />;
+    return <Image src={media} alt={title} className={fillClasses} />;
   };
 
   return (
-    <article className="group rounded relative flex flex-col h-full overflow-hidden transition-all duration-300">
+    <article className="group relative flex h-full min-w-0 flex-col overflow-hidden rounded contain-paint">
       {/* ── Image Area ────────────────────────────────────────────────────── */}
-      <div className="relative h-56 w-full overflow-hidden bg-muted group/carousel">
+      <div className="relative h-56 w-full shrink-0 overflow-hidden bg-muted group/carousel">
         {project.images.length > 1 ? (
           <>
-            <div
-              className="flex w-full h-full transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${currentImageIndex * 100}%)` }}
-            >
-              {project.images.map((media, idx) => (
-                <div key={idx} className="w-full h-full flex-shrink-0 relative">
-                  {renderMedia(media, currentImageIndex === idx)}
-                </div>
-              ))}
-            </div>
+            {/* Absolute slides: no flex track that can spill into neighbors */}
+            {project.images.map((media, idx) => (
+              <div
+                key={idx}
+                className={cn(
+                  'absolute inset-0 transition-opacity duration-500 ease-in-out',
+                  idx === currentImageIndex
+                    ? 'z-1 opacity-100'
+                    : 'z-0 opacity-0 pointer-events-none',
+                )}
+                aria-hidden={idx !== currentImageIndex}
+              >
+                {renderMedia(media, currentImageIndex === idx)}
+              </div>
+            ))}
 
             {/* Carousel Controls */}
-            <div className="absolute inset-y-0 left-0 flex items-center px-2 opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300 z-20">
+            <div className="absolute inset-y-0 left-0 z-20 flex items-center px-2 opacity-0 transition-opacity duration-300 group-hover/carousel:opacity-100">
               <button
                 type="button"
                 onClick={handlePrevImage}
-                className="p-1 rounded-full bg-black/40 text-white backdrop-blur-md border border-white/20 hover:bg-black/60 hover:scale-110 transition-all cursor-pointer"
+                className="cursor-pointer rounded-full border border-white/20 bg-black/40 p-1 text-white backdrop-blur-md transition-all hover:scale-110 hover:bg-black/60"
                 aria-label="Previous image"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
             </div>
-            <div className="absolute inset-y-0 right-0 flex items-center px-2 opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300 z-20">
+            <div className="absolute inset-y-0 right-0 z-20 flex items-center px-2 opacity-0 transition-opacity duration-300 group-hover/carousel:opacity-100">
               <button
                 type="button"
                 onClick={handleNextImage}
-                className="p-1 rounded-full bg-black/40 text-white backdrop-blur-md border border-white/20 hover:bg-black/60 hover:scale-110 transition-all cursor-pointer"
+                className="cursor-pointer rounded-full border border-white/20 bg-black/40 p-1 text-white backdrop-blur-md transition-all hover:scale-110 hover:bg-black/60"
                 aria-label="Next image"
               >
                 <ChevronRight className="h-5 w-5" />
@@ -128,7 +140,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             </div>
 
             {/* Pagination Dots */}
-            <div className="absolute bottom-2 inset-x-0 flex items-center justify-center gap-1.5 z-20">
+            <div className="absolute inset-x-0 bottom-2 z-20 flex items-center justify-center gap-1.5">
               {project.images.map((_, idx) => (
                 <button
                   key={idx}
@@ -139,10 +151,10 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                     setCurrentImageIndex(idx);
                   }}
                   className={cn(
-                    'h-1.5 rounded-full transition-all cursor-pointer shadow-[0_0_2px_rgba(0,0,0,0.5)]',
+                    'h-1.5 cursor-pointer rounded-full shadow-[0_0_2px_rgba(0,0,0,0.5)] transition-all',
                     currentImageIndex === idx
-                      ? 'bg-white w-4'
-                      : 'bg-white/60 hover:bg-white/90 w-1.5',
+                      ? 'w-4 bg-white'
+                      : 'w-1.5 bg-white/60 hover:bg-white/90',
                   )}
                   aria-label={`Go to slide ${idx + 1}`}
                 />
@@ -154,11 +166,11 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         )}
 
         {/* Overlay gradient for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10" />
+        <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
         {/* Badges Overlay */}
-        <div className="absolute top-4 inset-x-4 flex justify-between items-start pointer-events-none">
-          <span className="max-w-[70%] truncate rounded-md border border-white/10 bg-black/50 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md pointer-events-auto">
+        <div className="pointer-events-none absolute inset-x-4 top-4 z-20 flex items-start justify-between">
+          <span className="pointer-events-auto max-w-[70%] truncate rounded-md border border-white/10 bg-black/50 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md">
             {project.category}
           </span>
           {project.status && (
@@ -169,8 +181,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         </div>
 
         {/* Complexity (Bottom Left Overlay) */}
-        <div className="absolute bottom-4 left-4 flex items-center px-3 py-.5 rounded-md bg-black/50 backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 z-30 pointer-events-none">
-          <span className="text-[10px] font-bold text-white truncate shadow-sm">
+        <div className="pointer-events-none absolute bottom-4 left-4 z-30 flex translate-y-2 items-center rounded-md border border-white/10 bg-black/50 px-3 py-0.5 opacity-0 backdrop-blur-md transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+          <span className="truncate text-[10px] font-bold text-white shadow-sm">
             {project.complexity}
           </span>
         </div>
@@ -221,19 +233,25 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         </div>
 
         {/* Footer Meta & CTA */}
-        <div className="mt-auto pt-2 border-t border-border/50 flex items-center justify-between">
-          <div className="flex items-center gap-4 text-[11px] font-semibold text-muted-foreground/70">
-            <div className="flex items-center gap-1.5">
-              <Clock className="h-3.5 w-3.5" />
-              <span>{project.duration}</span>
+        <div className="mt-auto flex items-center justify-between gap-3 border-t border-border/50 pt-3">
+          <div className="flex min-w-0 items-center gap-3 text-[11px] font-medium leading-none text-muted-foreground">
+            <div className="flex min-w-0 items-center gap-1.5">
+              <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden />
+              <span className="truncate" title={project.duration}>
+                {project.duration}
+              </span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <Users className="h-3.5 w-3.5" />
-              <span>{project.teamSize} p.</span>
-            </div>
+            {project.teamSize != null && (
+              <div className="flex shrink-0 items-center gap-1.5">
+                <Users className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                <span className="whitespace-nowrap tabular-nums">
+                  {project.teamSize}&nbsp;p.
+                </span>
+              </div>
+            )}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-1">
             {project.github && project.github !== '#' && (
               <Button variant="ghost" size="icon-sm" asChild className="rounded-md">
                 <Link to={project.github} target="_blank" title="GitHub">
@@ -250,7 +268,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             )}
             <Link
               to={projectHref}
-              className="ml-1 p-2 rounded-md bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+              className="rounded-md bg-primary/10 p-2 text-primary transition-colors duration-300 hover:bg-primary hover:text-primary-foreground"
               title="View Details"
             >
               <ArrowUpRight className="h-4 w-4" />

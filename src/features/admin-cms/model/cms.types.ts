@@ -11,6 +11,7 @@ export interface IProfessionalReference {
   company: string;
   email: string;
   phone: string;
+  sortOrder?: number;
 }
 
 export interface IContactInfo {
@@ -29,6 +30,9 @@ export interface IContactInfo {
   github: string;
   linkedin: string;
   facebook: string;
+  youtube: string;
+  /** Home/About presentation video (YouTube URL). */
+  presentationVideoUrl: string;
 }
 
 export type ContactResponseStatus = 'new' | 'read' | 'archived' | 'replied';

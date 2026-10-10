@@ -15,13 +15,20 @@ export const EducationSection: React.FC<Props> = ({ education, language }) => (
       </Text>
     </View>
     {(education || []).map((edu, i) => (
-      <View key={i} style={styles.row}>
+      <View key={i} style={styles.row} wrap={false}>
         <View style={styles.leftCol}>
           <Text style={styles.period}>{edu.period}</Text>
         </View>
         <View style={styles.rightCol}>
-          <Text style={styles.boldText}>{language === 'fr' ? edu.degreeFr : edu.degreeEn}</Text>
-          <Text style={styles.metaText}>{edu.school}</Text>
+          <Text style={styles.compactLine}>
+            <Text style={styles.boldText}>{language === 'fr' ? edu.degreeFr : edu.degreeEn}</Text>
+            {edu.school ? (
+              <Text style={styles.metaInline}>
+                {'  ·  '}
+                {edu.school}
+              </Text>
+            ) : null}
+          </Text>
         </View>
       </View>
     ))}

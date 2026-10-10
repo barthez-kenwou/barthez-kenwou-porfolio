@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { HeroSection } from './sections/HeroSection';
 import { ProfileCard } from '@/entities/userProfile/ui/ProfileCard.ui';
 import { BioSection } from './sections/BioSection';
@@ -8,10 +8,20 @@ import { SEO } from '@/shared/ui/SEO/SEO';
 import { PresentationVideo } from '@/widgets/PresentationVideo/PresentationVideo';
 import { AboutCTASection } from './sections/AboutCTASection';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
+import { MobileStickyCtaBar } from '@/shared/ui/MobileStickyCtaBar';
+import { useStickyCtaVisibility } from '@/shared/hooks/useStickyCtaVisibility';
+
+const CONTACT_FROM_ABOUT = '/contact?from=about';
 
 export const AboutPage: React.FC = () => {
   const { language } = useLanguageStore();
   const isFr = language === 'fr';
+  const heroRef = useRef<HTMLDivElement | null>(null);
+  const endCtaRef = useRef<HTMLDivElement | null>(null);
+  const stickyVisible = useStickyCtaVisibility({
+    hideWhileInViewRef: heroRef,
+    endCtaRef,
+  });
 
   return (
     <>
@@ -27,9 +37,11 @@ export const AboutPage: React.FC = () => {
 
       {/* No overflow-x-clip here: it breaks position:sticky on the profile card */}
       <div className="mx-auto min-h-screen w-full">
-        <div className="min-h-screen py-20">
-          <div className="mx-auto py-12">
-            <HeroSection />
+        <div className="min-h-screen">
+          <div className="mx-auto space-y-10! pb-3 md:pb-4">
+            <div ref={heroRef}>
+              <HeroSection />
+            </div>
 
             <div className="mb-2 grid gap-8 px-4 md:px-10 lg:grid-cols-3 lg:px-14">
               <div className="lg:col-span-1">
@@ -49,10 +61,19 @@ export const AboutPage: React.FC = () => {
             </div>
 
             <PresentationVideo />
-            <AboutCTASection />
+            <div ref={endCtaRef}>
+              <AboutCTASection />
+            </div>
           </div>
         </div>
       </div>
+
+      <MobileStickyCtaBar
+        visible={stickyVisible}
+        to={CONTACT_FROM_ABOUT}
+        location="about_sticky"
+        label={isFr ? 'Engager la conversation' : 'Start the conversation'}
+      />
     </>
   );
 };

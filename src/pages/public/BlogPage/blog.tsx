@@ -21,7 +21,7 @@ export const BlogPage: React.FC = () => {
         }
       />
 
-      <div className="min-h-screen overflow-x-clip">
+      <div className="min-h-screen overflow-x-clip pb-3 md:pb-4">
         <HeroSection />
         <PostsGrid />
         <NewsletterCTA source="blog" contactTo="/contact?from=blog" />

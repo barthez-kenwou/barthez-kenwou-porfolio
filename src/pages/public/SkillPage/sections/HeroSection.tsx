@@ -6,15 +6,15 @@ export const HeroSection: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <section className="text-center relative mb-16 pt-16 animate-fade-in">
-      <div className="">
+    <section className="relative mb-8 animate-fade-in px-4 pt-[350px] text-center md:mb-12 md:px-10 md:pt-[350px] lg:px-14">
+      <div className="relative z-10 mx-auto max-w-3xl -mt-40 md:-mt-44">
         <h1 className="section-title">
-          <span className="font-display text-foreground">{t('skills.title')}</span>
+          <span className="font-heading text-foreground">{t('skills.title')}</span>
         </h1>
-
-        <p className="section-subtitle">{t('skills.subtitle')}</p>
+        <p className="section-subtitle mx-auto !mb-0 max-w-lg text-foreground/70">
+          {t('skills.subtitle')}
+        </p>
       </div>
-
       <RetroGrid />
     </section>
   );

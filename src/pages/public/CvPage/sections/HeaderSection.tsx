@@ -35,10 +35,6 @@ export const HeaderSection: React.FC<HeaderProps> = ({ personalInfo }) => {
       />
 
       <div className="relative text-center md:text-left">
-        <p className="mb-1.5 font-mono text-[10px] font-bold tracking-[0.18em] text-primary/80 uppercase">
-          {language === 'fr' ? 'Curriculum Vitae' : 'Curriculum Vitae'}
-        </p>
-
         <h1 className="font-heading text-xl font-bold tracking-tight text-foreground sm:text-2xl">
           {personalInfo.name}
         </h1>

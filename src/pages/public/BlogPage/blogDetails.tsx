@@ -16,14 +16,39 @@ import { useBlogBySlug, usePublicBlogs } from '@/entities/blogs';
 import { motion } from 'framer-motion';
 import { getBlogPathSlug } from '@/shared/lib/entity-slug';
 import { QueryState } from '@/shared/ui/QueryState';
+import { useEffect, useRef } from 'react';
+import { MobileStickyCtaBar } from '@/shared/ui/MobileStickyCtaBar';
+import { useStickyCtaVisibility } from '@/shared/hooks/useStickyCtaVisibility';
 
 export const BlogDetailPage = () => {
   const { blogID } = useParams();
   const { language } = useLanguageStore();
+  const isFr = language === 'fr';
   const { data, isPending, isError, error } = useBlogBySlug(blogID);
   const postsQuery = usePublicBlogs();
   const post = data?.data;
   const allPosts = postsQuery.data?.data.items ?? [];
+  const heroRef = useRef<HTMLDivElement | null>(null);
+  const endCtaRef = useRef<HTMLElement | null>(null);
+  const stickyVisible = useStickyCtaVisibility({
+    hideWhileInViewRef: heroRef,
+    endCtaRef,
+    ready: Boolean(post),
+  });
+  const contactTo = post
+    ? `/contact?from=blog&article=${encodeURIComponent(
+        isFr ? post.titleFr : post.titleEn || post.titleFr,
+      )}`
+    : '/contact?from=blog';
+
+  useEffect(() => {
+    if (!post || post.isPublished === false) return;
+    // Scroll depth on /blog/:slug is already captured by usePageEngagement;
+    // mark an explicit blog_read@25 once the article mounts.
+    void import('@/app/lib/analytics').then((m) =>
+      m.trackBlogRead(getBlogPathSlug(post), 25),
+    );
+  }, [post]);
 
   if (isPending || isError) {
     return (
@@ -98,7 +123,7 @@ export const BlogDetailPage = () => {
           <div className="absolute bottom-0 left-0 w-[min(400px,70vw)] h-[min(400px,70vw)] bg-primary/5 rounded-full blur-[100px] -translate-x-1/3 translate-y-1/3" />
         </div>
 
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-32 pb-16">
+        <div className="mx-auto max-w-6xl px-4 pb-3 pt-24 sm:px-6 md:pb-4 md:pt-32 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-16">
             {/* Sidebar - fixed TOC pinned to this column while reading */}
             <aside className="hidden lg:block lg:col-span-4 xl:col-span-3 min-w-0 relative">
@@ -116,7 +141,9 @@ export const BlogDetailPage = () => {
                   <BackSection />
                 </div>
 
-                <HeroDetailSection post={post} />
+                <div ref={heroRef}>
+                  <HeroDetailSection post={post} />
+                </div>
                 <MetaTagsSection post={post} />
 
                 <div className="mt-8 border-t border-border/40 pt-0">
@@ -129,9 +156,9 @@ export const BlogDetailPage = () => {
                   <RelatedPostsSection post={post} posts={allPosts} />
                   <NewsletterCTA
                     source="blog-article"
-                    contactTo={`/contact?from=blog&article=${encodeURIComponent(
-                      language === 'fr' ? post.titleFr : post.titleEn || post.titleFr,
-                    )}`}
+                    contactTo={contactTo}
+                    sectionRef={endCtaRef}
+                    className="!px-0"
                   />
                 </div>
               </motion.div>
@@ -143,6 +170,13 @@ export const BlogDetailPage = () => {
           </div>
         </div>
       </div>
+
+      <MobileStickyCtaBar
+        visible={stickyVisible}
+        to={contactTo}
+        location="blog_detail_sticky"
+        label={isFr ? 'Parlons-en' : "Let's talk"}
+      />
     </>
   );
 };

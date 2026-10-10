@@ -6,7 +6,7 @@ export const ContactFormSection: React.FC<{ className?: string }> = ({ className
   return (
     <div
       className={cn(
-        'glass flex h-full flex-col rounded-sm border border-border/50 p-3 md:p-4',
+        'glass flex h-full flex-col rounded-sm border border-border/50 p-5 md:p-8',
         className,
       )}
     >

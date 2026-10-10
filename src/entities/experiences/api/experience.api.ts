@@ -4,13 +4,9 @@ import type { IExperience } from '../model/experience.types';
 export interface IExperienceDto extends IExperience {
   id: string;
   sortOrder?: number;
-  isPublished?: boolean;
 }
 
-export interface ExperienceListParams extends PaginationParams {
-  isPublished?: boolean;
-  includeUnpublished?: boolean;
-}
+export type ExperienceListParams = PaginationParams;
 
 export async function listExperiences(
   params?: ExperienceListParams,

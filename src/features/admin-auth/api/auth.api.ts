@@ -9,6 +9,12 @@ export interface AuthUser {
   role: UserRole;
   firstName?: string;
   lastName?: string;
+  phone?: string;
+  avatarUrl?: string;
+  isVerified?: boolean;
+  isActive?: boolean;
+  totpEnabled?: boolean;
+  roles?: string[];
   permissions?: string[];
 }
 
@@ -62,6 +68,7 @@ function toAuthUser(profile: LoginProfile | MeProfile): AuthUser {
   }
   const firstName = profile.firstName ?? '';
   const lastName = profile.lastName ?? '';
+  const me = profile as MeProfile;
   return {
     id: profile.id,
     email: profile.email,
@@ -69,6 +76,12 @@ function toAuthUser(profile: LoginProfile | MeProfile): AuthUser {
     role: 'admin',
     firstName,
     lastName,
+    phone: me.phone ?? (profile as LoginProfile).phone,
+    avatarUrl: me.avatarUrl ?? (profile as LoginProfile).profileUrl,
+    isVerified: me.isVerified,
+    isActive: me.isActive,
+    totpEnabled: me.totpEnabled,
+    roles,
     permissions: profile.permissions,
   };
 }

@@ -17,10 +17,10 @@ export const ServiceSection: React.FC = () => {
   }, [data]);
 
   return (
-    <section className="relative z-10 overflow-x-clip px-4 py-8 md:px-10 lg:px-14 lg:py-0">
-      <div className="relative z-10 grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20">
-        {/* Centered until lg — two-column desktop unlocks left stack */}
-        <div className="animate-fade-in mx-auto flex w-full max-w-xl flex-col items-center space-y-8 text-center lg:mx-0 lg:max-w-none lg:items-start lg:text-left">
+    <section className="relative z-10 overflow-x-clip px-4 py-12 md:px-10 md:py-16 lg:px-14 lg:py-20">
+      <div className="relative z-10 grid w-full grid-cols-1 gap-12 lg:grid-cols-2 lg:items-stretch lg:gap-20">
+        {/* Stretches to the card column height, then spreads content top→bottom */}
+        <div className="animate-fade-in mx-auto flex w-full max-w-xl flex-col items-center justify-center gap-8 text-center lg:mx-0 lg:h-full lg:max-w-none lg:items-start lg:justify-between lg:py-8 lg:text-left">
           <div className="w-full space-y-4">
             <h2 className="section-title !text-center lg:!text-left">
               <span className="font-heading text-foreground">
@@ -63,8 +63,9 @@ export const ServiceSection: React.FC = () => {
           </div>
         </div>
 
-        <div className="relative mx-auto h-[420px] w-full max-w-[450px] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_8%,black_92%,transparent)] md:h-[540px] lg:ml-auto">
+        <div className="relative mx-auto flex h-[340px] w-full max-w-[450px] items-center overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] md:h-[400px] lg:ml-auto">
           <QueryState
+            className="flex h-full w-full items-center justify-center"
             isPending={isPending}
             isError={isError}
             errorMessage={error instanceof Error ? error.message : undefined}
@@ -72,7 +73,7 @@ export const ServiceSection: React.FC = () => {
             empty={!isPending && previewServices.length === 0}
           >
             <AnimatedList
-              className="mx-auto flex h-full flex-col items-center bg-transparent px-3 py-6 sm:px-4 sm:py-8"
+              className="mx-auto w-full bg-transparent px-3 py-4 sm:px-4 sm:py-5"
               delay={2000}
               maxVisible={3}
               pauseOnHover

@@ -4,13 +4,9 @@ import type { Icertifications } from '../model/certification.types';
 export interface ICertificationDto extends Icertifications {
   id: string;
   sortOrder?: number;
-  isPublished?: boolean;
 }
 
-export interface CertificationListParams extends PaginationParams {
-  isPublished?: boolean;
-  includeUnpublished?: boolean;
-}
+export type CertificationListParams = PaginationParams;
 
 export async function listCertifications(
   params?: CertificationListParams,

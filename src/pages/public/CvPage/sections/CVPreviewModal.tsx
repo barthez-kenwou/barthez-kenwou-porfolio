@@ -3,7 +3,8 @@ import { BlobProvider } from '@react-pdf/renderer';
 import { CvPDFDocument } from '../PDF/PDFDocument';
 import { usePublicCvData } from '@/entities/cv/hooks/useCv';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
-import { X, Download, Loader2, FileText, CheckCircle2 } from 'lucide-react';
+import { X, Download, Loader2, CheckCircle2 } from 'lucide-react';
+import { trackCvDownload } from '@/app/lib/analytics';
 import { createPortal } from 'react-dom';
 import { cn } from '@/shared/lib/utils';
 
@@ -117,22 +118,17 @@ export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose 
             : 'translate-y-6 opacity-0 sm:translate-y-3',
         )}
       >
-        <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border/50 px-4 py-3 sm:px-5">
-          <div className="flex min-w-0 items-center gap-2.5">
-            <div className="rounded-md bg-brand/15 p-2 text-brand dark:bg-primary/20 dark:text-primary">
-              <FileText className="h-4 w-4 sm:h-5 sm:w-5" />
-            </div>
-            <div className="min-w-0">
-              <h3
-                id="cv-preview-title"
-                className="truncate font-heading text-base font-bold text-foreground sm:text-lg"
-              >
-                {isFr ? 'Aperçu du CV' : 'CV preview'}
-              </h3>
-              <p className="truncate text-[11px] text-foreground/60 sm:text-xs">
-                {isFr ? 'Vérifiez, puis récupérez le fichier PDF.' : 'Review, then get the PDF file.'}
-              </p>
-            </div>
+        <div className="bg-primary/20 flex shrink-0 items-center justify-between gap-3 border-b border-border/50 px-4 py-3 sm:px-5">
+          <div className="min-w-0 mx-auto text-center">
+            <h3
+              id="cv-preview-title"
+              className="truncate font-heading text-base font-bold text-foreground sm:text-lg text-center"
+            >
+              {isFr ? 'Aperçu du CV' : 'CV preview'}
+            </h3>
+            <p className="truncate text-[11px] text-foreground/60 sm:text-xs text-center">
+              {isFr ? 'Vérifiez, puis récupérez le fichier PDF.' : 'Review, then get the PDF file.'}
+            </p>
           </div>
           <button
             type="button"
@@ -210,15 +206,16 @@ export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose 
                     )}
                   </div>
 
-                  <div className="shrink-0 border-t border-border/50 bg-background/90 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md sm:px-5 sm:py-4">
+                  <div className="flex shrink-0 justify-center border-t border-border/50 bg-background/90 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md sm:px-5 sm:py-4">
                     <a
                       href={url}
                       download={fileName}
+                      onClick={() => trackCvDownload(language === 'fr' ? 'fr' : 'en', 'cv_preview_modal')}
                       className={cn(
-                        'inline-flex w-full items-center justify-center gap-2 rounded-md',
+                        'inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-md',
                         'bg-brand px-4 py-3 text-sm font-semibold text-brand-foreground',
                         'transition-colors hover:bg-brand-hover',
-                        'sm:mx-auto sm:w-auto sm:min-w-[14rem] sm:px-6',
+                        'mx-auto sm:w-auto sm:min-w-[14rem] sm:px-6',
                       )}
                     >
                       <Download className="h-4 w-4" />

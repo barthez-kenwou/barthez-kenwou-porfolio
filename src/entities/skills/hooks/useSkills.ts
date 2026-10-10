@@ -20,13 +20,12 @@ import {
 
 /** API validates limit ∈ [1, 100] */
 const PAGE_SIZE = 100;
-const PUBLIC_LIST: SkillListParams = { limit: PAGE_SIZE, isPublished: true };
+const PUBLIC_LIST: SkillListParams = { limit: PAGE_SIZE };
 
 function mockSkillsDto(): ISkillDto[] {
   return skillsData.map((skill, index) => ({
     ...skill,
     id: `mock-skill-${index}`,
-    isPublished: true,
     sortOrder: index,
   }));
 }
@@ -50,8 +49,7 @@ export function usePublicSkills() {
 export function useAdminSkills(params?: SkillListParams) {
   return useQuery({
     queryKey: queryKeys.skills.list({ admin: true, ...params }),
-    queryFn: () =>
-      listAllSkills({ limit: PAGE_SIZE, includeUnpublished: true, ...params }),
+    queryFn: () => listAllSkills({ limit: PAGE_SIZE, ...params }),
   });
 }
 

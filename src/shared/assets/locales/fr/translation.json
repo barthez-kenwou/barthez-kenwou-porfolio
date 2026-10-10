@@ -59,7 +59,9 @@
     },
     "demo": "Voir démo",
     "code": "Code source",
-    "details": "Voir détails"
+    "details": "Voir détails",
+    "featuredTitle": "Sélection",
+    "featuredSubtitle": "Quelques cas représentatifs, à parcourir à votre rythme."
   },
   "services": {
     "cta": "Demander un devis"
@@ -76,6 +78,7 @@
     },
     "info": {
       "email": "Email",
+      "whatsapp": "WhatsApp",
       "location": "Localisation",
       "availability": "Disponibilité",
       "available": "Disponible pour missions (remote)"

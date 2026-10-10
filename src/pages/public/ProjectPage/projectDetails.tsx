@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { ProjectNotFound } from './sections/ProjectNotFound';
 import { HeroDetailSection } from './sections/HeroDetailSection';
 import { ProjectOverviewSection } from './sections/ProjectOverviewSection';
@@ -28,6 +28,8 @@ import { useProject } from '@/entities/projets/hooks/useProjects';
 import { truncateFonction } from '@/shared/ui/utils/truncateText/helpers';
 import { getProjectPathSlug, parseEntityIdFromParam } from '@/shared/lib/entity-slug';
 import { QueryState } from '@/shared/ui/QueryState';
+import { MobileStickyCtaBar } from '@/shared/ui/MobileStickyCtaBar';
+import { useStickyCtaVisibility } from '@/shared/hooks/useStickyCtaVisibility';
 
 export const ProjectDetailPage = () => {
   const { id, projectID } = useParams();
@@ -35,13 +37,33 @@ export const ProjectDetailPage = () => {
   const projectId = parseEntityIdFromParam(searchId) ?? undefined;
   const { data: project, isPending, isError, error } = useProject(projectId);
   const { language } = useLanguageStore();
+  const isFr = language === 'fr';
+  const heroRef = useRef<HTMLDivElement | null>(null);
+  const endCtaRef = useRef<HTMLElement | null>(null);
+  const stickyVisible = useStickyCtaVisibility({
+    hideWhileInViewRef: heroRef,
+    endCtaRef,
+    ready: Boolean(project),
+  });
   const projectPath = project
     ? `/projects/${getProjectPathSlug(project)}`
     : `/projects/${searchId}`;
+  const contactTo = project
+    ? `/contact?from=projects&article=${encodeURIComponent(
+        isFr ? project.titleFr : project.titleEn,
+      )}`
+    : '/contact?from=projects';
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [searchId]);
+
+  useEffect(() => {
+    if (!project) return;
+    void import('@/app/lib/analytics').then((m) =>
+      m.trackProjectView(getProjectPathSlug(project)),
+    );
+  }, [project]);
 
   if (isPending || isError) {
     return (
@@ -99,8 +121,10 @@ export const ProjectDetailPage = () => {
         }}
       />
 
-      <div className="min-h-screen">
-        <HeroDetailSection project={project} />
+      <div className="min-h-screen pb-3 md:pb-4">
+        <div ref={heroRef}>
+          <HeroDetailSection project={project} />
+        </div>
         <ProjectOverviewSection project={project} />
         <ProblemSolutionSection project={project} />
         <ProjectVideoSection project={project} />
@@ -121,8 +145,15 @@ export const ProjectDetailPage = () => {
         <ProjectResourcesSection project={project} />
         <ProjectLinksSection project={project} />
         <OtherProjectSection currentProjectId={project.id} />
-        <CTADetailsSection project={project} />
+        <CTADetailsSection project={project} sectionRef={endCtaRef} />
       </div>
+
+      <MobileStickyCtaBar
+        visible={stickyVisible}
+        to={contactTo}
+        location="project_detail_sticky"
+        label={isFr ? "Discuter d'un projet" : 'Discuss a project'}
+      />
     </>
   );
 };

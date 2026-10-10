@@ -1,13 +1,17 @@
 import React from 'react';
-import { Pencil, Plus, Trash2, Save, X, Loader2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, Pencil, Plus, Trash2, Save, X, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   AdminPageHeader,
   AdminDataTable,
   AdminSectionCard,
+  AdminStickyActions,
   ConfirmDeleteDialog,
   BilingualField,
   Field,
+  getReorderTargets,
+  sortBySortOrder,
+  useScrollToEditor,
 } from '@/features/admin-cms';
 import {
   useAdminAchievements,
@@ -52,8 +56,10 @@ export const AdminAchievementsPage: React.FC = () => {
   const remove = useDeleteAchievement();
   const [editing, setEditing] = React.useState<Draft | null>(null);
   const [pending, setPending] = React.useState<IAchievementDto | null>(null);
+  const [reorderingId, setReorderingId] = React.useState<string | null>(null);
+  const { editorRef, tableRef } = useScrollToEditor(editing);
   const saving = create.isPending || update.isPending;
-  const items = data?.items ?? [];
+  const items = React.useMemo(() => sortBySortOrder(data?.items ?? []), [data?.items]);
 
   const save = async () => {
     if (!editing) return;
@@ -80,6 +86,21 @@ export const AdminAchievementsPage: React.FC = () => {
     }
   };
 
+  const reorder = async (id: string, direction: 'up' | 'down') => {
+    const patches = getReorderTargets(items, id, direction);
+    if (!patches.length) return;
+    setReorderingId(id);
+    try {
+      await Promise.all(
+        patches.map((p) => update.mutateAsync({ id: p.id, payload: { sortOrder: p.sortOrder } })),
+      );
+    } catch (e) {
+      toast.error(isApiError(e) ? e.message : fr ? 'Échec du réordonnancement' : 'Reorder failed');
+    } finally {
+      setReorderingId(null);
+    }
+  };
+
   const confirmDelete = async () => {
     if (!pending) return;
     try {
@@ -96,7 +117,7 @@ export const AdminAchievementsPage: React.FC = () => {
       <AdminPageHeader
         title={fr ? 'Réalisations' : 'Achievements'}
         actions={
-          <Button onClick={() => setEditing(emptyItem())}>
+          <Button type="button" className="cursor-pointer" onClick={() => setEditing(emptyItem())}>
             <Plus className="size-4" />
             {fr ? 'Ajouter' : 'Add'}
           </Button>
@@ -104,106 +125,157 @@ export const AdminAchievementsPage: React.FC = () => {
       />
 
       {editing ? (
-        <AdminSectionCard
-          title={fr ? 'Édition' : 'Editor'}
-          actions={
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={() => setEditing(null)} disabled={saving}>
-                <X className="size-3.5" /> {fr ? 'Fermer' : 'Close'}
-              </Button>
-              <Button size="sm" onClick={() => void save()} disabled={saving}>
-                {saving ? <Loader2 className="size-3.5 animate-spin" /> : <Save className="size-3.5" />}
-                {fr ? 'Enregistrer' : 'Save'}
-              </Button>
-            </div>
-          }
-        >
-          <div className="grid gap-4 md:grid-cols-2">
-            <Field label="Icon key">
-              <Select
-                value={editing.iconKey}
-                onValueChange={(v) => setEditing({ ...editing, iconKey: v })}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {ACHIEVEMENT_ICON_KEYS.map((key) => (
-                    <SelectItem key={key} value={key}>
-                      {key}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </Field>
-            <Field label={fr ? 'Valeur' : 'Value'} required>
-              <Input
-                value={editing.value}
-                onChange={(e) => setEditing({ ...editing, value: e.target.value })}
-                placeholder="50+"
+        <div ref={editorRef}>
+          <AdminSectionCard
+            title={fr ? 'Édition' : 'Editor'}
+            actions={
+              <AdminStickyActions>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="cursor-pointer flex-1 md:flex-none"
+                  onClick={() => setEditing(null)}
+                  disabled={saving}
+                >
+                  <X className="size-3.5" /> {fr ? 'Fermer' : 'Close'}
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  className="cursor-pointer flex-[1.4] md:flex-none"
+                  onClick={() => void save()}
+                  disabled={saving}
+                >
+                  {saving ? <Loader2 className="size-3.5 animate-spin" /> : <Save className="size-3.5" />}
+                  {fr ? 'Enregistrer' : 'Save'}
+                </Button>
+              </AdminStickyActions>
+            }
+          >
+            <div className="grid gap-4 md:grid-cols-2">
+              <Field label="Icon key">
+                <Select
+                  value={editing.iconKey}
+                  onValueChange={(v) => setEditing({ ...editing, iconKey: v })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ACHIEVEMENT_ICON_KEYS.map((key) => (
+                      <SelectItem key={key} value={key}>
+                        {key}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </Field>
+              <Field label={fr ? 'Valeur' : 'Value'} required>
+                <Input
+                  value={editing.value}
+                  onChange={(e) => setEditing({ ...editing, value: e.target.value })}
+                  placeholder="50+"
+                />
+              </Field>
+              <BilingualField
+                label={fr ? 'Label' : 'Label'}
+                valueFr={editing.labelFr}
+                valueEn={editing.labelEn}
+                onChangeFr={(v) => setEditing({ ...editing, labelFr: v })}
+                onChangeEn={(v) => setEditing({ ...editing, labelEn: v })}
               />
-            </Field>
-            <BilingualField
-              label={fr ? 'Label' : 'Label'}
-              valueFr={editing.labelFr}
-              valueEn={editing.labelEn}
-              onChangeFr={(v) => setEditing({ ...editing, labelFr: v })}
-              onChangeEn={(v) => setEditing({ ...editing, labelEn: v })}
-            />
-          </div>
-        </AdminSectionCard>
+            </div>
+          </AdminSectionCard>
+        </div>
       ) : null}
 
-      <QueryState
-        isPending={isPending}
-        isError={isError}
-        errorMessage={isApiError(error) ? error.message : undefined}
-        empty={!isPending && !isError && items.length === 0}
-        emptyTitle={fr ? 'Aucune réalisation' : 'No achievements'}
-      >
-        <AdminDataTable
-          data={items}
-          getRowId={(r) => String(r.id)}
-          searchKeys={['value', 'labelFr', 'labelEn', 'iconKey']}
-          emptyTitle={fr ? 'Aucun élément' : 'No items'}
-          columns={[
-            {
-              key: 'value',
-              header: fr ? 'Valeur' : 'Value',
-              render: (r) => <span className="font-medium">{r.value}</span>,
-            },
-            {
-              key: 'label',
-              header: 'Label',
-              render: (r) => (fr ? r.labelFr : r.labelEn),
-            },
-            { key: 'iconKey', header: 'Icon' },
-          ]}
-          actions={(r) => (
-            <>
-              <Button
-                size="icon-sm"
-                variant="ghost"
-                onClick={() =>
-                  setEditing({
-                    id: r.id,
-                    iconKey: r.iconKey,
-                    value: r.value,
-                    labelFr: r.labelFr,
-                    labelEn: r.labelEn,
-                    isNew: false,
-                  })
-                }
-              >
-                <Pencil className="size-3.5" />
-              </Button>
-              <Button size="icon-sm" variant="ghost" onClick={() => setPending(r)}>
-                <Trash2 className="size-3.5 text-destructive" />
-              </Button>
-            </>
-          )}
-        />
-      </QueryState>
+      <div ref={tableRef}>
+        <QueryState
+          isPending={isPending}
+          isError={isError}
+          errorMessage={isApiError(error) ? error.message : undefined}
+          empty={!isPending && !isError && items.length === 0}
+          emptyTitle={fr ? 'Aucune réalisation' : 'No achievements'}
+        >
+          <AdminDataTable
+            data={items}
+            getRowId={(r) => String(r.id)}
+            searchKeys={['value', 'labelFr', 'labelEn', 'iconKey']}
+            emptyTitle={fr ? 'Aucun élément' : 'No items'}
+            columns={[
+              {
+                key: 'value',
+                header: fr ? 'Valeur' : 'Value',
+                render: (r) => <span className="font-medium">{r.value}</span>,
+              },
+              {
+                key: 'label',
+                header: 'Label',
+                render: (r) => (fr ? r.labelFr : r.labelEn),
+              },
+              { key: 'iconKey', header: 'Icon' },
+            ]}
+            actions={(r) => {
+              const idx = items.findIndex((x) => x.id === r.id);
+              const busy = reorderingId === r.id;
+              return (
+                <>
+                  <Button
+                    type="button"
+                    size="icon-sm"
+                    variant="ghost"
+                    className="size-11 cursor-pointer md:size-8"
+                    disabled={idx <= 0 || reorderingId !== null}
+                    title={fr ? 'Monter' : 'Move up'}
+                    onClick={() => void reorder(r.id, 'up')}
+                  >
+                    {busy ? <Loader2 className="size-3.5 animate-spin" /> : <ChevronUp className="size-3.5" />}
+                  </Button>
+                  <Button
+                    type="button"
+                    size="icon-sm"
+                    variant="ghost"
+                    className="size-11 cursor-pointer md:size-8"
+                    disabled={idx >= items.length - 1 || reorderingId !== null}
+                    title={fr ? 'Descendre' : 'Move down'}
+                    onClick={() => void reorder(r.id, 'down')}
+                  >
+                    <ChevronDown className="size-3.5" />
+                  </Button>
+                  <Button
+                    type="button"
+                    size="icon-sm"
+                    variant="ghost"
+                    className="size-11 cursor-pointer md:size-8"
+                    onClick={() =>
+                      setEditing({
+                        id: r.id,
+                        iconKey: r.iconKey,
+                        value: r.value,
+                        labelFr: r.labelFr,
+                        labelEn: r.labelEn,
+                        isNew: false,
+                      })
+                    }
+                  >
+                    <Pencil className="size-3.5" />
+                  </Button>
+                  <Button
+                    type="button"
+                    size="icon-sm"
+                    variant="ghost"
+                    className="size-11 cursor-pointer md:size-8"
+                    onClick={() => setPending(r)}
+                  >
+                    <Trash2 className="size-3.5 text-destructive" />
+                  </Button>
+                </>
+              );
+            }}
+          />
+        </QueryState>
+      </div>
 
       <ConfirmDeleteDialog
         open={!!pending}

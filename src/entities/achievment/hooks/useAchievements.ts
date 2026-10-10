@@ -11,7 +11,7 @@ import {
   type IAchievementDto,
 } from '../api/achievement.api';
 
-const PUBLIC_LIST: AchievementListParams = { limit: 100, isPublished: true };
+const PUBLIC_LIST: AchievementListParams = { limit: 100 };
 
 export function usePublicAchievements() {
   return useQuery({
@@ -27,7 +27,7 @@ export function usePublicAchievements() {
 export function useAdminAchievements(params?: AchievementListParams) {
   return useQuery({
     queryKey: queryKeys.achievements.list({ admin: true, ...params }),
-    queryFn: () => listAchievements({ limit: 100, includeUnpublished: true, ...params }),
+    queryFn: () => listAchievements({ limit: 100, ...params }),
   });
 }
 

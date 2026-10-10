@@ -16,7 +16,7 @@ export function Field({ label, hint, error, children, htmlFor, className, requir
   return (
     <div className={cn('space-y-2', className)}>
       <div className="flex items-baseline justify-between gap-3">
-        <Label htmlFor={htmlFor} className="text-foreground">
+        <Label htmlFor={htmlFor} className="cursor-default text-foreground">
           {label}
           {required ? <span className="ml-0.5 text-destructive">*</span> : null}
         </Label>

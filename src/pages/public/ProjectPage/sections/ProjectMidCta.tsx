@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { cn } from '@/shared/lib/utils';
+import { trackContactClick, trackCtaClick } from '@/app/lib/analytics';
 import type { IProject } from '@/entities/projets/model/project.types';
 
 type ProjectMidCtaProps = {
@@ -18,11 +19,13 @@ function MidCtaShell({
   body,
   linkLabel,
   contactTo,
+  location,
 }: {
   title: string;
   body: string;
   linkLabel: string;
   contactTo: string;
+  location: string;
 }) {
   return (
     <section className="px-4 md:px-10 lg:px-14">
@@ -33,6 +36,10 @@ function MidCtaShell({
           </p>
           <Link
             to={contactTo}
+            onClick={() => {
+              trackContactClick(location);
+              trackCtaClick('contact', location, contactTo);
+            }}
             onMouseEnter={() => {
               void import('@/app/routes/prefetch').then((m) => m.prefetchRoute('/contact'));
             }}
@@ -50,7 +57,7 @@ function MidCtaShell({
             <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
         </div>
-        <p className="mt-1.5 max-w-xl text-[11px] leading-relaxed text-foreground/75 sm:mt-1 sm:text-xs">
+        <p className="mt-1.5 max-w-xl text-[11px] leading-relaxed text-foreground/70 sm:mt-1 sm:text-xs">
           {body}
         </p>
       </div>
@@ -74,6 +81,7 @@ export const ProjectMidCta: React.FC<ProjectMidCtaProps> = ({ project }) => {
       }
       linkLabel={isFr ? 'En discuter' : 'Discuss it'}
       contactTo={contactHref(projectTitle)}
+      location="project_mid_cta_1"
     />
   );
 };
@@ -94,6 +102,7 @@ export const ProjectMidCta2: React.FC<ProjectMidCtaProps> = ({ project }) => {
       }
       linkLabel={isFr ? 'Parlons-en' : "Let's talk"}
       contactTo={contactHref(projectTitle)}
+      location="project_mid_cta_2"
     />
   );
 };

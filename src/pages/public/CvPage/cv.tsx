@@ -73,25 +73,27 @@ export const CvPage = () => {
         }
       />
 
-      <div className="min-h-screen overflow-x-clip pt-16 pb-28 md:py-16 md:pb-16 lg:py-20 xl:pb-20">
-        <section className="relative mb-6 animate-fade-in px-4 pt-14 text-center md:mb-10 md:px-10 md:pt-16 lg:px-14">
-          <h1 className="section-title relative z-10">
-            {isFr ? 'Mon' : 'My'}
-            <span className="bg-gradient-to-r from-foreground via-foreground/80 to-muted-foreground bg-clip-text text-transparent">
-              &nbsp;CV
-            </span>
-          </h1>
-          <p className="section-subtitle relative z-10 mx-auto mt-2 max-w-lg !mb-0">
-            {isFr
-              ? 'Profil prêt à partager, téléchargez le PDF ou démarrons la conversation.'
-              : 'A shareable profile, download the PDF or start the conversation.'}
-          </p>
+      <div className="min-h-screen overflow-x-clip pb-28 md:pb-16 xl:pb-20">
+        <section className="relative mb-2 animate-fade-in px-4 pt-[350px] text-center md:mb-4 md:px-10 md:pt-[350px] lg:px-14">
+          <div className="relative z-10 mx-auto max-w-3xl -mt-40 md:-mt-44">
+            <h1 className="section-title">
+              {isFr ? 'Mon' : 'My'}
+              <span className="bg-gradient-to-r from-foreground via-foreground/80 to-muted-foreground bg-clip-text text-transparent">
+                &nbsp;CV
+              </span>
+            </h1>
+            <p className="section-subtitle mx-auto mt-2 max-w-lg !mb-0">
+              {isFr
+                ? 'Profil prêt à partager, téléchargez le PDF ou démarrons la conversation.'
+                : 'A shareable profile, download the PDF or start the conversation.'}
+            </p>
 
-          <div
-            ref={heroActionsRef}
-            className="relative z-10 mx-auto mt-5 flex max-w-md justify-center sm:mt-6"
-          >
-            <CvQuickActions variant="hero" onDownload={openPreview} />
+            <div
+              ref={heroActionsRef}
+              className="mx-auto mt-5 flex max-w-md justify-center sm:mt-6"
+            >
+              <CvQuickActions variant="hero" onDownload={openPreview} />
+            </div>
           </div>
 
           <RetroGrid />

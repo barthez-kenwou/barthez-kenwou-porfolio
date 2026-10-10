@@ -116,99 +116,114 @@ export function AdminDataTable<T>({
   const mobileMetaCols = columns.slice(1).filter((c) => !c.hideOnMobile);
   const activeFilterCount = Object.values(filterValues).filter((v) => v && v !== 'all').length;
 
-  const filtersBlock = (
-    <>
-      {filters.map((f) => (
-        <Select
-          key={f.key}
-          value={filterValues[f.key] || 'all'}
-          onValueChange={(v) => {
-            setFilterValues((prev) => ({ ...prev, [f.key]: v }));
-            setPage(1);
-          }}
-        >
-          <SelectTrigger className="h-11 w-full md:h-9 md:w-[9.5rem]">
-            <SelectValue placeholder={f.label} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">{f.label}</SelectItem>
-            {f.options.map((o) => (
-              <SelectItem key={o.value} value={o.value}>
-                {o.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      ))}
+  const filterSelects = filters.map((f) => (
+    <Select
+      key={f.key}
+      value={filterValues[f.key] || 'all'}
+      onValueChange={(v) => {
+        setFilterValues((prev) => ({ ...prev, [f.key]: v }));
+        setPage(1);
+      }}
+    >
+      <SelectTrigger className="h-10 w-full min-w-0 md:h-9 md:w-[9.5rem]">
+        <SelectValue placeholder={f.label} />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="all">{f.label}</SelectItem>
+        {f.options.map((o) => (
+          <SelectItem key={o.value} value={o.value} className="max-w-[18rem]">
+            <span className="truncate">{o.label}</span>
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  ));
 
-      <Select
-        value={String(pageSize)}
-        onValueChange={(v) => {
-          setPageSize(Number(v));
-          setPage(1);
-        }}
+  const pageSizeSelect = (
+    <Select
+      value={String(pageSize)}
+      onValueChange={(v) => {
+        setPageSize(Number(v));
+        setPage(1);
+      }}
+    >
+      <SelectTrigger
+        className="h-10 w-full shrink-0 md:h-9 md:w-[4.25rem]"
+        aria-label={isFr ? 'Lignes par page' : 'Rows per page'}
+        title={isFr ? `${pageSize} par page` : `${pageSize} per page`}
       >
-        <SelectTrigger className="h-11 w-full md:h-9 md:w-[7.5rem]">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {[10, 20, 30, 50].map((n) => (
-            <SelectItem key={n} value={String(n)}>
-              {n} / {isFr ? 'page' : 'page'}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </>
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent align="end">
+        {[10, 20, 30, 50].map((n) => (
+          <SelectItem key={n} value={String(n)}>
+            {n}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 
   return (
     <div className={cn('space-y-3', className)}>
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative w-full sm:max-w-sm">
-          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground md:left-2.5 md:size-3.5" />
-          <Input
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setPage(1);
-            }}
-            placeholder={searchPlaceholder || (isFr ? 'Rechercher…' : 'Search…')}
-            className="h-11 pl-10 md:h-9 md:pl-8"
-          />
-        </div>
+      <div className="flex flex-col gap-2">
+        <div className="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
+          <div className="relative min-w-0">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground md:left-2.5 md:size-3.5" />
+            <Input
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setPage(1);
+              }}
+              placeholder={searchPlaceholder || (isFr ? 'Rechercher…' : 'Search…')}
+              className="h-11 pl-10 shadow-none md:h-9 md:pl-8"
+            />
+          </div>
 
-        {/* Desktop filters inline */}
-        <div className="hidden flex-wrap items-center gap-2 md:flex">
-          {filtersBlock}
-          {toolbar}
-        </div>
+          <div className="hidden items-center gap-2 md:flex">
+            {filterSelects}
+            {pageSizeSelect}
+            {toolbar}
+          </div>
 
-        {/* Mobile: filters in a sheet, keeps the list readable */}
-        <div className="flex items-center gap-2 md:hidden">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button type="button" variant="outline" className="h-11 flex-1 gap-2">
-                <SlidersHorizontal className="size-4" />
-                {isFr ? 'Filtres' : 'Filters'}
-                {activeFilterCount > 0 ? (
-                  <span className="rounded-full bg-primary/15 px-1.5 text-[10px] font-semibold text-primary">
-                    {activeFilterCount}
-                  </span>
-                ) : null}
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="bottom"
-              className="rounded-t-2xl pb-[max(1rem,env(safe-area-inset-bottom))]"
-            >
-              <SheetHeader>
-                <SheetTitle>{isFr ? 'Filtres & pagination' : 'Filters & paging'}</SheetTitle>
-              </SheetHeader>
-              <div className="mt-4 space-y-3">{filtersBlock}</div>
-            </SheetContent>
-          </Sheet>
-          {toolbar}
+          <div className="flex items-center gap-2 md:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button type="button" variant="outline" className="h-11 flex-1 gap-2 shadow-none">
+                  <SlidersHorizontal className="size-4" />
+                  {isFr ? 'Filtres' : 'Filters'}
+                  {activeFilterCount > 0 ? (
+                    <span className="rounded-sm bg-primary/15 px-1.5 text-[10px] font-semibold text-primary">
+                      {activeFilterCount}
+                    </span>
+                  ) : null}
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                side="bottom"
+                className="gap-0 overflow-hidden rounded-t-xl border-t px-5 pt-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-lg"
+              >
+                <SheetHeader className="space-y-0 px-0 pb-4 text-left">
+                  <SheetTitle className="pr-10">
+                    {isFr ? 'Filtres & pagination' : 'Filters & paging'}
+                  </SheetTitle>
+                </SheetHeader>
+                <div className="grid gap-4">
+                  {filterSelects.length > 0 ? (
+                    <div className="grid gap-3">{filterSelects}</div>
+                  ) : null}
+                  <div className="grid gap-2 border-t border-border/50 pt-4">
+                    <p className="cursor-default text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                      {isFr ? 'Lignes par page' : 'Rows per page'}
+                    </p>
+                    <div className="max-w-[6.5rem]">{pageSizeSelect}</div>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
+            {toolbar}
+          </div>
         </div>
       </div>
 
@@ -216,14 +231,13 @@ export function AdminDataTable<T>({
         <AdminEmptyState title={emptyTitle} description={emptyDescription ?? ''} />
       ) : (
         <>
-          {/* Mobile cards, business-first: identity, status, actions */}
           <div className="space-y-2.5 md:hidden">
             {pageRows.map((row) => (
               <article
                 key={getRowId(row)}
                 className={cn(
-                  'rounded-xl border border-border/70 bg-card/50 p-3.5',
-                  onRowClick && 'active:bg-muted/40',
+                  'rounded-md border border-border/60 bg-card/40 p-3.5',
+                  onRowClick && 'cursor-pointer active:bg-muted/40',
                 )}
                 onClick={() => onRowClick?.(row)}
                 onKeyDown={(e) => {
@@ -236,7 +250,7 @@ export function AdminDataTable<T>({
                 role={onRowClick ? 'button' : undefined}
                 tabIndex={onRowClick ? 0 : undefined}
               >
-                <div className="min-w-0">
+                <div className="min-w-0 overflow-hidden">
                   {primaryCol?.render
                     ? primaryCol.render(row)
                     : primaryCol
@@ -247,10 +261,12 @@ export function AdminDataTable<T>({
                 {mobileMetaCols.length > 0 ? (
                   <dl className="mt-3 space-y-2 border-t border-border/50 pt-3">
                     {mobileMetaCols.map((col) => (
-                      <div key={col.key} className="flex items-center justify-between gap-3">
-                        <dt className="shrink-0 text-[11px] text-muted-foreground">{col.header}</dt>
+                      <div key={col.key} className="flex items-start justify-between gap-3">
+                        <dt className="shrink-0 cursor-default text-[11px] text-muted-foreground">
+                          {col.header}
+                        </dt>
                         <dd
-                          className="min-w-0 text-right text-sm"
+                          className="min-w-0 max-w-[70%] overflow-hidden text-right text-sm"
                           onClick={(e) => e.stopPropagation()}
                           onKeyDown={(e) => e.stopPropagation()}
                         >
@@ -273,19 +289,21 @@ export function AdminDataTable<T>({
             ))}
           </div>
 
-          {/* Desktop table */}
-          <div className="hidden overflow-hidden rounded-xl border border-border/70 bg-card/40 md:block">
+          <div className="hidden overflow-hidden rounded-md border border-border/60 bg-card/30 md:block">
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="hover:bg-transparent">
                     {columns.map((col) => (
-                      <TableHead key={col.key} className={col.className}>
+                      <TableHead
+                        key={col.key}
+                        className={cn('cursor-default select-none', col.className)}
+                      >
                         {col.header}
                       </TableHead>
                     ))}
                     {actions ? (
-                      <TableHead className="w-[1%] text-right">
+                      <TableHead className="w-[1%] cursor-default text-right">
                         {isFr ? 'Actions' : 'Actions'}
                       </TableHead>
                     ) : null}
@@ -299,8 +317,10 @@ export function AdminDataTable<T>({
                       onClick={() => onRowClick?.(row)}
                     >
                       {columns.map((col) => (
-                        <TableCell key={col.key} className={col.className}>
-                          {col.render ? col.render(row) : readCellValue(row, col.key)}
+                        <TableCell key={col.key} className={cn('max-w-[18rem]', col.className)}>
+                          <div className="min-w-0 overflow-hidden">
+                            {col.render ? col.render(row) : readCellValue(row, col.key)}
+                          </div>
                         </TableCell>
                       ))}
                       {actions ? (
@@ -316,7 +336,7 @@ export function AdminDataTable<T>({
           </div>
 
           <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
-            <p>
+            <p className="cursor-default">
               {filtered.length} {isFr ? 'élément(s)' : 'item(s)'}
               {' · '}
               {isFr ? 'Page' : 'Page'} {safePage}/{totalPages}
@@ -326,7 +346,7 @@ export function AdminDataTable<T>({
                 type="button"
                 size="icon"
                 variant="outline"
-                className="size-11 md:size-8"
+                className="size-11 shadow-none md:size-8"
                 disabled={safePage <= 1}
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
               >
@@ -336,7 +356,7 @@ export function AdminDataTable<T>({
                 type="button"
                 size="icon"
                 variant="outline"
-                className="size-11 md:size-8"
+                className="size-11 shadow-none md:size-8"
                 disabled={safePage >= totalPages}
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               >

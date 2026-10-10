@@ -6,16 +6,26 @@ export type {
 export { newsletterAdminApi } from './api/newsletter-admin.api';
 export type {
   NewsletterStats,
+  NewsletterCampaignStats,
   NewsletterSubscriber,
+  NewsletterSubscriberStatus,
   NewsletterCampaign,
+  NewsletterCampaignType,
+  NewsletterCampaignStatus,
   NewsletterBroadcastPayload,
+  NewsletterSubscriberListParams,
+  NewsletterCampaignListParams,
 } from './api/newsletter-admin.api';
 export {
   useNewsletterStats,
+  useNewsletterCampaignStats,
   useNewsletterSubscribers,
+  useNewsletterSubscriber,
   useNewsletterCampaigns,
+  useNewsletterCampaign,
   useCreateNewsletterCampaign,
   useBroadcastNewsletter,
+  useCancelNewsletterCampaign,
   useDeleteNewsletterSubscriber,
   useNewsletterAdminMutations,
 } from './hooks/useNewsletterAdmin';

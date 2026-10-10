@@ -25,11 +25,20 @@ export const HeroDetailSection: React.FC<Props> = ({ project }) => {
   const renderMedia = (media: string, isActive: boolean) => {
     if (!media) return null;
     const isVideo = media.endsWith('.mp4') || media.endsWith('.webm') || media.endsWith('.ogg');
-    const classes = 'w-full h-full object-cover transition-transform duration-700 hover:scale-105';
+    const fillClasses = 'absolute inset-0 h-full w-full';
     if (isVideo) {
-      return <video src={media} autoPlay={isActive} loop muted playsInline className={classes} />;
+      return (
+        <video
+          src={media}
+          autoPlay={isActive}
+          loop
+          muted
+          playsInline
+          className={cn(fillClasses, 'object-cover transition-transform duration-700 hover:scale-105')}
+        />
+      );
     }
-    return <Image src={media} alt={title} className={classes} />;
+    return <Image src={media} alt={title} className={fillClasses} />;
   };
 
   return (
@@ -48,16 +57,18 @@ export const HeroDetailSection: React.FC<Props> = ({ project }) => {
 
         {project.images.length > 1 ? (
           <>
-            <div
-              className="flex w-full h-full transition-transform duration-700 ease-in-out"
-              style={{ transform: `translateX(-${currentIdx * 100}%)` }}
-            >
-              {project.images.map((img, i) => (
-                <div key={i} className="w-full h-full flex-shrink-0 relative">
-                  {renderMedia(img, currentIdx === i)}
-                </div>
-              ))}
-            </div>
+            {project.images.map((img, i) => (
+              <div
+                key={i}
+                className={cn(
+                  'absolute inset-0 transition-opacity duration-700 ease-in-out',
+                  i === currentIdx ? 'z-1 opacity-100' : 'z-0 opacity-0 pointer-events-none',
+                )}
+                aria-hidden={i !== currentIdx}
+              >
+                {renderMedia(img, currentIdx === i)}
+              </div>
+            ))}
 
             <button
               type="button"
@@ -132,7 +143,15 @@ export const HeroDetailSection: React.FC<Props> = ({ project }) => {
                 className="rounded-md border-white/20 text-white hover:bg-white/10 backdrop-blur-sm"
                 asChild
               >
-                <Link to={project.github} target="_blank">
+                <Link
+                  to={project.github}
+                  target="_blank"
+                  onClick={() => {
+                    void import('@/app/lib/analytics').then((m) =>
+                      m.trackOutboundClick(project.github!, 'github'),
+                    );
+                  }}
+                >
                   <Github className="mr-1.5 h-3.5 w-3.5" />
                   Code Source
                 </Link>
@@ -140,7 +159,15 @@ export const HeroDetailSection: React.FC<Props> = ({ project }) => {
             )}
             {project.demo && project.demo !== '#' && (
               <Button size="sm" className="rounded-md shadow-sm shadow-primary/20" asChild>
-                <Link to={project.demo} target="_blank">
+                <Link
+                  to={project.demo}
+                  target="_blank"
+                  onClick={() => {
+                    void import('@/app/lib/analytics').then((m) =>
+                      m.trackOutboundClick(project.demo!, 'demo'),
+                    );
+                  }}
+                >
                   <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
                   Live Demo
                 </Link>

@@ -23,12 +23,12 @@ export const ContactPage = () => {
         }
       />
 
-      <div className="min-h-screen overflow-x-clip py-10 md:py-16 lg:py-20">
+      <div className="min-h-screen overflow-x-clip pb-12 md:pb-16">
         <HeroSection />
 
         {/* Mobile: info → form → social. Desktop: social stays under info in the left column. */}
-        <div className="grid items-stretch gap-4 px-4 md:px-10 lg:-mt-6 lg:grid-cols-3 lg:px-14">
-          <div className="flex h-full flex-col gap-3">
+        <div className="grid items-stretch gap-8 px-4 md:gap-10 md:px-10 lg:grid-cols-3 lg:gap-12 lg:px-14">
+          <div className="flex h-full flex-col gap-5 md:gap-6">
             <ContactInfoSection />
             <div className="mt-auto hidden lg:block">
               <SocialGeometry />
@@ -45,11 +45,11 @@ export const ContactPage = () => {
         </div>
 
         {/* Alternate channel first, then signature block */}
-        <div className="mt-4 px-4 md:mt-4 md:px-10 lg:px-14">
+        <div className="mt-10 px-4 md:mt-14 md:px-10 lg:px-14">
           <WaContact />
         </div>
 
-        <div className="mt-4 px-4 md:mt-4 md:px-10 lg:px-14">
+        <div className="mt-10 px-4 md:mt-14 md:px-10 lg:px-14">
           <EndContact />
         </div>
       </div>

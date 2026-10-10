@@ -50,7 +50,7 @@ export function AnimatedServicePrice({
         >
           <RollingAmount
             value={amount}
-            className={cn('font-bold text-primary', compact ? 'text-[10px]' : 'text-sm')}
+            className={cn('font-bold text-primary', compact ? 'text-[10px]' : 'text-xs')}
           />
           <span
             className={cn(
@@ -60,8 +60,8 @@ export function AnimatedServicePrice({
                   ? 'text-[10px]'
                   : 'text-[9px] tracking-wide'
                 : isEuro
-                  ? 'text-sm'
-                  : 'text-[11px] tracking-wide',
+                  ? 'text-xs'
+                  : 'text-[10px] tracking-wide',
             )}
           >
             {isEuro ? '€' : 'FCFA'}
@@ -70,7 +70,7 @@ export function AnimatedServicePrice({
             <span
               className={cn(
                 'font-semibold text-primary/75',
-                compact ? 'text-[9px]' : 'text-[11px]',
+                compact ? 'text-[9px]' : 'text-[10px]',
               )}
             >
               /h

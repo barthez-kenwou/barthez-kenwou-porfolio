@@ -49,11 +49,13 @@ function mapAxiosError(error: {
     const data = error.response.data;
     const envelope = (data && typeof data === 'object' ? data : {}) as Record<string, unknown>;
     const fallback =
-      status === 502 || status === 503 || status === 504
+      status === 502 || status === 504
         ? 'API unavailable (bad gateway). Is the backend running on the proxy target?'
-        : status >= 500
-          ? 'API server error'
-          : 'Request failed';
+        : status === 503
+          ? 'Service unavailable. If this is analytics, check PLAUSIBLE_API_KEY on the API host.'
+          : status >= 500
+            ? 'API server error'
+            : 'Request failed';
     return {
       message: extractErrorMessage(data, fallback),
       code: envelope.code ? String(envelope.code) : status >= 500 ? 'UPSTREAM_ERROR' : undefined,

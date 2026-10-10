@@ -36,7 +36,7 @@ export const SkillPage: React.FC = () => {
       {!iconsReady ? (
         <RouteFallback fullScreen={false} />
       ) : (
-        <div className="min-h-screen overflow-x-clip py-16 md:py-16 lg:py-20">
+        <div className="min-h-screen overflow-x-clip pb-12 md:pb-16">
           <HeroSection />
           <SkillsSection />
           <CertificationSection />

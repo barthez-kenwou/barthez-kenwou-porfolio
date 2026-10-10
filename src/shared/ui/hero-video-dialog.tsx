@@ -22,6 +22,8 @@ interface HeroVideoProps {
   thumbnailAlt?: string;
   className?: string;
   aspect?: 'portrait' | 'landscape';
+  /** Fired once when the visitor opens the embed (play intent). */
+  onPlayIntent?: () => void;
 }
 
 const animationVariants = {
@@ -74,6 +76,7 @@ export function HeroVideoDialog({
   thumbnailAlt = 'Video thumbnail',
   className,
   aspect = 'landscape',
+  onPlayIntent,
 }: HeroVideoProps) {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const selectedAnimation = animationVariants[animationStyle];
@@ -87,6 +90,11 @@ export function HeroVideoDialog({
       document.body.style.overflow = prev;
     };
   }, [isVideoOpen]);
+
+  const openVideo = useCallback(() => {
+    setIsVideoOpen(true);
+    onPlayIntent?.();
+  }, [onPlayIntent]);
 
   const handleCloseVideo = useCallback(() => {
     setIsVideoOpen(false);
@@ -113,7 +121,7 @@ export function HeroVideoDialog({
           'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           'rounded-lg overflow-hidden',
         )}
-        onClick={() => setIsVideoOpen(true)}
+        onClick={openVideo}
       >
         <div
           className={cn(

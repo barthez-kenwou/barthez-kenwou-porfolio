@@ -30,14 +30,18 @@ export const HeaderSection: React.FC<Props> = ({ personalInfo, language }) => (
       )}
     </View>
     <View style={styles.headerRight}>
-      <Text style={styles.text}>{personalInfo.location}</Text>
-      <Text style={styles.text}>{personalInfo.email}</Text>
-      <Text style={styles.text}>{personalInfo.phone}</Text>
-      {personalInfo.website && (
-        <Text style={styles.text}>{formatPortfolioHost(personalInfo.website)}</Text>
-      )}
-      {personalInfo.linkedin && <Text style={styles.text}>{stripUrl(personalInfo.linkedin)}</Text>}
-      {personalInfo.github && <Text style={styles.text}>{stripUrl(personalInfo.github)}</Text>}
+      {personalInfo.location ? <Text style={styles.contactLine}>{personalInfo.location}</Text> : null}
+      {personalInfo.email ? <Text style={styles.contactLine}>{personalInfo.email}</Text> : null}
+      {personalInfo.phone ? <Text style={styles.contactLine}>{personalInfo.phone}</Text> : null}
+      {personalInfo.website ? (
+        <Text style={styles.contactLine}>{formatPortfolioHost(personalInfo.website)}</Text>
+      ) : null}
+      {personalInfo.linkedin ? (
+        <Text style={styles.contactLine}>{stripUrl(personalInfo.linkedin)}</Text>
+      ) : null}
+      {personalInfo.github ? (
+        <Text style={styles.contactLine}>{stripUrl(personalInfo.github)}</Text>
+      ) : null}
     </View>
   </View>
 );

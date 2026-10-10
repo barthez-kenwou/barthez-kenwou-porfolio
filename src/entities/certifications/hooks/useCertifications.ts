@@ -11,13 +11,12 @@ import {
   type ICertificationDto,
 } from '../api/certification.api';
 
-const PUBLIC_LIST: CertificationListParams = { limit: 100, isPublished: true };
+const PUBLIC_LIST: CertificationListParams = { limit: 100 };
 
 function mockCertificationsDto(): ICertificationDto[] {
   return certifications.map((item, index) => ({
     ...item,
     id: `mock-cert-${index}`,
-    isPublished: true,
     sortOrder: index,
   }));
 }
@@ -36,7 +35,7 @@ export function usePublicCertifications() {
 export function useAdminCertifications(params?: CertificationListParams) {
   return useQuery({
     queryKey: queryKeys.certifications.list({ admin: true, ...params }),
-    queryFn: () => listCertifications({ limit: 100, includeUnpublished: true, ...params }),
+    queryFn: () => listCertifications({ limit: 100, ...params }),
   });
 }
 

@@ -28,7 +28,7 @@ Useful variables:
 | `VITE_SITE_URL` / `VITE_APP_URL` | Canonical site URL              |
 | `VITE_ENABLE_PWA`                | Enable service worker in builds |
 | `VITE_API_BASE_URL`              | Optional backend base URL       |
-| `VITE_PRESENTATION_YOUTUBE_URL`  | Optional presentation video     |
+| `VITE_PRESENTATION_YOUTUBE_URL`  | Optional fallback; prefer CMS Contact info → Social |
 
 ## 4. Dev server
 

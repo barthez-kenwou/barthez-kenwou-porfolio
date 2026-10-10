@@ -11,13 +11,12 @@ import {
   type IExperienceDto,
 } from '../api/experience.api';
 
-const PUBLIC_LIST: ExperienceListParams = { limit: 100, isPublished: true };
+const PUBLIC_LIST: ExperienceListParams = { limit: 100 };
 
 function mockExperiencesDto(): IExperienceDto[] {
   return experiences.map((item, index) => ({
     ...item,
     id: `mock-exp-${index}`,
-    isPublished: true,
     sortOrder: index,
   }));
 }
@@ -36,7 +35,7 @@ export function usePublicExperiences() {
 export function useAdminExperiences(params?: ExperienceListParams) {
   return useQuery({
     queryKey: queryKeys.experiences.list({ admin: true, ...params }),
-    queryFn: () => listExperiences({ limit: 100, includeUnpublished: true, ...params }),
+    queryFn: () => listExperiences({ limit: 100, ...params }),
   });
 }
 

@@ -6,6 +6,7 @@ import {
   contactInfoMock,
   deleteContactResponse,
   getContactInfo,
+  getContactResponseStats,
   listContactResponses,
   submitContactResponse,
   updateContactInfo,
@@ -55,13 +56,23 @@ export function useAdminContactResponses(params?: ContactResponseListParams) {
   });
 }
 
+export function useContactResponseStats() {
+  return useQuery({
+    queryKey: queryKeys.contactResponses.stats,
+    queryFn: getContactResponseStats,
+    staleTime: 30_000,
+  });
+}
+
 export function useUpdateContactResponse() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: Partial<IContactResponse> }) =>
       updateContactResponse(id, payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.contactResponses.all });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.contactResponses.all });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.contactResponses.stats });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.root });
     },
   });
 }
@@ -71,7 +82,9 @@ export function useDeleteContactResponse() {
   return useMutation({
     mutationFn: deleteContactResponse,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.contactResponses.all });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.contactResponses.all });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.contactResponses.stats });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.root });
     },
   });
 }

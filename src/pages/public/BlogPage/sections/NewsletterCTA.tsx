@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle2, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { Button } from '@/shared/ui/Button';
 import { BrandAmbientField } from '@/shared/ui/BrandAmbientField';
@@ -10,14 +11,16 @@ import {
   subscribeNewsletter,
   type NewsletterSubscribeErrorCode,
 } from '@/features/newsletter';
+import { trackCtaClick, trackNewsletterSubscribe } from '@/app/lib/analytics';
 
 type NewsletterCTAProps = {
   source?: string;
   contactTo?: string;
   className?: string;
+  sectionRef?: React.Ref<HTMLElement>;
 };
 
-type FormStatus = 'idle' | 'loading' | 'success' | 'error';
+type FormStatus = 'idle' | 'loading' | 'error';
 
 function errorCopy(code: NewsletterSubscribeErrorCode, isFr: boolean) {
   switch (code) {
@@ -46,6 +49,7 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
   source = 'blog',
   contactTo,
   className,
+  sectionRef,
 }) => {
   const { language } = useLanguageStore();
   const isFr = language === 'fr';
@@ -58,15 +62,19 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
   );
 
   const isLoading = status === 'loading';
-  const isSuccess = status === 'success';
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setErrorCode(null);
 
     if (honeypot.trim()) {
-      setStatus('success');
+      toast.success(isFr ? 'Vous êtes abonné' : "You're subscribed", {
+        description: isFr
+          ? 'Merci. Un email de bienvenue arrive, puis les prochaines notes techniques.'
+          : 'Thanks. A welcome email is on its way, then the next technical notes.',
+      });
       setEmail('');
+      setStatus('idle');
       return;
     }
 
@@ -86,8 +94,14 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
     const result = await subscribeNewsletter(parsed.data);
 
     if (result.ok) {
-      setStatus('success');
+      trackNewsletterSubscribe(source, isFr ? 'fr' : 'en');
+      toast.success(isFr ? 'Vous êtes abonné' : "You're subscribed", {
+        description: isFr
+          ? 'Merci. Un email de bienvenue arrive, puis les prochaines notes techniques.'
+          : 'Thanks. A welcome email is on its way, then the next technical notes.',
+      });
       setEmail('');
+      setStatus('idle');
       return;
     }
 
@@ -97,115 +111,98 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
 
   return (
     <section
-      className={cn('mb-4 px-4 md:mb-2 md:px-10 lg:px-14', className)}
+      ref={sectionRef}
+      className={cn('mb-0 px-4 md:px-10 lg:px-14', className)}
       aria-labelledby="newsletter-cta-title"
     >
       <div className="relative z-10 overflow-hidden rounded-sm border border-border">
         <BrandAmbientField intensity="soft" />
-        <div className="relative z-10 mx-auto w-full p-2 text-center sm:p-3 md:p-4">
-          <div className="mx-auto max-w-xl rounded-sm border border-border/50 bg-background/70 px-4 py-2 shadow-sm backdrop-blur-md dark:bg-background/55 sm:px-4 sm:py-3">
+        <div className="relative z-10 mx-auto w-full p-2 text-center md:p-3">
+          <div className="mx-auto max-w-xl rounded-sm border border-border/50 bg-background/70 px-4 py-4 shadow-sm backdrop-blur-md dark:bg-background/55 sm:px-5 sm:py-5">
             <h3
               id="newsletter-cta-title"
-              className="mb-2 font-heading text-base font-bold text-foreground sm:text-lg md:text-xl"
+              className="mb-1.5 font-heading text-base font-bold text-foreground sm:text-lg md:text-xl"
             >
               {isFr ? 'Restez informé' : 'Stay informed'}
             </h3>
-            <p className="mb-4 text-xs leading-relaxed text-foreground/75 sm:mb-5 sm:text-sm">
+            <p className="mb-4 text-[11px] leading-relaxed text-foreground/70 sm:text-xs">
               {isFr
                 ? 'Recevez les derniers articles et actualités directement dans votre boîte mail.'
                 : 'Receive the latest articles and news directly in your inbox.'}
             </p>
 
-            {isSuccess ? (
-              <div
-                role="status"
-                className="mx-auto flex max-w-md items-start gap-2 rounded-md border border-primary/25 bg-primary/8 px-3 py-2.5 text-left"
-              >
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <div>
-                  <p className="text-xs font-semibold text-foreground sm:text-sm">
-                    {isFr ? 'Inscription confirmée' : 'Subscription confirmed'}
-                  </p>
-                  <p className="mt-0.5 text-[11px] leading-relaxed text-foreground/75 sm:text-xs">
-                    {isFr
-                      ? 'Merci, vous recevrez les prochaines notes techniques.'
-                      : 'Thanks, you will receive the next technical notes.'}
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <form onSubmit={onSubmit} noValidate className="mx-auto max-w-md space-y-2">
+            <form onSubmit={onSubmit} noValidate className="mx-auto max-w-md space-y-2">
+              <input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                className="absolute -left-[9999px] h-0 w-0 opacity-0"
+                aria-hidden
+              />
+
+              <div className="flex flex-col gap-2.5 sm:flex-row sm:gap-3">
+                <label className="sr-only" htmlFor={`newsletter-email-${source}`}>
+                  Email
+                </label>
                 <input
-                  type="text"
-                  name="website"
-                  tabIndex={-1}
-                  autoComplete="off"
-                  value={honeypot}
-                  onChange={(e) => setHoneypot(e.target.value)}
-                  className="absolute -left-[9999px] h-0 w-0 opacity-0"
-                  aria-hidden
+                  id={`newsletter-email-${source}`}
+                  type="email"
+                  name="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  required
+                  disabled={isLoading}
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (status === 'error') {
+                      setStatus('idle');
+                      setErrorCode(null);
+                    }
+                  }}
+                  placeholder="Email"
+                  className={cn(
+                    'min-w-0 flex-1 rounded-md border bg-background/90 px-3 py-2 text-sm text-foreground',
+                    'border-border transition-colors placeholder:text-muted-foreground/70',
+                    'focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
+                    'disabled:cursor-not-allowed disabled:opacity-60',
+                    status === 'error' && 'border-destructive/50',
+                  )}
                 />
+                <Button
+                  type="submit"
+                  disabled={isLoading || email.trim().length === 0}
+                  className="h-auto shrink-0 px-4 py-2 text-sm font-medium"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      {isFr ? 'Envoi…' : 'Sending…'}
+                    </>
+                  ) : isFr ? (
+                    "S'abonner"
+                  ) : (
+                    'Subscribe'
+                  )}
+                </Button>
+              </div>
 
-                <div className="flex flex-col gap-2.5 sm:flex-row sm:gap-3">
-                  <label className="sr-only" htmlFor={`newsletter-email-${source}`}>
-                    Email
-                  </label>
-                  <input
-                    id={`newsletter-email-${source}`}
-                    type="email"
-                    name="email"
-                    inputMode="email"
-                    autoComplete="email"
-                    required
-                    disabled={isLoading}
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      if (status === 'error') {
-                        setStatus('idle');
-                        setErrorCode(null);
-                      }
-                    }}
-                    placeholder="Email"
-                    className={cn(
-                      'min-w-0 flex-1 rounded-md border bg-background/90 px-3 py-2 text-sm text-foreground',
-                      'border-border transition-colors placeholder:text-muted-foreground/70',
-                      'focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
-                      'disabled:cursor-not-allowed disabled:opacity-60',
-                      status === 'error' && 'border-destructive/50',
-                    )}
-                  />
-                  <Button
-                    type="submit"
-                    disabled={isLoading || email.trim().length === 0}
-                    className="h-auto shrink-0 px-4 py-2 text-sm font-medium"
-                  >
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        {isFr ? 'Envoi…' : 'Sending…'}
-                      </>
-                    ) : isFr ? (
-                      "S'abonner"
-                    ) : (
-                      'Subscribe'
-                    )}
-                  </Button>
-                </div>
-
-                {status === 'error' && errorCode && (
-                  <p role="alert" className="text-[11px] font-medium text-destructive sm:text-xs">
-                    {errorCopy(errorCode, isFr)}
-                  </p>
-                )}
-              </form>
-            )}
+              {status === 'error' && errorCode && (
+                <p role="alert" className="text-[11px] font-medium text-destructive sm:text-xs">
+                  {errorCopy(errorCode, isFr)}
+                </p>
+              )}
+            </form>
 
             {contactTo && (
               <p className="mt-4 text-[11px] text-foreground/70 sm:text-xs">
                 {isFr ? 'Un besoin concret ? ' : 'A concrete need? '}
                 <Link
                   to={contactTo}
+                  onClick={() => trackCtaClick('contact', `newsletter_${source}`, contactTo)}
                   onMouseEnter={() => {
                     void import('@/app/routes/prefetch').then((m) => m.prefetchRoute('/contact'));
                   }}

@@ -81,7 +81,7 @@ export const GridProject: React.FC<GridProjectProps> = ({ filterState }) => {
   ];
 
   return (
-    <section className="mt-20" ref={sectionRef}>
+    <section className="relative mt-10 mb-10 overflow-hidden" ref={sectionRef}>
       {/* ── Category Filter (Primary) ────────────────────────────────────────── */}
       <div className="flex flex-wrap justify-center gap-2 mb-4 relative z-10">
         {categoryFilters.map((filter) => {
@@ -149,20 +149,21 @@ export const GridProject: React.FC<GridProjectProps> = ({ filterState }) => {
         </div>
       ) : (
         <>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 animate-fade-in">
+          <div className="mb-10 grid grid-cols-1 gap-8 animate-fade-in md:grid-cols-2 lg:grid-cols-3">
             {paginatedProjects.map((project) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                activeTechs={filters.techs}
-                onTechClick={toggleTech}
-              />
+              <div key={project.id} className="min-w-0">
+                <ProjectCard
+                  project={project}
+                  activeTechs={filters.techs}
+                  onTechClick={toggleTech}
+                />
+              </div>
             ))}
           </div>
 
           {/* ── Pagination UI ───────────────────────────────────────────────────── */}
           {totalPages > 1 && (
-            <div className="flex justify-center items-center gap-2">
+            <div className="relative z-10 flex items-center justify-center gap-2 pb-2">
               <Button
                 variant="outline"
                 size="icon"

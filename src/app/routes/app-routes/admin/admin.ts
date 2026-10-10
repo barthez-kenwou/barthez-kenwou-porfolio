@@ -100,4 +100,12 @@ export const adminChildRoutes = [
     path: 'newsletter',
     component: lazyPage(() => import('@/pages/app/Admin/NewsletterPage'), 'AdminNewsletterPage'),
   },
+  {
+    path: 'account',
+    component: lazyPage(() => import('@/pages/app/Admin/AccountPage'), 'AdminAccountPage'),
+  },
+  {
+    path: 'account/:section',
+    component: lazyPage(() => import('@/pages/app/Admin/AccountPage'), 'AdminAccountPage'),
+  },
 ] as const;

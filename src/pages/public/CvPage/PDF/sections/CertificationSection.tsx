@@ -15,13 +15,20 @@ export const CertificationSection: React.FC<Props> = ({ certifications }) => {
         <Text style={styles.sectionTitle}>Certifications</Text>
       </View>
       {certifications.map((cert, i) => (
-        <View key={i} style={styles.row}>
+        <View key={i} style={styles.row} wrap={false}>
           <View style={styles.leftCol}>
             <Text style={styles.period}>{cert.year}</Text>
           </View>
           <View style={styles.rightCol}>
-            <Text style={styles.boldText}>{cert.name}</Text>
-            <Text style={styles.metaText}>{cert.issuer}</Text>
+            <Text style={styles.compactLine}>
+              <Text style={styles.boldText}>{cert.name}</Text>
+              {cert.issuer ? (
+                <Text style={styles.metaInline}>
+                  {'  ·  '}
+                  {cert.issuer}
+                </Text>
+              ) : null}
+            </Text>
           </View>
         </View>
       ))}

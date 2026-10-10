@@ -60,6 +60,7 @@
   --animate-shimmer-slide: shimmer-slide var(--speed, 3s) ease-in-out infinite alternate;
   --animate-spin-around: spin-around calc(var(--speed, 3s) * 2) infinite linear;
   --animate-shimmer-orbit: shimmer-orbit var(--speed, 2.4s) linear infinite;
+  --animate-ripple: ripple var(--duration, 2.4s) ease-out infinite;
   @keyframes marquee {
     from {
       transform: translateX(0);
@@ -112,6 +113,15 @@
     }
     100% {
       transform: translateZ(0) rotate(360deg);
+    }
+  }
+  @keyframes ripple {
+    0%,
+    100% {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(1.04);
     }
   }
 }
@@ -358,10 +368,10 @@
   @keyframes hero-flare-pulse-dark {
     0%,
     100% {
-      opacity: 0.74;
+      opacity: 0.82;
     }
     50% {
-      opacity: 0.92;
+      opacity: 1;
     }
   }
 

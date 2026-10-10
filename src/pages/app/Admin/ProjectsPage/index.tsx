@@ -13,6 +13,7 @@ import {
   AdminPageHeader,
   AdminDataTable,
   ConfirmDeleteDialog,
+  formatAdminDate,
 } from '@/features/admin-cms';
 import { isApiError } from '@/shared/api';
 import { QueryState } from '@/shared/ui/QueryState';
@@ -152,10 +153,32 @@ export function AdminProjectsPage() {
             {
               key: 'status',
               header: 'Status',
-              render: (r) => <Badge variant="secondary">{r.status}</Badge>,
+              render: (r) => (
+                <Badge variant="secondary" className="max-w-[8.5rem] truncate">
+                  <span className="truncate">{r.status}</span>
+                </Badge>
+              ),
             },
-            { key: 'category', header: fr ? 'Catégorie' : 'Category', hideOnMobile: true },
-            { key: 'date', header: fr ? 'Date' : 'Date', hideOnMobile: true },
+            {
+              key: 'category',
+              header: fr ? 'Catégorie' : 'Category',
+              hideOnMobile: true,
+              render: (r) => (
+                <span className="line-clamp-1 max-w-[10rem] text-muted-foreground">
+                  {r.category || '—'}
+                </span>
+              ),
+            },
+            {
+              key: 'date',
+              header: fr ? 'Date' : 'Date',
+              hideOnMobile: true,
+              render: (r) => (
+                <span className="line-clamp-1 whitespace-nowrap text-muted-foreground">
+                  {formatAdminDate(r.date, language)}
+                </span>
+              ),
+            },
             {
               key: 'isPublished',
               header: fr ? 'Public' : 'Public',

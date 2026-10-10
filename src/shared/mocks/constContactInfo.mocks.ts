@@ -16,4 +16,6 @@ export const contactsInfo = {
   github: socialLinks[0].href,
   linkedin: socialLinks[1].href,
   facebook: socialLinks[2].href,
+  youtube: '',
+  presentationVideoUrl: '',
 };

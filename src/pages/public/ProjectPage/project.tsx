@@ -23,16 +23,16 @@ export const ProjectPage = () => {
             : 'Case studies: web apps, cloud platforms, and DevOps solutions delivered by Barthez Kenwou.'
         }
       />
-      <div className="min-h-screen overflow-x-clip py-10 md:py-16 lg:py-20">
+      <div className="min-h-screen overflow-x-clip pb-3 md:pb-4">
         {/* 1. Frame the journey */}
         <HeroSection />
 
         <div className="px-4 md:px-10 lg:px-14">
-          {/* 2. Explore the work */}
-          <GridProject filterState={filterState} />
-
-          {/* 3. Highlight featured case studies */}
+          {/* 2. Curated shortlist first — readable, user-paced */}
           <FeaturedProjectsMarquee />
+
+          {/* 3. Browse the full catalog */}
+          <GridProject filterState={filterState} />
 
           {/* 4. Credibility / impact */}
           <ProjectStatsSection />

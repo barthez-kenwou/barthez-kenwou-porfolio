@@ -2,9 +2,7 @@ import { apiClient, type PaginatedData, type PaginationParams, toQueryParams } f
 import type { IProfessionalReference } from '@/features/admin-cms/model/cms.types';
 import { cvData } from '@/entities/cv/api/mock/cv-data';
 
-export interface ReferenceListParams extends PaginationParams {
-  includeUnpublished?: boolean;
-}
+export type ReferenceListParams = PaginationParams;
 
 export async function listReferences(
   params?: ReferenceListParams,

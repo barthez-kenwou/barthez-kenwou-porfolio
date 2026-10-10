@@ -5,8 +5,22 @@ export {
   fetchAdminDashboard,
 } from './api/dashboard.api';
 export type { AdminDashboardDto } from './api/dashboard.api';
+export { filesApi, uploadAdminImage, createPresignedUpload } from './api/files.api';
+export type { PresignedUpload } from './api/files.api';
 export { useAdminDashboard } from './hooks/useAdminDashboard';
 export { useDashboardSummary } from './hooks/useDashboard';
+export { useAdminAnalytics } from './hooks/useAdminAnalytics';
+export { useAdminAudit } from './hooks/useAdminAudit';
+export {
+  analyticsApi,
+  fetchAnalyticsOverview,
+} from './api/analytics.api';
+export type {
+  AdminAnalyticsOverview,
+  AnalyticsPeriod,
+} from './api/analytics.api';
+export { auditApi, listAuditEntries, getAuditEntry } from './api/audit.api';
+export type { AuditEntry, AuditListParams } from './api/audit.api';
 export type {
   IContactInfo,
   IContactResponse,
@@ -18,6 +32,10 @@ export type {
   ContactResponseStatus,
 } from './model/cms.types';
 export { createId, ensureId } from './lib/id';
+export { formatAdminDate } from './lib/formatAdminDate';
+export { getReorderTargets, sortBySortOrder } from './lib/reorder';
+export type { ReorderDirection, ReorderPatch, SortableItem } from './lib/reorder';
+export { useScrollToEditor } from './hooks/useScrollToEditor';
 
 export { AdminPageHeader } from './ui/AdminPageHeader.ui';
 export type { AdminPageHeaderProps } from './ui/AdminPageHeader.ui';

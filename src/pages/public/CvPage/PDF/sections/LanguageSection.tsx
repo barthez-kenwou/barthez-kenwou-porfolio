@@ -7,25 +7,22 @@ interface Props {
   language: 'fr' | 'en';
 }
 
-export const LanguageSection: React.FC<Props> = ({ languages, language }) => (
-  <View style={styles.section}>
-    <View style={styles.sectionTitleBox}>
-      <Text style={styles.sectionTitle}>{language === 'fr' ? 'Langues' : 'Languages'}</Text>
-    </View>
-    <View style={styles.row}>
-      <View style={styles.leftCol}>
-        <Text style={styles.period}>{language === 'fr' ? 'Niveaux' : 'Proficiency'}</Text>
+export const LanguageSection: React.FC<Props> = ({ languages, language }) => {
+  if (!languages || languages.length === 0) return null;
+
+  return (
+    <View style={styles.section}>
+      <View style={styles.sectionTitleBox}>
+        <Text style={styles.sectionTitle}>{language === 'fr' ? 'Langues' : 'Languages'}</Text>
       </View>
-      <View style={styles.rightCol}>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-          {(languages || []).map((lang, i) => (
-            <Text key={i} style={[styles.text, { marginRight: 15 }]}>
-              <Text style={styles.boldText}>{lang.language}</Text>:{' '}
-              {language === 'fr' ? lang.proficiencyFr : lang.proficiencyEn}
-            </Text>
-          ))}
-        </View>
-      </View>
+      <Text style={styles.compactLine}>
+        {(languages || [])
+          .map(
+            (lang) =>
+              `${lang.language}: ${language === 'fr' ? lang.proficiencyFr : lang.proficiencyEn}`,
+          )
+          .join('   ·   ')}
+      </Text>
     </View>
-  </View>
-);
+  );
+};

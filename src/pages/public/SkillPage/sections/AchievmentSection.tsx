@@ -14,9 +14,9 @@ export const AchievmentSection: React.FC = () => {
   );
 
   return (
-    <section className="px-4 md:px-10 lg:px-14">
-      <div className="glass rounded-md border border-border p-3">
-        <div className="mb-6 flex items-center gap-3">
+    <section className="mt-2 px-4 md:px-10 lg:px-14">
+      <div className="glass rounded-md border border-border p-5 md:p-6">
+        <div className="mb-8 flex items-center gap-3">
           <div className="rounded-sm bg-primary/10 p-2">
             <AiFillTrophy className="h-4 w-4 text-primary" />
           </div>
@@ -30,7 +30,7 @@ export const AchievmentSection: React.FC = () => {
           source={data?.source}
           empty={!isPending && achievements.length === 0}
         >
-          <div className="grid grid-cols-2 justify-between gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-4 lg:gap-6">
+          <div className="grid grid-cols-2 justify-between gap-4 md:grid-cols-3 md:gap-5 lg:grid-cols-4 lg:gap-6">
             {achievements.map((achievement, index) => (
               <AchievmentCard key={index} Achievment={achievement} />
             ))}

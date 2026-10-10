@@ -10,13 +10,9 @@ export interface IAchievementDto {
   labelFr: string;
   labelEn: string;
   sortOrder?: number;
-  isPublished?: boolean;
 }
 
-export interface AchievementListParams extends PaginationParams {
-  isPublished?: boolean;
-  includeUnpublished?: boolean;
-}
+export type AchievementListParams = PaginationParams;
 
 export function mapAchievementsMockToDto(): IAchievementDto[] {
   return achievements.map((item, index) => ({
@@ -25,7 +21,6 @@ export function mapAchievementsMockToDto(): IAchievementDto[] {
     value: item.value,
     labelFr: item.labelFr,
     labelEn: item.labelEn,
-    isPublished: true,
     sortOrder: index,
   }));
 }

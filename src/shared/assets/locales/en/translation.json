@@ -59,7 +59,9 @@
     },
     "demo": "View demo",
     "code": "Source code",
-    "details": "View details"
+    "details": "View details",
+    "featuredTitle": "Featured",
+    "featuredSubtitle": "A shortlist of representative case studies, at your pace."
   },
   "services": {
     "cta": "Get a quote"
@@ -76,6 +78,7 @@
     },
     "info": {
       "email": "Email",
+      "whatsapp": "WhatsApp",
       "location": "Location",
       "availability": "Availability",
       "available": "Open for remote engagements"

@@ -7,9 +7,11 @@ import { Footer } from '@/widgets/Footer';
 import { Suspense } from 'react';
 import { RouteFallback } from '@/shared/ui/RouteFallback/RouteFallback';
 import { ErrorBoundary } from '@/app/lib/ErrorBoundary';
+import { usePageEngagement } from '@/shared/hooks/usePageEngagement';
 
 function PageShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
+  usePageEngagement(location.pathname);
 
   return (
     <div key={location.pathname} className="page-enter">

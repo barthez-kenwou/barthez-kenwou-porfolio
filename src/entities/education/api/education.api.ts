@@ -4,13 +4,9 @@ import type { IEducation } from '../model/education.types';
 export interface IEducationDto extends IEducation {
   id: string;
   sortOrder?: number;
-  isPublished?: boolean;
 }
 
-export interface EducationListParams extends PaginationParams {
-  isPublished?: boolean;
-  includeUnpublished?: boolean;
-}
+export type EducationListParams = PaginationParams;
 
 export async function listEducation(
   params?: EducationListParams,

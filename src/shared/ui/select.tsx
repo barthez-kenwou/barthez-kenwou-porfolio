@@ -22,16 +22,17 @@ function SelectTrigger({
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       className={cn(
-        'border-input data-[placeholder]:text-muted-foreground flex h-9 w-full items-center justify-between gap-2 rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs outline-none transition-[color,box-shadow]',
-        'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
+        'border-input data-[placeholder]:text-muted-foreground flex h-9 w-full cursor-pointer items-center justify-between gap-2 rounded-sm border bg-transparent px-3 py-2 text-sm outline-none transition-[color,box-shadow]',
+        'focus-visible:border-primary/50 focus-visible:ring-0',
         'disabled:cursor-not-allowed disabled:opacity-50',
+        'whitespace-nowrap [&>span]:min-w-0 [&>span]:flex-1 [&>span]:truncate [&>span]:text-left',
         className,
       )}
       {...props}
     >
       {children}
       <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon className="size-4 opacity-50" />
+        <ChevronDownIcon className="size-4 shrink-0 opacity-50" />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   );

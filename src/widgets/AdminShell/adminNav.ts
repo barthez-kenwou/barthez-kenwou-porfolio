@@ -122,6 +122,12 @@ export function findAdminNavItem(pathname: string): AdminNavItem | undefined {
   return adminNavItems.find((item) => item.path !== ADMIN_BASE && pathname.startsWith(item.path));
 }
 
+const ACCOUNT_CRUMB_LABELS: Record<string, { fr: string; en: string }> = {
+  account: { fr: 'Compte', en: 'Account' },
+  audit: { fr: 'Audit', en: 'Audit' },
+  permissions: { fr: 'Permissions', en: 'Permissions' },
+};
+
 /** Build header crumbs from pathname segments after /barthez-admin */
 export function buildAdminCrumbs(pathname: string, language: 'fr' | 'en') {
   const rest = pathname.replace(ADMIN_BASE, '').replace(/^\//, '');
@@ -134,12 +140,17 @@ export function buildAdminCrumbs(pathname: string, language: 'fr' | 'en') {
     acc = `${acc}/${part}`;
     const known = findAdminNavItem(acc);
     const isLast = i === parts.length - 1;
+    const accountLabel = ACCOUNT_CRUMB_LABELS[part];
     const label =
       known && known.path === acc
         ? language === 'fr'
           ? known.labelFr
           : known.labelEn
-        : decodeURIComponent(part);
+        : accountLabel
+          ? language === 'fr'
+            ? accountLabel.fr
+            : accountLabel.en
+          : decodeURIComponent(part);
     crumbs.push({ label, href: isLast ? undefined : acc });
   });
   return crumbs;

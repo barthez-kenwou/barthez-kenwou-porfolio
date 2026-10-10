@@ -1,24 +1,35 @@
 import React from 'react';
 import { HiOutlineEnvelope, HiOutlineMapPin, HiOutlineClock } from 'react-icons/hi2';
+import { FaWhatsapp } from 'react-icons/fa6';
 import { useTranslation } from 'react-i18next';
 import { usePublicContactInfo } from '@/entities/contact/hooks/useContact';
 import { ContactInfoCard } from '@/entities/contact/ui/ContactInfoCard.ui';
 import { cn } from '@/shared/lib/utils';
 import { QueryState } from '@/shared/ui/QueryState';
 
+function resolveWhatsappHref(phone: string | undefined, whatsappLink: string | undefined) {
+  const link = whatsappLink?.trim();
+  if (link) return link;
+  const digits = phone?.replace(/\D/g, '') ?? '';
+  return digits ? `https://wa.me/${digits}` : undefined;
+}
+
 export const ContactInfoSection: React.FC<{ className?: string }> = ({ className }) => {
   const { t } = useTranslation();
   const { data, isPending, isError, error } = usePublicContactInfo();
   const contactsInfo = data?.data;
+  const phoneValue = contactsInfo?.phone?.trim() || '+237 655 646 688';
+  const whatsappHref = resolveWhatsappHref(phoneValue, contactsInfo?.whatsappLink);
 
   return (
-    <section className={cn('flex flex-col gap-3', className)}>
+    <section className={cn(className)}>
       <QueryState
         isPending={isPending}
         isError={isError}
         errorMessage={error instanceof Error ? error.message : undefined}
         source={data?.source}
         empty={!isPending && !contactsInfo}
+        className="flex flex-col gap-3 md:gap-5"
       >
         {contactsInfo ? (
           <>
@@ -27,6 +38,19 @@ export const ContactInfoSection: React.FC<{ className?: string }> = ({ className
               label={t('contact.info.email')}
               value={contactsInfo.email}
               href={`mailto:${contactsInfo.email}`}
+              onClick={() => {
+                void import('@/app/lib/analytics').then((m) => m.trackContactClick('mailto'));
+              }}
+            />
+
+            <ContactInfoCard
+              icon={FaWhatsapp}
+              label={t('contact.info.whatsapp')}
+              value={phoneValue}
+              href={whatsappHref}
+              onClick={() => {
+                void import('@/app/lib/analytics').then((m) => m.trackContactClick('whatsapp'));
+              }}
             />
 
             <ContactInfoCard

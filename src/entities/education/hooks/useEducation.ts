@@ -11,13 +11,12 @@ import {
   type IEducationDto,
 } from '../api/education.api';
 
-const PUBLIC_LIST: EducationListParams = { limit: 100, isPublished: true };
+const PUBLIC_LIST: EducationListParams = { limit: 100 };
 
 function mockEducationDto(): IEducationDto[] {
   return education.map((item, index) => ({
     ...item,
     id: `mock-edu-${index}`,
-    isPublished: true,
     sortOrder: index,
   }));
 }
@@ -36,7 +35,7 @@ export function usePublicEducation() {
 export function useAdminEducation(params?: EducationListParams) {
   return useQuery({
     queryKey: queryKeys.education.list({ admin: true, ...params }),
-    queryFn: () => listEducation({ limit: 100, includeUnpublished: true, ...params }),
+    queryFn: () => listEducation({ limit: 100, ...params }),
   });
 }
 

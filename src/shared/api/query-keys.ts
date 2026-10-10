@@ -7,6 +7,10 @@ export const queryKeys = {
   dashboard: {
     root: ['admin', 'dashboard'] as const,
   },
+  analytics: {
+    all: ['admin', 'analytics'] as const,
+    overview: (period: string) => ['admin', 'analytics', 'overview', period] as const,
+  },
   projects: {
     all: ['projects'] as const,
     list: (params?: PaginationParams & Record<string, unknown>) =>
@@ -73,15 +77,19 @@ export const queryKeys = {
     all: ['contact-responses'] as const,
     list: (params?: PaginationParams & Record<string, unknown>) =>
       ['contact-responses', 'list', params ?? {}] as const,
+    stats: ['contact-responses', 'stats'] as const,
   },
   cv: {
     root: ['cv'] as const,
   },
   newsletter: {
     stats: ['newsletter', 'stats'] as const,
+    campaignStats: ['newsletter', 'campaign-stats'] as const,
     subscribers: (params?: PaginationParams & Record<string, unknown>) =>
       ['newsletter', 'subscribers', params ?? {}] as const,
+    subscriber: (id: string) => ['newsletter', 'subscriber', id] as const,
     campaigns: (params?: PaginationParams & Record<string, unknown>) =>
       ['newsletter', 'campaigns', params ?? {}] as const,
+    campaign: (id: string) => ['newsletter', 'campaign', id] as const,
   },
 } as const;

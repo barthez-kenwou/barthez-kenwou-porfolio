@@ -14,23 +14,24 @@ export const ReferenceSection: React.FC<Props> = ({ references, language }) => {
     <View style={styles.section}>
       <View style={styles.sectionTitleBox}>
         <Text style={styles.sectionTitle}>
-          {language === 'fr' ? 'Références Professionnelles' : 'Professional References'}
+          {language === 'fr' ? 'Références' : 'References'}
         </Text>
       </View>
-      {references.map((ref, i) => (
-        <View key={i} style={styles.row}>
-          <View style={styles.leftCol}>
-            <Text style={styles.period}>{ref.name}</Text>
+      {references.map((ref, i) => {
+        const role = language === 'fr' ? ref.roleFr : ref.roleEn;
+        const details = [role, ref.company, ref.email, ref.phone].filter(Boolean).join('  ·  ');
+
+        return (
+          <View key={i} style={styles.row} wrap={false}>
+            <View style={styles.leftCol}>
+              <Text style={styles.period}>{ref.name}</Text>
+            </View>
+            <View style={styles.rightCol}>
+              <Text style={styles.compactLine}>{details}</Text>
+            </View>
           </View>
-          <View style={styles.rightCol}>
-            <Text style={styles.boldText}>{language === 'fr' ? ref.roleFr : ref.roleEn}</Text>
-            <Text style={styles.metaText}>{ref.company}</Text>
-            <Text style={styles.text}>
-              {ref.email} | {ref.phone}
-            </Text>
-          </View>
-        </View>
-      ))}
+        );
+      })}
     </View>
   );
 };

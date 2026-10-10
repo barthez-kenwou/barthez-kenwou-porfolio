@@ -22,7 +22,7 @@ export const ServicePage: React.FC = () => {
         }
       />
 
-      <div className="min-h-screen overflow-x-clip py-16 md:py-16 lg:py-20">
+      <div className="min-h-screen overflow-x-clip pb-3 md:pb-4">
         <HeroSection />
         <ServicesSection />
         <ProcessSection />

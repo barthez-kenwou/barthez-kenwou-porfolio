@@ -16,6 +16,7 @@ export interface ITestimonial {
   /** Public visibility on the site (after owner approval). */
   isPublished?: boolean;
   status?: TestimonialStatus;
+  projectId?: string | null;
   createdAt?: string;
   source?: 'admin' | 'public-form';
 }

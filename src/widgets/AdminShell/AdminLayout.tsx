@@ -7,11 +7,12 @@ import { AdminMobileDock } from './AdminMobileDock';
 
 function CloseMobileNavOnRouteChange() {
   const location = useLocation();
-  const { setOpenMobile, isMobile, openMobile } = useSidebar();
+  const { setOpenMobile } = useSidebar();
 
+  // Pathname only — including openMobile in deps caused instant auto-close on open.
   useEffect(() => {
-    if (isMobile && openMobile) setOpenMobile(false);
-  }, [location.pathname, isMobile, openMobile, setOpenMobile]);
+    setOpenMobile(false);
+  }, [location.pathname, setOpenMobile]);
 
   return null;
 }

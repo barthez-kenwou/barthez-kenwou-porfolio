@@ -144,7 +144,7 @@ export const SkillsSection: React.FC = () => {
   };
 
   return (
-    <section className="relative mx-auto w-full max-w-7xl py-12">
+    <section className="relative mx-auto w-full max-w-7xl py-10 md:py-14 lg:py-16">
       <QueryState
         isPending={isPending}
         isError={isError}
@@ -152,7 +152,7 @@ export const SkillsSection: React.FC = () => {
         source={data?.source}
         empty={!isPending && skillsData.length === 0}
       >
-        <div className="mb-6 flex flex-wrap justify-center gap-3 md:hidden">
+        <div className="mb-8 flex flex-wrap justify-center gap-3 md:hidden">
           {filters.map((filter) => (
             <button
               key={filter.id}
@@ -170,7 +170,7 @@ export const SkillsSection: React.FC = () => {
           ))}
         </div>
 
-        <div className="flex flex-col gap-6 px-4 md:flex-row md:px-10 lg:px-14">
+        <div className="flex flex-col gap-8 px-4 md:flex-row md:gap-10 md:px-10 lg:gap-12 lg:px-14">
           <aside className="hidden w-full flex-shrink-0 md:block md:w-[13.5rem] lg:w-[15rem]">
             <SkillsDomainAtlas
               filters={atlasFilters}
@@ -180,7 +180,7 @@ export const SkillsSection: React.FC = () => {
             />
           </aside>
 
-          <div className="relative min-h-[320px] flex-1 overflow-hidden pt-6 md:pt-0">
+          <div className="relative min-h-[320px] flex-1 overflow-hidden pt-8 md:pt-0">
             <AnimatePresence mode="wait" custom={swipeDir} initial={false}>
               {activeFilter === 'all' ? (
                 <motion.div
@@ -217,7 +217,7 @@ export const SkillsSection: React.FC = () => {
                   initial="enter"
                   animate="center"
                   exit="exit"
-                  className="mb-20 grid grid-cols-3 items-stretch gap-2 sm:grid-cols-4 sm:gap-2 md:gap-5 lg:grid-cols-5 xl:grid-cols-6"
+                  className="mb-16 grid grid-cols-3 items-stretch gap-3 sm:grid-cols-4 sm:gap-4 md:mb-20 md:gap-5 lg:grid-cols-5 xl:grid-cols-6"
                 >
                   {filteredSkills.map((skill) => (
                     <motion.div

@@ -11,6 +11,14 @@ export interface ContactResponseListParams extends PaginationParams {
   status?: ContactResponseStatus;
 }
 
+export type ContactResponseStats = {
+  total: number;
+  new: number;
+  read: number;
+  replied: number;
+  archived: number;
+};
+
 export async function getContactInfo(): Promise<IContactInfo> {
   return apiClient.get<IContactInfo>('/contact-infos');
 }
@@ -32,6 +40,10 @@ export async function listContactResponses(
     '/contact-responses',
     toQueryParams(params),
   );
+}
+
+export async function getContactResponseStats(): Promise<ContactResponseStats> {
+  return apiClient.get<ContactResponseStats>('/contact-responses/stats');
 }
 
 export async function getContactResponse(id: string): Promise<IContactResponse> {
@@ -58,6 +70,7 @@ export const contactApi = {
   updateInfo: updateContactInfo,
   submit: submitContactResponse,
   listResponses: listContactResponses,
+  responseStats: getContactResponseStats,
   getResponse: getContactResponse,
   updateResponse: updateContactResponse,
   deleteResponse: deleteContactResponse,

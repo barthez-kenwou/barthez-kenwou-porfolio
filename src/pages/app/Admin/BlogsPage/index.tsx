@@ -6,6 +6,7 @@ import {
   AdminPageHeader,
   AdminDataTable,
   ConfirmDeleteDialog,
+  formatAdminDate,
 } from '@/features/admin-cms';
 import type { IBlog } from '@/entities/blogs/model/blog.type';
 import { getBlogBySlug } from '@/entities/blogs/api/blog.api';
@@ -173,7 +174,12 @@ export function AdminBlogsPage() {
               header: fr ? 'Catégorie' : 'Category',
               render: (r) => <Badge variant="secondary">{r.category}</Badge>,
             },
-            { key: 'date', header: fr ? 'Date' : 'Date', hideOnMobile: true },
+            {
+              key: 'date',
+              header: fr ? 'Date' : 'Date',
+              hideOnMobile: true,
+              render: (r) => formatAdminDate(r.date, language),
+            },
             {
               key: 'isPublished',
               header: fr ? 'Public' : 'Public',

@@ -17,6 +17,7 @@ export function AdminMobileDock() {
   const fr = language === 'fr';
   const dashboard = useAdminDashboard();
   const unread = dashboard.data?.newContactResponses ?? 0;
+  const pendingReviews = dashboard.data?.pendingTestimonials ?? 0;
 
   const items = [
     {
@@ -80,10 +81,15 @@ export function AdminMobileDock() {
         <button
           type="button"
           onClick={() => setOpenMobile(true)}
-          className="flex flex-col items-center justify-center gap-0.5 rounded-lg text-[10px] font-medium tracking-wide text-muted-foreground active:text-foreground"
+          className="relative flex cursor-pointer flex-col items-center justify-center gap-0.5 rounded-lg text-[10px] font-medium tracking-wide text-muted-foreground active:text-foreground"
         >
           <Menu className="size-[1.15rem]" />
           <span>{fr ? 'Menu' : 'Menu'}</span>
+          {pendingReviews > 0 ? (
+            <span className="absolute right-[18%] top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-semibold text-primary-foreground">
+              {pendingReviews > 9 ? '9+' : pendingReviews}
+            </span>
+          ) : null}
         </button>
       </div>
     </nav>

@@ -10,7 +10,7 @@ export const WhyChooseMeSection: React.FC = () => {
   const sectionTitle = isFr ? 'Pourquoi Me Choisir ?' : 'Why Choose Me?';
 
   return (
-    <section className="relative z-10 flex w-full flex-col items-center justify-center overflow-hidden bg-background/40 px-4 py-12 md:px-10 md:py-20 lg:px-14 dark:bg-transparent">
+    <section className="relative z-10 flex w-full flex-col items-center justify-center overflow-hidden bg-background/40 px-4 py-12 md:px-10 md:py-20 lg:px-14 dark:bg-background/40 backdrop-blur-md">
       <div className="pointer-events-none absolute top-1/2 left-1/2 hidden h-[240px] w-full max-w-[480px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/[0.05] blur-[70px] dark:block" />
 
       <div className="flex flex-col items-center w-full max-w-5xl mx-auto">

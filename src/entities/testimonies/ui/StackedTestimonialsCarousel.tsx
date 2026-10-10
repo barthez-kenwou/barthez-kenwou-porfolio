@@ -9,9 +9,21 @@ import {
 } from 'motion/react';
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
+import { GridPattern } from '@/shared/ui/grid-pattern';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { useThemeStore } from '@/shared/state/useThemeStore';
 import type { ITestimonial } from '../model/testimonial.types';
+
+/** Soft accent squares — same idea as the home hero grid */
+function cardGridSquares(seed: number): [number, number][] {
+  const result: [number, number][] = [];
+  for (let i = 0; i < 12; i += 1) {
+    const a = (seed * 9301 + i * 49297) % 233280;
+    const b = (seed * 233280 + i * 49297) % 9301;
+    result.push([a % 8, b % 10]);
+  }
+  return result;
+}
 
 type CarouselConfig = {
   distanceDivisor: number;
@@ -192,37 +204,71 @@ export function StackedTestimonialsCarousel({
         ))}
       </div>
 
-      <div className="mt-6 flex items-center gap-3 sm:gap-4">
-        <button
-          type="button"
+      <div className="mt-6 flex items-center gap-5 sm:gap-6">
+        <CarouselNavButton
+          direction="prev"
+          label={isFr ? 'Témoignage précédent' : 'Previous testimonial'}
           onClick={() => go(-1)}
-          aria-label={isFr ? 'Témoignage précédent' : 'Previous testimonial'}
-          className="inline-flex size-10 items-center justify-center rounded-md border border-border bg-card text-foreground transition-colors hover:border-brand/40 hover:bg-brand/10"
-        >
-          <ChevronLeft className="size-5" />
-        </button>
+        />
 
         <div
-          className="min-w-[4.5rem] text-center font-mono text-[11px] font-medium tracking-[0.14em] text-foreground/70 tabular-nums sm:text-xs"
+          className="min-w-[3.75rem] text-center font-mono text-[11px] font-medium tracking-[0.18em] text-foreground/55 tabular-nums sm:text-xs"
           aria-live="polite"
           aria-atomic="true"
         >
           <span className="text-brand dark:text-primary">{String(activeIndex + 1).padStart(2, '0')}</span>
-          <span className="mx-1 text-foreground/35">/</span>
+          <span className="mx-1.5 text-foreground/25">/</span>
           <span>{String(total).padStart(2, '0')}</span>
           <span className="sr-only">{pageLabel}</span>
         </div>
 
-        <button
-          type="button"
+        <CarouselNavButton
+          direction="next"
+          label={isFr ? 'Témoignage suivant' : 'Next testimonial'}
           onClick={() => go(1)}
-          aria-label={isFr ? 'Témoignage suivant' : 'Next testimonial'}
-          className="inline-flex size-10 items-center justify-center rounded-md border border-border bg-card text-foreground transition-colors hover:border-brand/40 hover:bg-brand/10"
-        >
-          <ChevronRight className="size-5" />
-        </button>
+        />
       </div>
     </div>
+  );
+}
+
+function CarouselNavButton({
+  direction,
+  label,
+  onClick,
+}: {
+  direction: 'prev' | 'next';
+  label: string;
+  onClick: () => void;
+}) {
+  const Icon = direction === 'prev' ? ChevronLeft : ChevronRight;
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      className="group relative inline-flex size-10 items-center justify-center text-foreground/45 transition-colors duration-300 hover:text-brand dark:hover:text-primary"
+    >
+      <svg
+        aria-hidden
+        viewBox="0 0 40 40"
+        className="pointer-events-none absolute inset-0 size-full -rotate-90"
+      >
+        <circle
+          cx="20"
+          cy="20"
+          r="18"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.25"
+          strokeLinecap="round"
+          pathLength={1}
+          className="opacity-0 transition-[stroke-dashoffset,opacity] duration-500 ease-out [stroke-dasharray:1] [stroke-dashoffset:1] group-hover:opacity-100 group-hover:[stroke-dashoffset:0]"
+        />
+      </svg>
+      <Icon className="relative size-5 stroke-[1.5]" />
+    </button>
   );
 }
 
@@ -303,6 +349,7 @@ function StackedCard({
   const quote = isFr ? slide.textFr : slide.textEn;
   const name = isFr ? slide.nameFr : slide.nameEn;
   const role = isFr ? slide.roleFr : slide.roleEn;
+  const squares = React.useMemo(() => cardGridSquares(index + 1), [index]);
 
   return (
     <motion.div
@@ -316,7 +363,7 @@ function StackedCard({
         filter: blur,
       }}
       className={cn(
-        'pointer-events-none absolute overflow-hidden rounded-xl',
+        'pointer-events-none absolute overflow-hidden rounded-md',
         'w-44 h-60 sm:w-56 sm:h-80 lg:w-64 lg:h-[22rem]',
         isDark
           ? 'border border-white/10 shadow-[0_24px_48px_-28px_rgba(0,0,0,0.55)]'
@@ -334,21 +381,35 @@ function StackedCard({
         }}
       />
 
+      {/* Hero-style grid — fades toward bottom-right */}
+      <GridPattern
+        width={28}
+        height={28}
+        squares={squares}
+        className={cn(
+          'z-[1] blur-[0.4px]',
+          isDark
+            ? 'fill-white/25 stroke-white/20 opacity-45'
+            : 'fill-brand/25 stroke-brand/20 opacity-40',
+          '[mask-image:linear-gradient(to_bottom_right,white,transparent_60%,transparent)]',
+        )}
+      />
+
       <motion.div
         style={{ opacity: dim }}
-        className={cn('absolute inset-0', isDark ? 'bg-black' : 'bg-[hsl(265_30%_40%)]')}
+        className={cn('absolute inset-0 z-[2]', isDark ? 'bg-black' : 'bg-[hsl(265_30%_40%)]')}
       />
 
       <div
         className={cn(
-          'absolute inset-0 bg-gradient-to-t',
+          'absolute inset-0 z-[2] bg-gradient-to-t',
           isDark
             ? 'from-black/85 via-black/25 to-transparent'
             : 'from-[hsl(265_25%_28%/0.55)] via-[hsl(265_20%_40%/0.08)] to-transparent',
         )}
       />
 
-      <div className="absolute top-3 right-3 flex gap-0.5 sm:top-4 sm:right-4">
+      <div className="absolute top-3 right-3 z-[3] flex gap-0.5 sm:top-4 sm:right-4">
         {Array.from({ length: Math.min(slide.rating || 5, 5) }).map((_, i) => (
           <Star
             key={i}
@@ -360,26 +421,36 @@ function StackedCard({
         ))}
       </div>
 
-      {/* Text always present — card blur handles depth; sharp when front */}
+      {/* Decorative opening quote */}
+      <span
+        aria-hidden
+        className={cn(
+          'pointer-events-none absolute top-8 left-3 z-[3] select-none font-display text-5xl leading-none sm:top-10 sm:left-4 sm:text-6xl lg:text-7xl',
+          isDark ? 'text-white/30' : 'text-brand/25',
+        )}
+      >
+        “
+      </span>
+
       <div
         className={cn(
-          'absolute inset-x-3 bottom-4 sm:inset-x-5 sm:bottom-6 lg:inset-x-6 lg:bottom-8',
+          'absolute inset-x-3 bottom-4 z-[3] sm:inset-x-5 sm:bottom-6 lg:inset-x-6 lg:bottom-8',
           isDark ? 'text-white' : 'text-foreground',
         )}
       >
         <p
           className={cn(
-            'mb-3 line-clamp-5 text-[11px] leading-relaxed font-medium italic sm:mb-4 sm:line-clamp-6 sm:text-sm',
+            'mb-3 line-clamp-4 text-[10px] leading-relaxed font-medium italic sm:mb-4 sm:line-clamp-10',
             isDark ? 'text-white/90' : 'text-foreground/85',
           )}
         >
-          “{quote}”
+          {quote}
         </p>
         <div>
-          <p className="font-heading text-sm font-semibold tracking-tight sm:text-base">{name}</p>
+          <p className="font-heading text-sm font-medium tracking-tight">{name}</p>
           <p
             className={cn(
-              'mt-0.5 text-[10px] sm:text-xs',
+              'mt-0.5 text-[10px]',
               isDark ? 'text-white/65' : 'text-foreground/60',
             )}
           >

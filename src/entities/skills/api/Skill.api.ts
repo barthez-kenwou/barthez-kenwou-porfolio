@@ -4,13 +4,10 @@ import type { ISkill } from '../model/Skill.types';
 export interface ISkillDto extends ISkill {
   id: string;
   sortOrder?: number;
-  isPublished?: boolean;
 }
 
 export interface SkillListParams extends PaginationParams {
   category?: string;
-  isPublished?: boolean;
-  includeUnpublished?: boolean;
 }
 
 export async function listSkills(params?: SkillListParams): Promise<PaginatedData<ISkillDto>> {

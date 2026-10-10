@@ -5,6 +5,7 @@ import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { Button } from '@/shared/ui/Button';
 import { SpectrumButton } from '@/shared/ui/SpectrumButton';
 import { cn } from '@/shared/lib/utils';
+import { trackContactClick, trackCtaClick } from '@/app/lib/analytics';
 
 const CONTACT_FROM_CV = '/contact?from=cv';
 
@@ -55,7 +56,10 @@ export const CvQuickActions: React.FC<CvQuickActionsProps> = ({
         type="button"
         variant="solid"
         size={isSticky ? 'sm' : 'default'}
-        onClick={onDownload}
+        onClick={() => {
+          trackCtaClick('cv_download_intent', `cv_${variant}`);
+          onDownload();
+        }}
         className={cn('flex-1 sm:flex-none', isSticky && 'h-9 px-3 text-xs')}
       >
         <Download className="h-3.5 w-3.5" />
@@ -73,6 +77,10 @@ export const CvQuickActions: React.FC<CvQuickActionsProps> = ({
       >
         <Link
           to={CONTACT_FROM_CV}
+          onClick={() => {
+            trackContactClick('cv_cta');
+            trackCtaClick('contact_from_cv', `cv_${variant}`, CONTACT_FROM_CV);
+          }}
           onMouseEnter={() => {
             void import('@/app/routes/prefetch').then((m) => m.prefetchRoute('/contact'));
           }}

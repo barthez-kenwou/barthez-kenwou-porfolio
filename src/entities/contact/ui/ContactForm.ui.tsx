@@ -212,6 +212,8 @@ export const ContactForm: React.FC = () => {
     setIsSubmitted(true);
     try {
       await submitContact.mutateAsync(values);
+      const { trackContactClick } = await import('@/app/lib/analytics');
+      trackContactClick('form_submit');
       toast.success(
         language === 'fr'
           ? 'Message envoyé. Je vous répondrai rapidement.'
@@ -239,8 +241,8 @@ export const ContactForm: React.FC = () => {
   return (
     <div className="relative flex h-full flex-col">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex h-full flex-col gap-4">
-          <div className="grid gap-3 md:grid-cols-2">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex h-full flex-col gap-5 md:gap-6">
+          <div className="grid gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
               name="name"
@@ -314,7 +316,7 @@ export const ContactForm: React.FC = () => {
                   <FloatingFillField
                     label={t('contact.form.message')}
                     multiline
-                    rows={5}
+                    rows={6}
                     value={field.value}
                     onChange={field.onChange}
                     onBlur={field.onBlur}
@@ -332,7 +334,7 @@ export const ContactForm: React.FC = () => {
           <Button
             type="submit"
             disabled={isSubmitted || submitContact.isPending}
-            className="mt-auto flex h-9 w-full cursor-pointer items-center justify-center rounded-sm border border-brand/20 bg-brand text-sm font-bold tracking-wide text-brand-foreground transition-all hover:bg-brand-hover disabled:cursor-not-allowed disabled:border-brand/10 disabled:bg-brand/50"
+            className="mt-2 flex h-11 w-full cursor-pointer items-center justify-center rounded-sm border border-brand/20 bg-brand text-sm font-bold tracking-wide text-brand-foreground transition-all hover:bg-brand-hover disabled:cursor-not-allowed disabled:border-brand/10 disabled:bg-brand/50"
           >
             {submitContact.isPending
               ? language === 'fr'
