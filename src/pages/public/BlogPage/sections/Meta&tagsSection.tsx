@@ -2,7 +2,6 @@ import type { IBlog } from '@/entities/blogs';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { HiOutlineCalendar, HiOutlineClock, HiOutlineUser } from 'react-icons/hi2';
 import React from 'react';
-import { motion } from 'framer-motion';
 
 export const MetaTagsSection: React.FC<{ post: IBlog }> = ({ post }) => {
   const { language } = useLanguageStore();
@@ -13,55 +12,42 @@ export const MetaTagsSection: React.FC<{ post: IBlog }> = ({ post }) => {
   );
 
   return (
-    <div className="space-y-5 animate-fade-in-up">
-      <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-        <div className="flex items-center gap-2 text-muted-foreground group">
-          <div className="p-1 rounded-md bg-secondary/50 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-            <HiOutlineUser className="h-3.5 w-3.5" />
-          </div>
-          <span className="text-[10px] font-semibold uppercase tracking-[0.14em]">
+    <header className="space-y-3 md:space-y-4">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-foreground/75">
+        <div className="flex items-center gap-1.5">
+          <HiOutlineUser className="size-3.5 shrink-0 text-primary" />
+          <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">
             {post.author}
           </span>
         </div>
-
-        <div className="flex items-center gap-2 text-muted-foreground group">
-          <div className="p-1 rounded-md bg-secondary/50 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-            <HiOutlineCalendar className="h-3.5 w-3.5" />
-          </div>
-          <span className="text-[10px] font-semibold uppercase tracking-[0.14em]">
+        <div className="flex items-center gap-1.5">
+          <HiOutlineCalendar className="size-3.5 shrink-0 text-primary" />
+          <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">
             {formattedDate}
           </span>
         </div>
-
-        <div className="flex items-center gap-2 text-muted-foreground group">
-          <div className="p-1 rounded-md bg-secondary/50 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-            <HiOutlineClock className="h-3.5 w-3.5" />
-          </div>
-          <span className="text-[10px] font-semibold uppercase tracking-[0.14em]">
+        <div className="flex items-center gap-1.5">
+          <HiOutlineClock className="size-3.5 shrink-0 text-primary" />
+          <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">
             {post.readTime}
           </span>
         </div>
       </div>
 
-      <h1 className="article-title">
-        <span className="bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent">
-          {language === 'fr' ? post.titleFr : post.titleEn}
-        </span>
+      <h1 className="text-[1.35rem] font-bold leading-snug tracking-tight text-foreground sm:text-2xl md:text-3xl md:leading-tight">
+        {language === 'fr' ? post.titleFr : post.titleEn}
       </h1>
 
-      <div className="flex flex-wrap gap-1.5 pt-0.5">
-        {post.tags.map((tag: string, index: number) => (
-          <motion.span
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: index * 0.05 }}
+      <div className="flex flex-wrap gap-1.5">
+        {post.tags.slice(0, 6).map((tag) => (
+          <span
             key={tag}
-            className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-semibold uppercase tracking-[0.12em] border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-all cursor-default"
+            className="rounded-md border border-border bg-secondary px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-foreground/80"
           >
             {tag}
-          </motion.span>
+          </span>
         ))}
       </div>
-    </div>
+    </header>
   );
 };

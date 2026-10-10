@@ -125,7 +125,7 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
             >
               {isFr ? 'Restez informé' : 'Stay informed'}
             </h3>
-            <p className="mb-4 text-[11px] leading-relaxed text-foreground/70 sm:text-xs">
+            <p className="mb-4 text-[11px] leading-relaxed text-foreground/85 sm:text-xs">
               {isFr
                 ? 'Recevez les derniers articles et actualités directement dans votre boîte mail.'
                 : 'Receive the latest articles and news directly in your inbox.'}
@@ -198,7 +198,7 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
             </form>
 
             {contactTo && (
-              <p className="mt-4 text-[11px] text-foreground/70 sm:text-xs">
+              <p className="mt-4 text-[11px] text-foreground/85 sm:text-xs">
                 {isFr ? 'Un besoin concret ? ' : 'A concrete need? '}
                 <Link
                   to={contactTo}

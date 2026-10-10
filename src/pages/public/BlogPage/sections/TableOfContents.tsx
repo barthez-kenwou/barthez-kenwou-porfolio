@@ -14,6 +14,8 @@ interface TableOfContentsProps {
   content: string;
   /** desktop = fixed sidebar panel; mobile = FAB only */
   variant?: 'desktop' | 'mobile';
+  /** Lift FAB above the mobile sticky CTA when that bar is visible */
+  clearStickyCta?: boolean;
 }
 
 const TOC_TOP_PX = 95; // clears floating navbar (~top-28)
@@ -21,6 +23,7 @@ const TOC_TOP_PX = 95; // clears floating navbar (~top-28)
 export const TableOfContents: React.FC<TableOfContentsProps> = ({
   content,
   variant = 'desktop',
+  clearStickyCta = false,
 }) => {
   const [toc, setToc] = useState<TOCItem[]>([]);
   const [activeId, setActiveId] = useState<string>('');
@@ -125,8 +128,8 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
             'flex items-center gap-2 py-1.5 text-[13px] leading-snug transition-all relative group rounded-md px-2',
             item.level === 3 ? 'ml-3' : 'ml-0',
             activeId === item.id
-              ? 'text-primary font-semibold bg-primary/8'
-              : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50',
+              ? 'bg-primary/10 font-semibold text-primary'
+              : 'text-foreground/80 hover:bg-secondary hover:text-foreground',
           )}
         >
           {activeId === item.id && (
@@ -166,7 +169,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
       </div>
 
       <div className="shrink-0 border-t border-border/40 px-3 py-3">
-        <p className="text-[10px] text-muted-foreground font-medium leading-relaxed italic">
+        <p className="text-[11px] font-medium leading-relaxed text-foreground/75">
           {language === 'fr'
             ? "Le courage de chercher la connaissance… focus sur l'objectif."
             : 'The courage to seek knowledge… focus on the goal.'}
@@ -176,15 +179,23 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
   );
 
   if (variant === 'mobile') {
+    // Dock ≈ bottom-19 (4.75rem). Sticky CTA (~3.75rem) parks on top of it.
+    // Raise the FAB so it never sits under "Let's talk".
     return (
-      <div className="fixed bottom-28 right-4 z-[60]">
+      <div
+        className={cn(
+          'pointer-events-none fixed right-3 z-[45] xl:hidden',
+          'transition-[bottom] duration-300 ease-out',
+          clearStickyCta ? 'bottom-[10.75rem]' : 'bottom-24',
+        )}
+      >
         <AnimatePresence>
           {isOpen && (
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="absolute bottom-10 right-0 flex max-h-[50vh] w-[min(18rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-md border border-border bg-background/95 shadow-sm backdrop-blur-2xl"
+              className="pointer-events-auto absolute right-0 bottom-12 flex max-h-[45vh] w-[min(17rem,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-md border border-border bg-background/95 shadow-md backdrop-blur-2xl"
             >
               <div className="shrink-0 sticky top-0 z-10 bg-background/95 flex items-center justify-between py-2 px-3 border-b border-border/50">
                 <div className="flex items-center gap-2">
@@ -214,7 +225,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
           type="button"
           onClick={() => setIsOpen(!isOpen)}
           className={cn(
-            'relative flex size-9 cursor-pointer items-center justify-center overflow-hidden rounded-md shadow-sm transition-all active:scale-90 group',
+            'pointer-events-auto relative flex size-10 cursor-pointer items-center justify-center overflow-hidden rounded-md shadow-md transition-all active:scale-90 group',
             isOpen ? 'bg-foreground text-background' : 'bg-brand text-brand-foreground',
           )}
           aria-label={language === 'fr' ? 'Ouvrir le sommaire' : 'Open table of contents'}

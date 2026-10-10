@@ -8,28 +8,19 @@ export const HeroDetailSection: React.FC<{ post: IBlog }> = ({ post }) => {
   const { language } = useLanguageStore();
 
   return (
-    <section className="mb-8 relative group">
-      {/* Decorative background glow */}
-      <div className="absolute -inset-4 bg-gradient-to-r from-primary/15 to-transparent rounded-sm blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10" />
-
+    <section className="relative mb-5 md:mb-7">
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
-        className="relative aspect-[21/10] md:aspect-[21/9] overflow-hidden rounded-sm border border-white/10 shadow-lg shadow-primary/10 transition-transform duration-700"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: 'easeOut' }}
+        className="relative aspect-[16/10] overflow-hidden rounded-md border border-border/40 shadow-sm sm:aspect-[21/11] md:aspect-[21/9]"
       >
         <Image
           src={post.image}
           alt={language === 'fr' ? post.titleFr : post.titleEn}
-          className="w-full h-full object-cover transition-transform duration-1000"
+          className="h-full w-full object-cover"
         />
-
-        {/* Gradients for depth */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-60" />
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent mix-blend-overlay" />
-
-        {/* Subtle glassmorphism border highlight */}
-        <div className="absolute inset-0 rounded-sm border border-white/20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent" />
       </motion.div>
     </section>
   );

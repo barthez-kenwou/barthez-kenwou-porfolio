@@ -1,8 +1,9 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createHighlighter, Highlighter } from 'shiki';
 import { transformerNotationDiff, transformerNotationHighlight } from '@shikijs/transformers';
 import { Check, Copy } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useThemeStore } from '@/shared/state/useThemeStore';
 
 interface CodeBlockProps {
   language: string;
@@ -11,50 +12,85 @@ interface CodeBlockProps {
   className?: string;
 }
 
+const LIGHT_THEME = 'github-light-high-contrast';
+const DARK_THEME = 'github-dark-dimmed';
+
 let highlighterCache: Highlighter | null = null;
+let highlighterReady: Promise<Highlighter> | null = null;
+
+async function getHighlighter() {
+  if (highlighterCache) return highlighterCache;
+  if (!highlighterReady) {
+    highlighterReady = createHighlighter({
+      themes: [LIGHT_THEME, DARK_THEME],
+      langs: [
+        'javascript',
+        'typescript',
+        'bash',
+        'yaml',
+        'json',
+        'python',
+        'markdown',
+        'html',
+        'css',
+        'go',
+        'rust',
+        'dockerfile',
+      ],
+    }).then((h) => {
+      highlighterCache = h;
+      return h;
+    });
+  }
+  return highlighterReady;
+}
 
 export const CodeBlock: React.FC<CodeBlockProps> = ({ language, value, filename, className }) => {
+  const theme = useThemeStore((s) => s.theme);
+  const isDark = theme === 'dark';
+  const shikiTheme = isDark ? DARK_THEME : LIGHT_THEME;
+
   const [html, setHtml] = useState<string>('');
   const [copied, setCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
+
     async function highlight() {
-      if (!highlighterCache) {
-        highlighterCache = await createHighlighter({
-          themes: ['github-dark-dimmed', 'ayu-mirage'],
-          langs: [
-            'javascript',
-            'typescript',
-            'bash',
-            'yaml',
-            'json',
-            'python',
-            'markdown',
-            'html',
-            'css',
-            'go',
-            'rust',
-            'dockerfile',
-          ],
+      setIsLoading(true);
+      try {
+        const highlighter = await getHighlighter();
+        const highlighted = highlighter.codeToHtml(value, {
+          lang: language || 'text',
+          theme: shikiTheme,
+          transformers: [transformerNotationDiff(), transformerNotationHighlight()],
         });
+        if (!cancelled) {
+          setHtml(highlighted);
+          setIsLoading(false);
+        }
+      } catch {
+        if (!cancelled) {
+          setHtml(
+            `<pre><code>${value
+              .replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')}</code></pre>`,
+          );
+          setIsLoading(false);
+        }
       }
-
-      const highlighted = highlighterCache.codeToHtml(value, {
-        lang: language || 'text',
-        theme: 'github-dark-dimmed',
-        transformers: [transformerNotationDiff(), transformerNotationHighlight()],
-      });
-
-      setHtml(highlighted);
-      setIsLoading(false);
     }
 
-    highlight();
-  }, [value, language]);
+    void highlight();
+    return () => {
+      cancelled = true;
+    };
+  }, [value, language, shikiTheme]);
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(value);
+    void navigator.clipboard.writeText(value);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -62,36 +98,36 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ language, value, filename,
   return (
     <div
       className={cn(
-        'group relative my-3 w-full overflow-hidden rounded-sm border border-border/50 bg-card font-mono text-sm shadow-sm transition-all hover:shadow-primary/5',
+        'group relative my-3 w-full overflow-hidden rounded-sm border border-border bg-card font-mono text-sm shadow-sm',
         className,
       )}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-border/50 bg-secondary/50 px-4 py-3">
+      <div className="flex items-center justify-between border-b border-border bg-secondary/80 px-4 py-2.5">
         <div className="flex items-center gap-2">
-          <div className="flex gap-1.5">
-            <div className="h-2.5 w-2.5 rounded-full bg-red-500/80 shadow-[0_0_8px_rgba(239,68,68,0.3)]" />
-            <div className="h-2.5 w-2.5 rounded-full bg-yellow-500/80" />
-            <div className="h-2.5 w-2.5 rounded-full bg-green-500/80" />
+          <div className="flex gap-1.5" aria-hidden>
+            <div className="h-2.5 w-2.5 rounded-full bg-red-500/90" />
+            <div className="h-2.5 w-2.5 rounded-full bg-yellow-500/90" />
+            <div className="h-2.5 w-2.5 rounded-full bg-green-500/90" />
           </div>
-          {filename && (
-            <span className="ml-3 text-[11px] font-medium text-muted-foreground/80 tracking-tight">
+          {filename ? (
+            <span className="ml-3 text-[11px] font-semibold tracking-tight text-foreground/80">
               {filename}
             </span>
-          )}
-          {!filename && language && (
-            <span className="ml-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
+          ) : null}
+          {!filename && language ? (
+            <span className="ml-3 text-[10px] font-bold uppercase tracking-widest text-foreground/70">
               {language}
             </span>
-          )}
+          ) : null}
         </div>
         <button
+          type="button"
           onClick={copyToClipboard}
-          className="flex items-center gap-1.5 rounded-md border border-border/50 bg-secondary/30 px-2 py-1 text-[11px] font-medium text-muted-foreground transition-all hover:bg-secondary/50 hover:text-foreground active:scale-95"
+          className="flex items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1 text-[11px] font-semibold text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground active:scale-95"
         >
           {copied ? (
             <>
-              <Check className="h-3 w-3 text-green-500" />
+              <Check className="h-3 w-3 text-green-600 dark:text-green-500" />
               <span>Copié !</span>
             </>
           ) : (
@@ -103,8 +139,12 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ language, value, filename,
         </button>
       </div>
 
-      {/* Code Content */}
-      <div className="relative overflow-x-auto p-4 md:p-6 custom-scrollbar">
+      <div
+        className={cn(
+          'relative overflow-x-auto p-4 md:p-5 custom-scrollbar',
+          isDark ? 'bg-[#22272e]' : 'bg-[#f6f8fa]',
+        )}
+      >
         {isLoading ? (
           <div className="flex min-h-[100px] items-center justify-center">
             <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
@@ -112,14 +152,16 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ language, value, filename,
         ) : (
           <div
             dangerouslySetInnerHTML={{ __html: html }}
-            className="[&>pre]:!m-0 [&>pre]:!bg-transparent [&>pre]:!p-0"
+            className={cn(
+              'text-[13px] leading-relaxed md:text-sm',
+              '[&>pre]:!m-0 [&>pre]:!bg-transparent [&>pre]:!p-0',
+              '[&_code]:!bg-transparent [&_code]:!text-[inherit]',
+              // Light mode: keep token contrast; never wash colors with low opacity
+              !isDark && '[&_.line]:text-[#24292f]',
+            )}
           />
         )}
       </div>
-
-      {/* Decorative Gradient Background */}
-      <div className="absolute -right-20 -top-20 -z-10 h-40 w-40 rounded-full bg-primary/10 blur-[80px]" />
-      <div className="absolute -bottom-20 -left-20 -z-10 h-40 w-40 rounded-full bg-primary/5 blur-[80px]" />
     </div>
   );
 };

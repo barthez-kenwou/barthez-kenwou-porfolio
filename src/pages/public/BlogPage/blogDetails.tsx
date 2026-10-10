@@ -4,9 +4,8 @@ import { BackSection } from './sections/BackSection';
 import { HeroDetailSection } from './sections/HeroDetailSection';
 import { MetaTagsSection } from './sections/Meta&tagsSection';
 import { NewsletterCTA } from './sections/NewsletterCTA';
-import { RelatedPostsSection } from './sections/RelatedPostsSection';
 import { NavigationSection } from './sections/NavigationSection';
-import { ShareSection } from './sections/ShareSection';
+import { FloatingShareRail } from './sections/FloatingShareRail';
 import { ArticleContentSection } from './sections/ArticleContentSection';
 import { TableOfContents } from './sections/TableOfContents';
 import { SEO } from '@/shared/ui/SEO/SEO';
@@ -43,8 +42,6 @@ export const BlogDetailPage = () => {
 
   useEffect(() => {
     if (!post || post.isPublished === false) return;
-    // Scroll depth on /blog/:slug is already captured by usePageEngagement;
-    // mark an explicit blog_read@25 once the article mounts.
     void import('@/app/lib/analytics').then((m) =>
       m.trackBlogRead(getBlogPathSlug(post), 25),
     );
@@ -135,43 +132,41 @@ export const BlogDetailPage = () => {
       />
 
       <div className="min-h-screen bg-background relative overflow-x-clip">
-        {/* Background Decorative Elements - contained so they never create page-level X scroll */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden -z-10" aria-hidden>
           <div className="absolute top-0 right-0 w-[min(400px,70vw)] h-[min(400px,70vw)] bg-primary/5 rounded-full blur-[100px] translate-x-1/3 -translate-y-1/3" />
           <div className="absolute bottom-0 left-0 w-[min(400px,70vw)] h-[min(400px,70vw)] bg-primary/5 rounded-full blur-[100px] -translate-x-1/3 translate-y-1/3" />
         </div>
 
-        <div className="mx-auto max-w-6xl px-4 pb-3 pt-24 sm:px-6 md:pb-4 md:pt-32 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-16">
-            {/* Sidebar - fixed TOC pinned to this column while reading */}
-            <aside className="hidden lg:block lg:col-span-4 xl:col-span-3 min-w-0 relative">
+        <FloatingShareRail post={post} />
+
+        {/* pr clears the fixed share rail on narrow viewports */}
+        <div className="mx-auto max-w-6xl px-4 pr-12 pt-28 pb-36 sm:px-6 sm:pr-14 md:pt-32 md:pb-20 lg:px-8 lg:pr-16">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12 xl:gap-14">
+            <aside className="relative hidden min-w-0 lg:col-span-4 lg:block xl:col-span-3">
               <TableOfContents content={content} variant="desktop" />
             </aside>
 
-            {/* Main Content */}
-            <main className="lg:col-span-8 xl:col-span-9 min-w-0">
+            <main className="min-w-0 lg:col-span-8 xl:col-span-9">
               <motion.div
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45 }}
+                transition={{ duration: 0.4 }}
+                className="space-y-5 md:space-y-7"
               >
-                <div className="mb-6 md:mb-8">
-                  <BackSection />
-                </div>
+                <BackSection />
 
                 <div ref={heroRef}>
                   <HeroDetailSection post={post} />
                 </div>
+
                 <MetaTagsSection post={post} />
 
-                <div className="mt-8 border-t border-border/40 pt-0">
+                <div className="border-t border-border/40 pt-5 md:pt-7">
                   <ArticleContentSection post={post} />
                 </div>
 
-                <div className="mt-10 space-y-12">
-                  <ShareSection post={post} />
+                <div className="space-y-6 border-t border-border/40 pt-6 md:space-y-8 md:pt-8">
                   <NavigationSection post={post} posts={allPosts} />
-                  <RelatedPostsSection post={post} posts={allPosts} />
                   <NewsletterCTA
                     source="blog-article"
                     contactTo={contactTo}
@@ -184,7 +179,11 @@ export const BlogDetailPage = () => {
           </div>
 
           <div className="lg:hidden">
-            <TableOfContents content={content} variant="mobile" />
+            <TableOfContents
+              content={content}
+              variant="mobile"
+              clearStickyCta={stickyVisible}
+            />
           </div>
         </div>
       </div>

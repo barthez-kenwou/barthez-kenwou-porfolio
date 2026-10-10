@@ -1,10 +1,11 @@
 import { FaMicroblog } from 'react-icons/fa';
 import type { IBlog } from '@/entities/blogs';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { CodeBlock } from '@/shared/ui/code-block';
+import { MarkdownFigure } from '@/shared/ui/markdown/MarkdownFigure';
 import {
   Info,
   Lightbulb,
@@ -14,9 +15,17 @@ import {
   MessageCircle,
   Plus,
   Minus,
-  Tag,
 } from 'lucide-react';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
+
+function isMarkdownFigureChild(node: React.ReactNode): boolean {
+  return (
+    React.isValidElement(node) &&
+    typeof node.props === 'object' &&
+    node.props !== null &&
+    'data-md-figure' in node.props
+  );
+}
 
 const FAQItem: React.FC<{ question: string; answer: string }> = ({ question, answer }) => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -36,7 +45,7 @@ const FAQItem: React.FC<{ question: string; answer: string }> = ({ question, ans
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
             <HelpCircle className="h-4 w-4" />
           </div>
-          <span className="text-sm md:text-base font-bold text-foreground/90">{question}</span>
+          <span className="text-sm font-bold text-foreground md:text-base">{question}</span>
         </div>
         <div
           className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border transition-transform duration-300 ${isOpen ? 'rotate-180 bg-primary border-primary text-primary-foreground' : ''}`}
@@ -54,11 +63,11 @@ const FAQItem: React.FC<{ question: string; answer: string }> = ({ question, ans
             transition={{ duration: 0.3, ease: 'easeInOut' }}
           >
             <div className="px-4 pb-4 pt-0">
-              <div className="flex gap-3 rounded-md bg-muted/30 p-4 border-l-2 border-primary/30">
-                <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center text-primary/60">
+              <div className="flex gap-3 rounded-md border-l-2 border-primary/40 bg-muted/40 p-4">
+                <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center text-primary">
                   <MessageCircle className="h-4 w-4" />
                 </div>
-                <p className="text-sm leading-relaxed text-muted-foreground/90 italic">{answer}</p>
+                <p className="text-sm leading-relaxed text-foreground/90">{answer}</p>
               </div>
             </div>
           </motion.div>
@@ -89,25 +98,6 @@ export const ArticleContentSection: React.FC<{ post: IBlog }> = ({ post }) => {
       .replace(/^-+|-+$/g, '');
   };
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            // This could be used for a Table of Contents highlighting
-            // Currently unused in this component
-          }
-        });
-      },
-      { rootMargin: '-20% 0% -35% 0%' },
-    );
-
-    const headers = document.querySelectorAll('h2, h3');
-    headers.forEach((header) => observer.observe(header));
-
-    return () => observer.disconnect();
-  }, [content]);
-
   return (
     <article className="relative max-w-none">
       {/* Reading Progress Bar */}
@@ -121,20 +111,21 @@ export const ArticleContentSection: React.FC<{ post: IBlog }> = ({ post }) => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="prose prose-sm md:prose-base dark:prose-invert max-w-none 
-          prose-headings:scroll-mt-32 prose-headings:font-bold prose-headings:tracking-tight
-          prose-p:text-muted-foreground/80 prose-p:leading-relaxed prose-p:mb-6
-          prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-a:font-semibold
-          prose-strong:text-foreground prose-strong:font-bold
-          prose-blockquote:border-l-primary prose-blockquote:bg-primary/5 prose-blockquote:py-1 prose-blockquote:px-5 prose-blockquote:rounded-r-lg prose-blockquote:italic
-          prose-img:rounded-sm prose-img:border prose-img:border-border/50
+        className="prose prose-sm md:prose-base dark:prose-invert mb-8 max-w-none md:mb-12
+          prose-headings:scroll-mt-28 prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-foreground
+          prose-p:mb-4 prose-p:leading-relaxed prose-p:text-foreground/90 md:prose-p:mb-5
+          prose-a:font-semibold prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+          prose-strong:font-bold prose-strong:text-foreground
+          prose-blockquote:rounded-r-lg prose-blockquote:border-l-primary prose-blockquote:bg-primary/5 prose-blockquote:px-4 prose-blockquote:py-1 prose-blockquote:not-italic prose-blockquote:text-foreground/90
           prose-ul:list-none prose-ul:pl-0
-          prose-ol:pl-5 marker:text-primary marker:font-bold
-          mb-16"
+          prose-ol:pl-5 marker:font-bold marker:text-primary"
       >
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
+            img: ({ src, alt, title }) => (
+              <MarkdownFigure src={src} alt={alt} title={title} />
+            ),
             h2: ({ children }) => {
               const textContent = React.Children.toArray(children).join('');
               const isFAQ = textContent.toLowerCase().includes('faq');
@@ -143,43 +134,55 @@ export const ArticleContentSection: React.FC<{ post: IBlog }> = ({ post }) => {
               return (
                 <h2
                   id={id}
-                  className={`group relative mt-12 mb-6 flex items-center gap-3 article-heading ${isFAQ ? 'text-primary' : ''}`}
+                  className={`group relative mt-8 mb-3 flex items-start gap-2.5 text-lg font-bold leading-snug tracking-tight sm:mt-10 sm:mb-4 sm:text-xl md:text-2xl ${isFAQ ? 'text-primary' : 'text-foreground'}`}
                 >
                   <a
                     href={`#${id}`}
-                    className="absolute left-0 -translate-x-[110%] hidden sm:flex items-center opacity-0 transition-all group-hover:opacity-100 text-primary"
+                    className="absolute top-1 left-0 hidden -translate-x-[110%] items-center text-primary opacity-0 transition-all group-hover:opacity-100 sm:flex"
+                    aria-label="Anchor"
                   >
-                    <Hash className="h-5 w-5" />
+                    <Hash className="size-4" />
                   </a>
                   <span
-                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-xs font-mono ${isFAQ ? 'bg-primary text-primary-foreground shadow-sm shadow-primary/20' : 'bg-primary/10 text-primary'}`}
+                    className={`mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md sm:size-7 ${isFAQ ? 'bg-primary text-primary-foreground' : 'bg-primary/10 text-primary'}`}
                   >
                     {isFAQ ? (
-                      <HelpCircle className="h-4 w-4" />
+                      <HelpCircle className="size-3.5" />
                     ) : (
-                      <FaMicroblog className="h-3.5 w-3.5" />
+                      <FaMicroblog className="size-3" />
                     )}
                   </span>
-                  {children}
-                  {isFAQ && (
-                    <span className="ml-2 h-1 w-12 bg-gradient-to-r from-primary to-transparent rounded-full" />
-                  )}
+                  <span className="min-w-0 flex-1">{children}</span>
                 </h2>
               );
             },
-            // Header 3
             h3: ({ children }) => {
               const id = slugify(React.Children.toArray(children).join(''));
               return (
-                <h3 id={id} className="group flex items-center gap-2 mt-10 mb-4 article-subheading">
-                  <ChevronRight className="h-4 w-4 shrink-0 text-primary/50 transition-transform group-hover:translate-x-1" />
-                  {children}
+                <h3
+                  id={id}
+                  className="group mt-6 mb-2.5 flex items-start gap-1.5 text-base font-semibold leading-snug tracking-tight text-foreground sm:mt-8 sm:mb-3 sm:text-lg"
+                >
+                  <ChevronRight className="mt-1 size-3.5 shrink-0 text-primary/80 transition-transform group-hover:translate-x-0.5" />
+                  <span className="min-w-0 flex-1">{children}</span>
                 </h3>
               );
             },
             // Paragraph & Strategic Blocks
             p: ({ children }) => {
-              const textContent = React.Children.toArray(children).join('');
+              const kids = React.Children.toArray(children);
+              // Avoid invalid <p><figure> — bare markdown images become block figures.
+              if (kids.length === 1 && isMarkdownFigureChild(kids[0])) {
+                return <>{kids[0]}</>;
+              }
+              if (
+                kids.length > 0 &&
+                kids.every((k) => typeof k === 'string' ? !k.trim() : isMarkdownFigureChild(k))
+              ) {
+                return <>{kids}</>;
+              }
+
+              const textContent = kids.join('');
 
               if (textContent.startsWith('Astuce') || textContent.startsWith('Pro tip')) {
                 return (
@@ -200,7 +203,7 @@ export const ArticleContentSection: React.FC<{ post: IBlog }> = ({ post }) => {
                         <span className="text-[10px] font-black uppercase tracking-widest text-primary mb-1.5 block">
                           {language === 'fr' ? 'Astuce de Pro' : 'Pro Tip'}
                         </span>
-                        <div className="text-foreground/90 text-sm md:text-sm leading-relaxed italic">
+                        <div className="text-sm leading-relaxed text-foreground md:text-sm">
                           {children}
                         </div>
                       </div>
@@ -263,42 +266,23 @@ export const ArticleContentSection: React.FC<{ post: IBlog }> = ({ post }) => {
 
               if (textContent.startsWith('R :')) {
                 return (
-                  <div className="mb-6 p-4 bg-muted/30 border-l-2 border-muted rounded-r-lg text-muted-foreground italic">
-                    <span className="text-foreground/60 font-bold not-italic mr-2">R:</span>{' '}
+                  <div className="mb-6 rounded-r-lg border-l-2 border-border bg-muted/40 p-4 text-foreground/90">
+                    <span className="mr-2 font-bold text-foreground">R:</span>{' '}
                     {textContent.replace(/^R\s*:\s*/g, '')}
                   </div>
                 );
               }
 
-              // Tags Detection (e.g. **Tags** : #... #... or just #Tag1 #Tag2)
+              // Bottom hashtag clouds are redundant with header tags — hide them.
               const hasManyHashtags = (textContent.match(/#\w+/g) || []).length >= 3;
               const isTagLine =
                 textContent.toLowerCase().includes('tags') && textContent.includes('#');
-
               if (isTagLine || hasManyHashtags) {
-                const tagsMatch = textContent.match(/#\w+/g);
-                if (tagsMatch) {
-                  return (
-                    <div className="my-8 flex flex-wrap gap-2 items-center">
-                      <div className="text-xs font-black uppercase tracking-widest text-primary/60">
-                        <Tag className="h-3 w-3" />
-                      </div>
-                      {tagsMatch.map((tag, i) => (
-                        <motion.span
-                          key={i}
-                          className="px-2 py-.5 text-[9px] md:text-[10px] font-bold bg-primary/10 text-primary border border-primary/20 rounded-full cursor-default
-                            transition-all shadow-sm "
-                        >
-                          {tag}
-                        </motion.span>
-                      ))}
-                    </div>
-                  );
-                }
+                return null;
               }
 
               return (
-                <p className="mb-6 leading-relaxed text-muted-foreground/90 text-sm md:text-sm">
+                <p className="mb-4 text-sm leading-relaxed text-foreground/90 md:mb-5">
                   {children}
                 </p>
               );
@@ -334,9 +318,9 @@ export const ArticleContentSection: React.FC<{ post: IBlog }> = ({ post }) => {
 
             // Lists
             li: ({ children }) => (
-              <li className="flex items-start gap-2 mb-0 group">
-                <span className="mt-2 flex h-1.5 w-1.5 shrink-0 rounded-full bg-primary/40 transition-all group-hover:scale-150 group-hover:bg-primary shadow-[0_0_6px_rgba(var(--primary),0.3)]" />
-                <span className="text-muted-foreground/90 leading-relaxed text-sm">{children}</span>
+              <li className="group mb-0 flex items-start gap-2">
+                <span className="mt-2 flex h-1.5 w-1.5 shrink-0 rounded-full bg-primary transition-transform group-hover:scale-125" />
+                <span className="text-sm leading-relaxed text-foreground/90">{children}</span>
               </li>
             ),
             // Tables
@@ -372,7 +356,7 @@ export const ArticleContentSection: React.FC<{ post: IBlog }> = ({ post }) => {
               </th>
             ),
             td: ({ children }) => (
-              <td className="px-5 py-2 text-muted-foreground/80 group-hover/row:text-foreground/90 transition-colors">
+              <td className="px-5 py-2 text-foreground/90 transition-colors group-hover/row:text-foreground">
                 {children}
               </td>
             ),
