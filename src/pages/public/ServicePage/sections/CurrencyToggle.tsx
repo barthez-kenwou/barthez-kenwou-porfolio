@@ -14,7 +14,7 @@ export function CurrencyToggle({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        'relative z-20 mb-4 flex justify-center px-4 sm:mb-5 sm:justify-end md:px-10 lg:px-14',
+        'relative z-20 mb-2 flex justify-center px-4 sm:mb-4 sm:justify-end md:mb-5 md:px-10 lg:px-14',
         className,
       )}
     >

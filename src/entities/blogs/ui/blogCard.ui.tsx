@@ -25,7 +25,7 @@ export const BlogCard: React.FC<{ Blog: IBlog; isFeatured?: boolean }> = ({ Blog
           className={cn(
             'relative w-full overflow-hidden bg-muted/30',
             isFeatured
-              ? 'aspect-video md:aspect-auto lg:col-span-3 md:h-full md:min-h-[220px] md:max-h-[300px]'
+              ? 'h-40 sm:h-44 md:h-full md:min-h-[220px] md:max-h-[300px] lg:col-span-3'
               : 'h-40 sm:h-44',
           )}
         >
@@ -43,11 +43,11 @@ export const BlogCard: React.FC<{ Blog: IBlog; isFeatured?: boolean }> = ({ Blog
 
         <div
           className={cn(
-            'p-4 flex flex-col justify-center',
-            isFeatured ? 'md:p-3 lg:col-span-2' : 'p-2',
+            'flex flex-col justify-center',
+            isFeatured ? 'p-3 md:p-3 lg:col-span-2' : 'p-2',
           )}
         >
-          <div className="flex items-center gap-3 text-[10px] uppercase tracking-wider font-bold text-muted-foreground/60 mb-3">
+          <div className="mb-2 flex items-center gap-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 md:mb-3">
             <span className="flex items-center gap-1">
               <HiOutlineCalendar className="h-3.5 w-3.5" />
               {new Date(date).toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-US', {
@@ -64,8 +64,10 @@ export const BlogCard: React.FC<{ Blog: IBlog; isFeatured?: boolean }> = ({ Blog
 
           <h3
             className={cn(
-              'font-extrabold text-foreground group-hover:text-primary transition-colors leading-tight mb-2',
-              isFeatured ? 'text-xl md:text-2xl' : 'text-base line-clamp-2',
+              'mb-1.5 font-extrabold leading-snug text-foreground transition-colors group-hover:text-primary md:mb-2 md:leading-tight',
+              isFeatured
+                ? 'line-clamp-3 text-base sm:text-lg md:line-clamp-none md:text-2xl'
+                : 'line-clamp-2 text-base',
             )}
           >
             {language === 'fr' ? titleFr : titleEn}
@@ -74,7 +76,7 @@ export const BlogCard: React.FC<{ Blog: IBlog; isFeatured?: boolean }> = ({ Blog
           <p
             className={cn(
               'text-muted-foreground line-clamp-2',
-              isFeatured ? 'text-sm md:text-base mb-2' : 'text-xs mb-4',
+              isFeatured ? 'mb-2 text-xs sm:text-sm md:text-base' : 'mb-4 text-xs',
             )}
           >
             {language === 'fr' ? excerptFr : excerptEn}

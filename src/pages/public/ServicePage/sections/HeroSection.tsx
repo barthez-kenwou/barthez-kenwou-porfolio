@@ -7,9 +7,9 @@ export const HeroSection: React.FC = () => {
   const isFr = language === 'fr';
 
   return (
-    <section className="relative mb-2 animate-fade-in px-4 pt-[350px] text-center md:mb-4 md:px-10 md:pt-[350px] lg:px-14">
-      <div className="relative z-10 mx-auto max-w-3xl -mt-40 md:-mt-44">
-        <h1 className="section-title">
+    <section className="relative mb-0 animate-fade-in px-4 pt-[350px] text-center md:mb-4 md:px-10 md:pt-[350px] lg:px-14">
+      <div className="relative z-10 mx-auto max-w-3xl -mt-44 md:-mt-44">
+        <h1 className="section-title !mb-1.5">
           <span className="font-heading text-foreground">
             {isFr ? 'Mes Services' : 'My Services'}
           </span>

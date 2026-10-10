@@ -34,7 +34,7 @@ export const PostsGrid: React.FC = () => {
   return (
     <>
       <div className="relative z-20 bg-background px-4 py-4 md:px-10 lg:px-14">
-        <section className="mb-4 flex flex-col gap-4 md:flex-row md:items-center">
+        <section className="mb-4 flex flex-col items-center gap-4 md:flex-row md:items-center md:justify-start">
           <div
             className={cn(
               'group/search relative w-full max-w-[11.5rem] transition-[max-width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:max-w-[13rem]',
@@ -91,7 +91,7 @@ export const PostsGrid: React.FC = () => {
           </div>
 
           <div
-            className="flex flex-wrap gap-2"
+            className="flex flex-wrap justify-center gap-2 md:justify-start"
             role="group"
             aria-label={language === 'fr' ? 'Catégories' : 'Categories'}
           >

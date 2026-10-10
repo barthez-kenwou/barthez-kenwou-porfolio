@@ -76,7 +76,10 @@ const matchesCategoryFilter = (project: IProject, filterId: string): boolean => 
 export const useProjectFilters = () => {
   const [filters, setFilters] = useState<ProjectFilters>(INITIAL_FILTERS);
   const projectsQuery = usePublicProjects();
-  const projects = projectsQuery.data?.data.items ?? [];
+  const projects = useMemo(
+    () => projectsQuery.data?.data.items ?? [],
+    [projectsQuery.data?.data.items],
+  );
 
   const availableTechs = useMemo(
     () => Array.from(new Set(projects.flatMap(getProjectTechs))).sort(),

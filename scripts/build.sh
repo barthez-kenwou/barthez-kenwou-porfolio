@@ -11,9 +11,9 @@ fi
 
 echo "[scripts] build: running TypeScript & Vite build"
 if command -v bun >/dev/null 2>&1; then
-  bunx vite build
+  bunx vite build || exit 1
 else
-  npx vite build
+  npx vite build || exit 1
 fi
 
 echo "[scripts] build: SEO discovery files + HTML prerender"

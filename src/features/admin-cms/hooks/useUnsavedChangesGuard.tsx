@@ -88,26 +88,23 @@ export function useUnsavedChangesGuard(isDirty: boolean) {
 
 /**
  * Track dirty state against a baseline set on hydrate / after successful save.
+ * Baseline lives in state (not a ref) so dirty checks are render-safe.
  */
 export function useDraftDirtyFlag<T>(draft: T) {
-  const baselineRef = React.useRef<string | null>(null);
-  const [, bump] = React.useState(0);
+  const [baseline, setBaseline] = React.useState<string | null>(null);
 
   const resetBaseline = React.useCallback((nextDraft: T) => {
-    baselineRef.current = JSON.stringify(nextDraft);
-    bump((n) => n + 1);
+    setBaseline(JSON.stringify(nextDraft));
   }, []);
 
   const markClean = React.useCallback(
     (nextDraft?: T) => {
-      baselineRef.current = JSON.stringify(nextDraft ?? draft);
-      bump((n) => n + 1);
+      setBaseline(JSON.stringify(nextDraft ?? draft));
     },
     [draft],
   );
 
-  const isDirty =
-    baselineRef.current !== null && JSON.stringify(draft) !== baselineRef.current;
+  const isDirty = baseline !== null && JSON.stringify(draft) !== baseline;
 
   return { isDirty, markClean, resetBaseline };
 }

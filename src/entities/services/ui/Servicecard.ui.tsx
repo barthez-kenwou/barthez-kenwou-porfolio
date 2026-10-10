@@ -75,17 +75,17 @@ export const ServiceCard: React.FC<{ Service: IServices }> = ({ Service }) => {
           </h3>
         </div>
 
-        <p className="mb-5 text-[12px] leading-relaxed font-medium text-foreground/75 italic md:text-xs">
+        <p className="mb-4 line-clamp-3 min-h-[3.6em] text-[12px] leading-relaxed font-medium text-foreground/75 italic md:mb-5 md:text-xs">
           {language === 'fr' ? descFr : descEn}
         </p>
 
-        <div className="mb-6 flex-1 space-y-2.5">
+        <div className="mb-5 flex min-h-0 flex-1 flex-col justify-start gap-2.5 md:mb-6">
           {(language === 'fr' ? featuresFr : featuresEn)
             .slice(0, 4)
             .map((feature: string, i: number) => (
               <div key={i} className="group/item flex items-start gap-2.5">
                 <HiOutlineCheckCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand transition-colors group-hover/item:text-brand-hover dark:text-primary" />
-                <span className="text-[11px] leading-snug text-foreground/80 md:text-[12px]">
+                <span className="line-clamp-2 text-[11px] leading-snug text-foreground/80 md:text-[12px]">
                   {feature}
                 </span>
               </div>
