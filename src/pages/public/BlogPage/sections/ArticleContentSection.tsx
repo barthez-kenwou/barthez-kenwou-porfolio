@@ -7,6 +7,21 @@ import { CodeBlock } from '@/shared/ui/code-block';
 import { MarkdownFigure } from '@/shared/ui/markdown/MarkdownFigure';
 import { Hash } from 'lucide-react';
 import { motion, useScroll, useSpring } from 'framer-motion';
+import { toast } from 'sonner';
+import { headingSlug } from '@/shared/lib/heading-slug';
+
+function copySectionLink(id: string, isFr: boolean) {
+  const path = `${window.location.pathname}${window.location.search}#${id}`;
+  window.history.pushState(null, '', path);
+  const absolute = `${window.location.origin}${path}`;
+  void navigator.clipboard.writeText(absolute).then(
+    () =>
+      toast.success(isFr ? 'Lien de section copié' : 'Section link copied', {
+        description: absolute,
+      }),
+    () => toast.error(isFr ? 'Impossible de copier' : 'Could not copy'),
+  );
+}
 
 function isMarkdownFigureChild(node: React.ReactNode): boolean {
   return (
@@ -51,30 +66,27 @@ function Callout({
   );
 }
 
-function slugify(text: string) {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_-]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
-
 function createMarkdownComponents(isFr: boolean): Components {
   return {
     img: ({ src, alt, title }) => <MarkdownFigure src={src} alt={alt} title={title} />,
     h2: ({ children }) => {
       const textContent = React.Children.toArray(children).join('');
-      const id = slugify(textContent);
+      const id = headingSlug(textContent);
 
       return (
         <h2
           id={id}
-          className="group relative mt-9 mb-3 text-lg font-semibold leading-snug tracking-tight text-foreground sm:mt-11 sm:mb-3.5 sm:text-xl md:text-[1.35rem]"
+          className="group relative mt-9 mb-3 scroll-mt-28 text-lg font-semibold leading-snug tracking-tight text-foreground sm:mt-11 sm:mb-3.5 sm:text-xl md:text-[1.35rem]"
         >
           <a
             href={`#${id}`}
             className="absolute top-1 left-0 hidden -translate-x-[110%] items-center text-foreground/35 opacity-0 transition-opacity group-hover:opacity-100 sm:flex"
-            aria-label={isFr ? 'Ancre de section' : 'Section anchor'}
+            aria-label={isFr ? 'Lien vers cette section' : 'Link to this section'}
+            title={isFr ? 'Copier le lien de la section' : 'Copy section link'}
+            onClick={(e) => {
+              e.preventDefault();
+              copySectionLink(id, isFr);
+            }}
           >
             <Hash className="size-3.5" />
           </a>
@@ -83,12 +95,24 @@ function createMarkdownComponents(isFr: boolean): Components {
       );
     },
     h3: ({ children }) => {
-      const id = slugify(React.Children.toArray(children).join(''));
+      const id = headingSlug(React.Children.toArray(children).join(''));
       return (
         <h3
           id={id}
-          className="mt-7 mb-2.5 border-l-2 border-border pl-3 text-base font-semibold leading-snug tracking-tight text-foreground sm:mt-8 sm:mb-3 sm:text-[1.05rem]"
+          className="group relative mt-7 mb-2.5 scroll-mt-28 border-l-2 border-border pl-3 text-base font-semibold leading-snug tracking-tight text-foreground sm:mt-8 sm:mb-3 sm:text-[1.05rem]"
         >
+          <a
+            href={`#${id}`}
+            className="absolute top-1 left-0 hidden -translate-x-[calc(100%+0.55rem)] items-center text-foreground/35 opacity-0 transition-opacity group-hover:opacity-100 sm:flex"
+            aria-label={isFr ? 'Lien vers cette section' : 'Link to this section'}
+            title={isFr ? 'Copier le lien de la section' : 'Copy section link'}
+            onClick={(e) => {
+              e.preventDefault();
+              copySectionLink(id, isFr);
+            }}
+          >
+            <Hash className="size-3.5" />
+          </a>
           {children}
         </h3>
       );

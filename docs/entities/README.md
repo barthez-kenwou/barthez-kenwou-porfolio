@@ -10,13 +10,14 @@ Core domain models. They define data shapes and contracts used across pages, wid
 | Blog       | [blog.md](./blog.md)             |
 | Skill      | [skill.md](./skill.md)           |
 | Experience | [experience.md](./experience.md) |
+| Partner    | [partner.md](./partner.md)       |
 
 ## Also present in `src/entities/`
 
 Document as needed when the public API stabilizes:
 
 - `services` - professional offerings
-- `certifications`, `education`, `cv`, `contact`, `testimonies`, `userProfile`, `achievment`
+- `certifications`, `education`, `cv`, `contact`, `testimonies`, `userProfile`, `achievment`, `references`
 
 ## Rules
 

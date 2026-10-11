@@ -28,11 +28,11 @@ export const ProjectPage = () => {
         <HeroSection />
 
         <div className="px-4 md:px-10 lg:px-14">
-          {/* 2. Curated shortlist first — readable, user-paced */}
-          <FeaturedProjectsMarquee />
-
-          {/* 3. Browse the full catalog */}
+          {/* 2. Browse the full catalog */}
           <GridProject filterState={filterState} />
+
+          {/* 3. Signature spotlight — curated after the catalog */}
+          <FeaturedProjectsMarquee />
 
           {/* 4. Credibility / impact */}
           <ProjectStatsSection />

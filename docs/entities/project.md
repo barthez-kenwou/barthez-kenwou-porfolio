@@ -44,4 +44,5 @@ Hero → Overview → Problem/Solution → Videos → Tech → Gallery → Archi
 ## UI
 
 Page composition: `src/pages/public/ProjectPage/projectDetails.tsx`  
-Cards: `src/entities/projets/ui/`
+Cards: `src/entities/projets/ui/`  
+CMS editor: `src/pages/app/Admin/ProjectsPage/ProjectEditorPage.tsx` (covers identity, narrative, stack, media/carousel, videos[], gallery[]+kind, diagrams/Mermaid, scope, milestones, decisions, security/infra, beforeAfter[], resources[], externalLinks[], testimonial)

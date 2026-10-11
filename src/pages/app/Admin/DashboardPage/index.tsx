@@ -61,6 +61,7 @@ const PRODUCT_SIGNALS = [
   { id: 'share', fr: 'Partages', en: 'Shares' },
   { id: 'locale_switch', fr: 'Langue', en: 'Locale' },
   { id: 'project_filter', fr: 'Filtres projets', en: 'Project filters' },
+  { id: 'project_pagination', fr: 'Pagination projets', en: 'Project pagination' },
   { id: 'video_complete', fr: 'Vidéo finie', en: 'Video complete' },
   { id: 'blog_read', fr: 'Lecture blog', en: 'Blog reads' },
   { id: 'project_view', fr: 'Vue projet', en: 'Project views' },
@@ -460,12 +461,6 @@ export function AdminDashboardPage() {
                   {PERIODS.find((p) => p.value === period)?.[fr ? 'fr' : 'en']}
                 </span>
               </div>
-              <p className="mt-1.5 cursor-default text-[12px] leading-relaxed text-muted-foreground">
-                {fr
-                  ? 'Actions clés du site public — hors pageviews auto.'
-                  : 'Key public-site actions — excluding auto pageviews.'}
-              </p>
-
               {analytics.isPending ? (
                 <p className="mt-4 cursor-default text-xs text-muted-foreground">…</p>
               ) : !hasProductSignal && otherProductEvents.length === 0 ? (

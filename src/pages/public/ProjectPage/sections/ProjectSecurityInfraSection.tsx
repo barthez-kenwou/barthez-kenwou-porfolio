@@ -2,7 +2,6 @@ import React from 'react';
 import { IProject } from '@/entities/projets/model/project.types';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { ProjectSectionShell } from './ProjectSectionShell';
-import { ShieldCheck, Server, CheckCircle2 } from 'lucide-react';
 
 export const ProjectSecurityInfraSection: React.FC<{ project: IProject }> = ({ project }) => {
   const { language } = useLanguageStore();
@@ -15,45 +14,34 @@ export const ProjectSecurityInfraSection: React.FC<{ project: IProject }> = ({ p
   if (!hasSecurity && !hasInfra) return null;
 
   return (
-    <ProjectSectionShell title={isFr ? 'Sécurité & Infrastructure' : 'Security & Infrastructure'}>
-      <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+    <ProjectSectionShell
+      title={isFr ? 'Sécurité et infra' : 'Security and ops'}
+      tone="ruled"
+    >
+      <div className="grid md:grid-cols-2 gap-10 md:gap-12 lg:gap-16">
         {hasSecurity && (
-          <div className="rounded-md border border-border/40 bg-card/40 p-5 md:p-6">
-            <h3 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
-              <div className="p-2 rounded-md bg-primary/10 text-primary">
-                <ShieldCheck className="w-4 h-4" />
-              </div>
+          <div>
+            <h3 className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground mb-4">
               {isFr ? 'Sécurité' : 'Security'}
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-0 divide-y divide-border/35 border-y border-border/35">
               {security!.map((item, idx) => (
-                <li
-                  key={idx}
-                  className="flex gap-2.5 text-sm text-muted-foreground leading-relaxed"
-                >
-                  <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                  <span>{item}</span>
+                <li key={idx} className="py-3 text-sm text-muted-foreground leading-relaxed">
+                  {item}
                 </li>
               ))}
             </ul>
           </div>
         )}
         {hasInfra && (
-          <div className="rounded-md border border-border/40 bg-card/40 p-5 md:p-6">
-            <h3 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
-              <div className="p-2 rounded-md bg-secondary text-secondary-foreground">
-                <Server className="w-4 h-4" />
-              </div>
-              {isFr ? 'Infrastructure & déploiement' : 'Infrastructure & deployment'}
+          <div>
+            <h3 className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground mb-4">
+              {isFr ? 'Infrastructure' : 'Infrastructure'}
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-3.5">
               {infra!.map((item, idx) => (
-                <li
-                  key={idx}
-                  className="flex gap-2.5 text-sm text-muted-foreground leading-relaxed"
-                >
-                  <CheckCircle2 className="w-4 h-4 text-secondary-foreground shrink-0 mt-0.5" />
-                  <span>{item}</span>
+                <li key={idx} className="text-sm text-muted-foreground leading-relaxed">
+                  {item}
                 </li>
               ))}
             </ul>

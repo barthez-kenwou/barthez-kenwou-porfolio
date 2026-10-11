@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { useThemeStore } from '@/shared/state/useThemeStore';
 import { cn } from '@/shared/lib/utils';
+import { cleanupMermaidDomArtifacts, renderMermaidSvg } from '@/shared/lib/renderMermaid';
 
 export type MermaidEditorProps = {
   label: string;
@@ -47,24 +48,21 @@ export function MermaidEditor({
 
     setRendering(true);
 
+    const diagramRenderId = `mermaid-editor-${renderId}-${token}`;
+
     void (async () => {
       try {
-        const mermaid = (await import('mermaid')).default;
-        mermaid.initialize({
-          startOnLoad: false,
-          securityLevel: 'strict',
-          theme: theme === 'dark' ? 'dark' : 'neutral',
-          fontFamily: 'inherit',
-        });
-        const { svg: rendered } = await mermaid.render(
-          `mermaid-editor-${renderId}-${token}`,
+        const rendered = await renderMermaidSvg(
+          diagramRenderId,
           value,
+          theme === 'dark' ? 'dark' : 'light',
         );
         if (token === abortRef.current) {
           setSvg(rendered);
           setRendering(false);
         }
       } catch (err) {
+        cleanupMermaidDomArtifacts(diagramRenderId);
         if (token === abortRef.current) {
           setError(
             isFr
@@ -76,6 +74,10 @@ export function MermaidEditor({
         }
       }
     })();
+
+    return () => {
+      cleanupMermaidDomArtifacts(diagramRenderId);
+    };
   }, [mode, value, theme, renderId, isFr]);
 
   return (

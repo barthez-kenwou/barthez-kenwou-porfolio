@@ -2,9 +2,9 @@ import React, { useMemo, useState } from 'react';
 import { IProject } from '@/entities/projets/model/project.types';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { ProjectSectionShell } from './ProjectSectionShell';
-import { HeroVideoDialog } from '@/shared/ui/hero-video-dialog';
-import { parseVideoUrl, type ParsedVideo } from '@/shared/lib/videoEmbed';
-import { cn } from '@/shared/lib/utils';
+import { resolveVideoMedia, type ResolvedVideoMedia } from '@/shared/lib/videoEmbed';
+import { ProjectVideoPlayer } from '@/shared/ui/ProjectVideoPlayer';
+import { projectDetailTabClass } from './projectDetailTabClass';
 
 const TYPE_LABEL: Record<string, { fr: string; en: string }> = {
   demo: { fr: 'Démo', en: 'Demo' },
@@ -13,13 +13,10 @@ const TYPE_LABEL: Record<string, { fr: string; en: string }> = {
   presentation: { fr: 'Présentation', en: 'Presentation' },
 };
 
-type ResolvedVideo =
-  | { kind: 'embed'; item: NonNullable<IProject['videos']>[number]; video: ParsedVideo }
-  | { kind: 'file'; item: NonNullable<IProject['videos']>[number]; src: string };
-
-function isDirectVideoFile(url: string): boolean {
-  return /\.(mp4|webm|ogg)(\?|$)/i.test(url.trim());
-}
+type ResolvedRow = {
+  item: NonNullable<IProject['videos']>[number];
+  media: ResolvedVideoMedia;
+};
 
 export const ProjectVideoSection: React.FC<{ project: IProject }> = ({ project }) => {
   const { language } = useLanguageStore();
@@ -35,16 +32,10 @@ export const ProjectVideoSection: React.FC<{ project: IProject }> = ({ project }
   }, [project.videos, project.videoDemo]);
 
   const resolved = useMemo(() => {
-    const out: ResolvedVideo[] = [];
+    const out: ResolvedRow[] = [];
     for (const item of items) {
-      const embed = parseVideoUrl(item.url);
-      if (embed) {
-        out.push({ kind: 'embed', item, video: embed });
-        continue;
-      }
-      if (isDirectVideoFile(item.url)) {
-        out.push({ kind: 'file', item, src: item.url });
-      }
+      const media = resolveVideoMedia(item.url, item.alternateUrls ?? []);
+      if (media) out.push({ item, media });
     }
     return out;
   }, [items]);
@@ -60,9 +51,9 @@ export const ProjectVideoSection: React.FC<{ project: IProject }> = ({ project }
     (isFr ? 'Vidéo du projet' : 'Project video');
 
   return (
-    <ProjectSectionShell title={isFr ? 'Vidéos' : 'Videos'}>
+    <ProjectSectionShell title={isFr ? 'Vidéo' : 'Video'} tone="plain">
       {resolved.length > 1 && (
-        <div className="flex flex-wrap gap-2 mb-5">
+        <div className="flex flex-wrap gap-x-4 gap-y-2 mb-5">
           {resolved.map((row, idx) => {
             const label =
               (isFr ? row.item.titleFr : row.item.titleEn) ||
@@ -73,12 +64,7 @@ export const ProjectVideoSection: React.FC<{ project: IProject }> = ({ project }
                 key={`${row.item.url}-${idx}`}
                 type="button"
                 onClick={() => setActive(idx)}
-                className={cn(
-                  'px-3 py-1.5 text-xs rounded-md border transition-colors cursor-pointer',
-                  idx === active
-                    ? 'bg-primary/15 border-primary/40 text-foreground'
-                    : 'bg-card/40 border-border/40 text-muted-foreground hover:border-primary/25',
-                )}
+                className={projectDetailTabClass(idx === active)}
               >
                 {label}
               </button>
@@ -89,28 +75,8 @@ export const ProjectVideoSection: React.FC<{ project: IProject }> = ({ project }
 
       <div className="mx-auto max-w-4xl">
         <p className="text-sm text-muted-foreground mb-3">{title}</p>
-        <div className="relative border border-primary/25 rounded-md backdrop-blur-sm p-3 sm:p-4 bg-card/30">
-          {current.kind === 'embed' ? (
-            <HeroVideoDialog
-              animationStyle="from-center"
-              aspect={current.video.aspect}
-              videoSrc={current.video.embedSrc}
-              thumbnailSrc={current.video.thumbnailSrc}
-              thumbnailAlt={title}
-            />
-          ) : (
-            <video
-              src={current.src}
-              controls
-              playsInline
-              preload="metadata"
-              className="w-full rounded-md aspect-video bg-black/40"
-            >
-              {isFr
-                ? 'Votre navigateur ne prend pas en charge la lecture vidéo.'
-                : 'Your browser does not support video playback.'}
-            </video>
-          )}
+        <div className="relative border border-primary/25 rounded-md p-3 sm:p-4 bg-card/30">
+          <ProjectVideoPlayer media={current.media} title={title} isFr={isFr} />
         </div>
       </div>
     </ProjectSectionShell>

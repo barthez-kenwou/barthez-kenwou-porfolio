@@ -146,7 +146,7 @@ export const Navbar: React.FC = () => {
           </div>
         </TooltipProvider>
 
-        <div className="transition-all hover:glow-primary hover:scale-105">
+        <div className="shrink-0">
           <CvButton className="rounded-full" />
         </div>
       </nav>

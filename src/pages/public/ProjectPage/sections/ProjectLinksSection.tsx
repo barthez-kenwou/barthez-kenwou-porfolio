@@ -12,8 +12,8 @@ export const ProjectLinksSection: React.FC<{ project: IProject }> = ({ project }
   if (links.length === 0) return null;
 
   return (
-    <ProjectSectionShell title={isFr ? 'Liens utiles' : 'Useful links'}>
-      <ul className="flex flex-wrap gap-2.5">
+    <ProjectSectionShell title={isFr ? 'Liens' : 'Links'} tone="quiet">
+      <ul className="flex flex-wrap gap-x-5 gap-y-2.5">
         {links.map((link, idx) => (
           <li key={`${link.url}-${idx}`}>
             <a
@@ -25,10 +25,10 @@ export const ProjectLinksSection: React.FC<{ project: IProject }> = ({ project }
                   m.trackOutboundClick(link.url, isFr ? link.labelFr : link.labelEn),
                 );
               }}
-              className="inline-flex items-center gap-2 px-3 py-2 text-xs rounded-md border border-border/40 bg-card/40 text-foreground hover:border-primary/30 transition-colors"
+              className="inline-flex items-center gap-1.5 text-sm text-foreground/85 underline-offset-4 hover:underline"
             >
-              <ExternalLink className="w-3.5 h-3.5 text-primary" />
               {isFr ? link.labelFr : link.labelEn}
+              <ExternalLink className="w-3 h-3 text-muted-foreground" />
             </a>
           </li>
         ))}

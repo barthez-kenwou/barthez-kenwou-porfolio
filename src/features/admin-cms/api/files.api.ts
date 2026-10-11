@@ -7,6 +7,24 @@ export type PresignedUpload = {
   publicUrl: string;
 };
 
+/** Docker / LAN hosts that the browser can never reach (and CSP will block). */
+const INTERNAL_UPLOAD_HOST =
+  /^(localhost|127\.0\.0\.1|0\.0\.0\.0|seaweed-s3|minio)(:\d+)?$/i;
+
+function assertBrowserReachableUploadUrl(url: string): void {
+  let host: string;
+  try {
+    host = new URL(url).hostname;
+  } catch {
+    throw new Error('Invalid upload URL from API');
+  }
+  if (INTERNAL_UPLOAD_HOST.test(host) || host.endsWith('.internal') || host.endsWith('.local')) {
+    throw new Error(
+      `Upload URL points to an internal host (${host}). The API must sign presigned URLs with MINIO_PUBLIC_URL (e.g. https://s3.zenora360.com), not the Docker S3 hostname.`,
+    );
+  }
+}
+
 export async function createPresignedUpload(input: {
   filename: string;
   contentType: string;
@@ -28,6 +46,8 @@ export async function uploadAdminImage(file: File): Promise<string> {
     contentType: file.type || 'image/jpeg',
     size: file.size,
   });
+
+  assertBrowserReachableUploadUrl(signed.url);
 
   const put = await fetch(signed.url, {
     method: 'PUT',

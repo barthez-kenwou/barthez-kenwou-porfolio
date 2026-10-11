@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { IProject } from '@/entities/projets/model/project.types';
 import { ChevronLeft, ChevronRight, Github, ExternalLink, ArrowLeft } from 'lucide-react';
@@ -6,21 +6,46 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/shared/ui/button';
 import { Image } from '@/shared/ui/Image';
 import { cn } from '@/shared/lib/utils';
-import { ProjectStatusBadge } from '@/entities/projets/ui/ProjectStatusBadge.ui';
+import { PROJECT_STATUS_CONFIG } from '@/entities/projets/model/project.config';
+import type { ProjectStatus } from '@/entities/projets/model/project.types';
 
 interface Props {
   project: IProject;
 }
 
+const SWIPE_THRESHOLD_PX = 40;
+
 export const HeroDetailSection: React.FC<Props> = ({ project }) => {
   const { language } = useLanguageStore();
-  const title = language === 'fr' ? project.titleFr : project.titleEn;
-  const description = language === 'fr' ? project.descriptionFr : project.descriptionEn;
+  const isFr = language === 'fr';
+  const title = isFr ? project.titleFr : project.titleEn;
+  const description = isFr ? project.descriptionFr : project.descriptionEn;
 
   const [currentIdx, setCurrentIdx] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const images = project.images?.length ? project.images : project.preview ? [project.preview] : [];
+  const hasCarousel = images.length > 1;
 
-  const next = () => setCurrentIdx((prev) => (prev === project.images.length - 1 ? 0 : prev + 1));
-  const prev = () => setCurrentIdx((p) => (p === 0 ? project.images.length - 1 : p - 1));
+  const goTo = (idx: number) => {
+    if (images.length === 0) return;
+    const next = ((idx % images.length) + images.length) % images.length;
+    setCurrentIdx(next);
+  };
+  const next = () => goTo(currentIdx + 1);
+  const prev = () => goTo(currentIdx - 1);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.changedTouches[0]?.clientX ?? null;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current == null || !hasCarousel) return;
+    const endX = e.changedTouches[0]?.clientX ?? touchStartX.current;
+    const delta = endX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(delta) < SWIPE_THRESHOLD_PX) return;
+    if (delta < 0) next();
+    else prev();
+  };
 
   const renderMedia = (media: string, isActive: boolean) => {
     if (!media) return null;
@@ -34,148 +59,167 @@ export const HeroDetailSection: React.FC<Props> = ({ project }) => {
           loop
           muted
           playsInline
-          className={cn(fillClasses, 'object-cover transition-transform duration-700 hover:scale-105')}
+          className={cn(fillClasses, 'object-cover')}
         />
       );
     }
-    return <Image src={media} alt={title} className={fillClasses} />;
+    return <Image src={media} alt={title} className={cn(fillClasses, 'object-cover')} />;
   };
 
   return (
-    <div className="relative overflow-hidden mb-12 md:mb-16 group border-b border-border/40">
-      <div className="relative w-full h-[52vh] md:h-[62vh] min-h-[22rem] bg-muted overflow-hidden">
-        {/* Back - clear of floating navbar, same idea as blog pt-20/28 */}
-        <div className="absolute top-24 left-4 md:top-28 md:left-8 z-30">
-          <Link
-            to="/projects"
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-black/55 backdrop-blur-md border border-white/15 text-white/90 hover:bg-black/70 transition-all text-xs md:text-sm shadow-sm"
+    <header className="mb-10 md:mb-14 border-b border-border/40">
+      {/* Full-bleed media under the floating navbar — no spacer band */}
+      <div
+        className="relative w-full overflow-hidden aspect-[2.15/1] sm:aspect-[2.35/1] md:aspect-[2.75/1] max-h-[min(36vh,16rem)] sm:max-h-[min(40vh,18rem)] md:max-h-[min(44vh,22rem)] touch-pan-y"
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
+        {images.map((img, i) => (
+          <div
+            key={`${img}-${i}`}
+            className={cn(
+              'absolute inset-0 transition-opacity duration-500 ease-out',
+              i === currentIdx ? 'z-10 opacity-100' : 'z-0 opacity-0 pointer-events-none',
+            )}
+            aria-hidden={i !== currentIdx}
           >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            {language === 'fr' ? 'Retour aux projets' : 'Back to projects'}
-          </Link>
-        </div>
+            {renderMedia(img, currentIdx === i)}
+          </div>
+        ))}
 
-        {project.images.length > 1 ? (
+        {/* Theme-aware edges: soft top for navbar, blend into page below */}
+        <div
+          className="pointer-events-none absolute inset-0 z-20 bg-linear-to-b from-black/35 via-transparent to-transparent dark:from-black/50"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-0 z-20 bg-linear-to-t from-background via-transparent to-transparent"
+          aria-hidden
+        />
+
+        {hasCarousel && (
           <>
-            {project.images.map((img, i) => (
-              <div
-                key={i}
-                className={cn(
-                  'absolute inset-0 transition-opacity duration-700 ease-in-out',
-                  i === currentIdx ? 'z-1 opacity-100' : 'z-0 opacity-0 pointer-events-none',
-                )}
-                aria-hidden={i !== currentIdx}
-              >
-                {renderMedia(img, currentIdx === i)}
-              </div>
-            ))}
-
             <button
               type="button"
               onClick={prev}
-              className="absolute top-1/2 -translate-y-1/2 left-2 md:left-4 z-20 p-1.5 bg-black/55 text-white rounded-full backdrop-blur-md hover:bg-black/75 opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
-              aria-label="Previous"
+              className="absolute left-1.5 top-1/2 z-30 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-md bg-black/35 text-white hover:bg-black/50 transition-colors cursor-pointer backdrop-blur-[2px]"
+              aria-label={isFr ? 'Image précédente' : 'Previous image'}
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeft className="h-4 w-4" strokeWidth={1.75} />
             </button>
             <button
               type="button"
               onClick={next}
-              className="absolute top-1/2 -translate-y-1/2 right-2 md:right-4 z-20 p-1.5 bg-black/55 text-white rounded-full backdrop-blur-md hover:bg-black/75 opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
-              aria-label="Next"
+              className="absolute right-1.5 top-1/2 z-30 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-md bg-black/35 text-white hover:bg-black/50 transition-colors cursor-pointer backdrop-blur-[2px]"
+              aria-label={isFr ? 'Image suivante' : 'Next image'}
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="h-4 w-4" strokeWidth={1.75} />
             </button>
 
-            <div className="absolute bottom-6 inset-x-0 flex justify-center gap-2 z-20">
-              {project.images.map((_, i) => (
+            <div className="absolute bottom-2.5 inset-x-0 z-30 flex items-center justify-center gap-1">
+              {images.map((_, i) => (
                 <button
                   key={i}
                   type="button"
-                  onClick={() => setCurrentIdx(i)}
-                  className={cn(
-                    'h-1.5 rounded-full transition-all shadow-sm cursor-pointer',
-                    currentIdx === i ? 'w-5 bg-white' : 'w-1.5 bg-white/45 hover:bg-white/80',
-                  )}
-                />
+                  onClick={() => goTo(i)}
+                  className="inline-flex h-5 w-4 items-center justify-center cursor-pointer"
+                  aria-label={isFr ? `Image ${i + 1}` : `Image ${i + 1}`}
+                  aria-current={i === currentIdx}
+                >
+                  <span
+                    className={cn(
+                      'block h-0.5 rounded-full transition-all ring-1 ring-black/25',
+                      i === currentIdx ? 'w-3.5 bg-white' : 'w-1.5 bg-white/55',
+                    )}
+                  />
+                </button>
               ))}
             </div>
           </>
-        ) : (
-          renderMedia(project.images[0] || project.preview || '', true)
         )}
-
-        {/* Very dark overlays - bright project shots stay readable */}
-        <div className="absolute inset-0 bg-black/55 pointer-events-none z-10" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/75 to-black/45 pointer-events-none z-10" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-transparent pointer-events-none z-10" />
       </div>
 
-      {/* Title block anchored to bottom - detached from navbar */}
-      <div className="absolute inset-x-0 bottom-0 z-30 px-4 pb-8 pt-24 sm:px-8 md:px-10 md:pb-10 md:pt-28 pointer-events-none">
-        <div className="pointer-events-auto max-w-3xl flex flex-col md:flex-row md:items-end justify-between gap-5">
-          <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-2 mb-3">
-              <span className="px-3 py-1 rounded-md bg-primary/25 backdrop-blur-md text-primary font-semibold text-[10px] md:text-xs uppercase tracking-wider border border-primary/30">
-                {project.category}
-              </span>
-              {project.status && <ProjectStatusBadge status={project.status} />}
-              {project.confidential && (
-                <span className="px-3 py-1 rounded-md bg-white/10 backdrop-blur-md text-white/90 font-semibold text-[10px] md:text-xs uppercase tracking-wider border border-white/20">
-                  {language === 'fr' ? 'NDA / Anonymisé' : 'NDA / Anonymized'}
-                </span>
-              )}
-            </div>
+      {/* Copy — solid surface, clear of nav and media */}
+      <div className="px-4 pt-5 pb-8 sm:px-8 md:px-10 md:pt-7 md:pb-10 lg:px-14">
+        <Link
+          to="/projects"
+          className="inline-flex items-center gap-1.5 text-xs md:text-sm text-muted-foreground hover:text-primary transition-colors mb-5 md:mb-6"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          {isFr ? 'Retour aux projets' : 'Back to projects'}
+        </Link>
 
-            <h1 className="text-2xl md:text-3xl font-bold text-white mb-2.5 tracking-tight leading-snug">
+        <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between md:gap-8">
+          <div className="min-w-0 max-w-3xl">
+            <p className="mb-3.5 text-[12px] leading-relaxed text-muted-foreground">
+              <span className="text-[11px] tracking-[0.06em] uppercase">{project.category}</span>
+              {project.status && (
+                <>
+                  <span className="mx-2 text-muted-foreground/40" aria-hidden>
+                    /
+                  </span>
+                  <span>
+                    {PROJECT_STATUS_CONFIG[project.status as ProjectStatus]?.label ?? project.status}
+                  </span>
+                </>
+              )}
+              {project.confidential && (
+                <>
+                  <span className="mx-2 text-muted-foreground/40" aria-hidden>
+                    /
+                  </span>
+                  <span>{isFr ? 'Confidentiel' : 'Confidential'}</span>
+                </>
+              )}
+            </p>
+
+            <h1 className="font-heading text-2xl md:text-3xl lg:text-[2.1rem] font-semibold text-foreground tracking-tight leading-snug mb-3">
               {title}
             </h1>
-            <p className="text-xs md:text-sm text-white/75 leading-relaxed line-clamp-3 md:line-clamp-4 max-w-2xl">
+            <p className="text-sm md:text-[15px] text-muted-foreground leading-relaxed max-w-2xl">
               {description}
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-            {project.github && project.github !== '#' && (
-              <Button
-                size="sm"
-                variant="outline"
-                className="rounded-md border-white/20 text-white hover:bg-white/10 backdrop-blur-sm"
-                asChild
-              >
-                <Link
-                  to={project.github}
-                  target="_blank"
-                  onClick={() => {
-                    void import('@/app/lib/analytics').then((m) =>
-                      m.trackOutboundClick(project.github!, 'github'),
-                    );
-                  }}
-                >
-                  <Github className="mr-1.5 h-3.5 w-3.5" />
-                  Code Source
-                </Link>
-              </Button>
-            )}
-            {project.demo && project.demo !== '#' && (
-              <Button size="sm" className="rounded-md shadow-sm shadow-primary/20" asChild>
-                <Link
-                  to={project.demo}
-                  target="_blank"
-                  onClick={() => {
-                    void import('@/app/lib/analytics').then((m) =>
-                      m.trackOutboundClick(project.demo!, 'demo'),
-                    );
-                  }}
-                >
-                  <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
-                  Live Demo
-                </Link>
-              </Button>
-            )}
-          </div>
+          {(Boolean(project.github && project.github !== '#') ||
+            Boolean(project.demo && project.demo !== '#')) && (
+            <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+              {project.github && project.github !== '#' && (
+                <Button size="sm" variant="outline" className="rounded-md" asChild>
+                  <Link
+                    to={project.github}
+                    target="_blank"
+                    onClick={() => {
+                      void import('@/app/lib/analytics').then((m) =>
+                        m.trackOutboundClick(project.github!, 'github'),
+                      );
+                    }}
+                  >
+                    <Github className="mr-1.5 h-3.5 w-3.5" />
+                    {isFr ? 'Code source' : 'Source'}
+                  </Link>
+                </Button>
+              )}
+              {project.demo && project.demo !== '#' && (
+                <Button size="sm" className="rounded-md" asChild>
+                  <Link
+                    to={project.demo}
+                    target="_blank"
+                    onClick={() => {
+                      void import('@/app/lib/analytics').then((m) =>
+                        m.trackOutboundClick(project.demo!, 'demo'),
+                      );
+                    }}
+                  >
+                    <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+                    {isFr ? 'Voir en ligne' : 'Live site'}
+                  </Link>
+                </Button>
+              )}
+            </div>
+          )}
         </div>
       </div>
-    </div>
+    </header>
   );
 };

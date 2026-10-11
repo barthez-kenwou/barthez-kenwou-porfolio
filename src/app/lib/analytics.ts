@@ -28,6 +28,7 @@ export const AnalyticsEvents = {
   SocialClick: 'social_click',
   LocaleSwitch: 'locale_switch',
   ProjectFilter: 'project_filter',
+  ProjectPagination: 'project_pagination',
   Share: 'share',
   ScrollDepth: 'scroll_depth',
   EngagementTime: 'engagement_time',
@@ -145,6 +146,19 @@ export function trackProjectFilter(filter: string, tag: string): void {
   track(AnalyticsEvents.ProjectFilter, {
     filter,
     tag: tag.slice(0, 80),
+  });
+}
+
+/** Project list pagination — page change on /projects. */
+export function trackProjectPagination(
+  page: number,
+  totalPages: number,
+  action: 'prev' | 'next' | 'page',
+): void {
+  track(AnalyticsEvents.ProjectPagination, {
+    page,
+    total_pages: totalPages,
+    action,
   });
 }
 

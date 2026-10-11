@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { cn } from '@/shared/lib';
-import { loadingTexts } from '@/shared/constants/loading.const';
 
 type RouteFallbackProps = {
   className?: string;
   /** Full-viewport shell (app boot / protected route) */
   fullScreen?: boolean;
-  /** Cycle status lines under the monogram (fullScreen boot only by default) */
-  showStatus?: boolean;
 };
 
 /**
@@ -17,19 +14,7 @@ type RouteFallbackProps = {
 export const RouteFallback: React.FC<RouteFallbackProps> = ({
   className,
   fullScreen = false,
-  showStatus,
 }) => {
-  const statusEnabled = showStatus ?? fullScreen;
-  const [textIndex, setTextIndex] = useState(0);
-
-  useEffect(() => {
-    if (!statusEnabled) return;
-    const id = window.setInterval(() => {
-      setTextIndex((i) => (i + 1) % loadingTexts.length);
-    }, 2200);
-    return () => window.clearInterval(id);
-  }, [statusEnabled]);
-
   return (
     <div
       className={cn(
@@ -94,28 +79,13 @@ export const RouteFallback: React.FC<RouteFallbackProps> = ({
         </div>
 
         <div className="flex flex-col items-center gap-2.5">
-          {statusEnabled ? (
-            <p
-              key={textIndex}
-              className="min-h-[1.25rem] text-center font-mono text-[10px] tracking-[0.28em] text-foreground/65 uppercase transition-opacity duration-500 sm:text-[11px]"
-            >
-              {loadingTexts[textIndex]}
-            </p>
-          ) : (
-            <p className="font-mono text-[10px] tracking-[0.42em] text-muted-foreground uppercase">
-              Barthez Kenwou
-            </p>
-          )}
+          <p className="font-mono text-[10px] tracking-[0.42em] text-muted-foreground uppercase">
+            Barthez Kenwou
+          </p>
 
           <div className="relative h-[2px] w-32 overflow-hidden rounded-full bg-border/70">
             <span className="loader-shimmer absolute inset-y-0 w-1/2 rounded-full bg-gradient-to-r from-transparent via-brand to-transparent dark:via-primary" />
           </div>
-
-          {statusEnabled ? (
-            <p className="mt-1 font-mono text-[9px] tracking-[0.45em] text-muted-foreground/70 uppercase">
-              Barthez Kenwou
-            </p>
-          ) : null}
         </div>
       </div>
     </div>

@@ -13,6 +13,7 @@ import {
   AdminSectionCard,
   AdminStickyActions,
   BilingualField,
+  DateField,
   Field,
   MarkdownEditor,
   MediaCoverField,
@@ -211,10 +212,9 @@ export const AdminBlogEditorPage: React.FC = () => {
               <Input value={draft.category} onChange={(e) => patch('category', e.target.value)} />
             </Field>
             <Field label={fr ? 'Date' : 'Date'}>
-              <Input
-                type="date"
+              <DateField
                 value={(draft.date || '').slice(0, 10)}
-                onChange={(e) => patch('date', e.target.value)}
+                onChange={(v) => patch('date', v)}
               />
             </Field>
             <Field label={fr ? 'Temps de lecture' : 'Read time'}>
@@ -224,14 +224,9 @@ export const AdminBlogEditorPage: React.FC = () => {
               <Input value={draft.author} onChange={(e) => patch('author', e.target.value)} />
             </Field>
             <div className="flex items-center justify-between rounded-lg border border-border/60 px-3 py-2">
-              <div>
-                <p className="text-sm font-medium">
-                  {fr ? 'Visible publiquement' : 'Publicly visible'}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {fr ? 'Masqué = hors vitrine' : 'Hidden = off the public site'}
-                </p>
-              </div>
+              <p className="text-sm font-medium">
+                {fr ? 'Visible publiquement' : 'Publicly visible'}
+              </p>
               <Switch
                 checked={draft.isPublished !== false}
                 onCheckedChange={(v) => patch('isPublished', v)}
@@ -242,6 +237,8 @@ export const AdminBlogEditorPage: React.FC = () => {
                 label={fr ? 'Couverture' : 'Cover'}
                 value={draft.image}
                 onChange={(v) => patch('image', v)}
+                // Same ratios as HeroDetailSection on the public blog detail page
+                previewClassName="aspect-[2/1] sm:aspect-[21/10] md:aspect-[21/9]"
               />
             </div>
           </div>

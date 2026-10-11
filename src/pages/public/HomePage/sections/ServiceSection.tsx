@@ -19,34 +19,34 @@ export const ServiceSection: React.FC = () => {
   return (
     <section className="relative z-10 overflow-x-clip px-4 py-12 md:px-10 md:py-16 lg:px-14 lg:py-20">
       <div className="relative z-10 grid w-full grid-cols-1 gap-12 lg:grid-cols-2 lg:items-stretch lg:gap-20">
-        {/* Stretches to the card column height, then spreads content top→bottom */}
-        <div className="animate-fade-in mx-auto flex w-full max-w-xl flex-col items-center justify-center gap-8 text-center lg:mx-0 lg:h-full lg:max-w-none lg:items-start lg:justify-between lg:py-8 lg:text-left">
-          <div className="w-full space-y-4">
-            <h2 className="section-title !text-center lg:!text-left">
-              <span className="font-heading text-foreground">
-                {isFr ? 'Mes Services' : 'My Services'}
-              </span>
-            </h2>
+        {/* Stretches to the card column height; content stays grouped and vertically centered */}
+        <div className="animate-fade-in mx-auto flex w-full max-w-xl flex-col items-center justify-center text-center lg:mx-0 lg:h-full lg:max-w-none lg:items-start lg:text-left">
+          <div className="flex w-full flex-col items-center gap-5 lg:items-start">
+            <div className="w-full space-y-3">
+              <h2 className="section-title !text-center lg:!text-left">
+                <span className="font-heading text-foreground">
+                  {isFr ? 'Mes Services' : 'My Services'}
+                </span>
+              </h2>
 
-            <p className="section-subtitle !mx-auto !mb-0 !text-center lg:!mx-0 lg:!text-left">
-              {isFr
-                ? 'Ingénieur Cloud & DevOps, je vous aide à bâtir des infrastructures solides, sécurisées et hautement performantes.'
-                : 'Cloud & DevOps Engineer, I help you build solid, secure, and highly performant infrastructures.'}
-            </p>
-          </div>
+              <p className="section-subtitle !mx-auto !mb-0 !text-center lg:!mx-0 lg:!text-left">
+                {isFr
+                  ? 'Ingénieur Cloud & DevOps, je vous aide à bâtir des infrastructures solides, sécurisées et hautement performantes.'
+                  : 'Cloud & DevOps Engineer, I help you build solid, secure, and highly performant infrastructures.'}
+              </p>
+            </div>
 
-          <div className="flex w-full flex-wrap justify-center gap-2 lg:justify-start">
-            {['AWS Architecture', 'DevOps CI/CD', 'Security Audit', 'Full Stack'].map((tag) => (
-              <span
-                key={tag}
-                className="rounded-md border border-border bg-card px-3 py-1 font-mono text-[11px] font-medium tracking-wide text-foreground/80 uppercase"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
+            <div className="flex w-full flex-wrap justify-center gap-2 lg:justify-start">
+              {['AWS Architecture', 'DevOps CI/CD', 'Security Audit', 'Full Stack'].map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-md border border-border bg-card px-3 py-1 font-mono text-[11px] font-medium tracking-wide text-foreground/80 uppercase"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
 
-          <div>
             <Link
               to="/services"
               onMouseEnter={() => {

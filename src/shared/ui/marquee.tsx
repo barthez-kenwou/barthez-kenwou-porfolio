@@ -13,7 +13,7 @@ interface MarqueeProps extends ComponentPropsWithoutRef<'div'> {
    */
   reverse?: boolean;
   /**
-   * Pause on hover (desktop) and on press/touch (mobile)
+   * Pause on hover (desktop, CSS — zero latency) and on press/touch (mobile)
    * @default false
    */
   pauseOnHover?: boolean;
@@ -42,26 +42,26 @@ export function Marquee({
   repeat = 4,
   ...props
 }: MarqueeProps) {
-  const [paused, setPaused] = useState(false);
+  // Touch only — desktop pause is pure CSS (group-hover/marquee) for zero latency
+  const [touchPaused, setTouchPaused] = useState(false);
 
-  const pause = useCallback(() => {
-    if (pauseOnHover) setPaused(true);
+  const onTouchStart = useCallback(() => {
+    if (pauseOnHover) setTouchPaused(true);
   }, [pauseOnHover]);
 
-  const resume = useCallback(() => {
-    if (pauseOnHover) setPaused(false);
+  const onTouchEnd = useCallback(() => {
+    if (pauseOnHover) setTouchPaused(false);
   }, [pauseOnHover]);
 
   return (
     <div
       {...props}
-      onMouseEnter={pause}
-      onMouseLeave={resume}
-      onTouchStart={pause}
-      onTouchEnd={resume}
-      onTouchCancel={resume}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+      onTouchCancel={onTouchEnd}
       className={cn(
-        'group flex [gap:var(--gap)] overflow-hidden p-2 [--duration:40s] [--gap:1rem]',
+        // Named group so nested card `group-hover:` styles never cascade from the track
+        'group/marquee flex overflow-hidden p-2 [gap:var(--gap)] [--duration:40s] [--gap:1rem]',
         {
           'flex-row': !vertical,
           'flex-col': vertical,
@@ -77,9 +77,10 @@ export function Marquee({
             className={cn('flex shrink-0 justify-around [gap:var(--gap)]', {
               'animate-marquee flex-row': !vertical,
               'animate-marquee-vertical flex-col': vertical,
-              'group-hover:[animation-play-state:paused]': pauseOnHover,
-              '[animation-play-state:paused]': paused,
+              'group-hover/marquee:[animation-play-state:paused]': pauseOnHover,
+              '[animation-play-state:paused]': touchPaused,
               '[animation-direction:reverse]': reverse,
+              'motion-reduce:animate-none': true,
             })}
           >
             {children}

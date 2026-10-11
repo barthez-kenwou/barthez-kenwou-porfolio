@@ -169,7 +169,7 @@ export const ProjectDetailPage = () => {
         visible={stickyVisible}
         to={contactTo}
         location="project_detail_sticky"
-        label={isFr ? "Discuter d'un projet" : 'Discuss a project'}
+        label={isFr ? 'Discuter d’un projet' : 'Discuss a project'}
       />
     </>
   );

@@ -70,6 +70,12 @@ export const queryKeys = {
     list: (params?: PaginationParams & Record<string, unknown>) =>
       ['references', 'list', params ?? {}] as const,
   },
+  partners: {
+    all: ['partners'] as const,
+    list: (params?: PaginationParams & Record<string, unknown>) =>
+      ['partners', 'list', params ?? {}] as const,
+    detail: (id: string) => ['partners', 'detail', id] as const,
+  },
   contactInfo: {
     root: ['contact-infos'] as const,
   },

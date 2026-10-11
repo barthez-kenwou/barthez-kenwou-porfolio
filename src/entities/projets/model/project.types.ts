@@ -27,6 +27,11 @@ export interface IProjectVideo {
   type: ProjectVideoType;
   titleFr?: string;
   titleEn?: string;
+  /**
+   * Extra progressive URLs (e.g. mp4 alongside a webm) for broader browser support.
+   * YouTube / Drive / Loom URLs do not need this — use `url` alone.
+   */
+  alternateUrls?: string[];
 }
 
 export type ProjectGalleryKind =

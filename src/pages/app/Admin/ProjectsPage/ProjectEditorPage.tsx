@@ -4,8 +4,17 @@ import { ArrowLeft, Loader2, Plus, Save, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import type {
   IProject,
+  IProjectBeforeAfter,
+  IProjectDecision,
   IProjectDiagram,
   IProjectGalleryItem,
+  IProjectLink,
+  IProjectMilestone,
+  IProjectResource,
+  IProjectVideo,
+  ProjectGalleryKind,
+  ProjectResourceType,
+  ProjectVideoType,
 } from '@/entities/projets/model/project.types';
 import {
   useProject,
@@ -31,8 +40,10 @@ import { isApiError } from '@/shared/api';
 import { QueryState } from '@/shared/ui/QueryState';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { adminPath } from '@/shared/config/admin';
+import { resolveVideoMedia } from '@/shared/lib/videoEmbed';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
+import { ProjectVideoPlayer } from '@/shared/ui/ProjectVideoPlayer';
 import { Switch } from '@/shared/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
 
@@ -60,6 +71,7 @@ const emptyProject = (): ProjectDraft => ({
   images: [],
   preview: '',
   videoDemo: '',
+  videos: [],
   category: 'Fullstack',
   status: 'Production',
   complexity: 'Intermédiaire',
@@ -92,6 +104,78 @@ const emptyProject = (): ProjectDraft => ({
   externalLinks: [],
   lessonsFr: [],
   lessonsEn: [],
+  beforeAfter: [],
+});
+
+const VIDEO_TYPES: ProjectVideoType[] = ['demo', 'walkthrough', 'testimonial', 'presentation'];
+const GALLERY_KINDS: ProjectGalleryKind[] = [
+  'ui',
+  'wip',
+  'diagram',
+  'metric',
+  'test',
+  'infra',
+  'process',
+  'other',
+];
+const RESOURCE_TYPES: ProjectResourceType[] = [
+  'spec',
+  'report',
+  'case-study',
+  'slides',
+  'other',
+];
+
+const emptyVideo = (): IProjectVideo => ({
+  url: '',
+  type: 'demo',
+  titleFr: '',
+  titleEn: '',
+  alternateUrls: [],
+});
+
+const emptyGalleryItem = (): IProjectGalleryItem => ({
+  src: '',
+  captionFr: '',
+  captionEn: '',
+  kind: 'ui',
+});
+
+const emptyMilestone = (): IProjectMilestone => ({
+  labelFr: '',
+  labelEn: '',
+  date: '',
+  descriptionFr: '',
+  descriptionEn: '',
+});
+
+const emptyDecision = (): IProjectDecision => ({
+  titleFr: '',
+  titleEn: '',
+  decisionFr: '',
+  decisionEn: '',
+  rationaleFr: '',
+  rationaleEn: '',
+});
+
+const emptyResource = (): IProjectResource => ({
+  labelFr: '',
+  labelEn: '',
+  url: '',
+  type: 'other',
+});
+
+const emptyLink = (): IProjectLink => ({
+  labelFr: '',
+  labelEn: '',
+  url: '',
+});
+
+const emptyBeforeAfter = (): IProjectBeforeAfter => ({
+  beforeSrc: '',
+  afterSrc: '',
+  captionFr: '',
+  captionEn: '',
 });
 
 export const AdminProjectEditorPage: React.FC = () => {
@@ -126,7 +210,30 @@ export const AdminProjectEditorPage: React.FC = () => {
       return;
     }
     if (project) {
-      const next = { ...project };
+      const next: ProjectDraft = {
+        ...emptyProject(),
+        ...project,
+        videos: project.videos ?? [],
+        gallery: project.gallery ?? [],
+        diagrams: project.diagrams ?? [],
+        milestones: project.milestones ?? [],
+        decisions: project.decisions ?? [],
+        resources: project.resources ?? [],
+        externalLinks: project.externalLinks ?? [],
+        beforeAfter: project.beforeAfter ?? [],
+        scopeFr: project.scopeFr ?? [],
+        scopeEn: project.scopeEn ?? [],
+        nonGoalsFr: project.nonGoalsFr ?? [],
+        nonGoalsEn: project.nonGoalsEn ?? [],
+        securityFr: project.securityFr ?? [],
+        securityEn: project.securityEn ?? [],
+        infraFr: project.infraFr ?? [],
+        infraEn: project.infraEn ?? [],
+      };
+      // Migrate legacy single videoDemo into the editable list when videos[] is empty
+      if (next.videos.length === 0 && next.videoDemo?.trim()) {
+        next.videos = [{ ...emptyVideo(), url: next.videoDemo.trim(), type: 'demo' }];
+      }
       setDraft(next);
       setHydrated(true);
       resetBaseline(next);
@@ -141,17 +248,147 @@ export const AdminProjectEditorPage: React.FC = () => {
       toast.error(fr ? 'Titres FR/EN requis' : 'FR/EN titles required');
       return;
     }
-    const { id: _id, ...payload } = draft;
+
+    const videos = (draft.videos ?? [])
+      .map((v) => ({
+        ...v,
+        url: v.url.trim(),
+        titleFr: v.titleFr?.trim() || undefined,
+        titleEn: v.titleEn?.trim() || undefined,
+        alternateUrls: (v.alternateUrls ?? []).map((u) => u.trim()).filter(Boolean),
+      }))
+      .filter((v) => v.url.length > 0)
+      .map((v) =>
+        v.alternateUrls && v.alternateUrls.length > 0 ? v : { ...v, alternateUrls: undefined },
+      );
+
+    const gallery = (draft.gallery ?? [])
+      .map((g) => ({
+        ...g,
+        src: g.src.trim(),
+        captionFr: g.captionFr?.trim() || undefined,
+        captionEn: g.captionEn?.trim() || undefined,
+        kind: g.kind || 'other',
+      }))
+      .filter((g) => g.src.length > 0);
+
+    const diagrams = (draft.diagrams ?? [])
+      .map((d) => ({
+        ...d,
+        id: d.id?.trim() || `d_${Date.now()}`,
+        titleFr: d.titleFr.trim(),
+        titleEn: d.titleEn.trim(),
+        mermaid: d.mermaid.trim(),
+      }))
+      .filter((d) => d.mermaid.length > 0 && (d.titleFr.length > 0 || d.titleEn.length > 0));
+
+    const milestones = (draft.milestones ?? [])
+      .map((m) => ({
+        ...m,
+        labelFr: m.labelFr.trim(),
+        labelEn: m.labelEn.trim(),
+        date: m.date?.trim() || undefined,
+        descriptionFr: m.descriptionFr?.trim() || undefined,
+        descriptionEn: m.descriptionEn?.trim() || undefined,
+      }))
+      .filter((m) => m.labelFr.length > 0 || m.labelEn.length > 0);
+
+    const decisions = (draft.decisions ?? [])
+      .map((d) => ({
+        ...d,
+        titleFr: d.titleFr.trim(),
+        titleEn: d.titleEn.trim(),
+        decisionFr: d.decisionFr.trim(),
+        decisionEn: d.decisionEn.trim(),
+        rationaleFr: d.rationaleFr?.trim() || undefined,
+        rationaleEn: d.rationaleEn?.trim() || undefined,
+      }))
+      .filter(
+        (d) =>
+          d.titleFr.length > 0 ||
+          d.titleEn.length > 0 ||
+          d.decisionFr.length > 0 ||
+          d.decisionEn.length > 0,
+      );
+
+    const resources = (draft.resources ?? [])
+      .map((r) => ({
+        ...r,
+        labelFr: r.labelFr.trim(),
+        labelEn: r.labelEn.trim(),
+        url: r.url.trim(),
+        type: r.type || 'other',
+      }))
+      .filter((r) => r.url.length > 0 && (r.labelFr.length > 0 || r.labelEn.length > 0));
+
+    const externalLinks = (draft.externalLinks ?? [])
+      .map((l) => ({
+        ...l,
+        labelFr: l.labelFr.trim(),
+        labelEn: l.labelEn.trim(),
+        url: l.url.trim(),
+      }))
+      .filter((l) => l.url.length > 0 && (l.labelFr.length > 0 || l.labelEn.length > 0));
+
+    const beforeAfter = (draft.beforeAfter ?? [])
+      .map((b) => ({
+        ...b,
+        beforeSrc: b.beforeSrc.trim(),
+        afterSrc: b.afterSrc.trim(),
+        captionFr: b.captionFr?.trim() || undefined,
+        captionEn: b.captionEn?.trim() || undefined,
+      }))
+      .filter((b) => b.beforeSrc.length > 0 && b.afterSrc.length > 0);
+
+    const testimonial = draft.testimonial;
+    const cleanedTestimonial =
+      testimonial &&
+      (testimonial.quoteFr?.trim() || testimonial.quoteEn?.trim()) &&
+      testimonial.author?.trim()
+        ? {
+            quoteFr: testimonial.quoteFr.trim(),
+            quoteEn: testimonial.quoteEn.trim(),
+            author: testimonial.author.trim(),
+            roleFr: testimonial.roleFr?.trim() || undefined,
+            roleEn: testimonial.roleEn?.trim() || undefined,
+            company: testimonial.company?.trim() || undefined,
+          }
+        : undefined;
+
+    const { id: _id, ...rest } = draft;
+    const payload = {
+      ...rest,
+      images: (draft.images ?? []).map((u) => u.trim()).filter(Boolean),
+      videos,
+      gallery,
+      diagrams,
+      milestones,
+      decisions,
+      resources,
+      externalLinks,
+      beforeAfter,
+      testimonial: cleanedTestimonial,
+      videoDemo: videos[0]?.url ?? '',
+      scopeFr: (draft.scopeFr ?? []).map((s) => s.trim()).filter(Boolean),
+      scopeEn: (draft.scopeEn ?? []).map((s) => s.trim()).filter(Boolean),
+      nonGoalsFr: (draft.nonGoalsFr ?? []).map((s) => s.trim()).filter(Boolean),
+      nonGoalsEn: (draft.nonGoalsEn ?? []).map((s) => s.trim()).filter(Boolean),
+      securityFr: (draft.securityFr ?? []).map((s) => s.trim()).filter(Boolean),
+      securityEn: (draft.securityEn ?? []).map((s) => s.trim()).filter(Boolean),
+      infraFr: (draft.infraFr ?? []).map((s) => s.trim()).filter(Boolean),
+      infraEn: (draft.infraEn ?? []).map((s) => s.trim()).filter(Boolean),
+    };
+
     try {
       if (isNew || draft.id === undefined || draft.id === null || draft.id === '') {
         const created = await create.mutateAsync(payload);
-        markClean({ ...draft, id: created.id });
+        markClean({ ...draft, ...payload, id: created.id });
         allowNextNavigation();
         toast.success(fr ? 'Projet enregistré' : 'Project saved');
         navigate(adminPath('projects', String(created.id)), { replace: true });
       } else {
         await update.mutateAsync({ id: String(draft.id), payload });
-        markClean(draft);
+        markClean({ ...draft, ...payload });
         toast.success(fr ? 'Projet enregistré' : 'Project saved');
       }
     } catch (e) {
@@ -161,6 +398,12 @@ export const AdminProjectEditorPage: React.FC = () => {
 
   const gallery = draft.gallery || [];
   const diagrams = draft.diagrams || [];
+  const videos = draft.videos || [];
+  const milestones = draft.milestones || [];
+  const decisions = draft.decisions || [];
+  const resources = draft.resources || [];
+  const externalLinks = draft.externalLinks || [];
+  const beforeAfter = draft.beforeAfter || [];
 
   return (
     <div className="space-y-6 pb-24 md:pb-0">
@@ -264,16 +507,9 @@ export const AdminProjectEditorPage: React.FC = () => {
               />
             </Field>
             <div className="flex items-center justify-between rounded-lg border border-border/60 px-3 py-2">
-              <div>
-                <p className="text-sm font-medium">
-                  {fr ? 'Visible publiquement' : 'Publicly visible'}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {fr
-                    ? 'Contrôle la présence sur la vitrine'
-                    : 'Controls presence on the public site'}
-                </p>
-              </div>
+              <p className="text-sm font-medium">
+                {fr ? 'Visible publiquement' : 'Publicly visible'}
+              </p>
               <Switch
                 checked={draft.isPublished !== false}
                 onCheckedChange={(v) => patch('isPublished', v)}
@@ -298,6 +534,8 @@ export const AdminProjectEditorPage: React.FC = () => {
                 label={fr ? 'Image de couverture' : 'Cover image'}
                 value={draft.preview}
                 onChange={(v) => patch('preview', v)}
+                layout="aside"
+                previewClassName="aspect-[2.15/1] sm:aspect-[2.35/1] md:aspect-[2.75/1]"
               />
             </div>
           </div>
@@ -416,15 +654,140 @@ export const AdminProjectEditorPage: React.FC = () => {
             kind="image"
             urls={draft.images}
             onChange={(v) => patch('images', v)}
+            previewClassName="aspect-[16/10]"
           />
-          <div className="mt-4">
-            <Field label="Video demo URL">
-              <Input
-                value={draft.videoDemo || ''}
-                onChange={(e) => patch('videoDemo', e.target.value)}
-              />
-            </Field>
-          </div>
+        </AdminSectionCard>
+
+        <AdminSectionCard
+          title={fr ? 'Vidéos' : 'Videos'}
+          className="mt-6"
+          actions={
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => patch('videos', [...videos, emptyVideo()])}
+            >
+              <Plus className="size-3.5" />
+              {fr ? 'Ajouter' : 'Add'}
+            </Button>
+          }
+        >
+          {videos.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              {fr ? 'Aucune vidéo pour ce projet.' : 'No videos for this project.'}
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {videos.map((item, i) => (
+                <div key={i} className="rounded-lg border border-border/60 p-3 space-y-3">
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <Field label={fr ? 'Type' : 'Type'} className="w-[11rem]">
+                      <Select
+                        value={item.type}
+                        onValueChange={(v) => {
+                          const next = [...videos];
+                          next[i] = { ...item, type: v as ProjectVideoType };
+                          patch('videos', next);
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {VIDEO_TYPES.map((t) => (
+                            <SelectItem key={t} value={t}>
+                              {t}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </Field>
+                    <Button
+                      type="button"
+                      size="icon-sm"
+                      variant="ghost"
+                      className="mt-6"
+                      onClick={() =>
+                        patch(
+                          'videos',
+                          videos.filter((_, idx) => idx !== i),
+                        )
+                      }
+                      aria-label={fr ? 'Supprimer la vidéo' : 'Remove video'}
+                    >
+                      <Trash2 className="size-3.5 text-destructive" />
+                    </Button>
+                  </div>
+
+                  <Field label={fr ? 'URL principale' : 'Primary URL'}>
+                    <Input
+                      value={item.url}
+                      placeholder="https://…"
+                      onChange={(e) => {
+                        const next = [...videos];
+                        next[i] = { ...item, url: e.target.value };
+                        patch('videos', next);
+                      }}
+                    />
+                  </Field>
+
+                  <BilingualField
+                    label={fr ? 'Titre' : 'Title'}
+                    valueFr={item.titleFr || ''}
+                    valueEn={item.titleEn || ''}
+                    onChangeFr={(v) => {
+                      const next = [...videos];
+                      next[i] = { ...item, titleFr: v };
+                      patch('videos', next);
+                    }}
+                    onChangeEn={(v) => {
+                      const next = [...videos];
+                      next[i] = { ...item, titleEn: v };
+                      patch('videos', next);
+                    }}
+                  />
+
+                  <MediaUrlListEditor
+                    label={fr ? 'URLs alternatives (ex. MP4)' : 'Alternate URLs (e.g. MP4)'}
+                    kind="video"
+                    urls={item.alternateUrls || []}
+                    onChange={(v) => {
+                      const next = [...videos];
+                      next[i] = { ...item, alternateUrls: v };
+                      patch('videos', next);
+                    }}
+                  />
+
+                  {(() => {
+                    const media = resolveVideoMedia(item.url, item.alternateUrls ?? []);
+                    if (!media) {
+                      return item.url.trim() ? (
+                        <p className="text-xs text-muted-foreground">
+                          {fr
+                            ? 'URL non reconnue — vérifiez le lien.'
+                            : 'Unrecognized URL — check the link.'}
+                        </p>
+                      ) : null;
+                    }
+                    const previewTitle =
+                      (fr ? item.titleFr : item.titleEn) ||
+                      (fr ? 'Aperçu vidéo' : 'Video preview');
+                    return (
+                      <div className="space-y-1.5">
+                        <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                          {fr ? 'Aperçu public' : 'Public preview'}
+                        </p>
+                        <div className="overflow-hidden rounded-md border border-border/50 bg-card/30 p-2 sm:p-3">
+                          <ProjectVideoPlayer media={media} title={previewTitle} isFr={fr} />
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              ))}
+            </div>
+          )}
         </AdminSectionCard>
 
         <AdminSectionCard
@@ -435,67 +798,92 @@ export const AdminProjectEditorPage: React.FC = () => {
               type="button"
               size="sm"
               variant="outline"
-              onClick={() =>
-                patch('gallery', [
-                  ...gallery,
-                  { src: '', captionFr: '', captionEn: '', kind: 'ui' },
-                ])
-              }
+              onClick={() => patch('gallery', [...gallery, emptyGalleryItem()])}
             >
-              <Plus className="size-3.5" /> Add
+              <Plus className="size-3.5" />
+              {fr ? 'Ajouter' : 'Add'}
             </Button>
           }
         >
-          <div className="space-y-4">
-            {gallery.map((item, i) => (
-              <div key={i} className="rounded-lg border border-border/60 p-3 space-y-3">
-                <div className="flex justify-between gap-2">
-                  <Field label="SRC" className="flex-1">
-                    <Input
-                      value={item.src}
-                      onChange={(e) => {
-                        const next = [...gallery];
-                        next[i] = { ...item, src: e.target.value };
-                        patch('gallery', next);
-                      }}
-                    />
-                  </Field>
-                  <Button
-                    type="button"
-                    size="icon-sm"
-                    variant="ghost"
-                    onClick={() =>
-                      patch(
-                        'gallery',
-                        gallery.filter((_, idx) => idx !== i),
-                      )
-                    }
-                  >
-                    <Trash2 className="size-3.5 text-destructive" />
-                  </Button>
+          {gallery.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              {fr ? 'Aucune capture.' : 'No gallery items.'}
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {gallery.map((item, i) => (
+                <div key={i} className="rounded-lg border border-border/60 p-3 space-y-3">
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <Field label={fr ? 'Type' : 'Kind'} className="w-44">
+                      <Select
+                        value={item.kind || 'other'}
+                        onValueChange={(v) => {
+                          const next = [...gallery];
+                          next[i] = { ...item, kind: v as ProjectGalleryKind };
+                          patch('gallery', next);
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {GALLERY_KINDS.map((k) => (
+                            <SelectItem key={k} value={k}>
+                              {k}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </Field>
+                    <Button
+                      type="button"
+                      size="icon-sm"
+                      variant="ghost"
+                      className="mt-6"
+                      onClick={() =>
+                        patch(
+                          'gallery',
+                          gallery.filter((_, idx) => idx !== i),
+                        )
+                      }
+                    >
+                      <Trash2 className="size-3.5 text-destructive" />
+                    </Button>
+                  </div>
+                  <MediaCoverField
+                    label={fr ? 'Image' : 'Image'}
+                    value={item.src}
+                    onChange={(v) => {
+                      const next = [...gallery];
+                      next[i] = { ...item, src: v };
+                      patch('gallery', next);
+                    }}
+                    layout="aside"
+                    previewClassName="aspect-[16/10]"
+                  />
+                  <BilingualField
+                    label={fr ? 'Légende' : 'Caption'}
+                    valueFr={item.captionFr || ''}
+                    valueEn={item.captionEn || ''}
+                    onChangeFr={(v) => {
+                      const next = [...gallery] as IProjectGalleryItem[];
+                      next[i] = { ...item, captionFr: v };
+                      patch('gallery', next);
+                    }}
+                    onChangeEn={(v) => {
+                      const next = [...gallery] as IProjectGalleryItem[];
+                      next[i] = { ...item, captionEn: v };
+                      patch('gallery', next);
+                    }}
+                  />
                 </div>
-                <BilingualField
-                  label={fr ? 'Légende' : 'Caption'}
-                  valueFr={item.captionFr || ''}
-                  valueEn={item.captionEn || ''}
-                  onChangeFr={(v) => {
-                    const next = [...gallery] as IProjectGalleryItem[];
-                    next[i] = { ...item, captionFr: v };
-                    patch('gallery', next);
-                  }}
-                  onChangeEn={(v) => {
-                    const next = [...gallery] as IProjectGalleryItem[];
-                    next[i] = { ...item, captionEn: v };
-                    patch('gallery', next);
-                  }}
-                />
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </AdminSectionCard>
 
         <AdminSectionCard
-          title="Mermaid diagrams"
+          title={fr ? 'Schémas Mermaid' : 'Mermaid diagrams'}
           className="mt-6"
           actions={
             <Button
@@ -514,55 +902,525 @@ export const AdminProjectEditorPage: React.FC = () => {
                 ])
               }
             >
-              <Plus className="size-3.5" /> Add
+              <Plus className="size-3.5" />
+              {fr ? 'Ajouter' : 'Add'}
             </Button>
           }
         >
-          <div className="space-y-6">
-            {diagrams.map((d, i) => (
-              <div key={d.id || i} className="space-y-3 rounded-lg border border-border/60 p-3">
-                <div className="flex justify-end">
-                  <Button
-                    type="button"
-                    size="icon-sm"
-                    variant="ghost"
-                    onClick={() =>
-                      patch(
-                        'diagrams',
-                        diagrams.filter((_, idx) => idx !== i),
-                      )
-                    }
-                  >
-                    <Trash2 className="size-3.5 text-destructive" />
-                  </Button>
+          <p className="mb-4 text-xs text-muted-foreground leading-relaxed">
+            {fr
+              ? 'Écrivez le diagramme puis vérifiez l’aperçu. Les schémas invalides n’apparaissent pas en public.'
+              : 'Write the diagram then check the preview. Invalid diagrams will not show publicly.'}
+          </p>
+          {diagrams.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              {fr ? 'Aucun schéma.' : 'No diagrams.'}
+            </p>
+          ) : (
+            <div className="space-y-6">
+              {diagrams.map((d, i) => (
+                <div key={d.id || i} className="space-y-3 rounded-lg border border-border/60 p-3">
+                  <div className="flex justify-end">
+                    <Button
+                      type="button"
+                      size="icon-sm"
+                      variant="ghost"
+                      onClick={() =>
+                        patch(
+                          'diagrams',
+                          diagrams.filter((_, idx) => idx !== i),
+                        )
+                      }
+                    >
+                      <Trash2 className="size-3.5 text-destructive" />
+                    </Button>
+                  </div>
+                  <BilingualField
+                    label={fr ? 'Titre diagramme' : 'Diagram title'}
+                    valueFr={d.titleFr}
+                    valueEn={d.titleEn}
+                    onChangeFr={(v) => {
+                      const next = [...diagrams] as IProjectDiagram[];
+                      next[i] = { ...d, titleFr: v };
+                      patch('diagrams', next);
+                    }}
+                    onChangeEn={(v) => {
+                      const next = [...diagrams] as IProjectDiagram[];
+                      next[i] = { ...d, titleEn: v };
+                      patch('diagrams', next);
+                    }}
+                  />
+                  <MermaidEditor
+                    label="Mermaid"
+                    value={d.mermaid}
+                    onChange={(v) => {
+                      const next = [...diagrams] as IProjectDiagram[];
+                      next[i] = { ...d, mermaid: v };
+                      patch('diagrams', next);
+                    }}
+                  />
                 </div>
-                <BilingualField
-                  label={fr ? 'Titre diagramme' : 'Diagram title'}
-                  valueFr={d.titleFr}
-                  valueEn={d.titleEn}
-                  onChangeFr={(v) => {
-                    const next = [...diagrams] as IProjectDiagram[];
-                    next[i] = { ...d, titleFr: v };
-                    patch('diagrams', next);
-                  }}
-                  onChangeEn={(v) => {
-                    const next = [...diagrams] as IProjectDiagram[];
-                    next[i] = { ...d, titleEn: v };
-                    patch('diagrams', next);
-                  }}
-                />
-                <MermaidEditor
-                  label="Mermaid"
-                  value={d.mermaid}
-                  onChange={(v) => {
-                    const next = [...diagrams] as IProjectDiagram[];
-                    next[i] = { ...d, mermaid: v };
-                    patch('diagrams', next);
-                  }}
-                />
-              </div>
-            ))}
+              ))}
+            </div>
+          )}
+        </AdminSectionCard>
+
+        <AdminSectionCard title={fr ? 'Périmètre' : 'Scope'} className="mt-6">
+          <div className="space-y-4">
+            <BilingualStringListEditor
+              label={fr ? 'Inclus' : 'In scope'}
+              valuesFr={draft.scopeFr || []}
+              valuesEn={draft.scopeEn || []}
+              onChangeFr={(v) => patch('scopeFr', v)}
+              onChangeEn={(v) => patch('scopeEn', v)}
+            />
+            <BilingualStringListEditor
+              label={fr ? 'Hors périmètre' : 'Out of scope'}
+              valuesFr={draft.nonGoalsFr || []}
+              valuesEn={draft.nonGoalsEn || []}
+              onChangeFr={(v) => patch('nonGoalsFr', v)}
+              onChangeEn={(v) => patch('nonGoalsEn', v)}
+            />
           </div>
+        </AdminSectionCard>
+
+        <AdminSectionCard
+          title={fr ? 'Jalons' : 'Milestones'}
+          className="mt-6"
+          actions={
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => patch('milestones', [...milestones, emptyMilestone()])}
+            >
+              <Plus className="size-3.5" />
+              {fr ? 'Ajouter' : 'Add'}
+            </Button>
+          }
+        >
+          {milestones.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              {fr ? 'Aucun jalon.' : 'No milestones.'}
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {milestones.map((item, i) => (
+                <div key={i} className="rounded-lg border border-border/60 p-3 space-y-3">
+                  <div className="flex justify-end">
+                    <Button
+                      type="button"
+                      size="icon-sm"
+                      variant="ghost"
+                      onClick={() =>
+                        patch(
+                          'milestones',
+                          milestones.filter((_, idx) => idx !== i),
+                        )
+                      }
+                    >
+                      <Trash2 className="size-3.5 text-destructive" />
+                    </Button>
+                  </div>
+                  <Field label={fr ? 'Date' : 'Date'}>
+                    <Input
+                      value={item.date || ''}
+                      placeholder="2026-03"
+                      onChange={(e) => {
+                        const next = [...milestones];
+                        next[i] = { ...item, date: e.target.value };
+                        patch('milestones', next);
+                      }}
+                    />
+                  </Field>
+                  <BilingualField
+                    label={fr ? 'Libellé' : 'Label'}
+                    valueFr={item.labelFr}
+                    valueEn={item.labelEn}
+                    onChangeFr={(v) => {
+                      const next = [...milestones];
+                      next[i] = { ...item, labelFr: v };
+                      patch('milestones', next);
+                    }}
+                    onChangeEn={(v) => {
+                      const next = [...milestones];
+                      next[i] = { ...item, labelEn: v };
+                      patch('milestones', next);
+                    }}
+                  />
+                  <BilingualField
+                    label={fr ? 'Description' : 'Description'}
+                    multiline
+                    valueFr={item.descriptionFr || ''}
+                    valueEn={item.descriptionEn || ''}
+                    onChangeFr={(v) => {
+                      const next = [...milestones];
+                      next[i] = { ...item, descriptionFr: v };
+                      patch('milestones', next);
+                    }}
+                    onChangeEn={(v) => {
+                      const next = [...milestones];
+                      next[i] = { ...item, descriptionEn: v };
+                      patch('milestones', next);
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </AdminSectionCard>
+
+        <AdminSectionCard
+          title={fr ? 'Arbitrages' : 'Trade-offs'}
+          className="mt-6"
+          actions={
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => patch('decisions', [...decisions, emptyDecision()])}
+            >
+              <Plus className="size-3.5" />
+              {fr ? 'Ajouter' : 'Add'}
+            </Button>
+          }
+        >
+          {decisions.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              {fr ? 'Aucun arbitrage.' : 'No decisions.'}
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {decisions.map((item, i) => (
+                <div key={i} className="rounded-lg border border-border/60 p-3 space-y-3">
+                  <div className="flex justify-end">
+                    <Button
+                      type="button"
+                      size="icon-sm"
+                      variant="ghost"
+                      onClick={() =>
+                        patch(
+                          'decisions',
+                          decisions.filter((_, idx) => idx !== i),
+                        )
+                      }
+                    >
+                      <Trash2 className="size-3.5 text-destructive" />
+                    </Button>
+                  </div>
+                  <BilingualField
+                    label={fr ? 'Titre' : 'Title'}
+                    valueFr={item.titleFr}
+                    valueEn={item.titleEn}
+                    onChangeFr={(v) => {
+                      const next = [...decisions];
+                      next[i] = { ...item, titleFr: v };
+                      patch('decisions', next);
+                    }}
+                    onChangeEn={(v) => {
+                      const next = [...decisions];
+                      next[i] = { ...item, titleEn: v };
+                      patch('decisions', next);
+                    }}
+                  />
+                  <BilingualField
+                    label={fr ? 'Décision' : 'Decision'}
+                    multiline
+                    valueFr={item.decisionFr}
+                    valueEn={item.decisionEn}
+                    onChangeFr={(v) => {
+                      const next = [...decisions];
+                      next[i] = { ...item, decisionFr: v };
+                      patch('decisions', next);
+                    }}
+                    onChangeEn={(v) => {
+                      const next = [...decisions];
+                      next[i] = { ...item, decisionEn: v };
+                      patch('decisions', next);
+                    }}
+                  />
+                  <BilingualField
+                    label={fr ? 'Justification' : 'Rationale'}
+                    multiline
+                    valueFr={item.rationaleFr || ''}
+                    valueEn={item.rationaleEn || ''}
+                    onChangeFr={(v) => {
+                      const next = [...decisions];
+                      next[i] = { ...item, rationaleFr: v };
+                      patch('decisions', next);
+                    }}
+                    onChangeEn={(v) => {
+                      const next = [...decisions];
+                      next[i] = { ...item, rationaleEn: v };
+                      patch('decisions', next);
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </AdminSectionCard>
+
+        <AdminSectionCard title={fr ? 'Sécurité et infra' : 'Security and ops'} className="mt-6">
+          <div className="space-y-4">
+            <BilingualStringListEditor
+              label={fr ? 'Sécurité' : 'Security'}
+              valuesFr={draft.securityFr || []}
+              valuesEn={draft.securityEn || []}
+              onChangeFr={(v) => patch('securityFr', v)}
+              onChangeEn={(v) => patch('securityEn', v)}
+            />
+            <BilingualStringListEditor
+              label={fr ? 'Infrastructure' : 'Infrastructure'}
+              valuesFr={draft.infraFr || []}
+              valuesEn={draft.infraEn || []}
+              onChangeFr={(v) => patch('infraFr', v)}
+              onChangeEn={(v) => patch('infraEn', v)}
+            />
+          </div>
+        </AdminSectionCard>
+
+        <AdminSectionCard
+          title={fr ? 'Avant / Après' : 'Before / After'}
+          className="mt-6"
+          actions={
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => patch('beforeAfter', [...beforeAfter, emptyBeforeAfter()])}
+            >
+              <Plus className="size-3.5" />
+              {fr ? 'Ajouter' : 'Add'}
+            </Button>
+          }
+        >
+          {beforeAfter.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              {fr ? 'Aucune paire avant/après.' : 'No before/after pairs.'}
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {beforeAfter.map((item, i) => (
+                <div key={i} className="rounded-lg border border-border/60 p-3 space-y-3">
+                  <div className="flex justify-end">
+                    <Button
+                      type="button"
+                      size="icon-sm"
+                      variant="ghost"
+                      onClick={() =>
+                        patch(
+                          'beforeAfter',
+                          beforeAfter.filter((_, idx) => idx !== i),
+                        )
+                      }
+                    >
+                      <Trash2 className="size-3.5 text-destructive" />
+                    </Button>
+                  </div>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <MediaCoverField
+                      label={fr ? 'Avant' : 'Before'}
+                      value={item.beforeSrc}
+                      onChange={(v) => {
+                        const next = [...beforeAfter];
+                        next[i] = { ...item, beforeSrc: v };
+                        patch('beforeAfter', next);
+                      }}
+                      previewClassName="aspect-[16/10]"
+                    />
+                    <MediaCoverField
+                      label={fr ? 'Après' : 'After'}
+                      value={item.afterSrc}
+                      onChange={(v) => {
+                        const next = [...beforeAfter];
+                        next[i] = { ...item, afterSrc: v };
+                        patch('beforeAfter', next);
+                      }}
+                      previewClassName="aspect-[16/10]"
+                    />
+                  </div>
+                  <BilingualField
+                    label={fr ? 'Légende' : 'Caption'}
+                    valueFr={item.captionFr || ''}
+                    valueEn={item.captionEn || ''}
+                    onChangeFr={(v) => {
+                      const next = [...beforeAfter];
+                      next[i] = { ...item, captionFr: v };
+                      patch('beforeAfter', next);
+                    }}
+                    onChangeEn={(v) => {
+                      const next = [...beforeAfter];
+                      next[i] = { ...item, captionEn: v };
+                      patch('beforeAfter', next);
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </AdminSectionCard>
+
+        <AdminSectionCard
+          title={fr ? 'Documents' : 'Documents'}
+          className="mt-6"
+          actions={
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => patch('resources', [...resources, emptyResource()])}
+            >
+              <Plus className="size-3.5" />
+              {fr ? 'Ajouter' : 'Add'}
+            </Button>
+          }
+        >
+          {resources.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              {fr ? 'Aucun document.' : 'No documents.'}
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {resources.map((item, i) => (
+                <div key={i} className="rounded-lg border border-border/60 p-3 space-y-3">
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <Field label={fr ? 'Type' : 'Type'} className="w-44">
+                      <Select
+                        value={item.type}
+                        onValueChange={(v) => {
+                          const next = [...resources];
+                          next[i] = { ...item, type: v as ProjectResourceType };
+                          patch('resources', next);
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {RESOURCE_TYPES.map((t) => (
+                            <SelectItem key={t} value={t}>
+                              {t}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </Field>
+                    <Button
+                      type="button"
+                      size="icon-sm"
+                      variant="ghost"
+                      className="mt-6"
+                      onClick={() =>
+                        patch(
+                          'resources',
+                          resources.filter((_, idx) => idx !== i),
+                        )
+                      }
+                    >
+                      <Trash2 className="size-3.5 text-destructive" />
+                    </Button>
+                  </div>
+                  <Field label="URL">
+                    <Input
+                      value={item.url}
+                      placeholder="https://…"
+                      onChange={(e) => {
+                        const next = [...resources];
+                        next[i] = { ...item, url: e.target.value };
+                        patch('resources', next);
+                      }}
+                    />
+                  </Field>
+                  <BilingualField
+                    label={fr ? 'Libellé' : 'Label'}
+                    valueFr={item.labelFr}
+                    valueEn={item.labelEn}
+                    onChangeFr={(v) => {
+                      const next = [...resources];
+                      next[i] = { ...item, labelFr: v };
+                      patch('resources', next);
+                    }}
+                    onChangeEn={(v) => {
+                      const next = [...resources];
+                      next[i] = { ...item, labelEn: v };
+                      patch('resources', next);
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </AdminSectionCard>
+
+        <AdminSectionCard
+          title={fr ? 'Liens externes' : 'External links'}
+          className="mt-6"
+          actions={
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => patch('externalLinks', [...externalLinks, emptyLink()])}
+            >
+              <Plus className="size-3.5" />
+              {fr ? 'Ajouter' : 'Add'}
+            </Button>
+          }
+        >
+          {externalLinks.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              {fr ? 'Aucun lien.' : 'No links.'}
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {externalLinks.map((item, i) => (
+                <div key={i} className="rounded-lg border border-border/60 p-3 space-y-3">
+                  <div className="flex justify-end">
+                    <Button
+                      type="button"
+                      size="icon-sm"
+                      variant="ghost"
+                      onClick={() =>
+                        patch(
+                          'externalLinks',
+                          externalLinks.filter((_, idx) => idx !== i),
+                        )
+                      }
+                    >
+                      <Trash2 className="size-3.5 text-destructive" />
+                    </Button>
+                  </div>
+                  <Field label="URL">
+                    <Input
+                      value={item.url}
+                      placeholder="https://…"
+                      onChange={(e) => {
+                        const next = [...externalLinks];
+                        next[i] = { ...item, url: e.target.value };
+                        patch('externalLinks', next);
+                      }}
+                    />
+                  </Field>
+                  <BilingualField
+                    label={fr ? 'Libellé' : 'Label'}
+                    valueFr={item.labelFr}
+                    valueEn={item.labelEn}
+                    onChangeFr={(v) => {
+                      const next = [...externalLinks];
+                      next[i] = { ...item, labelFr: v };
+                      patch('externalLinks', next);
+                    }}
+                    onChangeEn={(v) => {
+                      const next = [...externalLinks];
+                      next[i] = { ...item, labelEn: v };
+                      patch('externalLinks', next);
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </AdminSectionCard>
 
         <AdminSectionCard title={fr ? 'Témoignage projet' : 'Project testimonial'} className="mt-6">

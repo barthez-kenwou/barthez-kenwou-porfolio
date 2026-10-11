@@ -2,7 +2,6 @@ import React from 'react';
 import { IProject } from '@/entities/projets/model/project.types';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { ProjectSectionShell } from './ProjectSectionShell';
-import { GitBranch } from 'lucide-react';
 
 export const ProjectDecisionsSection: React.FC<{ project: IProject }> = ({ project }) => {
   const { language } = useLanguageStore();
@@ -12,27 +11,25 @@ export const ProjectDecisionsSection: React.FC<{ project: IProject }> = ({ proje
   if (decisions.length === 0) return null;
 
   return (
-    <ProjectSectionShell title={isFr ? 'Décisions clés' : 'Key decisions'}>
-      <div className="space-y-3">
+    <ProjectSectionShell title={isFr ? 'Arbitrages' : 'Trade-offs'} tone="ruled">
+      <div className="divide-y divide-border/40 border-y border-border/40">
         {decisions.map((d, idx) => (
-          <article key={idx} className="rounded-md border border-border/40 bg-card/40 p-4 md:p-5">
-            <div className="flex items-start gap-3 mb-2">
-              <div className="p-1.5 rounded-md bg-primary/10 text-primary shrink-0 mt-0.5">
-                <GitBranch className="w-3.5 h-3.5" />
-              </div>
-              <div className="min-w-0">
-                <h3 className="text-sm font-semibold text-foreground">
-                  {isFr ? d.titleFr : d.titleEn}
-                </h3>
-                <p className="text-sm text-primary/90 mt-1 leading-relaxed">
-                  {isFr ? d.decisionFr : d.decisionEn}
+          <article key={idx} className="grid gap-1 py-5 sm:grid-cols-[auto_1fr] sm:gap-x-5">
+            <span className="tabular-nums text-[11px] font-medium text-muted-foreground/80 pt-1">
+              {String(idx + 1).padStart(2, '0')}
+            </span>
+            <div className="min-w-0">
+              <h3 className="text-sm font-semibold text-foreground mb-1.5">
+                {isFr ? d.titleFr : d.titleEn}
+              </h3>
+              <p className="text-sm text-foreground/85 leading-relaxed">
+                {isFr ? d.decisionFr : d.decisionEn}
+              </p>
+              {(isFr ? d.rationaleFr : d.rationaleEn) && (
+                <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+                  {isFr ? d.rationaleFr : d.rationaleEn}
                 </p>
-                {(isFr ? d.rationaleFr : d.rationaleEn) && (
-                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-                    {isFr ? d.rationaleFr : d.rationaleEn}
-                  </p>
-                )}
-              </div>
+              )}
             </div>
           </article>
         ))}

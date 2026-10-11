@@ -17,6 +17,7 @@ Custom events: `src/app/lib/analytics.ts` → `window.plausible(event, { props }
 | `social_click` | Navbar / contact social icons |
 | `locale_switch` | FR ↔ EN toggle |
 | `project_filter` | Project list category / tech / role / status |
+| `project_pagination` | Project list page change (`page`, `total_pages`, `action`) |
 | `share` | Blog share Twitter / LinkedIn |
 | `scroll_depth` | 25 / 50 / 75 / 100% (once per path / session) |
 | `engagement_time` | 15 / 30 / 60 / 120 / 300s visible (once per mark) |

@@ -6,6 +6,8 @@ export {
 export type { AdminDashboardDto } from './api/dashboard.api';
 export { filesApi, uploadAdminImage, createPresignedUpload } from './api/files.api';
 export type { PresignedUpload } from './api/files.api';
+export { translateAdminText } from './api/translate.api';
+export type { TranslateLang } from './api/translate.api';
 export { useAdminDashboard } from './hooks/useAdminDashboard';
 export { useAdminAnalytics } from './hooks/useAdminAnalytics';
 export { useAdminAudit } from './hooks/useAdminAudit';
@@ -85,3 +87,6 @@ export type { AdminSectionCardProps } from './ui/AdminSectionCard.ui';
 
 export { Field } from './ui/Field.ui';
 export type { FieldProps } from './ui/Field.ui';
+
+export { DateField } from './ui/DateField.ui';
+export type { DateFieldProps } from './ui/DateField.ui';

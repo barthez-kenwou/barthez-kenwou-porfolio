@@ -214,6 +214,13 @@ export default defineConfig(({ mode }) => {
         '/api': apiProxy,
         '/csrf-token': apiProxy,
         '/health': apiProxy,
+        // CMS bilingual helper — same-origin so CSP connect-src 'self' allows it
+        '/cms-translate': {
+          target: 'https://api.mymemory.translated.net',
+          changeOrigin: true,
+          secure: true,
+          rewrite: (path: string) => path.replace(/^\/cms-translate/, ''),
+        },
       },
     },
     build: {

@@ -155,13 +155,13 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         {/* Overlay gradient for text readability */}
         <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-        {/* Badges Overlay */}
-        <div className="pointer-events-none absolute inset-x-4 top-4 z-20 flex items-start justify-between">
-          <span className="pointer-events-auto max-w-[70%] truncate rounded-md border border-white/10 bg-black/50 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md">
+        {/* Badges Overlay — status keeps full width; category truncates in remaining space */}
+        <div className="pointer-events-none absolute inset-x-3 top-3 z-20 flex items-center gap-2 sm:inset-x-4 sm:top-4">
+          <span className="pointer-events-auto min-w-0 flex-1 truncate rounded-md border border-white/10 bg-black/50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md sm:px-3">
             {project.category}
           </span>
           {project.status && (
-            <div className="pointer-events-auto">
+            <div className="pointer-events-auto shrink-0">
               <ProjectStatusBadge status={project.status} />
             </div>
           )}

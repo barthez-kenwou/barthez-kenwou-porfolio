@@ -267,14 +267,6 @@ export function MarkdownEditor({
           ) : null}
         </div>
 
-        {enableImages && mode === 'write' ? (
-          <p className="text-[11px] leading-relaxed text-muted-foreground">
-            {isFr
-              ? 'Images : icône + pour téléverser, icône fichier pour un snippet URL. L’alt Markdown devient la légende.'
-              : 'Images: + icon uploads, file icon inserts a URL snippet. Markdown alt text becomes the caption.'}
-          </p>
-        ) : null}
-
         <TabsContent value="write">
           <Textarea
             ref={textareaRef}

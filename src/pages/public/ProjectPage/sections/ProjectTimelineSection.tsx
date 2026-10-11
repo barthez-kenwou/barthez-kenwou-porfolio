@@ -11,26 +11,23 @@ export const ProjectTimelineSection: React.FC<{ project: IProject }> = ({ projec
   if (milestones.length === 0) return null;
 
   return (
-    <ProjectSectionShell title={isFr ? 'Timeline' : 'Timeline'}>
-      <ol className="relative border-l border-border/50 ml-2 space-y-6 pl-6">
+    <ProjectSectionShell title={isFr ? 'Jalons' : 'Milestones'} tone="default">
+      <ol className="space-y-0 divide-y divide-border/40 border-y border-border/40">
         {milestones.map((m, idx) => (
-          <li key={idx} className="relative">
-            <span className="absolute -left-[1.9rem] top-1.5 h-2.5 w-2.5 rounded-full bg-primary ring-4 ring-background" />
-            <div className="flex flex-wrap items-baseline gap-2 mb-1">
+          <li key={idx} className="grid gap-1 py-4 sm:grid-cols-[6.5rem_1fr] sm:gap-6">
+            <span className="text-[11px] tabular-nums text-muted-foreground pt-0.5">
+              {m.date || '—'}
+            </span>
+            <div className="min-w-0">
               <h3 className="text-sm font-semibold text-foreground">
                 {isFr ? m.labelFr : m.labelEn}
               </h3>
-              {m.date && (
-                <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
-                  {m.date}
-                </span>
+              {(isFr ? m.descriptionFr : m.descriptionEn) && (
+                <p className="text-sm text-muted-foreground leading-relaxed mt-1">
+                  {isFr ? m.descriptionFr : m.descriptionEn}
+                </p>
               )}
             </div>
-            {(isFr ? m.descriptionFr : m.descriptionEn) && (
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {isFr ? m.descriptionFr : m.descriptionEn}
-              </p>
-            )}
           </li>
         ))}
       </ol>

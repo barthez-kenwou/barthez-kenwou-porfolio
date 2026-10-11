@@ -15,6 +15,11 @@ export type MediaUrlListEditorProps = {
   onChange: (urls: string[]) => void;
   kind?: 'image' | 'video' | 'any';
   className?: string;
+  /**
+   * Public-surface aspect for the right-hand live preview.
+   * Defaults to project-card carousel proportions (≈ 16/10).
+   */
+  previewClassName?: string;
 };
 
 function looksLikeImage(url: string) {
@@ -27,6 +32,7 @@ export function MediaUrlListEditor({
   onChange,
   kind = 'any',
   className,
+  previewClassName = 'aspect-[16/10]',
 }: MediaUrlListEditorProps) {
   const language = useLanguageStore((s) => s.language);
   const isFr = language === 'fr';
@@ -132,7 +138,7 @@ export function MediaUrlListEditor({
               key={index}
               className="flex items-center gap-2 rounded-xl border border-border/50 bg-card/40 p-2.5"
             >
-              <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-sm border border-border/40 bg-muted/30">
+              <div className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-sm border border-border/40 bg-muted/30">
                 {showImagePreview(url) ? (
                   <img
                     src={url}
@@ -157,9 +163,34 @@ export function MediaUrlListEditor({
                       ? 'https://…/image.webp'
                       : 'https://…'
                 }
-                className="border-0 bg-transparent shadow-none focus-visible:ring-0"
+                className="min-w-0 flex-1 border-0 bg-transparent shadow-none focus-visible:ring-0"
                 aria-label={`${label} ${index + 1}`}
               />
+              {kind !== 'video' ? (
+                <div
+                  className={cn(
+                    'hidden w-28 shrink-0 overflow-hidden rounded-sm border border-border/40 bg-muted/25 sm:block',
+                    previewClassName,
+                  )}
+                  title={isFr ? 'Aperçu carte / carousel' : 'Card / carousel preview'}
+                >
+                  {showImagePreview(url) ? (
+                    <img
+                      src={url}
+                      alt=""
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <div className="flex h-full min-h-14 items-center justify-center text-[10px] text-muted-foreground">
+                      {isFr ? 'Aperçu' : 'Preview'}
+                    </div>
+                  )}
+                </div>
+              ) : null}
               <Button
                 type="button"
                 variant="ghost"

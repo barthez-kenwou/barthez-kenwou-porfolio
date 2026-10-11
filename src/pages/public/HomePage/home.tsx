@@ -3,6 +3,7 @@ import { SEO } from '@/shared/ui/SEO/SEO';
 import { HeroSection } from './sections/HeroSection';
 import { ServiceSection } from './sections/ServiceSection';
 import { WhyChooseMeSection } from './sections/WhyChooseMeSection';
+import { TrustedBySection } from './sections/TrustedBySection';
 import { TestimonialsSection } from './sections/TestimonialsSection';
 import { DarkBrandParallaxBand } from './sections/DarkBrandParallaxBand';
 import { CTASection } from './sections/CTASection';
@@ -51,6 +52,7 @@ export const HomePage: React.FC = () => {
         <DarkBrandParallaxBand>
           <ServiceSection />
           <WhyChooseMeSection />
+          <TrustedBySection />
           <TestimonialsSection />
         </DarkBrandParallaxBand>
         <CTASection />

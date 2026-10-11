@@ -82,6 +82,10 @@ export const adminChildRoutes = [
     ),
   },
   {
+    path: 'partners',
+    component: lazyPage(() => import('@/pages/app/Admin/PartnersPage'), 'AdminPartnersPage'),
+  },
+  {
     path: 'references',
     component: lazyPage(() => import('@/pages/app/Admin/ReferencesPage'), 'AdminReferencesPage'),
   },

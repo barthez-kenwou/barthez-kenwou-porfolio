@@ -60,8 +60,8 @@
     "demo": "Voir démo",
     "code": "Code source",
     "details": "Voir détails",
-    "featuredTitle": "Sélection",
-    "featuredSubtitle": "Quelques cas représentatifs, à parcourir à votre rythme."
+    "featuredTitle": "Cas signatures",
+    "featuredSubtitle": ""
   },
   "services": {
     "cta": "Demander un devis"

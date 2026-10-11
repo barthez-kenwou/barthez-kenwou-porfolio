@@ -9,6 +9,7 @@ import { ProjectCard } from '@/entities/projets';
 import { ProjectFilterBar, useProjectFilters } from '@/features/projets-browse';
 import { Button } from '@/shared/ui/button';
 import { QueryState } from '@/shared/ui/QueryState';
+import { trackProjectPagination } from '@/app/lib/analytics';
 import { FaSearch } from 'react-icons/fa';
 
 // ─── Props ──────────────────────────────────────────────────────────────────────
@@ -49,15 +50,19 @@ export const GridProject: React.FC<GridProjectProps> = ({ filterState }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const sectionRef = useRef<HTMLElement>(null);
   const PROJECTS_PER_PAGE = 6;
+  const totalPages = Math.ceil(filteredProjects.length / PROJECTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * PROJECTS_PER_PAGE;
+  const paginatedProjects = filteredProjects.slice(startIndex, startIndex + PROJECTS_PER_PAGE);
 
   useEffect(() => {
     setCurrentPage(1);
   }, [filters, filteredProjects.length]);
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = (page: number, action: 'prev' | 'next' | 'page' = 'page') => {
+    if (page < 1 || page > totalPages || page === currentPage) return;
+    trackProjectPagination(page, totalPages, action);
     setCurrentPage(page);
     setTimeout(() => {
-      // Offset scrolling slightly higher if there is a fixed header
       const yOffset = -20;
       const element = sectionRef.current;
       if (element) {
@@ -66,10 +71,6 @@ export const GridProject: React.FC<GridProjectProps> = ({ filterState }) => {
       }
     }, 50);
   };
-
-  const totalPages = Math.ceil(filteredProjects.length / PROJECTS_PER_PAGE);
-  const startIndex = (currentPage - 1) * PROJECTS_PER_PAGE;
-  const paginatedProjects = filteredProjects.slice(startIndex, startIndex + PROJECTS_PER_PAGE);
 
   // ─── Filter Options ──────────────────────────────────────────────────────────
   const skillCategories = Array.from(
@@ -83,29 +84,48 @@ export const GridProject: React.FC<GridProjectProps> = ({ filterState }) => {
   return (
     <section className="relative mt-10 mb-10 overflow-hidden" ref={sectionRef}>
       {/* ── Category Filter (Primary) ────────────────────────────────────────── */}
-      <div className="flex flex-wrap justify-center gap-2 mb-4 relative z-10">
-        {categoryFilters.map((filter) => {
-          const isActive = filters.category === filter.id;
-          return (
-            <button
-              key={filter.id}
-              type="button"
-              onClick={() => setCategory(filter.id)}
-              className={`relative px-4 py-1 cursor-pointer rounded-full text-xs capitalize tracking-wide font-semibold transition-all duration-300 overflow-hidden group border ${
-                isActive
-                  ? 'bg-brand border-brand text-brand-foreground shadow-none scale-105'
-                  : 'bg-secondary/40 border-border/40 text-muted-foreground hover:text-foreground hover:border-primary/50 hover:bg-secondary/80'
-              }`}
-            >
-              <span className="relative z-10 flex items-center justify-center gap-2">
-                {t(filter.labelKey)}
-                {isActive && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_10px_white] animate-pulse" />
+      <div className="relative z-10 mb-4">
+        <div
+          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-linear-to-r from-background to-transparent md:hidden"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-linear-to-l from-background to-transparent md:hidden"
+          aria-hidden
+        />
+        <div
+          className={cn(
+            'flex gap-2 pb-0.5',
+            // Mobile: one-line horizontal browse
+            '-mx-1 overflow-x-auto px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
+            // Desktop: wrap centered
+            'md:mx-0 md:flex-wrap md:justify-center md:overflow-visible md:px-0',
+          )}
+        >
+          {categoryFilters.map((filter) => {
+            const isActive = filters.category === filter.id;
+            return (
+              <button
+                key={filter.id}
+                type="button"
+                onClick={() => setCategory(filter.id)}
+                className={cn(
+                  'relative shrink-0 cursor-pointer overflow-hidden rounded-full border px-3.5 py-1.5 text-xs font-semibold capitalize tracking-wide transition-all duration-300 md:px-4 md:py-1',
+                  isActive
+                    ? 'scale-105 border-brand bg-brand text-brand-foreground shadow-none'
+                    : 'border-border/40 bg-secondary/40 text-muted-foreground hover:border-primary/50 hover:bg-secondary/80 hover:text-foreground',
                 )}
-              </span>
-            </button>
-          );
-        })}
+              >
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  {t(filter.labelKey)}
+                  {isActive && (
+                    <span className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_10px_white] animate-pulse" />
+                  )}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* ── Secondary Filter Bar (Feature layer) ─────────────────────────────── */}
@@ -167,25 +187,27 @@ export const GridProject: React.FC<GridProjectProps> = ({ filterState }) => {
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => handlePageChange(currentPage - 1)}
+                onClick={() => handlePageChange(currentPage - 1, 'prev')}
                 disabled={currentPage === 1}
-                className="rounded-md border-border/50 hover:border-primary/50 cursor-pointer"
+                className="cursor-pointer rounded-md border-border/50 hover:border-primary/50"
+                aria-label={language === 'fr' ? 'Page précédente' : 'Previous page'}
               >
                 <ChevronLeft className="h-5 w-5" />
               </Button>
 
-              <div className="flex gap-2 p-1 rounded-md bg-secondary/30 border border-border/50">
+              <div className="flex gap-2 rounded-md border border-border/50 bg-secondary/30 p-1">
                 {Array.from({ length: totalPages }).map((_, i) => {
                   const pageNumber = i + 1;
                   const isActive = currentPage === pageNumber;
                   return (
                     <button
                       key={pageNumber}
-                      onClick={() => handlePageChange(pageNumber)}
+                      type="button"
+                      onClick={() => handlePageChange(pageNumber, 'page')}
                       className={cn(
-                        'w-8 h-8 rounded-md text-sm font-bold transition-all cursor-pointer',
+                        'h-8 w-8 cursor-pointer rounded-md text-sm font-bold transition-all',
                         isActive
-                          ? 'bg-brand text-brand-foreground shadow-none scale-105'
+                          ? 'scale-105 bg-brand text-brand-foreground shadow-none'
                           : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
                       )}
                     >
@@ -198,9 +220,10 @@ export const GridProject: React.FC<GridProjectProps> = ({ filterState }) => {
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => handlePageChange(currentPage + 1)}
+                onClick={() => handlePageChange(currentPage + 1, 'next')}
                 disabled={currentPage === totalPages}
-                className="rounded-md border-border/50 hover:border-primary/50 cursor-pointer"
+                className="cursor-pointer rounded-md border-border/50 hover:border-primary/50"
+                aria-label={language === 'fr' ? 'Page suivante' : 'Next page'}
               >
                 <ChevronRight className="h-5 w-5" />
               </Button>

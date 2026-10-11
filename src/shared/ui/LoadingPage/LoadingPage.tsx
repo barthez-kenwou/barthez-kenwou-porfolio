@@ -6,5 +6,5 @@ import { RouteFallback } from '@/shared/ui/RouteFallback/RouteFallback';
  * Same branded BK orbits as route lazy-load — no flare / photo backdrop.
  */
 export const LoadingPage: React.FC = () => {
-  return <RouteFallback fullScreen showStatus />;
+  return <RouteFallback fullScreen />;
 };

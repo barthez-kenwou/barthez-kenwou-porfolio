@@ -2,15 +2,7 @@ import React, { useMemo } from 'react';
 import { IProject } from '@/entities/projets/model/project.types';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { ProjectSectionShell } from './ProjectSectionShell';
-import { FileText, Presentation, BookOpen, ScrollText, ExternalLink } from 'lucide-react';
-
-const ICONS = {
-  spec: ScrollText,
-  report: FileText,
-  'case-study': BookOpen,
-  slides: Presentation,
-  other: FileText,
-} as const;
+import { ExternalLink } from 'lucide-react';
 
 export const ProjectResourcesSection: React.FC<{ project: IProject }> = ({ project }) => {
   const { language } = useLanguageStore();
@@ -40,10 +32,9 @@ export const ProjectResourcesSection: React.FC<{ project: IProject }> = ({ proje
   if (resources.length === 0) return null;
 
   return (
-    <ProjectSectionShell title={isFr ? 'Ressources' : 'Resources'}>
-      <ul className="grid sm:grid-cols-2 gap-3">
+    <ProjectSectionShell title={isFr ? 'Documents' : 'Documents'} tone="plain">
+      <ul className="divide-y divide-border/40 border-y border-border/40">
         {resources.map((res, idx) => {
-          const Icon = ICONS[res.type] ?? FileText;
           const label = isFr ? res.labelFr : res.labelEn;
           return (
             <li key={`${res.url}-${idx}`}>
@@ -51,15 +42,10 @@ export const ProjectResourcesSection: React.FC<{ project: IProject }> = ({ proje
                 href={res.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 p-4 rounded-md border border-border/40 bg-card/40 hover:border-primary/30 transition-colors group"
+                className="flex items-center justify-between gap-3 py-3.5 text-sm text-foreground/90 hover:text-foreground group"
               >
-                <div className="p-2 rounded-md bg-primary/10 text-primary shrink-0">
-                  <Icon className="w-4 h-4" />
-                </div>
-                <span className="text-sm font-medium text-foreground flex-1 min-w-0 truncate">
-                  {label}
-                </span>
-                <ExternalLink className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary shrink-0" />
+                <span className="min-w-0 truncate font-medium">{label}</span>
+                <ExternalLink className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
               </a>
             </li>
           );
