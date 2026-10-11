@@ -1,7 +1,7 @@
 export type ReorderDirection = 'up' | 'down';
 
 export type SortableItem = {
-  id: string;
+  id: string | number;
   sortOrder?: number;
 };
 

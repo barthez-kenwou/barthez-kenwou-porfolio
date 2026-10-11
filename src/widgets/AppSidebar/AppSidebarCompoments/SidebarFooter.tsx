@@ -24,8 +24,9 @@ export const SidebarFooterSection: React.FC = () => {
     <Button
       asChild
       className={cn(
-        'transition-[width,height,padding] duration-500 ease-in-out',
-        contentReady ? 'w-full' : 'h-10 w-10 p-0',
+        'transition-[width,height,padding,filter,box-shadow] duration-500 ease-in-out',
+        'hover:brightness-[0.86] hover:shadow-sm active:brightness-[0.78]',
+        contentReady ? 'w-full' : 'h-10 w-10 gap-0 p-0',
       )}
       size={contentReady ? 'default' : 'icon'}
     >
@@ -38,17 +39,10 @@ export const SidebarFooterSection: React.FC = () => {
           void import('@/app/routes/prefetch').then((m) => m.prefetchRoute('/contact'));
         }}
         aria-label={t('nav.contactCta')}
+        className={cn(!contentReady && 'justify-center gap-0')}
       >
         <Mail className="h-4 w-4 shrink-0" />
-        <span
-          className={cn(
-            'overflow-hidden whitespace-nowrap transition-[opacity,max-width] duration-500 ease-in-out',
-            contentReady ? 'max-w-[12rem] opacity-100' : 'max-w-0 opacity-0',
-          )}
-          aria-hidden={!contentReady}
-        >
-          {t('nav.contactCta')}
-        </span>
+        {contentReady ? <span>{t('nav.contactCta')}</span> : null}
       </Link>
     </Button>
   );

@@ -231,7 +231,7 @@ export const AdminProjectEditorPage: React.FC = () => {
         infraEn: project.infraEn ?? [],
       };
       // Migrate legacy single videoDemo into the editable list when videos[] is empty
-      if (next.videos.length === 0 && next.videoDemo?.trim()) {
+      if ((next.videos?.length ?? 0) === 0 && next.videoDemo?.trim()) {
         next.videos = [{ ...emptyVideo(), url: next.videoDemo.trim(), type: 'demo' }];
       }
       setDraft(next);

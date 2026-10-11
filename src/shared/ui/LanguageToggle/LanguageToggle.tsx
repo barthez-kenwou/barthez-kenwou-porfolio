@@ -31,12 +31,12 @@ export const LanguageToggle = ({ flagOnly = false, className }: LanguageTogglePr
       onClick={handleToggle}
       disabled={isFlipping}
       className={cn(
-        'relative inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-md',
-        'transition-all duration-300 ease-out',
-        'hover:scale-105 hover:shadow-sm',
-        'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
-        'disabled:opacity-70 disabled:cursor-not-allowed',
-        'group',
+        // Named group so sidebar's ancestor `group` does not fake a hover state
+        'group/lang relative inline-flex shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-md',
+        'transition-[box-shadow,background-color] duration-200 ease-out',
+        'hover:bg-secondary/80 hover:shadow-sm',
+        'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
+        'disabled:cursor-not-allowed disabled:opacity-70',
         flagOnly ? 'size-9' : 'h-9 w-14',
         className,
       )}
@@ -45,17 +45,11 @@ export const LanguageToggle = ({ flagOnly = false, className }: LanguageTogglePr
     >
       <div
         className={cn(
-          'absolute inset-0 transition-all duration-500 bg-gradient-to-br',
+          'absolute inset-0 bg-gradient-to-br transition-opacity duration-200',
+          'opacity-60 group-hover/lang:opacity-100',
           isFrench
-            ? 'from-primary/20 via-foreground/5 to-muted/20'
-            : 'from-primary/15 via-foreground/5 to-muted/15',
-        )}
-      />
-
-      <div
-        className={cn(
-          'absolute inset-0 blur-md transition-opacity duration-300',
-          'opacity-0 group-hover:opacity-100 bg-primary/25',
+            ? 'from-primary/15 via-foreground/5 to-muted/15'
+            : 'from-primary/10 via-foreground/5 to-muted/10',
         )}
       />
 
