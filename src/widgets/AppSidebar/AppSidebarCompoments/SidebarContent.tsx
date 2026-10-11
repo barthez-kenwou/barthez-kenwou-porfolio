@@ -5,10 +5,11 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  useSidebar,
 } from '@/shared/ui/sidebar.tsx';
 import { sidebarNavItems } from '@/shared/constants/navItems.const';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/ui/tooltip';
+import { cn } from '@/shared/lib/utils';
+import { useSidebarReveal } from '../useSidebarReveal';
 
 /**
  * Sidebar navigation - list items must sit inside a real <ul> (SidebarMenu)
@@ -17,16 +18,18 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shar
 export const SidebarContentSection: React.FC = () => {
   const { t } = useTranslation();
   const location = useLocation();
-  const { state } = useSidebar();
-  const isExpanded = state === 'expanded';
+  const { isExpanded, contentReady } = useSidebarReveal();
 
   return (
     <TooltipProvider delayDuration={0}>
       <nav
         aria-label={t('nav.main', { defaultValue: 'Navigation principale' })}
-        className={`w-full transition-all duration-300 ${isExpanded ? 'p-4' : 'p-2'}`}
+        className={cn(
+          'w-full transition-[padding] duration-500 ease-in-out',
+          contentReady ? 'p-4' : 'p-2',
+        )}
       >
-        <SidebarMenu className={`gap-2 ${isExpanded ? '' : ''}`}>
+        <SidebarMenu className="gap-2">
           {sidebarNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.id;
@@ -40,23 +43,33 @@ export const SidebarContentSection: React.FC = () => {
                 onTouchStart={() => {
                   void import('@/app/routes/prefetch').then((m) => m.prefetchRoute(item.id));
                 }}
-                className={`group relative flex items-center rounded-sm transition-all duration-300 ${
+                className={cn(
+                  'group relative flex items-center rounded-sm transition-[background-color,color,padding,gap] duration-500 ease-in-out',
                   isActive
                     ? 'bg-brand text-brand-foreground'
-                    : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
-                } ${isExpanded ? 'gap-3 px-3 py-4' : 'justify-center px-3 py-3'}`}
+                    : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
+                  contentReady ? 'gap-3 px-3 py-4' : 'justify-center px-3 py-3',
+                )}
                 aria-label={t(item.labelKey)}
                 aria-current={isActive ? 'page' : undefined}
               >
                 <Icon className="h-4 w-4 shrink-0" aria-hidden />
-                {isExpanded && <span className="text-sm font-medium">{t(item.labelKey)}</span>}
+                <span
+                  className={cn(
+                    'overflow-hidden whitespace-nowrap text-sm font-medium transition-[opacity,max-width] duration-500 ease-in-out',
+                    contentReady ? 'max-w-[10rem] opacity-100' : 'max-w-0 opacity-0',
+                  )}
+                  aria-hidden={!contentReady}
+                >
+                  {t(item.labelKey)}
+                </span>
               </NavLink>
             );
 
             return (
               <SidebarMenuItem key={item.id} className="w-full">
                 <SidebarMenuButton asChild isActive={isActive}>
-                  {!isExpanded ? (
+                  {!isExpanded || !contentReady ? (
                     <Tooltip>
                       <TooltipTrigger asChild>{linkContent}</TooltipTrigger>
                       <TooltipContent side="right" className="font-medium">

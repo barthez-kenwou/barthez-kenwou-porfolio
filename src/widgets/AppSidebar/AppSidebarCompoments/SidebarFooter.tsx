@@ -4,10 +4,11 @@ import { Mail } from 'lucide-react';
 import { ThemeToggle } from '@/shared/ui/ThemeToggle';
 import { LanguageToggle } from '@/shared/ui/LanguageToggle';
 import { socialLinks } from '@/shared/constants/socialLink.const';
-import { useSidebar } from '@/shared/ui/sidebar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/ui/tooltip';
 import { Button } from '@/shared/ui/Button';
 import { useTranslation } from 'react-i18next';
+import { cn } from '@/shared/lib/utils';
+import { useSidebarReveal } from '../useSidebarReveal';
 
 const CONTACT_FROM_SIDEBAR = '/contact?from=sidebar';
 
@@ -16,12 +17,18 @@ const CONTACT_FROM_SIDEBAR = '/contact?from=sidebar';
  * CV download stays in the top navbar utility.
  */
 export const SidebarFooterSection: React.FC = () => {
-  const { state } = useSidebar();
-  const isExpanded = state === 'expanded';
+  const { isExpanded, contentReady } = useSidebarReveal();
   const { t } = useTranslation();
 
   const contactButton = (
-    <Button asChild className={isExpanded ? 'w-full' : 'h-10 w-10 p-0'} size={isExpanded ? 'default' : 'icon'}>
+    <Button
+      asChild
+      className={cn(
+        'transition-[width,height,padding] duration-500 ease-in-out',
+        contentReady ? 'w-full' : 'h-10 w-10 p-0',
+      )}
+      size={contentReady ? 'default' : 'icon'}
+    >
       <Link
         to={CONTACT_FROM_SIDEBAR}
         onMouseEnter={() => {
@@ -32,8 +39,16 @@ export const SidebarFooterSection: React.FC = () => {
         }}
         aria-label={t('nav.contactCta')}
       >
-        <Mail className="h-4 w-4" />
-        {isExpanded && <span>{t('nav.contactCta')}</span>}
+        <Mail className="h-4 w-4 shrink-0" />
+        <span
+          className={cn(
+            'overflow-hidden whitespace-nowrap transition-[opacity,max-width] duration-500 ease-in-out',
+            contentReady ? 'max-w-[12rem] opacity-100' : 'max-w-0 opacity-0',
+          )}
+          aria-hidden={!contentReady}
+        >
+          {t('nav.contactCta')}
+        </span>
       </Link>
     </Button>
   );
@@ -41,19 +56,25 @@ export const SidebarFooterSection: React.FC = () => {
   return (
     <TooltipProvider delayDuration={0}>
       <div
-        className={`flex flex-col gap-4 border-t transition-all duration-300 ${
-          isExpanded ? 'p-4' : 'p-2'
-        }`}
+        className={cn(
+          'flex flex-col gap-4 border-t transition-[padding] duration-500 ease-in-out',
+          contentReady ? 'p-4' : 'p-2',
+        )}
       >
-        <div className={`flex flex-col gap-2 ${isExpanded ? 'px-3' : 'px-0'}`}>
-          <div className={`flex gap-2 ${isExpanded ? 'justify-center' : 'flex-col items-center'}`}>
+        <div className={cn('flex flex-col gap-2', contentReady ? 'px-3' : 'px-0')}>
+          <div
+            className={cn(
+              'flex gap-2',
+              contentReady ? 'justify-center' : 'flex-col items-center',
+            )}
+          >
             {socialLinks.map((link) => {
               const Icon = link.icon;
               const socialLink = (
                 <Link
                   key={link.label}
                   to={link.href}
-                  className="flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-all duration-300 hover:bg-secondary hover:text-primary"
+                  className="flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors duration-300 hover:bg-secondary hover:text-primary"
                   aria-label={link.label}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -62,7 +83,7 @@ export const SidebarFooterSection: React.FC = () => {
                 </Link>
               );
 
-              return !isExpanded ? (
+              return !isExpanded || !contentReady ? (
                 <Tooltip key={link.label}>
                   <TooltipTrigger asChild>{socialLink}</TooltipTrigger>
                   <TooltipContent side="right" className="font-medium">
@@ -75,8 +96,13 @@ export const SidebarFooterSection: React.FC = () => {
             })}
           </div>
 
-          <div className={`flex gap-2 ${isExpanded ? 'justify-center' : 'flex-col items-center'}`}>
-            {!isExpanded ? (
+          <div
+            className={cn(
+              'flex gap-2',
+              contentReady ? 'justify-center' : 'flex-col items-center',
+            )}
+          >
+            {!contentReady ? (
               <>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -108,7 +134,7 @@ export const SidebarFooterSection: React.FC = () => {
           </div>
         </div>
 
-        {!isExpanded ? (
+        {!contentReady ? (
           <div className="flex justify-center">
             <Tooltip>
               <TooltipTrigger asChild>{contactButton}</TooltipTrigger>
