@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { analytics } from './analytics';
 import { reportError } from './errorReporter';
 import { InternalErrorPage } from '@/pages/Errors/InternalErrorPage/InternalError';
+import { isChunkLoadError, reloadOnceForChunkError } from '@/shared/lib/chunkLoadError';
 
 interface Props {
   children: React.ReactNode;
@@ -19,6 +20,7 @@ interface State {
   error?: Error;
   errorId?: string;
   reported?: boolean;
+  recovering?: boolean;
 }
 
 export class ErrorBoundary extends Component<Props, State> {
@@ -28,12 +30,20 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   static getDerivedStateFromError(error: Error): Partial<State> {
-    // Generate a short error id for cross-referencing in logs
+    if (isChunkLoadError(error)) {
+      return { hasError: false, recovering: true, error };
+    }
     const errorId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
-    return { hasError: true, error, errorId };
+    return { hasError: true, error, errorId, recovering: false };
   }
 
   async componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    // Stale Vite chunk after deploy — hard-reload once to pick up new hashes.
+    if (isChunkLoadError(error)) {
+      reloadOnceForChunkError();
+      return;
+    }
+
     // Centralized reporting (analytics + optional Sentry)
     try {
       await reportError(error, { componentStack: errorInfo.componentStack ?? undefined });
@@ -75,6 +85,10 @@ export class ErrorBoundary extends Component<Props, State> {
   };
 
   render() {
+    if (this.state.recovering) {
+      return null;
+    }
+
     if (this.state.hasError) {
       // Allow explicit null fallback (silent degrade) - do not use truthiness
       if (this.props.fallback !== undefined) {

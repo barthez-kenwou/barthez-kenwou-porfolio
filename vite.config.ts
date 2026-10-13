@@ -82,10 +82,27 @@ export default defineConfig(({ mode }) => {
         workbox: {
           // Keep SW precache lean - huge 3D/vendor chunks are runtime-cached
           maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
-          globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,webmanifest}'],
+          cleanupOutdatedCaches: true,
+          // Fresh SPA shell after deploy — avoids pointing at deleted hashed chunks
+          globPatterns: ['**/*.{js,css,ico,png,svg,woff2,webmanifest}'],
           // Exclude huge vendor chunks and any helper utilities that change hash on every build
           globIgnores: ['**/vendor.3d-*.js', '**/vendor.motion-*.js', '**/helpers-*.js'],
+          navigateFallback: 'index.html',
+          navigateFallbackDenylist: [/^\/api\//, /^\/assets\//, /^\/cms-translate\//],
           runtimeCaching: [
+            {
+              // Always prefer network for document navigations (new deploy = new index)
+              urlPattern: ({ request }) => request.mode === 'navigate',
+              handler: 'NetworkFirst',
+              options: {
+                cacheName: 'html-navigations',
+                networkTimeoutSeconds: 3,
+                expiration: {
+                  maxEntries: 8,
+                  maxAgeSeconds: 60 * 60 * 24,
+                },
+              },
+            },
             {
               urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|avif)$/,
               handler: 'CacheFirst',
@@ -98,13 +115,14 @@ export default defineConfig(({ mode }) => {
               },
             },
             {
+              // Hashed chunks: SWR so a miss after deploy recovers without a hard SW wipe
               urlPattern: /\/assets\/.*\.js$/,
-              handler: 'CacheFirst',
+              handler: 'StaleWhileRevalidate',
               options: {
                 cacheName: 'js-assets-cache',
                 expiration: {
                   maxEntries: 80,
-                  maxAgeSeconds: 60 * 60 * 24 * 30,
+                  maxAgeSeconds: 60 * 60 * 24 * 7,
                 },
               },
             },
