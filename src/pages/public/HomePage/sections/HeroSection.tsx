@@ -74,7 +74,10 @@ export const HeroSection: React.FC = () => {
     <AuroraBackground
       intensity="soft"
       showRadialGradient
-      className="bg-gradient-to-b from-transparent via-transparent to-background overflow-x-clip"
+      className={cn(
+        'overflow-x-clip bg-gradient-to-b from-transparent via-transparent to-background',
+        'min-h-[100svh] justify-center',
+      )}
     >
       {/* Grid - opposite corner from the flare, lightly softened */}
       <GridPattern
@@ -91,14 +94,23 @@ export const HeroSection: React.FC = () => {
       {/* Flare — dark mode only (harsh / washed-out in light) */}
       {isDark ? (
         <div className="pointer-events-none absolute inset-0 z-[5] overflow-hidden" aria-hidden>
-          <div className="absolute -right-[18%] bottom-[2%] w-[130%] max-w-none sm:-right-[14%] sm:bottom-[0%] sm:w-[115%] md:-right-[10%] md:bottom-[-2%] md:w-[95%] lg:-right-[6%] lg:w-[85%] xl:w-[78%]">
+          <div
+            className={cn(
+              // Pin to bottom-right of the first viewport (above the mobile dock).
+              'absolute -right-[18%] bottom-[4.25rem] w-[130%] max-w-none',
+              'sm:-right-[14%] sm:bottom-[4.75rem] sm:w-[115%]',
+              'md:-right-[10%] md:bottom-[-2%] md:w-[95%]',
+              'lg:-right-[6%] lg:bottom-[-2%] lg:w-[85%] xl:w-[78%]',
+            )}
+          >
             <img
               src={HERO_FLARE}
               alt=""
               decoding="async"
               {...{ fetchpriority: 'high' }}
               className={cn(
-                'hero-flare-pulse h-auto w-full origin-bottom-right scale-110 -rotate-[3deg] select-none sm:scale-125 sm:-rotate-[4deg]',
+                'hero-flare-pulse h-auto w-full origin-bottom-right scale-110 -rotate-[3deg] select-none',
+                'sm:scale-125 sm:-rotate-[4deg]',
                 '[mask-image:linear-gradient(90deg,transparent_0%,black_18%,black_82%,transparent_100%),linear-gradient(180deg,transparent_0%,black_12%,black_88%,transparent_100%)]',
                 '[-webkit-mask-image:linear-gradient(90deg,transparent_0%,black_18%,black_82%,transparent_100%),linear-gradient(180deg,transparent_0%,black_12%,black_88%,transparent_100%)]',
                 '[mask-composite:intersect] [-webkit-mask-composite:source-in]',
@@ -106,19 +118,23 @@ export const HeroSection: React.FC = () => {
               style={{ mixBlendMode: 'screen' }}
             />
           </div>
-          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-background to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-background to-transparent sm:h-24 md:h-28" />
         </div>
       ) : null}
 
-      <section className="relative z-30 flex w-full flex-col items-center px-4 pt-[350px] pb-2 text-center md:px-10 md:pt-[350px] md:pb-4 lg:px-14">
-        <div className="relative z-10 flex w-full max-w-3xl flex-col items-center -mt-40 md:-mt-44">
+      {/*
+        Pad for fixed mobile chrome, then optically center the copy in the remaining band
+        (slightly above true mid via heavier bottom pad = eye-line framing).
+      */}
+      <section className="relative z-30 flex w-full flex-1 flex-col items-center justify-center px-4 pt-[5.75rem] pb-[7.25rem] text-center sm:pt-24 sm:pb-28 md:px-10 md:pt-28 md:pb-16 lg:px-14 xl:pt-24">
+        <div className="relative z-10 flex w-full max-w-3xl flex-col items-center">
           {/* Greeting - script, discreet */}
           <motion.p
             custom={0}
             variants={fadeUp}
             initial="hidden"
             animate="show"
-            className="mb-2 font-greeting text-lg leading-none text-foreground/70 sm:text-xl md:text-2xl dark:text-muted-foreground"
+            className="mb-1.5 font-greeting text-lg leading-none text-foreground/70 sm:mb-2 sm:text-xl md:text-2xl dark:text-muted-foreground"
           >
             {t('hero.greeting')}
           </motion.p>
@@ -130,7 +146,7 @@ export const HeroSection: React.FC = () => {
             variants={fadeUp}
             initial="hidden"
             animate="show"
-            className="font-display mb-3 text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-foreground"
+            className="font-display mb-2 text-[2.15rem] leading-[1.05] text-foreground sm:mb-3 sm:text-5xl md:text-6xl lg:text-7xl"
           >
             <TextAnimate
               key={`barthez-${nameEnterKey}`}
@@ -163,7 +179,7 @@ export const HeroSection: React.FC = () => {
             variants={fadeUp}
             initial="hidden"
             animate="show"
-            className="mb-4 flex min-h-[1.5em] items-center justify-center"
+            className="mb-3 flex min-h-[1.5em] items-center justify-center sm:mb-4"
           >
             <p className="font-heading text-base font-medium tracking-wide text-primary sm:text-xl md:text-2xl lg:text-3xl leading-[1.35]">
               <TypingAnimation
@@ -185,7 +201,7 @@ export const HeroSection: React.FC = () => {
             variants={fadeUp}
             initial="hidden"
             animate="show"
-            className="mx-auto mb-9 max-w-lg text-sm leading-relaxed text-foreground/75"
+            className="mx-auto mb-6 max-w-lg text-sm leading-relaxed text-foreground/75 sm:mb-8 md:mb-9"
           >
             {t('hero.description')}
           </motion.p>
@@ -196,7 +212,7 @@ export const HeroSection: React.FC = () => {
             variants={fadeUp}
             initial="hidden"
             animate="show"
-            className="flex flex-col sm:flex-row items-center justify-center gap-3"
+            className="flex flex-col items-center justify-center gap-2.5 sm:flex-row sm:gap-3"
           >
             <SpectrumButton asChild variant="spectrum" size="default">
               <Link
