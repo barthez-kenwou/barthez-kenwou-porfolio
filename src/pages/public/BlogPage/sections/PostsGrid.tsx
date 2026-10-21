@@ -44,11 +44,11 @@ export const PostsGrid: React.FC = () => {
 
   return (
     <>
-      <div className="relative z-20 bg-background px-4 py-4 md:px-10 lg:px-14">
-        <section className="mb-4 flex flex-col items-center gap-4 md:flex-row md:items-center md:justify-start">
+      <div className="relative z-20 min-w-0 bg-background px-4 py-4 md:px-10 lg:px-14">
+        <section className="mb-4 flex min-w-0 flex-col items-center gap-4 md:flex-row md:items-center md:justify-start">
           <div
             className={cn(
-              'group/search relative w-full max-w-[11.5rem] transition-[max-width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:max-w-[13rem]',
+              'group/search relative w-full min-w-0 max-w-[11.5rem] transition-[max-width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:max-w-[13rem]',
               'md:max-w-[14rem]',
               isExpanded && 'max-w-full sm:max-w-md md:max-w-xl',
             )}
@@ -103,7 +103,7 @@ export const PostsGrid: React.FC = () => {
 
           <div
             className={cn(
-              'flex flex-wrap justify-center gap-2 md:justify-start',
+              'flex min-w-0 flex-wrap justify-center gap-2 md:flex-1 md:justify-start',
               isPending && 'opacity-80',
             )}
             role="group"

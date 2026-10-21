@@ -39,13 +39,13 @@ export const MobileNavbar: React.FC = () => {
   return (
     <div className="xl:hidden">
       {/* Top bar with toggles */}
-      <nav className="fixed top-6 left-0 right-0 z-50 w-full flex items-center justify-between gap-2 px-3 sm:px-6 py-1 backdrop-blur-sm border-b border-border/10">
-        <div className="flex items-center gap-1.5">
-          <SidebarTrigger className="h-6 w-6 cursor-pointer shadow-sm bg-background/80 backdrop-blur-sm ring-1 ring-sidebar-border" />
+      <nav className="fixed top-6 left-0 right-0 z-50 flex w-full min-w-0 items-center justify-between gap-2 px-3 py-1 backdrop-blur-sm border-b border-border/10 sm:px-6">
+        <div className="flex min-w-0 items-center gap-1.5">
+          <SidebarTrigger className="h-6 w-6 shrink-0 cursor-pointer shadow-sm bg-background/80 backdrop-blur-sm ring-1 ring-sidebar-border" />
 
-          <div className="h-6 w-px bg-border/50 mx-.5" />
+          <div className="mx-0.5 h-6 w-px shrink-0 bg-border/50" />
 
-          <Button variant={'outline'} asChild className="px-2 h-8">
+          <Button variant={'outline'} asChild className="h-8 shrink-0 px-2">
             <Link
               to="/blog"
               onMouseEnter={() => {
@@ -55,14 +55,14 @@ export const MobileNavbar: React.FC = () => {
                 void import('@/app/routes/prefetch').then((m) => m.prefetchRoute('/blog'));
               }}
             >
-              <IconBlog className={`h-2 w-2`} />
+              <IconBlog className="h-2 w-2" />
               <span className="text-xs">{t(textBlog)}</span>
             </Link>
           </Button>
 
           <Button
             asChild
-            className="w-fit px-2 h-8 font-semibold text-primary-foreground contrast-more:text-white"
+            className="h-8 w-fit shrink-0 px-2 font-semibold text-primary-foreground contrast-more:text-white"
           >
             <Link
               to="/cv"
@@ -73,14 +73,14 @@ export const MobileNavbar: React.FC = () => {
                 void import('@/app/routes/prefetch').then((m) => m.prefetchRoute('/cv'));
               }}
             >
-              <AiOutlineDownload className="mr-.5 h-2 w-2" />
+              <AiOutlineDownload className="mr-0.5 h-2 w-2" />
               <span className="text-sm font-semibold !text-white">{t('nav.cv')}</span>
             </Link>
           </Button>
         </div>
 
         <TooltipProvider delayDuration={0}>
-          <div className="flex items-center gap-0 md:gap-2">
+          <div className="flex shrink-0 items-center gap-0 md:gap-2">
             <Tooltip>
               <TooltipTrigger asChild>
                 <div className="inline-flex">
@@ -106,8 +106,8 @@ export const MobileNavbar: React.FC = () => {
       </nav>
 
       {/* Bottom Navbar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 backdrop-blur-xl">
-        <div className="flex items-center justify-around gap-0.5 px-2 py-3">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 overflow-hidden border-t border-border bg-background/95 backdrop-blur-xl">
+        <div className="flex w-full min-w-0 items-stretch justify-between gap-0 px-1 py-2 sm:px-2 sm:py-3">
           {bottomNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.id;
@@ -122,17 +122,19 @@ export const MobileNavbar: React.FC = () => {
                 onTouchStart={() => {
                   void import('@/app/routes/prefetch').then((m) => m.prefetchRoute(item.id));
                 }}
-                className={`relative flex flex-col items-center gap-1 px-2.5 py-2 rounded-xl transition-all duration-300
+                className={`relative flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-xl px-1 py-2 transition-all duration-300 sm:gap-1 sm:px-2
                 ${
                   isActive
                     ? 'text-primary bg-primary/10'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                <Icon className={`h-5 w-5 ${isActive ? 'scale-110' : ''}`} />
-                <span className="text-xs text-nowrap font-medium">{t(item.labelKey)}</span>
+                <Icon className={`h-5 w-5 shrink-0 ${isActive ? 'scale-110' : ''}`} />
+                <span className="max-w-full truncate text-center text-[10px] font-medium leading-tight sm:text-xs">
+                  {t(item.labelKey)}
+                </span>
                 {isActive && (
-                  <span className="absolute -top-0.5 h-0.5 w-8 rounded-full bg-primary" />
+                  <span className="absolute -top-0.5 h-0.5 w-6 rounded-full bg-primary sm:w-8" />
                 )}
               </NavLink>
             );

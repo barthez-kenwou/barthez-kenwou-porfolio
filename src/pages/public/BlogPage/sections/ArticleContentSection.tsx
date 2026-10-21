@@ -76,11 +76,11 @@ function createMarkdownComponents(isFr: boolean): Components {
       return (
         <h2
           id={id}
-          className="group relative mt-9 mb-3 scroll-mt-28 text-lg font-semibold leading-snug tracking-tight text-foreground sm:mt-11 sm:mb-3.5 sm:text-xl md:text-[1.35rem]"
+          className="group mt-9 mb-3 flex scroll-mt-28 items-start gap-1.5 text-lg font-semibold leading-snug tracking-tight text-foreground sm:mt-11 sm:mb-3.5 sm:text-xl md:text-[1.35rem]"
         >
           <a
             href={`#${id}`}
-            className="absolute top-1 left-0 hidden -translate-x-[110%] items-center text-foreground/35 opacity-0 transition-opacity group-hover:opacity-100 sm:flex"
+            className="mt-1 hidden shrink-0 items-center text-foreground/35 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 sm:inline-flex"
             aria-label={isFr ? 'Lien vers cette section' : 'Link to this section'}
             title={isFr ? 'Copier le lien de la section' : 'Copy section link'}
             onClick={(e) => {
@@ -90,7 +90,7 @@ function createMarkdownComponents(isFr: boolean): Components {
           >
             <Hash className="size-3.5" />
           </a>
-          <span className="min-w-0">{children}</span>
+          <span className="min-w-0 break-words">{children}</span>
         </h2>
       );
     },
@@ -99,11 +99,11 @@ function createMarkdownComponents(isFr: boolean): Components {
       return (
         <h3
           id={id}
-          className="group relative mt-7 mb-2.5 scroll-mt-28 border-l-2 border-border pl-3 text-base font-semibold leading-snug tracking-tight text-foreground sm:mt-8 sm:mb-3 sm:text-[1.05rem]"
+          className="group mt-7 mb-2.5 flex scroll-mt-28 items-start gap-1.5 border-l-2 border-border pl-3 text-base font-semibold leading-snug tracking-tight text-foreground sm:mt-8 sm:mb-3 sm:text-[1.05rem]"
         >
           <a
             href={`#${id}`}
-            className="absolute top-1 left-0 hidden -translate-x-[calc(100%+0.55rem)] items-center text-foreground/35 opacity-0 transition-opacity group-hover:opacity-100 sm:flex"
+            className="mt-0.5 hidden shrink-0 items-center text-foreground/35 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 sm:inline-flex"
             aria-label={isFr ? 'Lien vers cette section' : 'Link to this section'}
             title={isFr ? 'Copier le lien de la section' : 'Copy section link'}
             onClick={(e) => {
@@ -113,7 +113,7 @@ function createMarkdownComponents(isFr: boolean): Components {
           >
             <Hash className="size-3.5" />
           </a>
-          {children}
+          <span className="min-w-0 break-words">{children}</span>
         </h3>
       );
     },
@@ -176,9 +176,20 @@ function createMarkdownComponents(isFr: boolean): Components {
       }
 
       return (
-        <p className="mb-4 text-sm leading-relaxed text-foreground/90 md:mb-5">{children}</p>
+        <p className="mb-4 max-w-full text-sm leading-relaxed break-words text-foreground/90 md:mb-5">
+          {children}
+        </p>
       );
     },
+    a: ({ href, children, ...props }) => (
+      <a
+        href={href}
+        className="break-words font-medium text-primary no-underline hover:underline [overflow-wrap:anywhere]"
+        {...props}
+      >
+        {children}
+      </a>
+    ),
     pre: ({ children }) => <>{children}</>,
     code: ({ className, children, ...props }) => {
       const text = String(children).replace(/\n$/, '');
@@ -187,13 +198,13 @@ function createMarkdownComponents(isFr: boolean): Components {
 
       if (isBlock) {
         return (
-          <CodeBlock language={match?.[1] || ''} value={text} className="my-7 border-border" />
+          <CodeBlock language={match?.[1] || ''} value={text} className="my-7 max-w-full border-border" />
         );
       }
 
       return (
         <code
-          className="rounded-sm border border-border/70 bg-muted/50 px-1 py-0.5 font-mono text-[0.85em] font-medium text-foreground"
+          className="rounded-sm border border-border/70 bg-muted/50 px-1 py-0.5 font-mono text-[0.85em] font-medium break-all text-foreground [overflow-wrap:anywhere]"
           {...props}
         >
           {children}
@@ -201,17 +212,19 @@ function createMarkdownComponents(isFr: boolean): Components {
       );
     },
     li: ({ children }) => (
-      <li className="mb-1.5 flex items-start gap-2.5">
+      <li className="mb-1.5 flex min-w-0 items-start gap-2.5">
         <span
           className="mt-[0.55em] size-1 shrink-0 rounded-full bg-foreground/40"
           aria-hidden
         />
-        <span className="text-sm leading-relaxed text-foreground/90">{children}</span>
+        <span className="min-w-0 flex-1 text-sm leading-relaxed break-words text-foreground/90 [overflow-wrap:anywhere]">
+          {children}
+        </span>
       </li>
     ),
     table: ({ children }) => (
-      <div className="my-6 w-full overflow-x-auto border border-border">
-        <table className="w-full border-collapse text-left text-sm">{children}</table>
+      <div className="my-6 max-w-full overflow-x-auto border border-border">
+        <table className="w-full min-w-0 border-collapse text-left text-sm">{children}</table>
       </div>
     ),
     thead: ({ children }) => (
@@ -263,18 +276,19 @@ export const ArticleContentSection: React.FC<{ post: IBlog }> = React.memo(({ po
   const components = isFr ? MARKDOWN_COMPONENTS.fr : MARKDOWN_COMPONENTS.en;
 
   return (
-    <article className="relative max-w-none">
+    <article className="relative min-w-0 max-w-full">
       <ReadingProgressBar />
 
       <div
-        className="prose prose-sm mb-8 max-w-none dark:prose-invert md:prose-base md:mb-10
+        className="prose prose-sm mb-8 min-w-0 max-w-full dark:prose-invert md:prose-base md:mb-10
           prose-headings:scroll-mt-28 prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-foreground
-          prose-p:mb-4 prose-p:leading-relaxed prose-p:text-foreground/90 md:prose-p:mb-5
-          prose-a:font-medium prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+          prose-p:mb-4 prose-p:max-w-full prose-p:leading-relaxed prose-p:break-words prose-p:text-foreground/90 md:prose-p:mb-5
+          prose-a:font-medium prose-a:break-words prose-a:text-primary prose-a:no-underline hover:prose-a:underline
           prose-strong:font-semibold prose-strong:text-foreground
+          prose-code:break-all
           prose-blockquote:border-l-primary/40 prose-blockquote:bg-transparent prose-blockquote:px-4 prose-blockquote:py-0.5 prose-blockquote:not-italic prose-blockquote:text-foreground/85
           prose-ul:list-none prose-ul:pl-0
-          prose-ol:pl-5 prose-ol:marker:font-medium prose-ol:marker:text-foreground/55"
+          prose-ol:min-w-0 prose-ol:pl-5 prose-ol:marker:font-medium prose-ol:marker:text-foreground/55"
       >
         <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
           {content}

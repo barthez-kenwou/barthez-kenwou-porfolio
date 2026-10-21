@@ -139,23 +139,23 @@ export const BlogDetailPage = () => {
         }}
       />
 
-      <div className="relative min-h-screen bg-background">
+      <div className="relative min-h-screen min-w-0 bg-background">
         <FloatingShareRail post={post} />
 
-        <div className="mx-auto max-w-6xl px-3 pt-28 pb-44 sm:px-5 md:px-6 md:pt-32 md:pb-24 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10 xl:gap-12">
+        <div className="mx-auto w-full min-w-0 max-w-6xl px-3 pt-28 pb-44 sm:px-5 md:px-6 md:pt-32 md:pb-24 lg:px-8">
+          <div className="grid min-w-0 grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10 xl:gap-12">
             <aside className="relative hidden min-w-0 lg:col-span-4 lg:block xl:col-span-3">
               <TableOfContents content={content} variant="desktop" />
             </aside>
 
-            <main className="min-w-0 lg:col-span-8 xl:col-span-9">
+            <main className="min-w-0 max-w-full lg:col-span-8 xl:col-span-9">
               {/*
                 Header rhythm:
                 [Back —— date · read time] → H1 → banner → prose.
                 Meta shares the Back row so secondary info doesn’t stack.
               */}
-              <header className="flex flex-col">
-                <div className="flex items-center justify-between gap-3">
+              <header className="flex min-w-0 flex-col">
+                <div className="flex min-w-0 items-center justify-between gap-3">
                   <BackSection />
                   <ArticleMeta post={post} />
                 </div>

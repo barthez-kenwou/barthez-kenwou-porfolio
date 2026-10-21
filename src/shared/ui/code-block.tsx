@@ -103,7 +103,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = React.memo(({ language, value
   return (
     <div
       className={cn(
-        'group relative my-3 w-full overflow-hidden rounded-sm border border-border bg-card font-mono text-sm',
+        'group relative my-3 w-full max-w-full min-w-0 overflow-hidden rounded-sm border border-border bg-card font-mono text-sm',
         className,
       )}
     >

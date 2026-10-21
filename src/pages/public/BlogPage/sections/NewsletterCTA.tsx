@@ -139,7 +139,7 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
                 autoComplete="off"
                 value={honeypot}
                 onChange={(e) => setHoneypot(e.target.value)}
-                className="absolute -left-[9999px] h-0 w-0 opacity-0"
+                className="sr-only"
                 aria-hidden
               />
 

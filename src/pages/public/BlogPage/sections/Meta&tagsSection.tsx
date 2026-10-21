@@ -27,7 +27,7 @@ export const MetaTagsSection: React.FC<{ post: IBlog }> = ({ post }) => {
   const { language } = useLanguageStore();
 
   return (
-    <h1 className="text-[1.45rem] font-bold leading-[1.2] tracking-tight text-foreground sm:text-[1.75rem] sm:leading-snug md:text-[2rem] md:leading-[1.2]">
+    <h1 className="max-w-full text-[1.45rem] font-bold leading-[1.2] tracking-tight break-words text-foreground sm:text-[1.75rem] sm:leading-snug md:text-[2rem] md:leading-[1.2]">
       {language === 'fr' ? post.titleFr : post.titleEn}
     </h1>
   );
