@@ -228,13 +228,13 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval' https://www.googletagmanager.com https://analytics.zenora360.com https://static.cloudflareinsights.com 'sha256-Y5DkzDSkKEN0lVZBOszkzzqDGkjpKH2LFz9cE0TXoBY=' 'sha256-zv5y103lLH945kgXRQUh4X1IYN/azBtf+uRV04YhUl4=' 'sha256-iAmxsv9zzvylg1+IQBqYjhyL/VqD23hh6mWpVw0NOPs='; connect-src 'self' http://localhost:3000 http://127.0.0.1:3000 https://api.barthez-kenwou.dev https://s3.zenora360.com https://*.zenora360.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://analytics.zenora360.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://cdn.simpleicons.org https://cdn.jsdelivr.net https://*.supabase.co https://*.vimeo.com https://*.vimeocdn.com ws: wss: blob: data:; img-src 'self' data: https: blob:; media-src 'self' blob: https://*.vimeocdn.com https://player.vimeo.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.fontshare.com https://cdn.fontshare.com; font-src 'self' data: https://cdn.fontshare.com https://fonts.gstatic.com; frame-src 'self' blob: https://player.vimeo.com https://vimeo.com https://www.youtube-nocookie.com https://www.youtube.com; child-src 'self' blob: https://player.vimeo.com https://vimeo.com; worker-src 'self' blob:;"
+      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval' https://www.googletagmanager.com https://analytics.zenora360.com https://static.cloudflareinsights.com https://connect.facebook.net 'sha256-Y5DkzDSkKEN0lVZBOszkzzqDGkjpKH2LFz9cE0TXoBY=' 'sha256-zv5y103lLH945kgXRQUh4X1IYN/azBtf+uRV04YhUl4=' 'sha256-YhJXk1iTWplPeapuJ0O01wcXVQ3tP2fS4rbwuTpKjAs='; connect-src 'self' http://localhost:3000 http://127.0.0.1:3000 https://api.barthez-kenwou.dev https://s3.zenora360.com https://*.zenora360.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://analytics.zenora360.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://connect.facebook.net https://www.facebook.com https://cdn.simpleicons.org https://cdn.jsdelivr.net https://*.supabase.co https://*.vimeo.com https://*.vimeocdn.com ws: wss: blob: data:; img-src 'self' data: https: blob:; media-src 'self' blob: https://*.vimeocdn.com https://player.vimeo.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.fontshare.com https://cdn.fontshare.com; font-src 'self' data: https://cdn.fontshare.com https://fonts.gstatic.com; frame-src 'self' blob: https://player.vimeo.com https://vimeo.com https://www.youtube-nocookie.com https://www.youtube.com; child-src 'self' blob: https://player.vimeo.com https://vimeo.com; worker-src 'self' blob:;"
     />
 
     <!-- Compatibilité -->
     <meta name="format-detection" content="telephone=no" />
 
-    <!-- Analytics deferred until idle after load (keeps main thread free for LCP) -->
+    <!-- Analytics + Meta Pixel deferred until idle (LCP + single CSP-hashed boot script) -->
     <script>
       (function () {
         function inject(src, onload) {
@@ -243,6 +243,21 @@
           s.async = true;
           if (onload) s.onload = onload;
           document.head.appendChild(s);
+        }
+        function bootMetaPixel() {
+          if (window.fbq) return;
+          var n = (window.fbq = function () {
+            n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+          });
+          if (!window._fbq) window._fbq = n;
+          n.push = n;
+          n.loaded = true;
+          n.version = '2.0';
+          n.queue = [];
+          inject('https://connect.facebook.net/en_US/fbevents.js', function () {
+            window.fbq('init', '1597453798140483');
+            window.fbq('track', 'PageView');
+          });
         }
         function boot() {
           inject('https://www.googletagmanager.com/gtag/js?id=G-QKFZ112SCK', function () {
@@ -267,6 +282,7 @@
               };
             plausible.init();
           });
+          bootMetaPixel();
         }
         if ('requestIdleCallback' in window) {
           window.addEventListener('load', function () {
@@ -281,27 +297,15 @@
     </script>
 
     <meta name="p:domain_verify" content="07c5cd3addb6b960283548b7ff6b9e79" />
-  
-    <!-- Meta Pixel Code -->
-    <script>
-      !function(f,b,e,v,n,t,s)
-      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-      n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s)}(window, document,'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', '1597453798140483');
-      fbq('track', 'PageView');
-      </script>
-      <noscript><img height="1" width="1" style="display:none"
-      src="https://www.facebook.com/tr?id=1597453798140483&ev=PageView&noscript=1"
-      />
-    </noscript>
-    <!-- End Meta Pixel Code -->
+    <noscript
+      ><img
+        height="1"
+        width="1"
+        style="display: none"
+        src="https://www.facebook.com/tr?id=1597453798140483&ev=PageView&noscript=1"
+        alt=""
+    /></noscript>
   </head>
-
   <body>
     <!-- Crawlable fallback when JS is disabled or not yet executed -->
     <noscript>

@@ -8,7 +8,7 @@ interface Props {
   language: 'fr' | 'en';
 }
 
-const PROJECTS_PORTFOLIO_URL = 'https://www.barthez-kenwou.dev/projects';
+const PROJECTS_PORTFOLIO_URL = 'https://barthez-kenwou.dev/projects';
 
 export const ProjectSection: React.FC<Props> = ({ projects, language }) => {
   if (!projects || projects.length === 0) return null;
