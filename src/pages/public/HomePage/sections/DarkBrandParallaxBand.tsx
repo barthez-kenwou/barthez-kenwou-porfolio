@@ -29,6 +29,9 @@ export function DarkBrandParallaxBand({ children, className }: DarkBrandParallax
           <img
             src="/images/brand-nebula.webp"
             alt=""
+            width={740}
+            height={416}
+            loading="lazy"
             decoding="async"
             className={cn(
               'h-full w-full object-cover object-center',

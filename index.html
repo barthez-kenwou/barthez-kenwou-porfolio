@@ -152,12 +152,53 @@
       }
     </script>
 
-    <!-- Performance & loading -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <!--
+      Performance: ≤4 preconnects, preload LCP deco, fonts loaded async (not CSS @import).
+    -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://jebiwuygwtpmdnhhzsbw.supabase.co" crossorigin />
-    <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
     <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+    <link rel="preconnect" href="https://api.barthez-kenwou.dev" crossorigin />
+
+    <link
+      rel="preload"
+      as="image"
+      href="/images/hero-flare.webp"
+      type="image/webp"
+      fetchpriority="high"
+    />
+
+    <script>
+      (function () {
+        function load(href) {
+          var l = document.createElement('link');
+          l.rel = 'stylesheet';
+          l.href = href;
+          l.media = 'print';
+          l.onload = function () {
+            l.media = 'all';
+          };
+          document.head.appendChild(l);
+        }
+        load(
+          'https://fonts.googleapis.com/css2?family=Allura&family=JetBrains+Mono:wght@400;500;600;700&display=swap',
+        );
+        load(
+          'https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&f[]=cabinet-grotesk@400,500,600,700,800&f[]=switzer@400,500,600,700&display=swap',
+        );
+      })();
+    </script>
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Allura&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      />
+      <link
+        rel="stylesheet"
+        href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&f[]=cabinet-grotesk@400,500,600,700,800&f[]=switzer@400,500,600,700&display=swap"
+      />
+    </noscript>
 
     <!-- Branding / Icons / PWA -->
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -178,41 +219,59 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval' https://www.googletagmanager.com https://analytics.zenora360.com 'sha256-Y5DkzDSkKEN0lVZBOszkzzqDGkjpKH2LFz9cE0TXoBY=' 'sha256-K5rmwFT4aDEKKYlA2IPWldX2O15tLcdtDrNlz1MXzPM=' 'sha256-7moKog8KBPupO/tN7luIKy5iaAqA9/Rz+sXzLrdOKAM=' 'sha256-ZLJNTOb/YTmraMl6jSvPQYToEV1Y6rVlj4QgseWqigA='; connect-src 'self' http://localhost:3000 http://127.0.0.1:3000 https://api.barthez-kenwou.dev https://s3.zenora360.com https://*.zenora360.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://analytics.zenora360.com https://www.googletagmanager.com https://*.vimeo.com https://*.vimeocdn.com ws: wss: blob: data:; img-src 'self' data: https: blob:; media-src 'self' blob: https://*.vimeocdn.com https://player.vimeo.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.fontshare.com https://cdn.fontshare.com; font-src 'self' data: https://cdn.fontshare.com https://fonts.gstatic.com; frame-src 'self' blob: https://player.vimeo.com https://vimeo.com https://www.youtube-nocookie.com https://www.youtube.com; child-src 'self' blob: https://player.vimeo.com https://vimeo.com; worker-src 'self' blob:;"
+      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval' https://www.googletagmanager.com https://analytics.zenora360.com https://static.cloudflareinsights.com 'sha256-Y5DkzDSkKEN0lVZBOszkzzqDGkjpKH2LFz9cE0TXoBY=' 'sha256-zv5y103lLH945kgXRQUh4X1IYN/azBtf+uRV04YhUl4=' 'sha256-iAmxsv9zzvylg1+IQBqYjhyL/VqD23hh6mWpVw0NOPs='; connect-src 'self' http://localhost:3000 http://127.0.0.1:3000 https://api.barthez-kenwou.dev https://s3.zenora360.com https://*.zenora360.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://analytics.zenora360.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://cdn.simpleicons.org https://cdn.jsdelivr.net https://*.supabase.co https://*.vimeo.com https://*.vimeocdn.com ws: wss: blob: data:; img-src 'self' data: https: blob:; media-src 'self' blob: https://*.vimeocdn.com https://player.vimeo.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.fontshare.com https://cdn.fontshare.com; font-src 'self' data: https://cdn.fontshare.com https://fonts.gstatic.com; frame-src 'self' blob: https://player.vimeo.com https://vimeo.com https://www.youtube-nocookie.com https://www.youtube.com; child-src 'self' blob: https://player.vimeo.com https://vimeo.com; worker-src 'self' blob:;"
     />
 
     <!-- Compatibilité -->
     <meta name="format-detection" content="telephone=no" />
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QKFZ112SCK"></script>
+    <!-- Analytics deferred until idle after load (keeps main thread free for LCP) -->
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-
-      gtag('config', 'G-QKFZ112SCK');
+      (function () {
+        function inject(src, onload) {
+          var s = document.createElement('script');
+          s.src = src;
+          s.async = true;
+          if (onload) s.onload = onload;
+          document.head.appendChild(s);
+        }
+        function boot() {
+          inject('https://www.googletagmanager.com/gtag/js?id=G-QKFZ112SCK', function () {
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+              dataLayer.push(arguments);
+            }
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('config', 'G-QKFZ112SCK');
+          });
+          inject('https://analytics.zenora360.com/js/pa-IZ8naue6cPKpIdClxFRax.js', function () {
+            window.plausible =
+              window.plausible ||
+              function () {
+                (plausible.q = plausible.q || []).push(arguments);
+              };
+            plausible.init =
+              plausible.init ||
+              function (i) {
+                plausible.o = i || {};
+              };
+            plausible.init();
+          });
+        }
+        if ('requestIdleCallback' in window) {
+          window.addEventListener('load', function () {
+            requestIdleCallback(boot, { timeout: 4000 });
+          });
+        } else {
+          window.addEventListener('load', function () {
+            setTimeout(boot, 2000);
+          });
+        }
+      })();
     </script>
 
-    <!-- Privacy-friendly analytics by Plausible -->
-    <script async src="https://analytics.zenora360.com/js/pa-IZ8naue6cPKpIdClxFRax.js"></script>
-    <script>
-      ((window.plausible =
-        window.plausible ||
-        function () {
-          (plausible.q = plausible.q || []).push(arguments);
-        }),
-        (plausible.init =
-          plausible.init ||
-          function (i) {
-            plausible.o = i || {};
-          }));
-      plausible.init();
-      </script>
-
-    <meta name="p:domain_verify" content="07c5cd3addb6b960283548b7ff6b9e79"/>
+    <meta name="p:domain_verify" content="07c5cd3addb6b960283548b7ff6b9e79" />
   </head>
 
   <body>

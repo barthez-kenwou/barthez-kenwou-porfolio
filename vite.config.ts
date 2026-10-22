@@ -17,6 +17,8 @@ export default defineConfig(({ mode }) => {
     plugins.push(
       VitePWA({
         registerType: 'autoUpdate',
+        // Manual registration in main.tsx (after load) — avoid injectRegisterSW as render-blocking.
+        injectRegister: null,
         includeAssets: [
           'favicon.ico',
           'favicon.svg',

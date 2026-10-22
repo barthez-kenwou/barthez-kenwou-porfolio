@@ -1,8 +1,7 @@
-/* Greeting script (Google) — kept for hero "Bonjour, je suis" only */
-@import url('https://fonts.googleapis.com/css2?family=Allura&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
-/* Display / heading / body — Fontshare (Clash Display · Cabinet Grotesk · Switzer) */
-@import url('https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&f[]=cabinet-grotesk@400,500,600,700,800&f[]=switzer@400,500,600,700&display=swap');
-
+/*
+  Fonts are loaded asynchronously from index.html (not via CSS @import).
+  @import of remote stylesheets is render-blocking and tanks FCP/LCP on mobile.
+*/
 @import 'tailwindcss';
 @import 'tw-animate-css';
 

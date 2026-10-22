@@ -40,8 +40,8 @@ export const HomePage: React.FC = () => {
         <HeroSection />
 
         <DeferredMount
-          timeout={400}
-          rootMargin="200px"
+          timeout={800}
+          rootMargin="120px"
           fallback={<div className="min-h-[340px]" aria-hidden />}
         >
           <Suspense fallback={<div className="min-h-[340px]" aria-hidden />}>
@@ -49,13 +49,22 @@ export const HomePage: React.FC = () => {
           </Suspense>
         </DeferredMount>
 
-        <DarkBrandParallaxBand>
-          <ServiceSection />
-          <WhyChooseMeSection />
-          <TrustedBySection />
-          <TestimonialsSection />
-        </DarkBrandParallaxBand>
-        <CTASection />
+        <DeferredMount
+          timeout={1200}
+          rootMargin="160px"
+          fallback={<div className="min-h-[48rem]" aria-hidden />}
+        >
+          <DarkBrandParallaxBand>
+            <ServiceSection />
+            <WhyChooseMeSection />
+            <TrustedBySection />
+            <TestimonialsSection />
+          </DarkBrandParallaxBand>
+        </DeferredMount>
+
+        <DeferredMount timeout={1600} rootMargin="120px" fallback={<div className="min-h-[16rem]" aria-hidden />}>
+          <CTASection />
+        </DeferredMount>
       </div>
     </>
   );

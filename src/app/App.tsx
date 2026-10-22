@@ -67,7 +67,22 @@ const router = createBrowserRouter([
 
 export const App: React.FC = () => {
   React.useEffect(() => {
-    import('./routes/prefetch').then((m) => m.prefetchRoutes()).catch(() => {});
+    // Warm secondary routes only after first paint — blog mocks alone are ~568 KiB.
+    const warm = () => {
+      void import('./routes/prefetch').then((m) => m.prefetchRoutes()).catch(() => {});
+    };
+    const ric =
+      (
+        window as Window & {
+          requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+        }
+      ).requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 1));
+
+    const onLoad = () => {
+      window.setTimeout(() => ric(warm, { timeout: 8000 }), 4000);
+    };
+    if (document.readyState === 'complete') onLoad();
+    else window.addEventListener('load', onLoad, { once: true });
   }, []);
 
   return <RouterProvider router={router} />;

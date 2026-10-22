@@ -29,9 +29,12 @@ const PartnerLogoCell: React.FC<{
       <img
         src={partner.logoUrl}
         alt={partner.name}
+        width={120}
+        height={40}
         loading="lazy"
+        decoding="async"
         className={cn(
-          'max-h-9 w-auto max-w-[7.5rem] object-contain object-center sm:max-h-10 sm:max-w-[8.5rem]',
+          'h-9 w-auto max-w-[7.5rem] object-contain object-center sm:h-10 sm:max-w-[8.5rem]',
           'opacity-70 grayscale transition-[opacity,filter,transform] duration-300',
           'group-hover/logo:scale-[1.02] group-hover/logo:opacity-100 group-hover/logo:grayscale-0',
           'dark:opacity-80 dark:brightness-110 dark:group-hover/logo:opacity-100',

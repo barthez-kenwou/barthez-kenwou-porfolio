@@ -13,9 +13,23 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 );
 
-// PWA only in production builds - Vite dev has no sw.js (SPA fallback returns HTML).
+// PWA only in production — register after load so registerSW.js never competes with LCP.
 if (import.meta.env.PROD && import.meta.env.VITE_ENABLE_PWA === 'true') {
-  import('./app/config/pwa/registerServiceWorker')
-    .then((m) => m.registerServiceWorker())
-    .catch((e) => console.warn('[PWA] registration failed', e));
+  const register = () => {
+    const run = () =>
+      import('./app/config/pwa/registerServiceWorker')
+        .then((m) => m.registerServiceWorker())
+        .catch((e) => console.warn('[PWA] registration failed', e));
+
+    const ric =
+      (
+        window as Window & {
+          requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+        }
+      ).requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 1));
+    ric(run, { timeout: 5000 });
+  };
+
+  if (document.readyState === 'complete') register();
+  else window.addEventListener('load', register, { once: true });
 }

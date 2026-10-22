@@ -106,6 +106,8 @@ export const HeroSection: React.FC = () => {
             <img
               src={HERO_FLARE}
               alt=""
+              width={960}
+              height={276}
               decoding="async"
               {...{ fetchpriority: 'high' }}
               className={cn(

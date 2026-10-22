@@ -5,15 +5,17 @@ export function prefetchRoutes() {
   if (typeof window === 'undefined') return;
 
   const doPrefetch = () => {
-    void import('@/pages/public/HomePage/home');
+    // Keep the first idle pass light. Blog/project pages pull large mock chunks —
+    // those warm only on hover/touch via prefetchRoute().
     void import('@/pages/public/AboutPage/About');
-    void import('@/pages/public/SkillPage/skill');
-    void import('@/pages/public/ProjectPage/project');
     void import('@/pages/public/ServicePage/service');
-    void import('@/pages/public/BlogPage/blog');
     void import('@/pages/public/Contact/contact');
     void import('@/pages/public/CvPage/cv');
-    // Warm skill logo HTTP cache in the background (session-scoped).
+  };
+
+  const warmHeavy = () => {
+    void import('@/pages/public/SkillPage/skill');
+    void import('@/pages/public/ProjectPage/project');
     void useSkillIconsStore.getState().ensureLoaded();
   };
 
@@ -27,7 +29,8 @@ export function prefetchRoutes() {
       return window.setTimeout(cb, 300);
     };
 
-  rIC(doPrefetch, { timeout: 2500 });
+  rIC(doPrefetch, { timeout: 6000 });
+  window.setTimeout(() => rIC(warmHeavy, { timeout: 10000 }), 8000);
 }
 
 export async function prefetchRoute(path: string) {
