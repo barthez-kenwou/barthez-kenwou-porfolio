@@ -335,7 +335,7 @@ const GalleryLightbox: React.FC<LightboxProps> = ({
 export const ProjectGallerySection: React.FC<{ project: IProject }> = ({ project }) => {
   const { language } = useLanguageStore();
   const isFr = language === 'fr';
-  const items = project.gallery ?? [];
+  const items = useMemo(() => project.gallery ?? [], [project.gallery]);
   const [filter, setFilter] = useState<ProjectGalleryKind | 'all'>('all');
   const [lightbox, setLightbox] = useState<number | null>(null);
 

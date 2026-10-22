@@ -16,7 +16,7 @@ export const PostsGrid: React.FC = () => {
   const [searchFocused, setSearchFocused] = useState(false);
   const [isPending, startTransition] = useTransition();
   const { data, isPending: listPending, isError, error } = usePublicBlogs();
-  const posts = data?.data.items ?? [];
+  const posts = useMemo(() => data?.data.items ?? [], [data?.data.items]);
 
   const filteredPosts = useMemo(() => {
     return sortBlogsByArrival(

@@ -258,7 +258,7 @@ export const AdminContactResponsesPage: React.FC = () => {
     [setSearchParams],
   );
 
-  const items = data?.items ?? [];
+  const items = React.useMemo(() => data?.items ?? [], [data?.items]);
   const selected = items.find((i) => i.id === selectedId) || null;
 
   const counts = React.useMemo(() => {

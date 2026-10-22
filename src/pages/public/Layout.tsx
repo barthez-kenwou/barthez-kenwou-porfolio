@@ -4,7 +4,7 @@ import { SidebarProvider } from '@/shared/ui/sidebar.tsx';
 import { PUBLIC_SHELL_BREAKPOINT } from '@/shared/hooks/use-mobile';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Footer } from '@/widgets/Footer';
-import { Suspense, useEffect, useRef } from 'react';
+import { Suspense, useState } from 'react';
 import { RouteFallback } from '@/shared/ui/RouteFallback/RouteFallback';
 import { ErrorBoundary } from '@/app/lib/ErrorBoundary';
 import { usePageEngagement } from '@/shared/hooks/usePageEngagement';
@@ -12,17 +12,19 @@ import { usePageEngagement } from '@/shared/hooks/usePageEngagement';
 function PageShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   usePageEngagement(location.pathname);
-  // Skip enter animation on first paint — opacity:0 delays FCP/LCP on home.
-  const isFirstPaint = useRef(true);
-  useEffect(() => {
-    isFirstPaint.current = false;
-  }, []);
+
+  // Skip enter animation on the initial document route (FCP/LCP).
+  // Adjusting state during render when the path changes is the React-recommended pattern
+  // (no ref reads during render — eslint react-hooks/refs).
+  const [route, setRoute] = useState(location.pathname);
+  const [animateEnter, setAnimateEnter] = useState(false);
+  if (location.pathname !== route) {
+    setRoute(location.pathname);
+    setAnimateEnter(true);
+  }
 
   return (
-    <div
-      key={location.pathname}
-      className={!isFirstPaint.current ? 'page-enter' : undefined}
-    >
+    <div key={location.pathname} className={animateEnter ? 'page-enter' : undefined}>
       {children}
     </div>
   );

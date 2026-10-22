@@ -16,21 +16,21 @@ const browserLocalStorage = (_name: string) => {
       try {
         const raw = window.localStorage.getItem(key);
         return raw;
-      } catch (e) {
+      } catch {
         return null;
       }
     },
     setItem: (key: string, value: string) => {
       try {
         window.localStorage.setItem(key, value);
-      } catch (e) {
+      } catch {
         // ignore quota errors
       }
     },
     removeItem: (key: string) => {
       try {
         window.localStorage.removeItem(key);
-      } catch (e) {
+      } catch {
         // ignore
       }
     },

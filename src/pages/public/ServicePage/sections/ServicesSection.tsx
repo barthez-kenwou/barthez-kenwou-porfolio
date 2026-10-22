@@ -1,7 +1,7 @@
 import { mapServiceDtoToCard, ServiceCard, usePublicServices } from '@/entities/services';
 import type { IServices } from '@/entities/services';
 import { QueryState } from '@/shared/ui/QueryState';
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { CurrencyToggle } from './CurrencyToggle';
 
 const CARD_GAP_PX = 12; // gap-3
@@ -15,7 +15,7 @@ function ServicesMobileRail({ services }: { services: IServices[] }) {
   const [progress, setProgress] = useState(0);
   const [spacerHeight, setSpacerHeight] = useState(560);
 
-  const measure = () => {
+  const measure = useCallback(() => {
     const pin = pinRef.current;
     const track = trackRef.current;
     if (!pin || !track) return;
@@ -37,11 +37,11 @@ function ServicesMobileRail({ services }: { services: IServices[] }) {
     // One comfortable scroll "step" per card — long enough to feel, not a dead zone.
     const step = Math.min(380, Math.max(240, window.innerHeight * 0.42));
     setSpacerHeight(step * Math.max(1, services.length - 1) + window.innerHeight * 0.2);
-  };
+  }, [services.length]);
 
   useLayoutEffect(() => {
     measure();
-  }, [services.length]);
+  }, [measure]);
 
   useEffect(() => {
     const pin = pinRef.current;
@@ -59,7 +59,7 @@ function ServicesMobileRail({ services }: { services: IServices[] }) {
       window.removeEventListener('resize', onResize);
       ro.disconnect();
     };
-  }, [services.length]);
+  }, [measure]);
 
   useEffect(() => {
     const spacer = spacerRef.current;

@@ -130,7 +130,7 @@ export const SkillsSection: React.FC = () => {
         label: t(f.labelKey),
         count: f.count,
       })),
-    [filters, t, language],
+    [filters, t],
   );
 
   const selectDomain = (id: string) => {

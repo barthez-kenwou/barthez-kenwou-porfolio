@@ -86,7 +86,7 @@ export const AdminTestimonialsPage: React.FC = () => {
   const { editorRef, tableRef } = useScrollToEditor(editing);
   const saving = create.isPending || update.isPending;
   const items = data?.items ?? [];
-  const projects = projectsData?.items ?? [];
+  const projects = React.useMemo(() => projectsData?.items ?? [], [projectsData?.items]);
 
   const projectTitleById = React.useMemo(() => {
     const map = new Map<string, string>();

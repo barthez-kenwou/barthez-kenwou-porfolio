@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { IProject } from '@/entities/projets/model/project.types';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
@@ -334,7 +334,7 @@ export const ProjectDiagramsSection: React.FC<{ project: IProject }> = ({ projec
   const { language } = useLanguageStore();
   const theme = useThemeStore((s) => s.theme);
   const isFr = language === 'fr';
-  const diagrams = project.diagrams ?? [];
+  const diagrams = useMemo(() => project.diagrams ?? [], [project.diagrams]);
   const [active, setActive] = useState(0);
   const [svg, setSvg] = useState<string>('');
   const [error, setError] = useState<string | null>(null);

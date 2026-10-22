@@ -29,7 +29,6 @@ export function DeferredMount({
   useEffect(() => {
     let cancelled = false;
     let idleHandle: number | undefined;
-    let observer: IntersectionObserver | undefined;
 
     const cancelIdle = (id: number) => {
       const w = window as Window & { cancelIdleCallback?: (n: number) => void };
@@ -68,10 +67,10 @@ export function DeferredMount({
       };
     }
 
-    observer = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          observer?.disconnect();
+          observer.disconnect();
           arm();
         }
       },
@@ -81,7 +80,7 @@ export function DeferredMount({
 
     return () => {
       cancelled = true;
-      observer?.disconnect();
+      observer.disconnect();
       if (idleHandle !== undefined) cancelIdle(idleHandle);
     };
   }, [timeout, whenVisible, rootMargin]);

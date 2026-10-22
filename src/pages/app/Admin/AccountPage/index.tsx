@@ -103,7 +103,7 @@ function AccountDetails({ fr }: { fr: boolean }) {
     });
     setAvatarFile(null);
     setAvatarPreview(null);
-  }, [user?.id, user?.firstName, user?.lastName, user?.phone]);
+  }, [user]);
 
   React.useEffect(() => {
     if (!avatarFile) {
@@ -633,7 +633,10 @@ function AuditDetails({ fr }: { fr: boolean }) {
     [fr],
   );
 
-  const items = auditQuery.data?.items ?? [];
+  const items = React.useMemo(
+    () => auditQuery.data?.items ?? [],
+    [auditQuery.data?.items],
+  );
 
   const filters = React.useMemo<AdminDataTableFilter<AuditEntry>[]>(() => {
     const actions = [...new Set(items.map((i) => i.action).filter(Boolean))].sort();
