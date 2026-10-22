@@ -123,6 +123,7 @@ export const Image: React.FC<ImageProps> = ({
           srcSet={srcSet}
           sizes={sizes}
           loading={lazy ? 'lazy' : 'eager'}
+          fetchPriority={priority ? 'high' : undefined}
           onLoad={handleLoad}
           onError={handleError}
           style={{

@@ -155,8 +155,9 @@
     <!--
       Performance: ≤4 preconnects, preload LCP deco, fonts loaded async (not CSS @import).
     -->
+    <!-- ≤4 preconnects: fonts + API. Profile is first-party WebP (no Supabase on critical path). -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
     <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
     <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
     <link rel="preconnect" href="https://api.barthez-kenwou.dev" crossorigin />
@@ -167,6 +168,14 @@
       href="/images/hero-flare.webp"
       type="image/webp"
       fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/images/barthez-type-2.webp"
+      type="image/webp"
+      fetchpriority="high"
+      media="(min-width: 1280px)"
     />
 
     <script>

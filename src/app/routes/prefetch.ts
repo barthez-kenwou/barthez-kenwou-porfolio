@@ -4,19 +4,10 @@ import { useSkillIconsStore } from '@/entities/skills/model/useSkillIconsStore';
 export function prefetchRoutes() {
   if (typeof window === 'undefined') return;
 
+  // Only warm the most likely next navigation. Everything else: hover/touch via prefetchRoute().
+  // Eager multi-route prefetch was showing up as a ~6s critical-path tail in Lighthouse.
   const doPrefetch = () => {
-    // Keep the first idle pass light. Blog/project pages pull large mock chunks —
-    // those warm only on hover/touch via prefetchRoute().
-    void import('@/pages/public/AboutPage/About');
-    void import('@/pages/public/ServicePage/service');
     void import('@/pages/public/Contact/contact');
-    void import('@/pages/public/CvPage/cv');
-  };
-
-  const warmHeavy = () => {
-    void import('@/pages/public/SkillPage/skill');
-    void import('@/pages/public/ProjectPage/project');
-    void useSkillIconsStore.getState().ensureLoaded();
   };
 
   const rIC =
@@ -26,11 +17,10 @@ export function prefetchRoutes() {
       }
     ).requestIdleCallback ??
     function (cb: () => void) {
-      return window.setTimeout(cb, 300);
+      return window.setTimeout(cb, 1200);
     };
 
-  rIC(doPrefetch, { timeout: 6000 });
-  window.setTimeout(() => rIC(warmHeavy, { timeout: 10000 }), 8000);
+  rIC(doPrefetch, { timeout: 12000 });
 }
 
 export async function prefetchRoute(path: string) {

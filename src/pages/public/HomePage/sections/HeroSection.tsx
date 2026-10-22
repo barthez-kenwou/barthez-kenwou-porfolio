@@ -15,14 +15,15 @@ import { useThemeStore } from '@/shared/state/useThemeStore';
 
 const HERO_FLARE = '/images/hero-flare.webp';
 
+/** Keep opacity at 1 — Lighthouse LCP was stuck ~2.8s on hero copy with opacity:0. */
 const fadeUp = {
-  hidden: { opacity: 0, y: 10 },
+  hidden: { opacity: 1, y: 12 },
   show: (i: number) => ({
     opacity: 1,
     y: 0,
     transition: {
-      delay: 0.08 + i * 0.1,
-      duration: 0.55,
+      delay: 0.04 + i * 0.06,
+      duration: 0.4,
       ease: [0.22, 1, 0.36, 1] as const,
     },
   }),
@@ -141,7 +142,7 @@ export const HeroSection: React.FC = () => {
             {t('hero.greeting')}
           </motion.p>
 
-          {/* Name - blurIn replays on each re-appearance */}
+          {/* Name — first paint is static (LCP-safe); blurIn only on re-entry */}
           <motion.h1
             ref={nameWrapRef}
             custom={1}
@@ -150,29 +151,38 @@ export const HeroSection: React.FC = () => {
             animate="show"
             className="font-display mb-2 text-[2.15rem] leading-[1.05] text-foreground sm:mb-3 sm:text-5xl md:text-6xl lg:text-7xl"
           >
-            <TextAnimate
-              key={`barthez-${nameEnterKey}`}
-              animation="blurIn"
-              as="span"
-              once={false}
-              startOnView={false}
-              className="mr-2 inline-block"
-              segmentClassName="text-foreground"
-            >
-              Barthez
-            </TextAnimate>
-            <TextAnimate
-              key={`kenwou-${nameEnterKey}`}
-              animation="blurIn"
-              by="character"
-              duration={1}
-              once={false}
-              startOnView={false}
-              className="inline-block uppercase"
-              segmentClassName="text-foreground"
-            >
-              Kenwou
-            </TextAnimate>
+            {nameEnterKey === 0 ? (
+              <>
+                <span className="mr-2 inline-block text-foreground">Barthez</span>
+                <span className="inline-block uppercase text-foreground">Kenwou</span>
+              </>
+            ) : (
+              <>
+                <TextAnimate
+                  key={`barthez-${nameEnterKey}`}
+                  animation="blurIn"
+                  as="span"
+                  once={false}
+                  startOnView={false}
+                  className="mr-2 inline-block"
+                  segmentClassName="text-foreground"
+                >
+                  Barthez
+                </TextAnimate>
+                <TextAnimate
+                  key={`kenwou-${nameEnterKey}`}
+                  animation="blurIn"
+                  by="character"
+                  duration={1}
+                  once={false}
+                  startOnView={false}
+                  className="inline-block uppercase"
+                  segmentClassName="text-foreground"
+                >
+                  Kenwou
+                </TextAnimate>
+              </>
+            )}
           </motion.h1>
 
           {/* Role - hand writing cursor (height reserved by TypingAnimation sizer) */}

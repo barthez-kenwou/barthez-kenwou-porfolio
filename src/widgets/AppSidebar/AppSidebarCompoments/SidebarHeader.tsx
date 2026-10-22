@@ -46,6 +46,7 @@ export const SidebarHeaderSection: React.FC = () => {
               src={profilePhotos[0]}
               alt="Barthez Kenwou"
               lazy={false}
+              priority
               showSkeleton
               showSpinner={false}
               className="absolute inset-0 size-full transition-transform duration-500 ease-in-out group-hover/picture:scale-105"

@@ -4,7 +4,7 @@ import { SidebarProvider } from '@/shared/ui/sidebar.tsx';
 import { PUBLIC_SHELL_BREAKPOINT } from '@/shared/hooks/use-mobile';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Footer } from '@/widgets/Footer';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
 import { RouteFallback } from '@/shared/ui/RouteFallback/RouteFallback';
 import { ErrorBoundary } from '@/app/lib/ErrorBoundary';
 import { usePageEngagement } from '@/shared/hooks/usePageEngagement';
@@ -12,9 +12,17 @@ import { usePageEngagement } from '@/shared/hooks/usePageEngagement';
 function PageShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   usePageEngagement(location.pathname);
+  // Skip enter animation on first paint — opacity:0 delays FCP/LCP on home.
+  const isFirstPaint = useRef(true);
+  useEffect(() => {
+    isFirstPaint.current = false;
+  }, []);
 
   return (
-    <div key={location.pathname} className="page-enter">
+    <div
+      key={location.pathname}
+      className={!isFirstPaint.current ? 'page-enter' : undefined}
+    >
       {children}
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { usePublicPartners } from '@/entities/partners';
+import { resolvePartnerLogoUrl, usePublicPartners } from '@/entities/partners';
 import type { IPartner } from '@/entities/partners';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { QueryState } from '@/shared/ui/QueryState';
@@ -24,10 +24,11 @@ const PartnerLogoCell: React.FC<{
 }> = ({ partner, isFr, className }) => {
   const relation = isFr ? partner.relationFr : partner.relationEn;
   const title = [partner.name, relation].filter(Boolean).join(' — ');
+  const logoSrc = resolvePartnerLogoUrl(partner.id, partner.logoUrl);
   const inner = (
     <>
       <img
-        src={partner.logoUrl}
+        src={logoSrc}
         alt={partner.name}
         width={120}
         height={40}

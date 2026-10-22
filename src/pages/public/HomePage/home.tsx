@@ -50,14 +50,20 @@ export const HomePage: React.FC = () => {
         </DeferredMount>
 
         <DeferredMount
-          timeout={1200}
-          rootMargin="160px"
+          timeout={2000}
+          rootMargin="80px"
           fallback={<div className="min-h-[48rem]" aria-hidden />}
         >
           <DarkBrandParallaxBand>
             <ServiceSection />
             <WhyChooseMeSection />
-            <TrustedBySection />
+            <DeferredMount
+              timeout={800}
+              rootMargin="40px"
+              fallback={<div className="min-h-[14rem]" aria-hidden />}
+            >
+              <TrustedBySection />
+            </DeferredMount>
             <TestimonialsSection />
           </DarkBrandParallaxBand>
         </DeferredMount>

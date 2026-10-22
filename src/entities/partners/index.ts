@@ -21,3 +21,4 @@ export type {
   PartnerCreatePayload,
   PartnerUpdatePayload,
 } from './model/partner.types';
+export { resolvePartnerLogoUrl } from './lib/optimizedPartnerLogos';

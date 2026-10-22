@@ -79,7 +79,8 @@ export const App: React.FC = () => {
       ).requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 1));
 
     const onLoad = () => {
-      window.setTimeout(() => ric(warm, { timeout: 8000 }), 4000);
+      // Wait well past LCP before warming any secondary chunks.
+      window.setTimeout(() => ric(warm, { timeout: 15000 }), 10000);
     };
     if (document.readyState === 'complete') onLoad();
     else window.addEventListener('load', onLoad, { once: true });
