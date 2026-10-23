@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 import {
   clearSession,
   fetchCurrentUser,
@@ -10,7 +11,8 @@ import {
   type AuthUser,
 } from '@/features/admin-auth';
 import { env } from '@/app/config/env';
-import { getAccessToken } from '@/shared/api';
+import { apiClient, getAccessToken, onSessionEnded } from '@/shared/api';
+import { sessionExpiresAtFromNow } from '@/shared/api/jwt';
 
 interface AuthContextType {
   user: AuthUser | null;
@@ -34,6 +36,12 @@ export const useAuth = () => {
 
 interface AuthProviderProps {
   children: React.ReactNode;
+}
+
+function notifySessionExpired(): void {
+  toast.error('Session expired — please sign in again', {
+    id: 'bk-admin-session-expired',
+  });
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
@@ -62,7 +70,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return;
       }
 
-      if (!stored.viaApi || !getAccessToken()) {
+      if (!stored.viaApi) {
         clearSession();
         if (!cancelled) {
           setSession(null);
@@ -72,19 +80,32 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
 
       try {
+        // Expired access JWT → 401 → silent refresh → retry (see api client).
+        // No bearer yet: still try /me after a refresh attempt via keep-alive.
+        if (!getAccessToken()) {
+          const refreshed = await apiClient.ensureFreshAccessToken();
+          if (!refreshed) {
+            clearSession();
+            if (!cancelled) setSession(null);
+            return;
+          }
+        }
+
         const user = await fetchCurrentUser();
         const next: AuthSession = {
           ...stored,
           user,
           viaApi: true,
           token: getAccessToken() || stored.token,
-          expiresAt: Date.now() + 1000 * 60 * 60 * 12,
+          expiresAt: sessionExpiresAtFromNow(),
         };
         persistSession(next);
+        apiClient.startSessionKeepAlive();
         if (!cancelled) setSession(next);
       } catch {
         // Invalid / expired API session — force re-login
         clearSession();
+        apiClient.stopSessionKeepAlive();
         if (!cancelled) setSession(null);
       } finally {
         if (!cancelled) setLoading(false);
@@ -97,12 +118,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    return onSessionEnded(() => {
+      clearSession();
+      apiClient.stopSessionKeepAlive();
+      setSession(null);
+      notifySessionExpired();
+    });
+  }, []);
+
   const login = useCallback(async (email: string, password: string) => {
     const next = await loginWithCredentials(email, password);
+    apiClient.startSessionKeepAlive();
     setSession(next);
   }, []);
 
   const logout = useCallback(async () => {
+    apiClient.stopSessionKeepAlive();
     await logoutFromApi();
     setSession(null);
   }, []);
@@ -123,12 +155,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         user,
         viaApi: true,
         token: getAccessToken() || stored.token,
-        expiresAt: Date.now() + 1000 * 60 * 60 * 12,
+        expiresAt: sessionExpiresAtFromNow(),
       };
       persistSession(next);
+      apiClient.startSessionKeepAlive();
       setSession(next);
     } catch {
       clearSession();
+      apiClient.stopSessionKeepAlive();
       setSession(null);
     }
   }, []);

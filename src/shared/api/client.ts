@@ -1,6 +1,12 @@
 import axios from 'axios';
 import { env } from '@/app/config/env';
 import { clearCsrfToken, csrfHeaderName, ensureCsrfToken, isUnsafeMethod } from './csrf';
+import {
+  ACCESS_REFRESH_SKEW_MS,
+  getJwtExpiryMs,
+  isAccessTokenExpiringSoon,
+} from './jwt';
+import { emitSessionEnded } from './session-events';
 import { clearAccessToken, getAccessToken, parseBearerHeader, setAccessToken } from './token';
 import type { ApiError, ApiSuccessEnvelope } from './types';
 
@@ -103,9 +109,17 @@ function isCsrfFailure(error: {
   return data.code === 'EBADCSRFTOKEN' || /csrf/i.test(String(data.message || ''));
 }
 
+function isAuthRefreshUrl(url: string | undefined): boolean {
+  const path = String(url || '');
+  return path.includes('/auth/login') || path.includes('/auth/refresh');
+}
+
 class ApiClient {
   // axios typings vary across versions; keep the instance loosely typed.
   private readonly client: ReturnType<typeof axios.create>;
+  private proactiveTimer: ReturnType<typeof setTimeout> | null = null;
+  private keepAliveStarted = false;
+  private visibilityHandler: (() => void) | null = null;
 
   constructor(baseURL: string) {
     this.client = axios.create({
@@ -140,7 +154,10 @@ class ApiClient {
     this.client.interceptors.response.use(
       (response: { data?: unknown; headers?: unknown }) => {
         const headerToken = readAuthHeader(response.headers);
-        if (headerToken) setAccessToken(headerToken);
+        if (headerToken) {
+          setAccessToken(headerToken);
+          this.scheduleProactiveRefresh(headerToken);
+        }
         return response;
       },
       async (error: {
@@ -169,11 +186,10 @@ class ApiClient {
           status === 401 &&
           original &&
           !original._retry &&
-          !String(original.url || '').includes('/auth/login') &&
-          !String(original.url || '').includes('/auth/refresh')
+          !isAuthRefreshUrl(original.url)
         ) {
           original._retry = true;
-          const token = await this.refreshAccessToken();
+          const token = await this.refreshAccessToken({ announceFailure: true });
           if (token) {
             original.headers = { ...(original.headers ?? {}), Authorization: `Bearer ${token}` };
             return this.client.request(original);
@@ -185,7 +201,73 @@ class ApiClient {
     );
   }
 
-  private async refreshAccessToken(): Promise<string | null> {
+  /**
+   * Start proactive access refresh (timer + tab focus).
+   * Safe to call multiple times; idempotent per page lifetime.
+   */
+  startSessionKeepAlive(): void {
+    if (this.keepAliveStarted) {
+      const token = getAccessToken();
+      if (token) this.scheduleProactiveRefresh(token);
+      return;
+    }
+    this.keepAliveStarted = true;
+
+    const token = getAccessToken();
+    if (token) this.scheduleProactiveRefresh(token);
+
+    if (typeof document !== 'undefined') {
+      this.visibilityHandler = () => {
+        if (document.visibilityState === 'visible') {
+          void this.ensureFreshAccessToken();
+        }
+      };
+      document.addEventListener('visibilitychange', this.visibilityHandler);
+    }
+  }
+
+  stopSessionKeepAlive(): void {
+    this.clearProactiveRefresh();
+    if (this.visibilityHandler && typeof document !== 'undefined') {
+      document.removeEventListener('visibilitychange', this.visibilityHandler);
+      this.visibilityHandler = null;
+    }
+    this.keepAliveStarted = false;
+  }
+
+  /** Refresh now if the access JWT is missing, expired, or within the skew window. */
+  async ensureFreshAccessToken(): Promise<string | null> {
+    const current = getAccessToken();
+    if (current && !isAccessTokenExpiringSoon(current)) {
+      this.scheduleProactiveRefresh(current);
+      return current;
+    }
+    return this.refreshAccessToken({ announceFailure: Boolean(current) });
+  }
+
+  private clearProactiveRefresh(): void {
+    if (this.proactiveTimer != null) {
+      clearTimeout(this.proactiveTimer);
+      this.proactiveTimer = null;
+    }
+  }
+
+  private scheduleProactiveRefresh(token: string): void {
+    this.clearProactiveRefresh();
+    const expMs = getJwtExpiryMs(token);
+    if (expMs == null) return;
+
+    const delay = Math.max(1_000, expMs - Date.now() - ACCESS_REFRESH_SKEW_MS);
+    this.proactiveTimer = setTimeout(() => {
+      void this.refreshAccessToken({ announceFailure: true }).then((next) => {
+        if (next) this.scheduleProactiveRefresh(next);
+      });
+    }, delay);
+  }
+
+  private async refreshAccessToken(options?: {
+    announceFailure?: boolean;
+  }): Promise<string | null> {
     if (!refreshPromise) {
       refreshPromise = (async () => {
         try {
@@ -205,12 +287,17 @@ class ApiClient {
           const token = bodyToken || headerToken;
           if (token) {
             setAccessToken(token);
+            this.scheduleProactiveRefresh(token);
             return token;
           }
           clearAccessToken();
+          this.clearProactiveRefresh();
+          if (options?.announceFailure) emitSessionEnded('refresh_failed');
           return null;
         } catch {
           clearAccessToken();
+          this.clearProactiveRefresh();
+          if (options?.announceFailure) emitSessionEnded('refresh_failed');
           return null;
         } finally {
           refreshPromise = null;
@@ -256,7 +343,10 @@ class ApiClient {
         ? String((data as { accessToken: string }).accessToken)
         : null;
     const accessToken = fromBody || readAuthHeader(response.headers);
-    if (accessToken) setAccessToken(accessToken);
+    if (accessToken) {
+      setAccessToken(accessToken);
+      this.scheduleProactiveRefresh(accessToken);
+    }
     return { data: data as T, accessToken };
   }
 }

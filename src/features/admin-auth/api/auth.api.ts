@@ -1,4 +1,5 @@
 import { apiClient, clearAccessToken, getAccessToken, setAccessToken, isApiError } from '@/shared/api';
+import { sessionExpiresAtFromNow } from '@/shared/api/jwt';
 import { env } from '@/app/config/env';
 import type { UserRole } from '../model/auth.types';
 
@@ -91,8 +92,8 @@ function buildSession(user: AuthUser, token: string, viaApi: boolean): AuthSessi
     user,
     token,
     viaApi,
-    // Access JWT is short-lived; refresh cookie keeps the session alive.
-    expiresAt: Date.now() + 1000 * 60 * 60 * 12,
+    // Soft session ceiling aligned with refresh cookie (30d). Access JWT is short-lived.
+    expiresAt: sessionExpiresAtFromNow(),
   };
 }
 

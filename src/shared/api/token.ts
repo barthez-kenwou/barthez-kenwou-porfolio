@@ -3,6 +3,8 @@
  * Refresh lives in an httpOnly cookie; access JWT stays out of localStorage.
  */
 
+import { sessionExpiresAtFromNow } from './jwt';
+
 let accessToken: string | null = null;
 
 const SESSION_ACCESS_KEY = 'bk-admin-access-token';
@@ -35,7 +37,8 @@ export function setAccessToken(token: string | null): void {
         const session = JSON.parse(raw) as { token?: string; expiresAt?: number };
         if (session && typeof session === 'object') {
           session.token = token;
-          session.expiresAt = Date.now() + 1000 * 60 * 60 * 12;
+          // Soft session ceiling (refresh cookie TTL), not access JWT lifetime.
+          session.expiresAt = sessionExpiresAtFromNow();
           sessionStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(session));
         }
       }

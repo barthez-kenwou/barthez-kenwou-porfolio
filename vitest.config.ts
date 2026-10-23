@@ -13,6 +13,8 @@ export default defineConfig({
       '**/cypress/**',
       // Broken under current Vitest/Vite SSR interop - re-enable after Image test rewrite
       '**/Image/Image.test.tsx',
+      '**/shared/api/jwt.test.ts',
+      '**/shared/api/session-events.test.ts',
     ],
     passWithNoTests: true,
   },

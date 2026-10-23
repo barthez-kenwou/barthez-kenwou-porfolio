@@ -11,6 +11,14 @@ export {
   parseBearerHeader,
 } from './token';
 export {
+  getJwtExpiryMs,
+  isAccessTokenExpiringSoon,
+  sessionExpiresAtFromNow,
+  ADMIN_SESSION_TTL_MS,
+  ACCESS_REFRESH_SKEW_MS,
+} from './jwt';
+export { onSessionEnded, emitSessionEnded, type SessionEndedReason } from './session-events';
+export {
   isApiError,
   toApiError,
   isNetworkError,
