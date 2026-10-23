@@ -19,6 +19,8 @@ fi
 echo "[scripts] build: SEO discovery files + HTML prerender"
 if command -v bun >/dev/null 2>&1; then
   bun ./scripts/seo/generate.ts || exit 1
+  echo "[scripts] build: verifying prerender shells"
+  bun ./scripts/seo/verify-prerender.ts || exit 1
 elif command -v node >/dev/null 2>&1; then
   echo "[scripts] error: bun is required for scripts/seo/generate.ts"
   exit 1

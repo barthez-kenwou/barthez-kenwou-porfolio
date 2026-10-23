@@ -95,12 +95,17 @@ jobs:
           sed -i 's|^VITE_APP_URL=.*|VITE_APP_URL=https://barthez-kenwou.dev|' .env
           sed -i 's|^VITE_ENVIRONMENT=.*|VITE_ENVIRONMENT=production|' .env
 
-      - name: Production build
+      - name: Production build (Vite + SEO prerender)
         env:
           NODE_ENV: production
           VITE_SKIP_IMAGEMIN: 'true'
           CI: 'true'
-        run: bunx vite build
+        # Must use scripts/build.sh — vite alone skips per-route HTML shells
+        # (canonical/title/body). Without them nginx falls back to home index.html.
+        run: bun run build
+
+      - name: Verify SEO prerender shells
+        run: bun ./scripts/seo/verify-prerender.ts
 
       - name: Upload dist artifact
         uses: actions/upload-artifact@v4

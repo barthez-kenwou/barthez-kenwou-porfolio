@@ -43,11 +43,15 @@ jobs:
       - name: Prepare .env for build
         run: cp .env.example .env
 
-      - name: Build
+      - name: Build (Vite + SEO prerender)
         env:
           NODE_ENV: production
           VITE_SKIP_IMAGEMIN: 'true'
-        run: bunx vite build
+          CI: 'true'
+        run: bun run build
+
+      - name: Verify SEO prerender shells
+        run: bun ./scripts/seo/verify-prerender.ts
 
       - name: Upload dist (artifact)
         if: success()

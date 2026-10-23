@@ -162,8 +162,9 @@ Disallow: /admin
 # Spec: https://llmstxt.org/
 # llms.txt and llms-full.txt are intentionally crawlable
 
+# Index only — child sitemaps are linked from sitemap-index.xml.
+# Listing both index + flat sitemap.xml caused Semrush to double-count URLs.
 Sitemap: ${SITE_URL}/sitemap-index.xml
-Sitemap: ${SITE_URL}/sitemap.xml
 `;
   writeBoth('robots.txt', content);
 }
