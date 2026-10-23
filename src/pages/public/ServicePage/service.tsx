@@ -3,6 +3,7 @@ import { ProcessSection } from './sections/ProcessSection';
 import { ServicesSection } from './sections/ServicesSection';
 import { HeroSection } from './sections/HeroSection';
 import { ServicesCTASection } from './sections/ServicesCTASection';
+import { NewsletterCTA } from '@/pages/public/BlogPage/sections/NewsletterCTA';
 import { SEO } from '@/shared/ui/SEO/SEO';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 
@@ -26,6 +27,9 @@ export const ServicePage: React.FC = () => {
         <HeroSection />
         <ServicesSection />
         <ProcessSection />
+        <div className="mb-8 md:mb-10">
+          <NewsletterCTA source="services" contactTo="/contact?from=services" />
+        </div>
         <TestimonialsSection />
         <ServicesCTASection />
       </div>

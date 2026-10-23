@@ -61,11 +61,11 @@ export function OverviewSection({ fr, onNavigate }: Props) {
 
       <div className="grid gap-4 md:grid-cols-2">
         <AdminSectionCard
-          title={fr ? 'Actions rapides' : 'Quick actions'}
+          title={fr ? 'Cadence AIEC' : 'AIEC cadence'}
           description={
             fr
-              ? 'Accès direct aux flux de gestion.'
-              : 'Jump into the main management flows.'
+              ? 'Welcome auto · édition mensuelle (Composer) · digest mensuel si articles. Alerte blog auto désactivée.'
+              : 'Auto welcome · monthly edition (Compose) · monthly digest if posts. Auto blog alert off.'
           }
         >
           <div className="flex flex-col gap-2 sm:flex-row">
@@ -76,7 +76,7 @@ export function OverviewSection({ fr, onNavigate }: Props) {
             >
               <span className="inline-flex items-center gap-2">
                 <Megaphone className="size-3.5" />
-                {fr ? 'Nouvelle diffusion' : 'New broadcast'}
+                {fr ? 'Édition mensuelle' : 'Monthly edition'}
               </span>
               <ArrowRight className="size-3.5 opacity-70" />
             </Button>
@@ -96,8 +96,8 @@ export function OverviewSection({ fr, onNavigate }: Props) {
           {stats?.active != null ? (
             <p className="mt-3 text-xs text-muted-foreground">
               {fr
-                ? `${stats.active} abonné${stats.active > 1 ? 's' : ''} actif${stats.active > 1 ? 's' : ''} prêts à recevoir une campagne.`
-                : `${stats.active} active subscriber${stats.active === 1 ? '' : 's'} ready for a campaign.`}
+                ? `${stats.active} abonné${stats.active > 1 ? 's' : ''} actif${stats.active > 1 ? 's' : ''} · presets Engagement / Intérêt / Conversion dans Composer.`
+                : `${stats.active} active subscriber${stats.active === 1 ? '' : 's'} · Engagement / Interest / Conversion presets in Compose.`}
             </p>
           ) : null}
         </AdminSectionCard>

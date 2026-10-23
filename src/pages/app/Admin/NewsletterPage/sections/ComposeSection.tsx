@@ -28,6 +28,11 @@ import { Input } from '@/shared/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
 import { Textarea } from '@/shared/ui/textarea';
 import { cn } from '@/shared/lib/utils';
+import {
+  AIEC_PRESETS,
+  applyAiecPreset,
+  type AiecPresetId,
+} from '../lib/aiec-presets';
 
 const emptyBroadcast = (): NewsletterBroadcastPayload => ({
   subjectFr: '',
@@ -53,6 +58,7 @@ export function ComposeSection({ fr, onSent }: Props) {
   const statsQuery = useNewsletterStats();
   const broadcast = useBroadcastNewsletter();
   const [form, setForm] = React.useState(emptyBroadcast());
+  const [presetId, setPresetId] = React.useState<AiecPresetId | 'none'>('none');
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
   const activeCount = statsQuery.data?.active ?? 0;
@@ -68,6 +74,8 @@ export function ComposeSection({ fr, onSent }: Props) {
         : fr
           ? 'abonnés actifs'
           : 'active subscribers';
+
+  const activePreset = AIEC_PRESETS.find((p) => p.id === presetId);
 
   const validate = (): boolean => {
     if (
@@ -110,6 +118,7 @@ export function ComposeSection({ fr, onSent }: Props) {
       await broadcast.mutateAsync(payload);
       toast.success(fr ? 'Campagne mise en file' : 'Campaign queued');
       setForm(emptyBroadcast());
+      setPresetId('none');
       setConfirmOpen(false);
       onSent?.();
     } catch (e) {
@@ -138,11 +147,11 @@ export function ComposeSection({ fr, onSent }: Props) {
       <AdminStickyActions className="md:justify-end">{sendButton}</AdminStickyActions>
 
       <AdminSectionCard
-        title={fr ? 'Composer une diffusion' : 'Compose broadcast'}
+        title={fr ? 'Composer une édition mensuelle' : 'Compose a monthly edition'}
         description={
           fr
-            ? `Envoi bilingue vers les abonnés actifs. Segment optionnel par locale.`
-            : `Bilingual send to active subscribers. Optional locale segment.`
+            ? 'Funnel AIEC : une idée, un CTA, bilingue. Cadence cible = 1× / mois.'
+            : 'AIEC funnel: one idea, one CTA, bilingual. Target cadence = 1× / month.'
         }
       >
         <div className="mb-4 rounded-lg border border-border/60 bg-muted/15 px-3 py-2.5 text-sm">
@@ -156,7 +165,46 @@ export function ComposeSection({ fr, onSent }: Props) {
           </p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="mb-4 grid gap-3 md:grid-cols-2">
+          <Field label={fr ? 'Preset AIEC' : 'AIEC preset'}>
+            <Select
+              value={presetId}
+              onValueChange={(v) => {
+                const id = v as AiecPresetId | 'none';
+                setPresetId(id);
+                if (id === 'none') return;
+                setForm((prev) => applyAiecPreset(id, prev));
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue
+                  placeholder={fr ? 'Choisir un preset…' : 'Choose a preset…'}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">
+                  {fr ? 'Aucun (brouillon libre)' : 'None (blank draft)'}
+                </SelectItem>
+                {AIEC_PRESETS.map((p) => (
+                  <SelectItem key={p.id} value={p.id}>
+                    {fr ? p.labelFr : p.labelEn}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {activePreset ? (
+              <p className="mt-1.5 text-xs text-muted-foreground">
+                {fr ? activePreset.hintFr : activePreset.hintEn}
+              </p>
+            ) : (
+              <p className="mt-1.5 text-xs text-muted-foreground">
+                {fr
+                  ? 'UTM : utm_source=newsletter&utm_medium=email&utm_campaign=…&utm_content=cta-blog|cta-contact'
+                  : 'UTM: utm_source=newsletter&utm_medium=email&utm_campaign=…&utm_content=cta-blog|cta-contact'}
+              </p>
+            )}
+          </Field>
+
           <Field label={fr ? 'Segment locale' : 'Locale segment'}>
             <Select
               value={form.locale ?? 'all'}
@@ -179,14 +227,24 @@ export function ComposeSection({ fr, onSent }: Props) {
               </SelectContent>
             </Select>
           </Field>
+        </div>
 
+        <div className="grid gap-4 md:grid-cols-2">
           <Field label="CTA URL">
             <Input
               value={form.ctaUrl || ''}
               onChange={(e) => setForm({ ...form, ctaUrl: e.target.value })}
-              placeholder="https://"
+              placeholder="https://…?utm_source=newsletter&…"
             />
           </Field>
+
+          <BilingualField
+            label={fr ? 'Label CTA' : 'CTA label'}
+            valueFr={form.ctaLabelFr || ''}
+            valueEn={form.ctaLabelEn || ''}
+            onChangeFr={(v) => setForm({ ...form, ctaLabelFr: v })}
+            onChangeEn={(v) => setForm({ ...form, ctaLabelEn: v })}
+          />
 
           <BilingualField
             label={fr ? 'Sujet' : 'Subject'}
@@ -207,14 +265,19 @@ export function ComposeSection({ fr, onSent }: Props) {
           <div className="md:col-span-2 grid gap-4 md:grid-cols-2">
             <Field label={fr ? 'Corps FR' : 'Body FR'} required>
               <Textarea
-                rows={7}
+                rows={9}
                 value={form.bodyFr}
                 onChange={(e) => setForm({ ...form, bodyFr: e.target.value })}
+                placeholder={
+                  fr
+                    ? 'Une idée. Une preuve. Un CTA (reply ou lien).'
+                    : 'One idea. One proof. One CTA (reply or link).'
+                }
               />
             </Field>
             <Field label={fr ? 'Corps EN' : 'Body EN'} required>
               <Textarea
-                rows={7}
+                rows={9}
                 value={form.bodyEn}
                 onChange={(e) => setForm({ ...form, bodyEn: e.target.value })}
               />
@@ -226,13 +289,6 @@ export function ComposeSection({ fr, onSent }: Props) {
             valueEn={form.previewEn || ''}
             onChangeFr={(v) => setForm({ ...form, previewFr: v })}
             onChangeEn={(v) => setForm({ ...form, previewEn: v })}
-          />
-          <BilingualField
-            label={fr ? 'Label CTA' : 'CTA label'}
-            valueFr={form.ctaLabelFr || ''}
-            valueEn={form.ctaLabelEn || ''}
-            onChangeFr={(v) => setForm({ ...form, ctaLabelFr: v })}
-            onChangeEn={(v) => setForm({ ...form, ctaLabelEn: v })}
           />
         </div>
       </AdminSectionCard>

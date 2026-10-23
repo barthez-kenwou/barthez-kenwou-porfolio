@@ -14,11 +14,20 @@ import {
 import { trackCtaClick, trackNewsletterSubscribe } from '@/app/lib/analytics';
 
 type NewsletterCTAProps = {
+  /** Channel (`blog`, `services`…) or omit when `blogSlug` is set. */
   source?: string;
+  /** When set, signup source becomes `blog:{slug}` for contextual welcome. */
+  blogSlug?: string;
   contactTo?: string;
   className?: string;
   sectionRef?: React.Ref<HTMLElement>;
 };
+
+function resolveSubscribeSource(source: string, blogSlug?: string): string {
+  const slug = blogSlug?.trim();
+  if (!slug) return source.slice(0, 96);
+  return `blog:${slug}`.slice(0, 96);
+}
 
 type FormStatus = 'idle' | 'loading' | 'error';
 
@@ -47,12 +56,14 @@ function errorCopy(code: NewsletterSubscribeErrorCode, isFr: boolean) {
 
 export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
   source = 'blog',
+  blogSlug,
   contactTo,
   className,
   sectionRef,
 }) => {
   const { language } = useLanguageStore();
   const isFr = language === 'fr';
+  const subscribeSource = resolveSubscribeSource(source, blogSlug);
 
   const [email, setEmail] = React.useState('');
   const [honeypot, setHoneypot] = React.useState('');
@@ -68,10 +79,10 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
     setErrorCode(null);
 
     if (honeypot.trim()) {
-      toast.success(isFr ? 'Vous êtes abonné' : "You're subscribed", {
+      toast.success(isFr ? 'Inscription enregistrée' : 'Subscription recorded', {
         description: isFr
-          ? 'Merci. Un email de bienvenue arrive, puis les prochaines notes techniques.'
-          : 'Thanks. A welcome email is on its way, then the next technical notes.',
+          ? 'Merci. Un email de bienvenue arrive sous peu.'
+          : 'Thank you. A welcome email is on its way.',
       });
       setEmail('');
       setStatus('idle');
@@ -81,7 +92,7 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
     const parsed = newsletterSubscribeSchema.safeParse({
       email,
       locale: isFr ? 'fr' : 'en',
-      source,
+      source: subscribeSource,
     });
 
     if (!parsed.success) {
@@ -94,11 +105,11 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
     const result = await subscribeNewsletter(parsed.data);
 
     if (result.ok) {
-      trackNewsletterSubscribe(source, isFr ? 'fr' : 'en');
-      toast.success(isFr ? 'Vous êtes abonné' : "You're subscribed", {
+      trackNewsletterSubscribe(subscribeSource, isFr ? 'fr' : 'en');
+      toast.success(isFr ? 'Inscription enregistrée' : 'Subscription recorded', {
         description: isFr
-          ? 'Merci. Un email de bienvenue arrive, puis les prochaines notes techniques.'
-          : 'Thanks. A welcome email is on its way, then the next technical notes.',
+          ? 'Merci. Un email de bienvenue arrive sous peu, puis une note par mois.'
+          : 'Thank you. A welcome email is on its way, then one note per month.',
       });
       setEmail('');
       setStatus('idle');
@@ -123,14 +134,10 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
               id="newsletter-cta-title"
               className="mb-2 font-heading text-base font-bold text-foreground sm:text-lg md:text-xl"
             >
-              {isFr ? 'Restez informé' : 'Stay informed'}
-            </h3>
-            <p className="mb-5 text-[12px] leading-relaxed text-foreground/85 sm:mb-5 sm:text-xs md:mb-6">
               {isFr
-                ? 'Recevez les derniers articles et actualités directement dans votre boîte mail.'
-                : 'Receive the latest articles and news directly in your inbox.'}
-            </p>
-
+                ? 'Notes techniques pour la prod'
+                : 'Technical notes for production'}
+            </h3>
             <form onSubmit={onSubmit} noValidate className="mx-auto max-w-md space-y-3">
               <input
                 type="text"
@@ -144,11 +151,11 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
               />
 
               <div className="flex flex-col gap-3 sm:flex-row sm:gap-3">
-                <label className="sr-only" htmlFor={`newsletter-email-${source}`}>
+                <label className="sr-only" htmlFor={`newsletter-email-${subscribeSource}`}>
                   Email
                 </label>
                 <input
-                  id={`newsletter-email-${source}`}
+                  id={`newsletter-email-${subscribeSource}`}
                   type="email"
                   name="email"
                   inputMode="email"
@@ -163,7 +170,7 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
                       setErrorCode(null);
                     }
                   }}
-                  placeholder="Email"
+                  placeholder={isFr ? 'Votre email professionnel' : 'Your work email'}
                   className={cn(
                     'min-w-0 flex-1 rounded-md border bg-background/90 px-3 py-2.5 text-sm text-foreground',
                     'border-border transition-colors placeholder:text-muted-foreground/70',
@@ -183,7 +190,7 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
                       {isFr ? 'Envoi…' : 'Sending…'}
                     </>
                   ) : isFr ? (
-                    "S'abonner"
+                    "S'inscrire"
                   ) : (
                     'Subscribe'
                   )}
@@ -198,11 +205,13 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
             </form>
 
             {contactTo && (
-              <p className="mt-5 text-[12px] leading-relaxed text-foreground/85 sm:mt-5 sm:text-xs">
+              <p className="mt-2 text-[12px] leading-relaxed text-foreground/85 sm:mt-2 sm:text-xs">
                 {isFr ? 'Un besoin concret ? ' : 'A concrete need? '}
                 <Link
                   to={contactTo}
-                  onClick={() => trackCtaClick('contact', `newsletter_${source}`, contactTo)}
+                  onClick={() =>
+                    trackCtaClick('contact', `newsletter_${subscribeSource}`, contactTo)
+                  }
                   onMouseEnter={() => {
                     void import('@/app/routes/prefetch').then((m) => m.prefetchRoute('/contact'));
                   }}

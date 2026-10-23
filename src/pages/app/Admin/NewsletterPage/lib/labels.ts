@@ -47,8 +47,8 @@ export function campaignTypeLabel(type: string | undefined, fr: boolean): string
       confirm: 'Confirm',
       welcome: 'Welcome',
       blog_publish: 'Blog alert',
-      digest: 'Digest',
-      broadcast: 'Broadcast',
+      digest: 'Monthly digest',
+      broadcast: 'Monthly edition',
     };
     return en[type] ?? type;
   }
@@ -56,8 +56,8 @@ export function campaignTypeLabel(type: string | undefined, fr: boolean): string
     confirm: 'Confirmation',
     welcome: 'Bienvenue',
     blog_publish: 'Alerte blog',
-    digest: 'Digest',
-    broadcast: 'Diffusion',
+    digest: 'Digest mensuel',
+    broadcast: 'Édition mensuelle',
   };
   return frMap[type] ?? type;
 }

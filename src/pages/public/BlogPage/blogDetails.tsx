@@ -178,6 +178,7 @@ export const BlogDetailPage = () => {
                 <NavigationSection post={post} posts={allPosts} />
                 <NewsletterCTA
                   source="blog-article"
+                  blogSlug={getBlogPathSlug(post)}
                   contactTo={contactTo}
                   sectionRef={endCtaRef}
                   className="!px-0"

@@ -134,6 +134,19 @@ export function SubscribersSection({ fr }: Props) {
                   { value: 'en', label: 'EN' },
                 ],
               },
+              {
+                key: 'source',
+                label: 'Source',
+                options: Array.from(
+                  new Set(
+                    subscribers
+                      .map((s) => s.source?.trim())
+                      .filter((s): s is string => Boolean(s)),
+                  ),
+                )
+                  .sort()
+                  .map((s) => ({ value: s, label: s })),
+              },
             ]}
             columns={[
               {
