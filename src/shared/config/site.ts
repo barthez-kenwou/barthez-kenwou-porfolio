@@ -6,10 +6,10 @@ export const SITE_NAME_FULL = 'Barthez Kenwou - Portfolio';
 export const DEFAULT_TITLE = 'Barthez Kenwou | Développeur Full Stack & Ingénieur DevOps';
 
 export const DEFAULT_DESCRIPTION =
-  'Portfolio de Barthez Kenwou - Développeur Full Stack JS & Ingénieur DevOps spécialiste AWS Cloud. Applications web modernes, CI/CD, Kubernetes et architectures cloud performantes.';
+  'Barthez Kenwou — développeur Full Stack JavaScript/TypeScript & ingénieur DevOps AWS (Yaoundé, Cameroun). React, Node.js, CI/CD GitHub Actions, Docker, Kubernetes, Terraform, DevSecOps. Freelance remote Afrique francophone & international.';
 
 export const DEFAULT_KEYWORDS =
-  'Barthez Kenwou, Full Stack Developer, DevOps Engineer, Ingénieur DevOps, AWS Cloud, React, Node.js, Kubernetes, Terraform, CI/CD, Docker, Portfolio, Développeur Web, Yaoundé, Cameroun';
+  'Barthez Kenwou, développeur Full Stack JavaScript, développeur React Node.js, ingénieur DevOps freelance, CI/CD GitHub Actions, AWS Cloud, Docker, Kubernetes, Terraform, DevSecOps, Trivy, Yaoundé, Cameroun, Afrique francophone, remote';
 
 /**
  * Absolute OG/Twitter share image (1200×630).

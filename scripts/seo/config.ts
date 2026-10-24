@@ -5,7 +5,7 @@ export const SITE_NAME = 'Barthez Kenwou';
 export const SITE_NAME_FULL = 'Barthez Kenwou - Portfolio';
 export const DEFAULT_TITLE = 'Barthez Kenwou | Développeur Full Stack & Ingénieur DevOps';
 export const DEFAULT_DESCRIPTION =
-  'Portfolio de Barthez Kenwou - Développeur Full Stack JS & Ingénieur DevOps spécialiste AWS Cloud. Applications web modernes, CI/CD, Kubernetes et architectures cloud performantes.';
+  'Barthez Kenwou — développeur Full Stack JavaScript/TypeScript & ingénieur DevOps AWS (Yaoundé, Cameroun). React, Node.js, CI/CD GitHub Actions, Docker, Kubernetes, Terraform, DevSecOps. Freelance remote Afrique francophone & international.';
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-share.jpg`;
 export const AUTHOR_EMAIL = 'kenwoubarthez@gmail.com';
 export const AUTHOR_PHONE = '+237 655 646 688';
@@ -36,14 +36,16 @@ export const STATIC_PAGES: StaticPage[] = [
     titleFr: DEFAULT_TITLE,
     titleEn: 'Barthez Kenwou | Full Stack Developer & DevOps Engineer',
     descriptionFr:
-      'Passionné par le développement web et le cloud depuis plus de 3 ans. Applications web modernes, CI/CD, Kubernetes et architectures AWS performantes.',
+      'Développeur Full Stack React/Node & ingénieur DevOps AWS à Yaoundé (Cameroun). CI/CD, Docker, Kubernetes, Terraform — freelance remote Afrique francophone et international.',
     descriptionEn:
-      'Passionate about web development and cloud for 3+ years. Modern web apps, CI/CD, Kubernetes and high-performance AWS architectures.',
+      'Full Stack React/Node developer & AWS DevOps engineer in Yaoundé (Cameroon). CI/CD, Docker, Kubernetes, Terraform — remote freelancing across Francophone Africa and internationally.',
     priority: 1.0,
     changefreq: 'weekly',
     bodyFr: `<h1>Barthez Kenwou</h1>
-<p>Développeur Full Stack JS &amp; Ingénieur DevOps, spécialiste AWS Cloud, basé à Yaoundé (Cameroun).</p>
-<p>Je conçois et déploie des applications web modernes, scalables et performantes : React, Node.js, Docker, Kubernetes, Terraform, CI/CD et observabilité.</p>
+<p>Développeur Full Stack JavaScript/TypeScript &amp; ingénieur DevOps / AWS Cloud, basé à <strong>Yaoundé (Cameroun)</strong>.</p>
+<p>Je conçois, sécurise et déploie en production : React, Node.js, GitHub Actions, Docker, Kubernetes, Terraform, DevSecOps et observabilité.</p>
+<p>Missions : locales (Cameroun / Afrique centrale), Afrique francophone, Europe francophone et remote international.</p>
+<p>Profil machine-readable pour IA : <a href="${SITE_URL}/llms.txt">llms.txt</a>.</p>
 <nav><ul>
 <li><a href="${SITE_URL}/about">À propos</a></li>
 <li><a href="${SITE_URL}/services">Services</a></li>
@@ -54,8 +56,10 @@ export const STATIC_PAGES: StaticPage[] = [
 <li><a href="${SITE_URL}/contact">Contact</a></li>
 </ul></nav>`,
     bodyEn: `<h1>Barthez Kenwou</h1>
-<p>Full Stack JS Developer &amp; DevOps Engineer, AWS Cloud specialist, based in Yaoundé (Cameroon).</p>
-<p>I design and ship modern, scalable web applications: React, Node.js, Docker, Kubernetes, Terraform, CI/CD and observability.</p>
+<p>Full Stack JavaScript/TypeScript developer &amp; DevOps / AWS Cloud engineer, based in <strong>Yaoundé (Cameroon)</strong>.</p>
+<p>I design, secure and ship to production: React, Node.js, GitHub Actions, Docker, Kubernetes, Terraform, DevSecOps and observability.</p>
+<p>Available locally (Cameroon / Central Africa), Francophone Africa, Francophone Europe, and remote internationally.</p>
+<p>Machine-readable AI profile: <a href="${SITE_URL}/llms.txt">llms.txt</a>.</p>
 <nav><ul>
 <li><a href="${SITE_URL}/about">About</a></li>
 <li><a href="${SITE_URL}/services">Services</a></li>
@@ -71,16 +75,16 @@ export const STATIC_PAGES: StaticPage[] = [
     titleFr: 'À propos | Barthez Kenwou',
     titleEn: 'About | Barthez Kenwou',
     descriptionFr:
-      'Parcours, vision et expertise de Barthez Kenwou - Full Stack, DevOps et cloud AWS.',
+      'Parcours de Barthez Kenwou — Full Stack, DevOps et AWS à Yaoundé. Freelance Cameroun, Afrique francophone et remote international.',
     descriptionEn:
-      'Background, vision and expertise of Barthez Kenwou - Full Stack, DevOps and AWS cloud.',
+      'Background of Barthez Kenwou — Full Stack, DevOps and AWS in Yaoundé. Freelance Cameroon, Francophone Africa and remote international.',
     priority: 0.9,
     changefreq: 'monthly',
     bodyFr: `<h1>À propos de Barthez Kenwou</h1>
-<p>Ingénieur passionné par le craft logiciel et les infrastructures cloud. Je construis des produits numériques fiables, observés et déployés en continu.</p>
+<p>Ingénieur basé à Yaoundé, passionné par le craft logiciel et les infrastructures cloud. Je construis des produits numériques fiables, observés et déployés en continu — pour clients locaux et équipes remote.</p>
 <p><a href="${SITE_URL}/cv">Voir mon CV</a> · <a href="${SITE_URL}/contact">Me contacter</a> · <a href="${SITE_URL}/projects">Mes projets</a></p>`,
     bodyEn: `<h1>About Barthez Kenwou</h1>
-<p>Engineer focused on software craft and cloud infrastructure. I build reliable digital products with continuous delivery and observability.</p>
+<p>Engineer based in Yaoundé, focused on software craft and cloud infrastructure. I build reliable digital products with continuous delivery — for local clients and remote teams.</p>
 <p><a href="${SITE_URL}/cv">Resume</a> · <a href="${SITE_URL}/contact">Contact</a> · <a href="${SITE_URL}/projects">Projects</a></p>`,
   },
   {
@@ -88,18 +92,18 @@ export const STATIC_PAGES: StaticPage[] = [
     titleFr: 'Services | Barthez Kenwou',
     titleEn: 'Services | Barthez Kenwou',
     descriptionFr:
-      'Développement Full Stack, DevOps, CI/CD, Kubernetes, sécurisation cloud AWS et accompagnement technique.',
+      'Développement Full Stack React/Node, DevOps CI/CD, Kubernetes, AWS, DevSecOps et hardening VPS — Yaoundé & remote.',
     descriptionEn:
-      'Full Stack development, DevOps, CI/CD, Kubernetes, AWS hardening and technical consulting.',
+      'Full Stack React/Node development, DevOps CI/CD, Kubernetes, AWS, DevSecOps and VPS hardening — Yaoundé & remote.',
     priority: 0.9,
     changefreq: 'monthly',
     bodyFr: `<h1>Services</h1>
 <ul>
-<li>Développement d’applications web Full Stack (React, Node.js, TypeScript)</li>
+<li>Développement d'applications web Full Stack (React, Node.js, TypeScript)</li>
 <li>Architecture cloud AWS et déploiement scalable</li>
 <li>Pipelines CI/CD, GitOps, Docker &amp; Kubernetes</li>
-<li>Observabilité, sécurité et hardening serveur</li>
-<li>Audit technique et accompagnement d’équipes</li>
+<li>Observabilité, sécurité et hardening serveur Ubuntu / VPS</li>
+<li>Audit technique et accompagnement d'équipes (Cameroun &amp; remote)</li>
 </ul>
 <p><a href="${SITE_URL}/contact">Demander un devis</a></p>`,
     bodyEn: `<h1>Services</h1>
@@ -107,8 +111,8 @@ export const STATIC_PAGES: StaticPage[] = [
 <li>Full Stack web apps (React, Node.js, TypeScript)</li>
 <li>AWS cloud architecture and scalable delivery</li>
 <li>CI/CD pipelines, GitOps, Docker &amp; Kubernetes</li>
-<li>Observability, security and server hardening</li>
-<li>Technical audits and team enablement</li>
+<li>Observability, security and Ubuntu / VPS hardening</li>
+<li>Technical audits and team enablement (Cameroon &amp; remote)</li>
 </ul>
 <p><a href="${SITE_URL}/contact">Get in touch</a></p>`,
   },
@@ -116,13 +120,15 @@ export const STATIC_PAGES: StaticPage[] = [
     path: '/projects',
     titleFr: 'Projets | Barthez Kenwou',
     titleEn: 'Projects | Barthez Kenwou',
-    descriptionFr: 'Études de cas : SaaS, PWA, ERP, DevSecOps, observabilité et plateformes cloud.',
-    descriptionEn: 'Case studies: SaaS, PWA, ERP, DevSecOps, observability and cloud platforms.',
+    descriptionFr:
+      'Études de cas Full Stack & DevOps : SaaS, ERP Odoo, AWS, Kubernetes, DevSecOps, observabilité — preuves de production.',
+    descriptionEn:
+      'Full Stack & DevOps case studies: SaaS, Odoo ERP, AWS, Kubernetes, DevSecOps, observability — production proof.',
     priority: 0.9,
     changefreq: 'weekly',
     bodyFr: `<h1>Projets</h1>
 <p>Sélection de réalisations Full Stack &amp; DevOps - ERP SaaS, PWA, plateformes cloud, sécurité et observabilité.</p>
-<p><a href="${SITE_URL}/">Retour à l’accueil</a></p>`,
+<p><a href="${SITE_URL}/">Retour à l'accueil</a></p>`,
     bodyEn: `<h1>Projects</h1>
 <p>Selected Full Stack &amp; DevOps work - SaaS ERP, PWAs, cloud platforms, security and observability.</p>
 <p><a href="${SITE_URL}/">Back home</a></p>`,
@@ -132,9 +138,9 @@ export const STATIC_PAGES: StaticPage[] = [
     titleFr: 'Compétences | Barthez Kenwou',
     titleEn: 'Skills | Barthez Kenwou',
     descriptionFr:
-      'Stack technique : React, TypeScript, Node.js, AWS, Docker, Kubernetes, Terraform, CI/CD, observabilité.',
+      'Stack : React, TypeScript, Node.js, AWS, Docker, Kubernetes, Terraform, GitHub Actions, Trivy, Prometheus, Grafana.',
     descriptionEn:
-      'Tech stack: React, TypeScript, Node.js, AWS, Docker, Kubernetes, Terraform, CI/CD, observability.',
+      'Stack: React, TypeScript, Node.js, AWS, Docker, Kubernetes, Terraform, GitHub Actions, Trivy, Prometheus, Grafana.',
     priority: 0.8,
     changefreq: 'monthly',
     bodyFr: `<h1>Compétences</h1>
@@ -149,9 +155,9 @@ export const STATIC_PAGES: StaticPage[] = [
     titleFr: 'Blog | Barthez Kenwou',
     titleEn: 'Blog | Barthez Kenwou',
     descriptionFr:
-      'Tutoriels DevOps, AWS, Node.js, React, Kubernetes, sécurité et bonnes pratiques production.',
+      'Tutoriels DevOps, AWS, Node.js, React, Kubernetes, sécurisation Linux, CI/CD et bonnes pratiques production.',
     descriptionEn:
-      'Tutorials on DevOps, AWS, Node.js, React, Kubernetes, security and production best practices.',
+      'Tutorials on DevOps, AWS, Node.js, React, Kubernetes, Linux hardening, CI/CD and production best practices.',
     priority: 0.8,
     changefreq: 'weekly',
     bodyFr: `<h1>Blog technique</h1>
@@ -164,16 +170,16 @@ export const STATIC_PAGES: StaticPage[] = [
     titleFr: 'CV | Barthez Kenwou',
     titleEn: 'Resume | Barthez Kenwou',
     descriptionFr:
-      'Curriculum vitae de Barthez Kenwou - expériences, formations et compétences Full Stack &amp; DevOps.',
+      'CV de Barthez Kenwou — développeur Full Stack & DevOps AWS à Yaoundé. Expériences, formations, compétences.',
     descriptionEn:
-      'Resume of Barthez Kenwou - experience, education and Full Stack &amp; DevOps skills.',
+      'Resume of Barthez Kenwou — Full Stack & AWS DevOps engineer in Yaoundé. Experience, education, skills.',
     priority: 0.8,
     changefreq: 'monthly',
     bodyFr: `<h1>Curriculum vitae</h1>
-<p>Parcours professionnel, formations et compétences de Barthez Kenwou.</p>
+<p>Parcours professionnel, formations et compétences de Barthez Kenwou (Yaoundé / remote).</p>
 <p><a href="${SITE_URL}/contact">Me recruter</a> · <a href="${SOCIAL.linkedin}">LinkedIn</a></p>`,
     bodyEn: `<h1>Resume</h1>
-<p>Professional background, education and skills of Barthez Kenwou.</p>
+<p>Professional background, education and skills of Barthez Kenwou (Yaoundé / remote).</p>
 <p><a href="${SITE_URL}/contact">Hire me</a> · <a href="${SOCIAL.linkedin}">LinkedIn</a></p>`,
   },
   {
@@ -181,9 +187,9 @@ export const STATIC_PAGES: StaticPage[] = [
     titleFr: 'Contact | Barthez Kenwou',
     titleEn: 'Contact | Barthez Kenwou',
     descriptionFr:
-      'Contactez Barthez Kenwou pour un projet web, DevOps ou cloud AWS. Email, WhatsApp, LinkedIn.',
+      'Contactez Barthez Kenwou (Yaoundé) pour un projet web, DevOps, AWS ou hardening VPS. Email, WhatsApp, LinkedIn.',
     descriptionEn:
-      'Contact Barthez Kenwou for web, DevOps or AWS cloud projects. Email, WhatsApp, LinkedIn.',
+      'Contact Barthez Kenwou (Yaoundé) for web, DevOps, AWS or VPS hardening projects. Email, WhatsApp, LinkedIn.',
     priority: 0.7,
     changefreq: 'monthly',
     bodyFr: `<h1>Contact</h1>
@@ -193,7 +199,7 @@ export const STATIC_PAGES: StaticPage[] = [
 <li>WhatsApp : <a href="${SOCIAL.whatsapp}">Écrire sur WhatsApp</a></li>
 <li>LinkedIn : <a href="${SOCIAL.linkedin}">barthez-kenwou</a></li>
 <li>GitHub : <a href="${SOCIAL.github}">barthez-kenwou</a></li>
-<li>Localisation : ${AUTHOR_LOCATION}</li>
+<li>Localisation : ${AUTHOR_LOCATION} — disponible remote Afrique francophone &amp; international</li>
 </ul>`,
     bodyEn: `<h1>Contact</h1>
 <ul>
@@ -202,7 +208,7 @@ export const STATIC_PAGES: StaticPage[] = [
 <li>WhatsApp: <a href="${SOCIAL.whatsapp}">Chat on WhatsApp</a></li>
 <li>LinkedIn: <a href="${SOCIAL.linkedin}">barthez-kenwou</a></li>
 <li>GitHub: <a href="${SOCIAL.github}">barthez-kenwou</a></li>
-<li>Location: ${AUTHOR_LOCATION}</li>
+<li>Location: ${AUTHOR_LOCATION} — available remote (Francophone Africa &amp; international)</li>
 </ul>`,
   },
 ];

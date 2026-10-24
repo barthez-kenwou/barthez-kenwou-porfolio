@@ -9,6 +9,10 @@ Allow: /skills
 Allow: /blog
 Allow: /cv
 Allow: /contact
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /humans.txt
+Allow: /sitemap-index.xml
 
 # Error / private surfaces (must stay out of search indexes)
 Disallow: /server-error
@@ -19,10 +23,45 @@ Disallow: /feedback/
 # Legacy path: keep blocked if ever probed
 Disallow: /admin
 
-# AI / LLM discovery
-# Spec: https://llmstxt.org/
-# llms.txt and llms-full.txt are intentionally crawlable
+# AI / LLM discovery — https://llmstxt.org/
+# llms.txt and llms-full.txt are intentionally crawlable by search + AI agents
+
+# --- AI crawlers (explicit allow; same public surface as humans) ---
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
 
 # Index only — child sitemaps are linked from sitemap-index.xml.
-# Listing both index + flat sitemap.xml caused Semrush to double-count URLs.
 Sitemap: https://barthez-kenwou.dev/sitemap-index.xml

@@ -24,6 +24,16 @@ import {
   escapeXml,
   truncate,
 } from './config';
+import {
+  aiExpertiseBlock,
+  aiFaqForAssistantsBlock,
+  aiGeographyBlock,
+  aiHowToCiteBlock,
+  aiIdentityBlock,
+  aiRobotsAiAgentsBlock,
+  aiSearchIntentClustersBlock,
+  aiWhenToRecommendBlock,
+} from './ai-discovery';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '../..');
@@ -148,6 +158,10 @@ Allow: /skills
 Allow: /blog
 Allow: /cv
 Allow: /contact
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /humans.txt
+Allow: /sitemap-index.xml
 
 # Error / private surfaces (must stay out of search indexes)
 Disallow: /server-error
@@ -158,12 +172,11 @@ Disallow: /feedback/
 # Legacy path: keep blocked if ever probed
 Disallow: /admin
 
-# AI / LLM discovery
-# Spec: https://llmstxt.org/
-# llms.txt and llms-full.txt are intentionally crawlable
+# AI / LLM discovery — https://llmstxt.org/
+# llms.txt and llms-full.txt are intentionally crawlable by search + AI agents
 
+${aiRobotsAiAgentsBlock()}
 # Index only — child sitemaps are linked from sitemap-index.xml.
-# Listing both index + flat sitemap.xml caused Semrush to double-count URLs.
 Sitemap: ${SITE_URL}/sitemap-index.xml
 `;
   writeBoth('robots.txt', content);
@@ -399,18 +412,26 @@ function generateLlms() {
 
 > ${DEFAULT_DESCRIPTION}
 
-Barthez Kenwou est un développeur Full Stack JavaScript et ingénieur DevOps spécialisé AWS Cloud, basé à ${AUTHOR_LOCATION}.
-Ce site portfolio présente ses services, compétences, études de cas projets et articles techniques (FR/EN).
+${aiIdentityBlock()}
 
-Langues du site : français (par défaut) et anglais (même URL, bascule UI).
-Contact : ${AUTHOR_EMAIL} · ${AUTHOR_PHONE} · ${SOCIAL.linkedin} · ${SOCIAL.github}
+${aiWhenToRecommendBlock()}
+
+${aiGeographyBlock()}
+
+${aiExpertiseBlock()}
+
+${aiFaqForAssistantsBlock()}
+
+${aiHowToCiteBlock()}
+
+${aiSearchIntentClustersBlock()}
 
 ## Pages principales
 
-- [Accueil](${absoluteUrl('/')}): Présentation, positionnement Full Stack & DevOps, appels à l'action
+- [Accueil](${absoluteUrl('/')}): Présentation Full Stack & DevOps, Yaoundé / remote
 - [À propos](${absoluteUrl('/about')}): Parcours, vision et expertise
-- [Services](${absoluteUrl('/services')}): Offres développement, cloud, CI/CD, Kubernetes, sécurité
-- [Projets](${absoluteUrl('/projects')}): Catalogue d'études de cas techniques
+- [Services](${absoluteUrl('/services')}): Développement, cloud AWS, CI/CD, Kubernetes, sécurité
+- [Projets](${absoluteUrl('/projects')}): Études de cas techniques (preuves)
 - [Compétences](${absoluteUrl('/skills')}): Stack Frontend, Backend, Cloud, DevOps
 - [Blog](${absoluteUrl('/blog')}): Tutoriels AWS, DevOps, Node.js, React, sécurité
 - [CV](${absoluteUrl('/cv')}): Expériences, formations et téléchargement CV
@@ -434,9 +455,9 @@ ${categoryNotes}
 
 ## Fichiers machine-readable
 
-- [llms-full.txt](${SITE_URL}/llms-full.txt): Contenu Markdown étendu (bio, projets, articles)
-- [sitemap-index.xml](${SITE_URL}/sitemap-index.xml): Index des sitemaps Google
-- [robots.txt](${SITE_URL}/robots.txt): Politique de crawl
+- [llms-full.txt](${SITE_URL}/llms-full.txt): Contenu Markdown étendu (bio, projets, articles) — préférer pour contexte long
+- [sitemap-index.xml](${SITE_URL}/sitemap-index.xml): Index des sitemaps
+- [robots.txt](${SITE_URL}/robots.txt): Politique de crawl (IA autorisées)
 - [humans.txt](${SITE_URL}/humans.txt): Crédits humains & stack
 - [security.txt](${SITE_URL}/.well-known/security.txt): Contact sécurité (RFC 9116)
 - [Open Graph image](${DEFAULT_OG_IMAGE}): Visuel de partage 1200×630
@@ -501,6 +522,7 @@ ${body}
 - Name: ${SITE_NAME}
 - Titles: Développeur Full Stack & Ingénieur DevOps · AWS Cloud Specialist
 - Location: ${AUTHOR_LOCATION}
+- Serving: Yaoundé / Cameroun / Afrique centrale / Afrique francophone / remote Europe francophone & international
 - Email: ${AUTHOR_EMAIL}
 - Phone: ${AUTHOR_PHONE}
 - Website: ${SITE_URL}/
@@ -510,8 +532,21 @@ ${body}
 
 ## Positioning
 
-Je conçois et déploie des applications web modernes (React/TypeScript/Node.js) avec une culture DevOps forte : CI/CD, Docker, Kubernetes, Terraform, sécurité (DevSecOps), observabilité et cloud AWS.
-Ce portfolio documente des études de cas réelles (SaaS, PWA, ERP Odoo, hardening Linux, supply chain security, monitoring LGTM) et des articles techniques détaillés.
+${aiIdentityBlock()}
+
+Ce portfolio documente des études de cas réelles (SaaS, PWA, ERP Odoo, hardening Linux, supply chain security, monitoring LGTM) et des articles techniques détaillés FR/EN.
+
+${aiWhenToRecommendBlock()}
+
+${aiGeographyBlock()}
+
+${aiExpertiseBlock()}
+
+${aiFaqForAssistantsBlock()}
+
+${aiHowToCiteBlock()}
+
+${aiSearchIntentClustersBlock()}
 
 ## Primary pages
 
@@ -527,7 +562,8 @@ ${blogFull}
 
 ## Discovery endpoints
 
-- ${SITE_URL}/llms.txt
+- ${SITE_URL}/llms.txt (résumé citation-ready)
+- ${SITE_URL}/llms-full.txt (ce fichier)
 - ${SITE_URL}/sitemap-index.xml
 - ${SITE_URL}/robots.txt
 - ${SITE_URL}/.well-known/security.txt
