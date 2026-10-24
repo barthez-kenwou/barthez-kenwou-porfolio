@@ -1,0 +1,21 @@
+# Gitleaks config — extend defaults, allow only known public client-side tokens.
+# Spec: https://github.com/gitleaks/gitleaks#configuration
+
+title = "barthez-kenwou-porfolio"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Public marketing / analytics tokens that must live in HTML (not server secrets)"
+paths = [
+  '''(^|/)index\.html$''',
+]
+regexes = [
+  # Ahrefs Web Analytics data-key (browser-side, designed to be public)
+  '''analytics\.ahrefs\.com/analytics\.js["']?\s+data-key=['"][^'"]+['"]''',
+  # Facebook Pixel ID in noscript/img (public pixel id)
+  '''facebook\.com/tr\?id=\d+''',
+  # Bing Webmaster ownership meta (public site verification token)
+  '''name=["']msvalidate\.01["']\s+content=["'][A-F0-9]+["']''',
+]
