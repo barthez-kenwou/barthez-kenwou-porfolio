@@ -4,7 +4,10 @@ import { Hash } from 'lucide-react';
 import { toast } from 'sonner';
 import { CodeBlock } from '@/shared/ui/code-block';
 import { headingSlug } from '@/shared/lib/heading-slug';
+import { cn } from '@/shared/lib/utils';
 import { MarkdownFigure } from './MarkdownFigure';
+import { BlogMermaid } from './BlogMermaid';
+import { BlogYoutubeEmbed, isBareYoutubeUrl } from './BlogYoutubeEmbed';
 
 /** Same prose shell as the public article page — keep preview and publish identical. */
 export const BLOG_PROSE_CLASSNAME = `prose prose-sm min-w-0 max-w-full dark:prose-invert md:prose-base
@@ -145,6 +148,10 @@ export function createBlogMarkdownComponents({
 
       const textContent = kids.join('');
 
+      if (isBareYoutubeUrl(textContent)) {
+        return <BlogYoutubeEmbed url={textContent.trim()} />;
+      }
+
       if (textContent.startsWith('Astuce') || textContent.startsWith('Pro tip')) {
         return <Callout label={isFr ? 'Astuce' : 'Tip'}>{children}</Callout>;
       }
@@ -207,12 +214,17 @@ export function createBlogMarkdownComponents({
     code: ({ className, children, ...props }) => {
       const text = String(children).replace(/\n$/, '');
       const match = /language-(\w+)/.exec(className || '');
+      const lang = match?.[1] || '';
       const isBlock = Boolean(match) || text.includes('\n');
+
+      if (isBlock && lang === 'mermaid') {
+        return <BlogMermaid definition={text} />;
+      }
 
       if (isBlock) {
         return (
           <CodeBlock
-            language={match?.[1] || ''}
+            language={lang}
             value={text}
             className="my-7 max-w-full border-border"
           />
@@ -228,19 +240,30 @@ export function createBlogMarkdownComponents({
         </code>
       );
     },
-    li: ({ children }) => (
-      <li className="mb-1.5 flex min-w-0 items-start gap-2.5">
-        <span
-          className="mt-[0.55em] size-1 shrink-0 rounded-full bg-foreground/40"
-          aria-hidden
-        />
-        <span className="min-w-0 flex-1 text-sm leading-relaxed break-words text-foreground/90 [overflow-wrap:anywhere]">
-          {children}
-        </span>
-      </li>
-    ),
+    li: ({ children, className }) => {
+      const isTask = typeof className === 'string' && className.includes('task-list-item');
+      return (
+        <li
+          className={cn(
+            'mb-1.5 flex min-w-0 items-start gap-2.5',
+            isTask && 'list-none',
+            className,
+          )}
+        >
+          {!isTask ? (
+            <span
+              className="mt-[0.55em] size-1 shrink-0 rounded-full bg-foreground/40"
+              aria-hidden
+            />
+          ) : null}
+          <span className="min-w-0 flex-1 text-sm leading-relaxed break-words text-foreground/90 [overflow-wrap:anywhere]">
+            {children}
+          </span>
+        </li>
+      );
+    },
     table: ({ children }) => (
-      <div className="my-6 max-w-full overflow-x-auto border border-border">
+      <div className="my-6 max-w-full overflow-x-auto border border-border [&_img]:my-0 [&_img]:inline-block [&_img]:max-h-48 [&_img]:rounded-sm">
         <table className="w-full min-w-0 border-collapse text-left text-sm">{children}</table>
       </div>
     ),

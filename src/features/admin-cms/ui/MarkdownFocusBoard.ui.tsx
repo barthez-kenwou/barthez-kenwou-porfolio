@@ -6,25 +6,18 @@ import {
   Bold,
   ChevronDown,
   Code2,
-  Columns2,
-  CopyPlus,
   Eye,
-  FileImage,
   GripVertical,
   Heading2,
   ImagePlus,
-  Images,
   Italic,
-  Languages,
   Link2,
   List,
   Loader2,
   Maximize2,
   Minimize2,
   PenLine,
-  Rows2,
   Save,
-  Table2,
   X,
 } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
@@ -39,6 +32,11 @@ import {
 } from '@/shared/ui/dropdown-menu';
 import { cn } from '@/shared/lib/utils';
 import { BlogMarkdown } from '@/shared/ui/markdown/BlogMarkdown';
+import {
+  restoreTextareaCaret,
+  type TextareaCaret,
+} from '../lib/textareaCaret';
+import { MarkdownFocusSecondaryDock } from './MarkdownFocusSecondaryDock.ui';
 
 /** Sidebar-like cadence: soft ease, ~500ms open / slightly snappier close */
 const EASE_FOCUS = [0.22, 1, 0.36, 1] as const;
@@ -52,10 +50,21 @@ export type FocusToolbarAction =
   | 'bold'
   | 'italic'
   | 'code'
+  | 'codeBlock'
   | 'link'
   | 'list'
+  | 'ol'
+  | 'checklist'
+  | 'quote'
+  | 'hr'
+  | 'strike'
   | 'table'
-  | 'imageUrl';
+  | 'imageUrl'
+  | 'youtube'
+  | 'gist'
+  | 'mermaid'
+  | 'imageGrid2'
+  | 'imageGrid3';
 
 type DockOrientation = 'horizontal' | 'vertical';
 
@@ -121,6 +130,10 @@ export type MarkdownFocusBoardProps = {
   /** When true, Save is visually emphasized (unsaved edits). */
   isDirty?: boolean;
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
+  /** Persist selection/scroll before toolbar steals focus. */
+  onRememberCaret?: () => void;
+  /** Live caret when focused, else last remembered position. */
+  readCaret?: () => TextareaCaret;
   fileInput: React.ReactNode;
 };
 
@@ -150,6 +163,8 @@ export function MarkdownFocusBoard({
   saveDisabled = false,
   isDirty = false,
   textareaRef,
+  onRememberCaret,
+  readCaret,
   fileInput,
 }: MarkdownFocusBoardProps) {
   const reduceMotion = useReducedMotion();
@@ -186,9 +201,26 @@ export function MarkdownFocusBoard({
         onClose();
         return;
       }
-      if (onSave && (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') {
+      const mod = e.metaKey || e.ctrlKey;
+      if (onSave && mod && e.key.toLowerCase() === 's') {
         e.preventDefault();
         if (!saveBusy) void onSave();
+        return;
+      }
+      if (view !== 'write') return;
+      if (mod && e.key.toLowerCase() === 'b') {
+        e.preventDefault();
+        onSnippet('bold');
+        return;
+      }
+      if (mod && e.key.toLowerCase() === 'i') {
+        e.preventDefault();
+        onSnippet('italic');
+        return;
+      }
+      if (mod && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        onSnippet('link');
       }
     };
     window.addEventListener('keydown', onKey);
@@ -196,7 +228,43 @@ export function MarkdownFocusBoard({
       document.body.style.overflow = prev;
       window.removeEventListener('keydown', onKey);
     };
-  }, [open, onClose, onSave, saveBusy]);
+  }, [open, onClose, onSave, saveBusy, onSnippet, view]);
+
+  const resolveCaret = useCallback((): TextareaCaret => {
+    if (readCaret) return readCaret();
+    const el = textareaRef.current;
+    if (!el) return { start: value.length, end: value.length, scrollTop: 0 };
+    return {
+      start: el.selectionStart,
+      end: el.selectionEnd,
+      scrollTop: el.scrollTop,
+    };
+  }, [readCaret, textareaRef, value.length]);
+
+  const insertAtCursor = useCallback(
+    (text: string) => {
+      const caret = resolveCaret();
+      const next = value.slice(0, caret.start) + text + value.slice(caret.end);
+      onChange(next);
+      const el = textareaRef.current;
+      const cursor = caret.start + text.length;
+      if (el) restoreTextareaCaret(el, cursor, cursor, caret.scrollTop);
+    },
+    [onChange, resolveCaret, textareaRef, value],
+  );
+
+  const jumpToHeading = useCallback(
+    (index: number) => {
+      const el = textareaRef.current;
+      if (!el) return;
+      const style = window.getComputedStyle(el);
+      const lineHeight = parseFloat(style.lineHeight) || 24;
+      const line = value.slice(0, index).split('\n').length;
+      const scrollTop = Math.max(0, (line - 3) * lineHeight);
+      restoreTextareaCaret(el, index, index, scrollTop);
+    },
+    [textareaRef, value],
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -205,7 +273,10 @@ export function MarkdownFocusBoard({
 
   useEffect(() => {
     if (!open || view !== 'write') return;
-    const t = window.setTimeout(() => textareaRef.current?.focus(), reduceMotion ? 0 : 420);
+    const t = window.setTimeout(
+      () => textareaRef.current?.focus({ preventScroll: true }),
+      reduceMotion ? 0 : 420,
+    );
     return () => window.clearTimeout(t);
   }, [open, view, textareaRef, reduceMotion]);
 
@@ -267,7 +338,6 @@ export function MarkdownFocusBoard({
     { key: 'code' as const, icon: Code2, tip: isFr ? 'Code' : 'Code' },
     { key: 'link' as const, icon: Link2, tip: isFr ? 'Lien' : 'Link' },
     { key: 'list' as const, icon: List, tip: isFr ? 'Liste' : 'List' },
-    { key: 'table' as const, icon: Table2, tip: isFr ? 'Tableau' : 'Table' },
   ];
 
   const board = (
@@ -322,7 +392,7 @@ export function MarkdownFocusBoard({
 
           {/* Top bar — slides in like chrome revealing */}
           <motion.div
-            className="relative z-10 flex items-center justify-end gap-1.5 px-4 py-3 sm:px-6"
+            className="relative z-10 flex shrink-0 items-center justify-end gap-1.5 px-4 py-2 sm:px-6"
             initial={reduceMotion ? false : { opacity: 0, y: -16 }}
             animate={{
               opacity: 1,
@@ -407,7 +477,7 @@ export function MarkdownFocusBoard({
 
           {/* Writing surface — gentle rise, sidebar cadence */}
           <motion.div
-            className="relative z-10 min-h-0 flex-1 px-3 pb-6 sm:px-8 md:px-12"
+            className="relative z-10 min-h-0 flex-1 px-3 pb-12 sm:px-8 sm:pb-12 md:px-12"
             initial={reduceMotion ? false : { opacity: 0, y: 22 }}
             animate={{
               opacity: 1,
@@ -442,6 +512,10 @@ export function MarkdownFocusBoard({
                     ref={textareaRef}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
+                    onSelect={onRememberCaret}
+                    onKeyUp={onRememberCaret}
+                    onMouseUp={onRememberCaret}
+                    onBlur={onRememberCaret}
                     className={cn(
                       'h-full min-h-0 w-full resize-none rounded-md border border-white/10',
                       'bg-background/50 font-mono text-[15px] leading-relaxed shadow-none',
@@ -478,6 +552,24 @@ export function MarkdownFocusBoard({
             </AnimatePresence>
           </motion.div>
 
+          <MarkdownFocusSecondaryDock
+            isFr={isFr}
+            value={value}
+            writable={view === 'write'}
+            enableImages={enableImages}
+            localePair={localePair}
+            mirrorMedia={mirrorMedia}
+            translating={translating}
+            dockOrientation={orientation}
+            onSnippet={onSnippet}
+            onJumpToHeading={jumpToHeading}
+            onInsertEmoji={insertAtCursor}
+            onSyncImages={onSyncImages}
+            onToggleMirror={onToggleMirror}
+            onTranslate={onTranslate}
+            onToggleDockOrientation={toggleOrientation}
+          />
+
           {fileInput}
           </motion.div>
         ) : null}
@@ -491,7 +583,7 @@ export function MarkdownFocusBoard({
             ref={dockRef}
             className={cn(
               'pointer-events-auto fixed z-[400] touch-none select-none',
-              'rounded-lg border border-white/15 bg-background/80 p-1.5 shadow-[0_12px_40px_-16px_rgba(0,0,0,0.55)]',
+              'rounded-lg border border-white/15 bg-background/80 p-1.5 shadow-none',
               'backdrop-blur-xl backdrop-saturate-150',
             )}
             style={{ left: pos.x, top: pos.y }}
@@ -538,175 +630,113 @@ export function MarkdownFocusBoard({
             <GripVertical className="size-3.5 opacity-80" />
           </button>
 
-          <div className="inline-flex items-stretch">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              className={cn(gadgetBtn, 'rounded-r-none border-r-0')}
-              onClick={() => onSnippet('h2')}
-              title="H2"
-            >
-              <Heading2 className="size-3.5" />
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+          {view === 'write' ? (
+            <>
+              <div className="inline-flex items-stretch">
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon-sm"
-                  className={cn(gadgetBtn, 'w-6 rounded-l-none px-0')}
-                  title={isFr ? 'Titres H3–H6' : 'Headings H3–H6'}
+                  className={cn(gadgetBtn, 'rounded-r-none border-r-0')}
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => onSnippet('h2')}
+                  title="H2"
                 >
-                  <ChevronDown className="size-3 opacity-70" />
+                  <Heading2 className="size-3.5" />
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="z-[450] min-w-[7.5rem]">
-                <DropdownMenuLabel className="text-[10px] uppercase tracking-wide">
-                  {isFr ? 'Titre' : 'Heading'}
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {EXTRA_HEADINGS.map(({ key, label }) => (
-                  <DropdownMenuItem
-                    key={key}
-                    className="cursor-pointer text-xs font-medium"
-                    onSelect={() => onSnippet(key)}
-                  >
-                    {label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon-sm"
+                      className={cn(gadgetBtn, 'w-6 rounded-l-none px-0')}
+                      title={isFr ? 'Titres H3–H6' : 'Headings H3–H6'}
+                      onMouseDown={() => onRememberCaret?.()}
+                    >
+                      <ChevronDown className="size-3 opacity-70" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="z-[450] min-w-[7.5rem]">
+                    <DropdownMenuLabel className="text-[10px] uppercase tracking-wide">
+                      {isFr ? 'Titre' : 'Heading'}
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {EXTRA_HEADINGS.map(({ key, label }) => (
+                      <DropdownMenuItem
+                        key={key}
+                        className="cursor-pointer text-xs font-medium"
+                        onSelect={() => onSnippet(key)}
+                      >
+                        {label}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
 
-          {formatItems.map(({ key, icon: Icon, tip }) => (
-            <Button
-              key={key}
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              className={gadgetBtn}
-              onClick={() => onSnippet(key)}
-              title={tip}
-              aria-label={tip}
-            >
-              <Icon className="size-3.5" />
-            </Button>
-          ))}
+              {formatItems.map(({ key, icon: Icon, tip }) => (
+                <Button
+                  key={key}
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  className={gadgetBtn}
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => onSnippet(key)}
+                  title={tip}
+                  aria-label={tip}
+                >
+                  <Icon className="size-3.5" />
+                </Button>
+              ))}
 
-          {enableImages ? (
-            <>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-sm"
-                className={gadgetBtn}
-                disabled={uploading}
-                onClick={onPickImage}
-                title={isFr ? 'Insérer une image' : 'Insert image'}
-              >
-                {uploading ? (
-                  <Loader2 className="size-3.5 animate-spin" />
-                ) : (
-                  <ImagePlus className="size-3.5" />
-                )}
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-sm"
-                className={gadgetBtn}
-                onClick={() => onSnippet('imageUrl')}
-                title={isFr ? 'Image par URL' : 'Image from URL'}
-              >
-                <FileImage className="size-3.5" />
-              </Button>
+              {enableImages ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  className={gadgetBtn}
+                  disabled={uploading}
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={onPickImage}
+                  title={isFr ? 'Insérer une image' : 'Insert image'}
+                >
+                  {uploading ? (
+                    <Loader2 className="size-3.5 animate-spin" />
+                  ) : (
+                    <ImagePlus className="size-3.5" />
+                  )}
+                </Button>
+              ) : null}
             </>
           ) : null}
 
-          {localePair ? (
-            <>
-              {onSwitchLocale ? (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  className={cn(
-                    gadgetBtn,
-                    'min-w-8 gap-0.5 px-1.5 text-[10px] font-semibold tracking-wide',
-                  )}
-                  onClick={onSwitchLocale}
-                  title={
-                    isFr
-                      ? `Éditer la version ${localePair.siblingLabel}`
-                      : `Edit ${localePair.siblingLabel} version`
-                  }
-                  aria-label={
-                    isFr
-                      ? `Passer à l’édition ${localePair.siblingLabel}`
-                      : `Switch to ${localePair.siblingLabel} editing`
-                  }
-                >
-                  <ArrowLeftRight className="size-3 opacity-80" />
-                  <span>{localePair.siblingLabel}</span>
-                </Button>
-              ) : null}
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-sm"
-                className={gadgetBtn}
-                onClick={onSyncImages}
-                title={
-                  isFr
-                    ? `Aligner images → ${localePair.siblingLabel}`
-                    : `Align images → ${localePair.siblingLabel}`
-                }
-              >
-                <Images className="size-3.5" />
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-sm"
-                className={cn(
-                  gadgetBtn,
-                  mirrorMedia && 'border-primary/40 bg-primary/15 text-primary',
-                )}
-                aria-pressed={mirrorMedia}
-                onClick={onToggleMirror}
-                title={
-                  mirrorMedia
-                    ? isFr
-                      ? `Miroir ON → ${localePair.siblingLabel}`
-                      : `Mirror ON → ${localePair.siblingLabel}`
-                    : isFr
-                      ? 'Miroir OFF'
-                      : 'Mirror OFF'
-                }
-              >
-                <CopyPlus className="size-3.5" />
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-sm"
-                className={gadgetBtn}
-                disabled={translating || !value.trim()}
-                onClick={onTranslate}
-                title={
-                  isFr
-                    ? `Traduire → ${localePair.siblingLabel}`
-                    : `Translate → ${localePair.siblingLabel}`
-                }
-              >
-                {translating ? (
-                  <Loader2 className="size-3.5 animate-spin" />
-                ) : (
-                  <Languages className="size-3.5" />
-                )}
-              </Button>
-            </>
+          {localePair && onSwitchLocale ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              className={cn(
+                gadgetBtn,
+                'min-w-8 gap-0.5 px-1.5 text-[10px] font-semibold tracking-wide',
+              )}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={onSwitchLocale}
+              title={
+                isFr
+                  ? `Éditer la version ${localePair.siblingLabel}`
+                  : `Edit ${localePair.siblingLabel} version`
+              }
+              aria-label={
+                isFr
+                  ? `Passer à l’édition ${localePair.siblingLabel}`
+                  : `Switch to ${localePair.siblingLabel} editing`
+              }
+            >
+              <ArrowLeftRight className="size-3 opacity-80" />
+              <span>{localePair.siblingLabel}</span>
+            </Button>
           ) : null}
 
           <div
@@ -721,6 +751,7 @@ export function MarkdownFocusBoard({
             variant="ghost"
             size="icon-sm"
             className={cn(gadgetBtn, view === 'preview' && 'border-primary/40 bg-primary/15 text-primary')}
+            onMouseDown={(e) => e.preventDefault()}
             onClick={() => setView((v) => (v === 'write' ? 'preview' : 'write'))}
             title={
               view === 'write'
@@ -735,29 +766,6 @@ export function MarkdownFocusBoard({
             {view === 'write' ? <Eye className="size-3.5" /> : <PenLine className="size-3.5" />}
           </Button>
 
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            className={gadgetBtn}
-            onClick={toggleOrientation}
-            title={
-              orientation === 'horizontal'
-                ? isFr
-                  ? 'Barre verticale'
-                  : 'Vertical toolbar'
-                : isFr
-                  ? 'Barre horizontale'
-                  : 'Horizontal toolbar'
-            }
-          >
-            {orientation === 'horizontal' ? (
-              <Columns2 className="size-3.5" />
-            ) : (
-              <Rows2 className="size-3.5" />
-            )}
-          </Button>
-
           {onSave ? (
             <Button
               type="button"
@@ -768,6 +776,7 @@ export function MarkdownFocusBoard({
                 isDirty && 'border-primary/40 bg-primary/15 text-primary',
               )}
               disabled={saveBusy}
+              onMouseDown={(e) => e.preventDefault()}
               onClick={runSave}
               title={isFr ? 'Enregistrer (⌘/Ctrl+S)' : 'Save (⌘/Ctrl+S)'}
               aria-label={isFr ? 'Enregistrer' : 'Save'}
@@ -785,6 +794,7 @@ export function MarkdownFocusBoard({
             variant="ghost"
             size="icon-sm"
             className={gadgetBtn}
+            onMouseDown={(e) => e.preventDefault()}
             onClick={onClose}
             title={isFr ? 'Quitter le focus' : 'Exit focus'}
           >

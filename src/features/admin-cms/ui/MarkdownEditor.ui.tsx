@@ -44,6 +44,11 @@ import {
   syncMissingImagesFromSource,
 } from '../lib/markdownImages';
 import {
+  readTextareaCaret,
+  restoreTextareaCaret,
+  type TextareaCaret,
+} from '../lib/textareaCaret';
+import {
   MarkdownFocusBoard,
   MarkdownFocusTrigger,
   type FocusToolbarAction,
@@ -94,8 +99,19 @@ const SNIPPETS: Record<string, Snippet> = {
   bold: { before: '**', after: '**', placeholder: 'bold' },
   italic: { before: '_', after: '_', placeholder: 'italic' },
   code: { before: '`', after: '`', placeholder: 'code' },
+  codeBlock: {
+    before: '```ts\n',
+    after: '\n```\n',
+    placeholder: '// code',
+    block: true,
+  },
   link: { before: '[', after: '](https://)', placeholder: 'label' },
   list: { before: '- ', placeholder: 'item', block: true },
+  ol: { before: '1. ', placeholder: 'item', block: true },
+  checklist: { before: '- [ ] ', placeholder: 'task', block: true },
+  quote: { before: '> ', placeholder: 'Quote', block: true },
+  hr: { before: '\n---\n\n', block: true },
+  strike: { before: '~~', after: '~~', placeholder: 'text' },
   table: {
     before: '| Column | Column |\n| --- | --- |\n| Cell | Cell |\n',
     block: true,
@@ -104,6 +120,33 @@ const SNIPPETS: Record<string, Snippet> = {
     before: '![',
     after: '](https://)',
     placeholder: 'caption',
+    block: true,
+  },
+  youtube: {
+    before: '',
+    after: '',
+    placeholder: 'https://www.youtube.com/watch?v=',
+    block: true,
+  },
+  gist: {
+    before: '[Gist](',
+    after: ')',
+    placeholder: 'https://gist.github.com/user/id',
+    block: true,
+  },
+  mermaid: {
+    before: '```mermaid\nflowchart LR\n  A[Start] --> B[Done]\n',
+    after: '```\n',
+    block: true,
+  },
+  imageGrid2: {
+    before:
+      '| | |\n| :---: | :---: |\n| ![left](https://) | ![right](https://) |\n',
+    block: true,
+  },
+  imageGrid3: {
+    before:
+      '| | | |\n| :---: | :---: | :---: |\n| ![a](https://) | ![b](https://) | ![c](https://) |\n',
     block: true,
   },
 };
@@ -174,6 +217,7 @@ export function MarkdownEditor({
   const language = useLanguageStore((s) => s.language);
   const isFr = language === 'fr';
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const caretRef = useRef<TextareaCaret>({ start: 0, end: 0, scrollTop: 0 });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [mode, setMode] = useState('write');
   const [uploading, setUploading] = useState(false);
@@ -205,13 +249,28 @@ export function MarkdownEditor({
     activeLanguageLabel?.toUpperCase() === 'EN' ? 'en' : 'fr';
   const targetLang: TranslateLang = sourceLang === 'fr' ? 'en' : 'fr';
 
-  const focusAt = useCallback((cursor: number) => {
-    requestAnimationFrame(() => {
-      const target = textareaRef.current;
-      if (!target) return;
-      target.focus();
-      target.setSelectionRange(cursor, cursor);
-    });
+  const rememberCaret = useCallback(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+    caretRef.current = readTextareaCaret(el);
+  }, []);
+
+  const readCaretForEdit = useCallback(() => {
+    const el = textareaRef.current;
+    if (el && document.activeElement === el) {
+      const live = readTextareaCaret(el);
+      caretRef.current = live;
+      return live;
+    }
+    return caretRef.current;
+  }, []);
+
+  const focusAt = useCallback((cursor: number, scrollTop?: number) => {
+    const target = textareaRef.current;
+    if (!target) return;
+    const top = scrollTop ?? caretRef.current.scrollTop ?? target.scrollTop;
+    caretRef.current = { start: cursor, end: cursor, scrollTop: top };
+    restoreTextareaCaret(target, cursor, cursor, top);
   }, []);
 
   const mirrorImageToSibling = useCallback(
@@ -316,14 +375,14 @@ export function MarkdownEditor({
     (key: FocusToolbarAction | keyof typeof SNIPPETS) => {
       const snippet = SNIPPETS[key];
       if (!snippet) return;
-      const el = textareaRef.current;
-      const start = el?.selectionStart ?? activeValue.length;
-      const end = el?.selectionEnd ?? activeValue.length;
+      const caret = readCaretForEdit();
+      const start = caret.start;
+      const end = caret.end;
       const { next, cursor } = insertSnippet(activeValue, start, end, snippet);
       activeOnChange(next);
-      focusAt(cursor);
+      focusAt(cursor, caret.scrollTop);
     },
-    [activeOnChange, activeValue, focusAt],
+    [activeOnChange, activeValue, focusAt, readCaretForEdit],
   );
 
   const onImageFile = async (file: File | null) => {
@@ -335,22 +394,20 @@ export function MarkdownEditor({
     setUploading(true);
     try {
       const url = await uploadAdminImage(file, INLINE_COMPRESS);
-      const el = textareaRef.current;
-      const start = el?.selectionStart ?? activeValue.length;
-      const end = el?.selectionEnd ?? activeValue.length;
+      const caret = readCaretForEdit();
       const caption =
         file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').trim() ||
         (isFr ? 'Image' : 'Image');
       const { next, cursor } = insertImageMarkdown(
         activeValue,
-        start,
-        end,
+        caret.start,
+        caret.end,
         url,
         caption,
       );
       activeOnChange(next);
-      focusAt(cursor);
-      const mirrored = mirrorImageToSibling(url, caption, start);
+      focusAt(cursor, caret.scrollTop);
+      const mirrored = mirrorImageToSibling(url, caption, caret.start);
       const here = activeLanguageLabel || languageLabel || 'FR';
       const there = otherLanguageLabel || localePair?.siblingLabel;
       toast.success(
@@ -458,6 +515,7 @@ export function MarkdownEditor({
                   type="button"
                   variant="outline"
                   size="icon-sm"
+                  onMouseDown={(e) => e.preventDefault()}
                   onClick={() => applySnippet('h2')}
                   aria-label="H2"
                   title="H2"
@@ -506,6 +564,7 @@ export function MarkdownEditor({
                   type="button"
                   variant="outline"
                   size="icon-sm"
+                  onMouseDown={(e) => e.preventDefault()}
                   onClick={() => applySnippet(key)}
                   aria-label={tip}
                   title={tip}
@@ -614,6 +673,10 @@ export function MarkdownEditor({
               ref={textareaRef}
               value={value}
               onChange={(e) => onChange(e.target.value)}
+              onSelect={rememberCaret}
+              onKeyUp={rememberCaret}
+              onMouseUp={rememberCaret}
+              onBlur={rememberCaret}
               rows={rows}
               className="min-h-[220px] resize-y font-mono text-sm leading-relaxed"
               placeholder={isFr ? 'Rédigez en Markdown…' : 'Write Markdown…'}
@@ -689,7 +752,9 @@ export function MarkdownEditor({
           localePair
             ? () => {
                 setFocusEditTarget((t) => (t === 'self' ? 'sibling' : 'self'));
-                requestAnimationFrame(() => textareaRef.current?.focus());
+                requestAnimationFrame(() =>
+                  textareaRef.current?.focus({ preventScroll: true }),
+                );
               }
             : undefined
         }
@@ -698,6 +763,8 @@ export function MarkdownEditor({
         saveDisabled={saveDisabled}
         isDirty={isDirty}
         textareaRef={textareaRef}
+        onRememberCaret={rememberCaret}
+        readCaret={readCaretForEdit}
         fileInput={null}
       />
     </div>

@@ -1,11 +1,24 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
+import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 import { cn } from '@/shared/lib/utils';
 import {
   BLOG_MARKDOWN_COMPONENTS,
   BLOG_PROSE_CLASSNAME,
 } from './blogMarkdownComponents';
+
+/** Allow only safe inline style spans (focus dock color / font wraps). */
+const sanitizeSchema = {
+  ...defaultSchema,
+  attributes: {
+    ...defaultSchema.attributes,
+    span: [...(defaultSchema.attributes?.span || []), ['style']],
+    mark: [...(defaultSchema.attributes?.mark || []), ['style']],
+  },
+  tagNames: [...(defaultSchema.tagNames || []), 'span', 'mark'],
+};
 
 export type BlogMarkdownProps = {
   content: string;
@@ -49,7 +62,11 @@ export const BlogMarkdown: React.FC<BlogMarkdownProps> = ({
 
   return (
     <div className={cn(BLOG_PROSE_CLASSNAME, className)}>
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
+        components={components}
+      >
         {content}
       </ReactMarkdown>
     </div>
