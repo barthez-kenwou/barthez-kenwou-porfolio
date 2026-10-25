@@ -1,6 +1,11 @@
 import { useAuth } from '@/app/providers/AuthProvider';
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
+import { ADMIN_LOGIN } from '@/shared/config/admin';
+import {
+  rememberAdminReturnPath,
+  toAdminReturnPath,
+} from '@/shared/config/adminReturnPath';
 import { LoadingPage } from '@/shared/ui/LoadingPage/LoadingPage';
 
 interface ProtectedRouteProps {
@@ -8,7 +13,10 @@ interface ProtectedRouteProps {
   requiredRoles?: string[];
 }
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRoles = [] }) => {
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  requiredRoles = [],
+}) => {
   const { isAuthenticated, user, loading } = useAuth();
   const location = useLocation();
 
@@ -17,11 +25,15 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requir
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/barthez-admin/login" replace state={{ from: location.pathname }} />;
+    const returnPath = toAdminReturnPath(location);
+    rememberAdminReturnPath(returnPath);
+    return <Navigate to={ADMIN_LOGIN} replace state={{ from: returnPath }} />;
   }
 
   if (requiredRoles.length > 0 && user && !requiredRoles.includes(user.role)) {
-    return <Navigate to="/barthez-admin/login" replace />;
+    const returnPath = toAdminReturnPath(location);
+    rememberAdminReturnPath(returnPath);
+    return <Navigate to={ADMIN_LOGIN} replace state={{ from: returnPath }} />;
   }
 
   return <>{children}</>;

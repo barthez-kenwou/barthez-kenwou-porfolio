@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,6 +9,11 @@ import { useAuth } from '@/app/providers/AuthProvider';
 import { loginSchema, type LoginSchema } from '@/features/admin-auth';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { ADMIN_BASE } from '@/shared/config/admin';
+import {
+  clearAdminReturnPath,
+  isSafeAdminReturnPath,
+  peekAdminReturnPath,
+} from '@/shared/config/adminReturnPath';
 import { FloatingFillField } from '@/entities/contact/ui/FloatingFillField.ui';
 import { LanguageToggle } from '@/shared/ui/LanguageToggle';
 import { ThemeToggle } from '@/shared/ui/ThemeToggle';
@@ -16,6 +21,11 @@ import { Button } from '@/shared/ui/button';
 import { LoadingPage } from '@/shared/ui/LoadingPage/LoadingPage';
 
 type LocationState = { from?: string };
+
+function resolvePostAuthDestination(fromState?: string | null): string {
+  if (isSafeAdminReturnPath(fromState)) return fromState;
+  return peekAdminReturnPath() ?? ADMIN_BASE;
+}
 
 export function AdminLoginPage() {
   const { login, isAuthenticated, loading } = useAuth();
@@ -31,19 +41,27 @@ export function AdminLoginPage() {
     defaultValues: { email: '', password: '' },
   });
 
+  /** Peek only — clear storage after a successful auth so F5 on /login keeps the target. */
+  const postAuthDestination = useMemo(
+    () => resolvePostAuthDestination((location.state as LocationState | null)?.from),
+    // location.state is stable for this login visit
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
   if (loading) return <LoadingPage />;
-  if (isAuthenticated) return <Navigate to={ADMIN_BASE} replace />;
+  if (isAuthenticated) {
+    clearAdminReturnPath();
+    return <Navigate to={postAuthDestination} replace />;
+  }
 
   const onSubmit = async (values: LoginSchema) => {
     setSubmitting(true);
     try {
       await login(values.email, values.password);
       toast.success(fr ? 'Bienvenue' : 'Welcome back');
-      const from = (location.state as LocationState | null)?.from;
-      navigate(
-        from && from.startsWith(ADMIN_BASE) && !from.includes('/login') ? from : ADMIN_BASE,
-        { replace: true },
-      );
+      clearAdminReturnPath();
+      navigate(postAuthDestination, { replace: true });
     } catch (e) {
       toast.error(e instanceof Error ? e.message : fr ? 'Accès refusé' : 'Access denied');
     } finally {

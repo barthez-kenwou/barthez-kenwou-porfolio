@@ -1,22 +1,28 @@
+import { resolve } from 'path';
 import { defineConfig } from 'vitest/config';
-import tsconfigPaths from 'vite-tsconfig-paths';
 
+/**
+ * Unit tests live under `tests/unit/` (not colocated in `src/`).
+ * Browser E2E remains in `cypress/`.
+ */
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, './src'),
+    },
+  },
   test: {
-    environment: 'jsdom',
+    environment: 'node',
     globals: true,
-    setupFiles: [],
-    threads: false,
+    pool: 'forks',
+    include: ['tests/unit/**/*.{test,spec}.{ts,tsx}'],
     exclude: [
       '**/node_modules/**',
       '**/dist/**',
       '**/cypress/**',
-      // Broken under current Vitest/Vite SSR interop - re-enable after Image test rewrite
-      '**/Image/Image.test.tsx',
-      '**/shared/api/jwt.test.ts',
-      '**/shared/api/session-events.test.ts',
+      // Needs jsdom + component rewrite; keep out of the node unit pool for now
+      'tests/unit/shared/ui/Image/Image.test.tsx',
     ],
     passWithNoTests: true,
   },
-  plugins: [tsconfigPaths()],
 });

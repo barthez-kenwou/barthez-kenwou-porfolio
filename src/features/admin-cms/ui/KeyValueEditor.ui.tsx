@@ -5,6 +5,9 @@ import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { cn } from '@/shared/lib/utils';
+import { insertIntoList } from '../lib/listInsertPosition';
+import { useListInsertPosition } from '../hooks/useListInsertPosition';
+import { ListInsertPositionToggle } from './ListInsertPositionToggle.ui';
 
 export type KeyValueRecord = Record<string, string | number>;
 
@@ -54,6 +57,7 @@ function createRowId() {
 export function KeyValueEditor({ label, value, onChange, className }: KeyValueEditorProps) {
   const language = useLanguageStore((s) => s.language);
   const isFr = language === 'fr';
+  const { position } = useListInsertPosition();
   const [rows, setRows] = useState<Row[]>(() => rowsFromRecord(value));
 
   useEffect(() => {
@@ -88,17 +92,22 @@ export function KeyValueEditor({ label, value, onChange, className }: KeyValueEd
   };
 
   const addRow = () => {
-    commit([...rows, { id: createRowId(), key: '', value: '' }]);
+    commit(
+      insertIntoList(rows, { id: createRowId(), key: '', value: '' }, position),
+    );
   };
 
   return (
     <div className={cn('space-y-3', className)}>
       <div className="flex items-center justify-between gap-3">
         <Label className="text-foreground">{label}</Label>
-        <Button type="button" variant="outline" size="sm" onClick={addRow}>
-          <Plus className="size-3.5" aria-hidden />
-          {isFr ? 'Ajouter' : 'Add'}
-        </Button>
+        <div className="flex items-center gap-1.5">
+          <ListInsertPositionToggle />
+          <Button type="button" variant="outline" size="sm" onClick={addRow}>
+            <Plus className="size-3.5" aria-hidden />
+            {isFr ? 'Ajouter' : 'Add'}
+          </Button>
+        </div>
       </div>
 
       {rows.length === 0 ? (

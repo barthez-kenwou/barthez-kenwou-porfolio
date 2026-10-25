@@ -118,8 +118,10 @@ class ApiClient {
   // axios typings vary across versions; keep the instance loosely typed.
   private readonly client: ReturnType<typeof axios.create>;
   private proactiveTimer: ReturnType<typeof setTimeout> | null = null;
+  private networkRetryTimer: ReturnType<typeof setTimeout> | null = null;
   private keepAliveStarted = false;
   private visibilityHandler: (() => void) | null = null;
+  private onlineHandler: (() => void) | null = null;
 
   constructor(baseURL: string) {
     this.client = axios.create({
@@ -224,13 +226,25 @@ class ApiClient {
       };
       document.addEventListener('visibilitychange', this.visibilityHandler);
     }
+
+    if (typeof window !== 'undefined') {
+      this.onlineHandler = () => {
+        void this.ensureFreshAccessToken();
+      };
+      window.addEventListener('online', this.onlineHandler);
+    }
   }
 
   stopSessionKeepAlive(): void {
     this.clearProactiveRefresh();
+    this.clearNetworkRetry();
     if (this.visibilityHandler && typeof document !== 'undefined') {
       document.removeEventListener('visibilitychange', this.visibilityHandler);
       this.visibilityHandler = null;
+    }
+    if (this.onlineHandler && typeof window !== 'undefined') {
+      window.removeEventListener('online', this.onlineHandler);
+      this.onlineHandler = null;
     }
     this.keepAliveStarted = false;
   }
@@ -252,6 +266,24 @@ class ApiClient {
     }
   }
 
+  private clearNetworkRetry(): void {
+    if (this.networkRetryTimer != null) {
+      clearTimeout(this.networkRetryTimer);
+      this.networkRetryTimer = null;
+    }
+  }
+
+  /** Soft retry after connectivity blips — must not kill the admin session. */
+  private scheduleNetworkRefreshRetry(): void {
+    if (this.networkRetryTimer != null) return;
+    this.networkRetryTimer = setTimeout(() => {
+      this.networkRetryTimer = null;
+      void this.refreshAccessToken({ announceFailure: true }).then((next) => {
+        if (next) this.scheduleProactiveRefresh(next);
+      });
+    }, 12_000);
+  }
+
   private scheduleProactiveRefresh(token: string): void {
     this.clearProactiveRefresh();
     const expMs = getJwtExpiryMs(token);
@@ -265,6 +297,11 @@ class ApiClient {
     }, delay);
   }
 
+  /**
+   * Refresh failures:
+   * - network / 5xx → keep session, retry later (offline blip must not log the user out)
+   * - 401/403 / empty token → real auth death → emit sessionEnded when requested
+   */
   private async refreshAccessToken(options?: {
     announceFailure?: boolean;
   }): Promise<string | null> {
@@ -286,6 +323,7 @@ class ApiClient {
               : null;
           const token = bodyToken || headerToken;
           if (token) {
+            this.clearNetworkRetry();
             setAccessToken(token);
             this.scheduleProactiveRefresh(token);
             return token;
@@ -294,7 +332,25 @@ class ApiClient {
           this.clearProactiveRefresh();
           if (options?.announceFailure) emitSessionEnded('refresh_failed');
           return null;
-        } catch {
+        } catch (error: unknown) {
+          const axiosLike = error as {
+            response?: { status?: number };
+            request?: unknown;
+          };
+          const status = axiosLike.response?.status;
+          const transient =
+            !axiosLike.response ||
+            status === undefined ||
+            status === 502 ||
+            status === 503 ||
+            status === 504;
+
+          if (transient) {
+            // Keep whatever access token we still have; cookie may still be valid.
+            this.scheduleNetworkRefreshRetry();
+            return null;
+          }
+
           clearAccessToken();
           this.clearProactiveRefresh();
           if (options?.announceFailure) emitSessionEnded('refresh_failed');

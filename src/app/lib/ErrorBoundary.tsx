@@ -100,6 +100,7 @@ export class ErrorBoundary extends Component<Props, State> {
           variant={this.props.variant ?? 'content'}
           error={this.state.error}
           errorId={this.state.errorId}
+          onRetry={this.handleRetry}
         />
       );
     }

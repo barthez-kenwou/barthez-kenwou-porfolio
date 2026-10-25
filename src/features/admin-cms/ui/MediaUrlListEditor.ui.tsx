@@ -12,6 +12,9 @@ import {
   COVER_COMPRESS,
   type CompressImageOptions,
 } from '@/shared/lib/compressImage';
+import { insertIntoList } from '../lib/listInsertPosition';
+import { useListInsertPosition } from '../hooks/useListInsertPosition';
+import { ListInsertPositionToggle } from './ListInsertPositionToggle.ui';
 
 export type MediaUrlListEditorProps = {
   label: string;
@@ -45,6 +48,7 @@ export function MediaUrlListEditor({
   const isFr = language === 'fr';
   const fileRef = React.useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = React.useState(false);
+  const { position } = useListInsertPosition();
 
   const updateAt = (index: number, next: string) => {
     onChange(urls.map((url, i) => (i === index ? next : url)));
@@ -70,7 +74,7 @@ export function MediaUrlListEditor({
     setUploading(true);
     try {
       const url = await uploadAdminImage(file, compressOptions);
-      onChange([...urls.filter((u) => u.trim()), url]);
+      onChange(insertIntoList(urls.filter((u) => u.trim()), url, position));
       toast.success(isFr ? 'Image compressée et ajoutée' : 'Image compressed and added');
     } catch (e) {
       toast.error(
@@ -94,7 +98,8 @@ export function MediaUrlListEditor({
     <div className={cn('space-y-3', className)}>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <Label className="text-foreground">{label}</Label>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <ListInsertPositionToggle />
           {kind !== 'video' ? (
             <>
               <input
@@ -126,7 +131,7 @@ export function MediaUrlListEditor({
             variant="outline"
             size="sm"
             className="cursor-pointer shadow-none"
-            onClick={() => onChange([...urls, ''])}
+            onClick={() => onChange(insertIntoList(urls, '', position))}
           >
             <Plus className="size-3.5" aria-hidden />
             {isFr ? 'URL' : 'URL'}

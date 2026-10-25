@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { emitSessionEnded, onSessionEnded } from './session-events';
+import { emitSessionEnded, onSessionEnded } from '@/shared/api/session-events';
 
 describe('session-events', () => {
   it('notifies subscribers and supports unsubscribe', () => {

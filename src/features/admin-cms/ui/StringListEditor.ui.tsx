@@ -4,6 +4,9 @@ import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { cn } from '@/shared/lib/utils';
+import { insertIntoList } from '../lib/listInsertPosition';
+import { useListInsertPosition } from '../hooks/useListInsertPosition';
+import { ListInsertPositionToggle } from './ListInsertPositionToggle.ui';
 
 export type StringListEditorProps = {
   label?: string;
@@ -25,6 +28,7 @@ export function StringListEditor({
 }: StringListEditorProps) {
   const language = useLanguageStore((s) => s.language);
   const isFr = language === 'fr';
+  const { position } = useListInsertPosition();
 
   const updateAt = (index: number, next: string) => {
     onChange(values.map((value, i) => (i === index ? next : value)));
@@ -43,6 +47,10 @@ export function StringListEditor({
     onChange(next);
   };
 
+  const addItem = () => {
+    onChange(insertIntoList(values, '', position));
+  };
+
   return (
     <div className={cn('space-y-3', className)}>
       <div
@@ -52,10 +60,13 @@ export function StringListEditor({
         )}
       >
         {!hideLabel && label ? <Label className="text-foreground">{label}</Label> : null}
-        <Button type="button" variant="outline" size="sm" onClick={() => onChange([...values, ''])}>
-          <Plus className="size-3.5" aria-hidden />
-          {isFr ? 'Ajouter' : 'Add'}
-        </Button>
+        <div className="flex items-center gap-1.5">
+          <ListInsertPositionToggle />
+          <Button type="button" variant="outline" size="sm" onClick={addItem}>
+            <Plus className="size-3.5" aria-hidden />
+            {isFr ? 'Ajouter' : 'Add'}
+          </Button>
+        </div>
       </div>
 
       {values.length === 0 ? (

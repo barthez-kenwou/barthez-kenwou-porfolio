@@ -28,12 +28,15 @@ import {
   BilingualField,
   BilingualStringListEditor,
   Field,
+  insertIntoList,
   KeyValueEditor,
+  ListInsertPositionToggle,
   MediaCoverField,
   MediaUrlListEditor,
   MermaidEditor,
   StringListEditor,
   useDraftDirtyFlag,
+  useListInsertPosition,
   useUnsavedChangesGuard,
 } from '@/features/admin-cms';
 import { isApiError } from '@/shared/api';
@@ -200,6 +203,7 @@ export const AdminProjectEditorPage: React.FC = () => {
   const { dialog: unsavedDialog, allowNextNavigation } = useUnsavedChangesGuard(
     isDirty && hydrated && !saving,
   );
+  const { position: listInsertPosition } = useListInsertPosition();
 
   React.useEffect(() => {
     if (isNew) {
@@ -662,15 +666,20 @@ export const AdminProjectEditorPage: React.FC = () => {
           title={fr ? 'Vidéos' : 'Videos'}
           className="mt-6"
           actions={
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              onClick={() => patch('videos', [...videos, emptyVideo()])}
-            >
-              <Plus className="size-3.5" />
-              {fr ? 'Ajouter' : 'Add'}
-            </Button>
+            <div className="flex items-center gap-1.5">
+              <ListInsertPositionToggle />
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  patch('videos', insertIntoList(videos, emptyVideo(), listInsertPosition))
+                }
+              >
+                <Plus className="size-3.5" />
+                {fr ? 'Ajouter' : 'Add'}
+              </Button>
+            </div>
           }
         >
           {videos.length === 0 ? (
@@ -794,15 +803,23 @@ export const AdminProjectEditorPage: React.FC = () => {
           title={fr ? 'Galerie annotée' : 'Annotated gallery'}
           className="mt-6"
           actions={
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              onClick={() => patch('gallery', [...gallery, emptyGalleryItem()])}
-            >
-              <Plus className="size-3.5" />
-              {fr ? 'Ajouter' : 'Add'}
-            </Button>
+            <div className="flex items-center gap-1.5">
+              <ListInsertPositionToggle />
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  patch(
+                    'gallery',
+                    insertIntoList(gallery, emptyGalleryItem(), listInsertPosition),
+                  )
+                }
+              >
+                <Plus className="size-3.5" />
+                {fr ? 'Ajouter' : 'Add'}
+              </Button>
+            </div>
           }
         >
           {gallery.length === 0 ? (
@@ -886,25 +903,32 @@ export const AdminProjectEditorPage: React.FC = () => {
           title={fr ? 'Schémas Mermaid' : 'Mermaid diagrams'}
           className="mt-6"
           actions={
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              onClick={() =>
-                patch('diagrams', [
-                  ...diagrams,
-                  {
-                    id: `d_${Date.now()}`,
-                    titleFr: '',
-                    titleEn: '',
-                    mermaid: 'flowchart LR\n  A --> B',
-                  },
-                ])
-              }
-            >
-              <Plus className="size-3.5" />
-              {fr ? 'Ajouter' : 'Add'}
-            </Button>
+            <div className="flex items-center gap-1.5">
+              <ListInsertPositionToggle />
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  patch(
+                    'diagrams',
+                    insertIntoList(
+                      diagrams,
+                      {
+                        id: `d_${Date.now()}`,
+                        titleFr: '',
+                        titleEn: '',
+                        mermaid: 'flowchart LR\n  A --> B',
+                      },
+                      listInsertPosition,
+                    ),
+                  )
+                }
+              >
+                <Plus className="size-3.5" />
+                {fr ? 'Ajouter' : 'Add'}
+              </Button>
+            </div>
           }
         >
           <p className="mb-4 text-xs text-muted-foreground leading-relaxed">
@@ -988,15 +1012,23 @@ export const AdminProjectEditorPage: React.FC = () => {
           title={fr ? 'Jalons' : 'Milestones'}
           className="mt-6"
           actions={
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              onClick={() => patch('milestones', [...milestones, emptyMilestone()])}
-            >
-              <Plus className="size-3.5" />
-              {fr ? 'Ajouter' : 'Add'}
-            </Button>
+            <div className="flex items-center gap-1.5">
+              <ListInsertPositionToggle />
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  patch(
+                    'milestones',
+                    insertIntoList(milestones, emptyMilestone(), listInsertPosition),
+                  )
+                }
+              >
+                <Plus className="size-3.5" />
+                {fr ? 'Ajouter' : 'Add'}
+              </Button>
+            </div>
           }
         >
           {milestones.length === 0 ? (
@@ -1074,15 +1106,23 @@ export const AdminProjectEditorPage: React.FC = () => {
           title={fr ? 'Arbitrages' : 'Trade-offs'}
           className="mt-6"
           actions={
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              onClick={() => patch('decisions', [...decisions, emptyDecision()])}
-            >
-              <Plus className="size-3.5" />
-              {fr ? 'Ajouter' : 'Add'}
-            </Button>
+            <div className="flex items-center gap-1.5">
+              <ListInsertPositionToggle />
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  patch(
+                    'decisions',
+                    insertIntoList(decisions, emptyDecision(), listInsertPosition),
+                  )
+                }
+              >
+                <Plus className="size-3.5" />
+                {fr ? 'Ajouter' : 'Add'}
+              </Button>
+            </div>
           }
         >
           {decisions.length === 0 ? (
@@ -1184,15 +1224,23 @@ export const AdminProjectEditorPage: React.FC = () => {
           title={fr ? 'Avant / Après' : 'Before / After'}
           className="mt-6"
           actions={
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              onClick={() => patch('beforeAfter', [...beforeAfter, emptyBeforeAfter()])}
-            >
-              <Plus className="size-3.5" />
-              {fr ? 'Ajouter' : 'Add'}
-            </Button>
+            <div className="flex items-center gap-1.5">
+              <ListInsertPositionToggle />
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  patch(
+                    'beforeAfter',
+                    insertIntoList(beforeAfter, emptyBeforeAfter(), listInsertPosition),
+                  )
+                }
+              >
+                <Plus className="size-3.5" />
+                {fr ? 'Ajouter' : 'Add'}
+              </Button>
+            </div>
           }
         >
           {beforeAfter.length === 0 ? (
@@ -1265,15 +1313,23 @@ export const AdminProjectEditorPage: React.FC = () => {
           title={fr ? 'Documents' : 'Documents'}
           className="mt-6"
           actions={
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              onClick={() => patch('resources', [...resources, emptyResource()])}
-            >
-              <Plus className="size-3.5" />
-              {fr ? 'Ajouter' : 'Add'}
-            </Button>
+            <div className="flex items-center gap-1.5">
+              <ListInsertPositionToggle />
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  patch(
+                    'resources',
+                    insertIntoList(resources, emptyResource(), listInsertPosition),
+                  )
+                }
+              >
+                <Plus className="size-3.5" />
+                {fr ? 'Ajouter' : 'Add'}
+              </Button>
+            </div>
           }
         >
           {resources.length === 0 ? (
@@ -1357,15 +1413,23 @@ export const AdminProjectEditorPage: React.FC = () => {
           title={fr ? 'Liens externes' : 'External links'}
           className="mt-6"
           actions={
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              onClick={() => patch('externalLinks', [...externalLinks, emptyLink()])}
-            >
-              <Plus className="size-3.5" />
-              {fr ? 'Ajouter' : 'Add'}
-            </Button>
+            <div className="flex items-center gap-1.5">
+              <ListInsertPositionToggle />
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  patch(
+                    'externalLinks',
+                    insertIntoList(externalLinks, emptyLink(), listInsertPosition),
+                  )
+                }
+              >
+                <Plus className="size-3.5" />
+                {fr ? 'Ajouter' : 'Add'}
+              </Button>
+            </div>
           }
         >
           {externalLinks.length === 0 ? (

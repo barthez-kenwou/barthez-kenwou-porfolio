@@ -8,6 +8,8 @@ import { PublicLayout } from '@/pages/public/Layout';
 import { ScrollToTop } from '@/shared/ui/ScrollToTop/ScrollToTop';
 import { AdminLayout } from '@/widgets/AdminShell';
 import { lazyPage } from './routes/utils/utils';
+import { RouteErrorElement } from '@/pages/Errors/RouteErrorElement';
+import { InternalErrorPage } from '@/pages/Errors/InternalErrorPage/InternalError';
 
 const AdminLoginPage = lazyPage(() => import('@/pages/app/Admin/LoginPage'), 'AdminLoginPage');
 
@@ -27,17 +29,26 @@ const publicRoutes = routes.filter((route) => route.meta?.layout === 'public');
 const router = createBrowserRouter([
   {
     element: <RootLayout />,
+    // Last-resort when even a layout shell crashes
+    errorElement: <InternalErrorPage variant="fullscreen" />,
     children: [
       {
         element: <PublicLayout />,
-        children: publicRoutes.map((route) => ({
-          path: route.path === '/' ? undefined : route.path.replace(/^\//, ''),
-          index: route.path === '/',
-          element: <route.component />,
-        })),
+        children: [
+          {
+            // Pathless group: errors replace only the Outlet, not navbar/aside/footer
+            errorElement: <RouteErrorElement />,
+            children: publicRoutes.map((route) => ({
+              path: route.path === '/' ? undefined : route.path.replace(/^\//, ''),
+              index: route.path === '/',
+              element: <route.component />,
+            })),
+          },
+        ],
       },
       {
         path: 'barthez-admin/login',
+        errorElement: <InternalErrorPage variant="fullscreen" />,
         element: (
           <Suspense fallback={<RouteFallback fullScreen />}>
             <AdminLoginPage />
@@ -51,15 +62,21 @@ const router = createBrowserRouter([
             <AdminLayout />
           </ProtectedRoute>
         ),
-        children: adminChildRoutes.map((route) => ({
-          index: route.path === '',
-          path: route.path === '' ? undefined : route.path,
-          element: (
-            <Suspense fallback={<RouteFallback />}>
-              <route.component />
-            </Suspense>
-          ),
-        })),
+        children: [
+          {
+            // Pathless group: keep admin sidebar/header when a page blows up
+            errorElement: <RouteErrorElement />,
+            children: adminChildRoutes.map((route) => ({
+              index: route.path === '',
+              path: route.path === '' ? undefined : route.path,
+              element: (
+                <Suspense fallback={<RouteFallback />}>
+                  <route.component />
+                </Suspense>
+              ),
+            })),
+          },
+        ],
       },
     ],
   },

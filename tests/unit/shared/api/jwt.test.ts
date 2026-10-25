@@ -5,7 +5,7 @@ import {
   getJwtExpiryMs,
   isAccessTokenExpiringSoon,
   sessionExpiresAtFromNow,
-} from './jwt';
+} from '@/shared/api/jwt';
 
 function fakeJwt(payload: Record<string, unknown>): string {
   const header = btoa(JSON.stringify({ alg: 'none', typ: 'JWT' }))

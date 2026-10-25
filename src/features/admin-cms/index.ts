@@ -6,7 +6,7 @@ export {
 export type { AdminDashboardDto } from './api/dashboard.api';
 export { filesApi, uploadAdminImage, createPresignedUpload } from './api/files.api';
 export type { PresignedUpload } from './api/files.api';
-export { translateAdminText } from './api/translate.api';
+export { translateAdminText, translateAdminMarkdown } from './api/translate.api';
 export type { TranslateLang } from './api/translate.api';
 export { useAdminDashboard } from './hooks/useAdminDashboard';
 export { useAdminAnalytics } from './hooks/useAdminAnalytics';
@@ -36,10 +36,21 @@ export { formatAdminDate } from './lib/formatAdminDate';
 export { getReorderTargets, sortBySortOrder } from './lib/reorder';
 export type { ReorderDirection, ReorderPatch, SortableItem } from './lib/reorder';
 export { useScrollToEditor } from './hooks/useScrollToEditor';
+export { useListInsertPosition } from './hooks/useListInsertPosition';
 export {
   useUnsavedChangesGuard,
   useDraftDirtyFlag,
 } from './hooks/useUnsavedChangesGuard';
+export {
+  insertIntoList,
+  insertManyIntoList,
+  readListInsertPosition,
+  writeListInsertPosition,
+  DEFAULT_LIST_INSERT_POSITION,
+} from './lib/listInsertPosition';
+export type { ListInsertPosition } from './lib/listInsertPosition';
+export { ListInsertPositionToggle } from './ui/ListInsertPositionToggle.ui';
+export type { ListInsertPositionToggleProps } from './ui/ListInsertPositionToggle.ui';
 
 export { AdminPageHeader } from './ui/AdminPageHeader.ui';
 export type { AdminPageHeaderProps } from './ui/AdminPageHeader.ui';
@@ -49,13 +60,21 @@ export type { BilingualFieldProps } from './ui/BilingualField.ui';
 
 export { MarkdownEditor } from './ui/MarkdownEditor.ui';
 export type { MarkdownEditorProps, MarkdownLocalePair } from './ui/MarkdownEditor.ui';
+export { MarkdownFocusBoard, MarkdownFocusTrigger } from './ui/MarkdownFocusBoard.ui';
+export type { MarkdownFocusBoardProps, FocusToolbarAction } from './ui/MarkdownFocusBoard.ui';
 export {
   appendMissingImages,
   extractMarkdownImages,
+  extractPlacedImages,
   buildImageMarkdown,
   markdownContainsImageUrl,
+  mirrorImageIntoSibling,
+  removeImageByUrl,
+  stripAllMarkdownImages,
+  syncMissingImagesFromSource,
+  headingMatchKey,
 } from './lib/markdownImages';
-export type { MarkdownImageRef } from './lib/markdownImages';
+export type { MarkdownImageRef, PlacedMarkdownImage } from './lib/markdownImages';
 
 export { MermaidEditor } from './ui/MermaidEditor.ui';
 export type { MermaidEditorProps } from './ui/MermaidEditor.ui';

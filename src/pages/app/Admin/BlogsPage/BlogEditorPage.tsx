@@ -269,6 +269,10 @@ export const AdminBlogEditorPage: React.FC = () => {
                   siblingValue: draft.contentEn,
                   onSiblingChange: (v) => patch('contentEn', v),
                 }}
+                onSave={save}
+                saving={saving}
+                saveDisabled={!isNew && !hydrated}
+                isDirty={isDirty}
               />
             </TabsContent>
             <TabsContent value="en" className="mt-4">
@@ -282,6 +286,10 @@ export const AdminBlogEditorPage: React.FC = () => {
                   siblingValue: draft.contentFr,
                   onSiblingChange: (v) => patch('contentFr', v),
                 }}
+                onSave={save}
+                saving={saving}
+                saveDisabled={!isNew && !hydrated}
+                isDirty={isDirty}
               />
             </TabsContent>
           </Tabs>

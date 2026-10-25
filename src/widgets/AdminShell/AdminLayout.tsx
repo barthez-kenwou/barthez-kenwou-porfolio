@@ -1,9 +1,11 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { SidebarInset, SidebarProvider, useSidebar } from '@/shared/ui/sidebar';
 import { AdminSidebar } from './AdminSidebar';
 import { AdminHeader } from './AdminHeader';
 import { AdminMobileDock } from './AdminMobileDock';
+import { ErrorBoundary } from '@/app/lib/ErrorBoundary';
+import { RouteFallback } from '@/shared/ui/RouteFallback/RouteFallback';
 
 function CloseMobileNavOnRouteChange() {
   const location = useLocation();
@@ -18,6 +20,8 @@ function CloseMobileNavOnRouteChange() {
 }
 
 export function AdminLayout() {
+  const location = useLocation();
+
   return (
     <SidebarProvider defaultOpen>
       <CloseMobileNavOnRouteChange />
@@ -38,7 +42,15 @@ export function AdminLayout() {
 
         <main className="relative min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain">
           <div className="mx-auto w-full max-w-6xl px-4 py-5 pb-[calc(7rem+env(safe-area-inset-bottom))] sm:px-6 md:py-6 md:pb-8 lg:px-8 lg:py-8">
-            <Outlet />
+            {/*
+              Boundary around page content only — sidebar / header / dock stay up.
+              key=pathname resets after navigation so a fixed page can recover.
+            */}
+            <ErrorBoundary key={location.pathname} variant="content">
+              <Suspense fallback={<RouteFallback className="min-h-[16rem]" />}>
+                <Outlet />
+              </Suspense>
+            </ErrorBoundary>
           </div>
         </main>
 

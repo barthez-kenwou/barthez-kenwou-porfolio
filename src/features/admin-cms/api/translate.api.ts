@@ -1,3 +1,8 @@
+import {
+  stripAllMarkdownImages,
+  syncMissingImagesFromSource,
+} from '../lib/markdownImages';
+
 export type TranslateLang = 'fr' | 'en';
 
 type MyMemoryResponse = {
@@ -92,4 +97,56 @@ export async function translateAdminText(
     translated.push(await translateChunk(chunk, from, to));
   }
   return translated.join('\n\n');
+}
+
+const CODE_TOKEN_RE = /⟦CODE(\d+)⟧/g;
+
+/**
+ * Freeze fenced + inline code only. Images are removed entirely and re-injected
+ * after translation from the source structure (MyMemory otherwise dumps them at the end).
+ */
+function protectCodeArtifacts(markdown: string): { text: string; tokens: string[] } {
+  const tokens: string[] = [];
+  const stash = (match: string) => {
+    const i = tokens.length;
+    tokens.push(match);
+    return `⟦CODE${i}⟧`;
+  };
+
+  let text = markdown;
+  text = text.replace(/```[\s\S]*?```/g, stash);
+  text = text.replace(/`[^`\n]+`/g, stash);
+  return { text, tokens };
+}
+
+function restoreCodeArtifacts(text: string, tokens: string[]): string {
+  return text.replace(CODE_TOKEN_RE, (_, n) => tokens[Number(n)] ?? '');
+}
+
+/**
+ * Translate blog markdown FR↔EN:
+ * 1) protect code fences
+ * 2) strip images (translator must not touch them)
+ * 3) translate prose
+ * 4) restore code
+ * 5) re-place images under matching sections from the source article
+ */
+export async function translateAdminMarkdown(
+  markdown: string,
+  from: TranslateLang,
+  to: TranslateLang,
+): Promise<string> {
+  const source = markdown.trim();
+  if (!source) return '';
+  if (from === to) return source;
+
+  const { text: coded, tokens } = protectCodeArtifacts(source);
+  const proseOnly = stripAllMarkdownImages(coded);
+  const translatedProse = await translateAdminText(proseOnly, from, to);
+  const withCode = restoreCodeArtifacts(translatedProse, tokens);
+  // Drop any image the API might have hallucinated / any leftover tokens
+  const cleanTarget = stripAllMarkdownImages(withCode.replace(CODE_TOKEN_RE, ''));
+
+  const { next } = syncMissingImagesFromSource(source, cleanTarget);
+  return next.trim() + '\n';
 }

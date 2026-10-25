@@ -11,8 +11,14 @@ import {
   type AuthUser,
 } from '@/features/admin-auth';
 import { env } from '@/app/config/env';
-import { apiClient, getAccessToken, onSessionEnded } from '@/shared/api';
+import { apiClient, getAccessToken, isNetworkError, onSessionEnded, toApiError } from '@/shared/api';
 import { sessionExpiresAtFromNow } from '@/shared/api/jwt';
+import {
+  clearAdminReturnPath,
+  rememberAdminReturnPath,
+  toAdminReturnPath,
+} from '@/shared/config/adminReturnPath';
+import { useLanguageStore } from '@/shared/state/useLanguageStore';
 
 interface AuthContextType {
   user: AuthUser | null;
@@ -38,10 +44,10 @@ interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-function notifySessionExpired(): void {
-  toast.error('Session expired — please sign in again', {
-    id: 'bk-admin-session-expired',
-  });
+function rememberCurrentAdminLocation(): void {
+  if (typeof window === 'undefined') return;
+  const { pathname, search, hash } = window.location;
+  rememberAdminReturnPath(toAdminReturnPath({ pathname, search, hash }));
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
@@ -79,15 +85,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return;
       }
 
+      const adoptStoredOffline = () => {
+        // Connectivity blip at boot: keep working UI; refresh when back online.
+        apiClient.startSessionKeepAlive();
+        if (!cancelled) setSession(stored);
+      };
+
       try {
         // Expired access JWT → 401 → silent refresh → retry (see api client).
         // No bearer yet: still try /me after a refresh attempt via keep-alive.
         if (!getAccessToken()) {
           const refreshed = await apiClient.ensureFreshAccessToken();
           if (!refreshed) {
-            clearSession();
-            if (!cancelled) setSession(null);
-            return;
+            if (typeof navigator !== 'undefined' && !navigator.onLine) {
+              adoptStoredOffline();
+              return;
+            }
+            // Refresh may have failed transiently (network) without ending session.
+            // Still try /me — if that also fails as network, we keep the session below.
           }
         }
 
@@ -102,8 +117,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         persistSession(next);
         apiClient.startSessionKeepAlive();
         if (!cancelled) setSession(next);
-      } catch {
+      } catch (error) {
+        if (isNetworkError(toApiError(error))) {
+          adoptStoredOffline();
+          return;
+        }
         // Invalid / expired API session — force re-login
+        rememberCurrentAdminLocation();
         clearSession();
         apiClient.stopSessionKeepAlive();
         if (!cancelled) setSession(null);
@@ -120,10 +140,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     return onSessionEnded(() => {
+      rememberCurrentAdminLocation();
       clearSession();
       apiClient.stopSessionKeepAlive();
       setSession(null);
-      notifySessionExpired();
+      const fr = useLanguageStore.getState().language === 'fr';
+      toast.error(
+        fr
+          ? 'Session expirée — reconnecte-toi pour continuer'
+          : 'Session expired — please sign in again',
+        { id: 'bk-admin-session-expired' },
+      );
     });
   }, []);
 
@@ -135,6 +162,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = useCallback(async () => {
     apiClient.stopSessionKeepAlive();
+    clearAdminReturnPath();
     await logoutFromApi();
     setSession(null);
   }, []);
