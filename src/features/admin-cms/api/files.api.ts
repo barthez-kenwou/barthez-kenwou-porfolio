@@ -1,4 +1,8 @@
 import { apiClient } from '@/shared/api';
+import {
+  compressImageFile,
+  type CompressImageOptions,
+} from '@/shared/lib/compressImage';
 
 export type PresignedUpload = {
   url: string;
@@ -33,27 +37,41 @@ export async function createPresignedUpload(input: {
   return apiClient.post<PresignedUpload>('/files/presign', input);
 }
 
+export type UploadAdminImageOptions = CompressImageOptions & {
+  /** When false, upload the raw file (default: compress) */
+  compress?: boolean;
+};
+
 /**
- * Presign → PUT to object storage → durable public URL for CMS media fields.
+ * Compress (WebP/JPEG) → presign → PUT to object storage → durable public URL.
  */
-export async function uploadAdminImage(file: File): Promise<string> {
+export async function uploadAdminImage(
+  file: File,
+  options: UploadAdminImageOptions = {},
+): Promise<string> {
   if (!file.type.startsWith('image/')) {
     throw new Error('Invalid image type');
   }
 
+  const { compress = true, ...compressOpts } = options;
+  const payload =
+    compress && typeof document !== 'undefined'
+      ? await compressImageFile(file, compressOpts)
+      : file;
+
   const signed = await createPresignedUpload({
-    filename: file.name || 'image.jpg',
-    contentType: file.type || 'image/jpeg',
-    size: file.size,
+    filename: payload.name || 'image.jpg',
+    contentType: payload.type || 'image/jpeg',
+    size: payload.size,
   });
 
   assertBrowserReachableUploadUrl(signed.url);
 
   const put = await fetch(signed.url, {
     method: 'PUT',
-    body: file,
+    body: payload,
     headers: {
-      'Content-Type': file.type || 'application/octet-stream',
+      'Content-Type': payload.type || 'application/octet-stream',
     },
   });
 

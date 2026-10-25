@@ -32,6 +32,7 @@ import {
   type IPartner,
 } from '@/entities/partners';
 import { isApiError } from '@/shared/api';
+import { LOGO_COMPRESS } from '@/shared/lib/compressImage';
 import { QueryState } from '@/shared/ui/QueryState';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { Button } from '@/shared/ui/button';
@@ -217,6 +218,7 @@ export const AdminPartnersPage: React.FC = () => {
                   // Same shell as TrustedBySection PartnerLogoCell
                   previewClassName="h-[4.5rem] w-full max-w-[14rem] bg-background/30 px-4 py-3"
                   previewImgClassName="max-h-10 max-w-[8.5rem] opacity-90"
+                  compressOptions={LOGO_COMPRESS}
                 />
               </div>
 

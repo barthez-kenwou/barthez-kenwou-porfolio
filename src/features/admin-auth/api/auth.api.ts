@@ -1,6 +1,7 @@
 import { apiClient, clearAccessToken, getAccessToken, setAccessToken, isApiError } from '@/shared/api';
 import { sessionExpiresAtFromNow } from '@/shared/api/jwt';
 import { env } from '@/app/config/env';
+import { AVATAR_COMPRESS, compressImageFile } from '@/shared/lib/compressImage';
 import type { UserRole } from '../model/auth.types';
 
 export interface AuthUser {
@@ -219,11 +220,15 @@ export async function updateOwnProfile(input: UpdateOwnProfileInput): Promise<Au
   const { avatarFile, ...fields } = input;
 
   if (avatarFile) {
+    const compressed =
+      typeof document !== 'undefined'
+        ? await compressImageFile(avatarFile, AVATAR_COMPRESS)
+        : avatarFile;
     const form = new FormData();
     if (fields.firstName !== undefined) form.append('firstName', fields.firstName);
     if (fields.lastName !== undefined) form.append('lastName', fields.lastName);
     if (fields.phone !== undefined) form.append('phone', fields.phone);
-    form.append('avatar', avatarFile);
+    form.append('avatar', compressed);
     const me = await apiClient.put<MeProfile>('/users/profile', form, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });

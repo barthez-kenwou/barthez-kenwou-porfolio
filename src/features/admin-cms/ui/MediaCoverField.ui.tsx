@@ -9,6 +9,10 @@ import { uploadAdminImage } from '../api/files.api';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { isApiError } from '@/shared/api';
 import { cn } from '@/shared/lib/utils';
+import {
+  COVER_COMPRESS,
+  type CompressImageOptions,
+} from '@/shared/lib/compressImage';
 
 type MediaCoverFieldProps = {
   label: string;
@@ -27,6 +31,11 @@ type MediaCoverFieldProps = {
   previewImgClassName?: string;
   /** stack = preview under controls; aside = controls left / live preview right */
   layout?: 'stack' | 'aside';
+  /**
+   * Client compression before upload.
+   * Use `LOGO_COMPRESS` for partner logos, `COVER_COMPRESS` (default) for photos.
+   */
+  compressOptions?: CompressImageOptions;
 };
 
 export function MediaCoverField({
@@ -38,6 +47,7 @@ export function MediaCoverField({
   previewFit = 'cover',
   previewImgClassName,
   layout = 'stack',
+  compressOptions = COVER_COMPRESS,
 }: MediaCoverFieldProps) {
   const { language } = useLanguageStore();
   const fr = language === 'fr';
@@ -52,9 +62,11 @@ export function MediaCoverField({
     }
     setUploading(true);
     try {
-      const url = await uploadAdminImage(file);
+      const url = await uploadAdminImage(file, compressOptions);
       onChange(url);
-      toast.success(fr ? 'Image téléversée' : 'Image uploaded');
+      toast.success(
+        fr ? 'Image compressée et téléversée' : 'Image compressed and uploaded',
+      );
     } catch (e) {
       toast.error(
         isApiError(e)
@@ -155,8 +167,12 @@ export function MediaCoverField({
               ? 'Téléversement…'
               : 'Uploading…'
             : fr
-              ? 'Choisir une image'
-              : 'Choose an image'}
+              ? compressOptions.kind === 'logo'
+                ? 'Choisir un logo (compressé, fond transparent conservé)'
+                : 'Choisir une image (compressée en WebP)'
+              : compressOptions.kind === 'logo'
+                ? 'Choose a logo (compressed, alpha preserved)'
+                : 'Choose an image (compressed to WebP)'}
         </button>
       </TabsContent>
 

@@ -264,6 +264,11 @@ export const AdminBlogEditorPage: React.FC = () => {
                 languageLabel="FR"
                 value={draft.contentFr}
                 onChange={(v) => patch('contentFr', v)}
+                localePair={{
+                  siblingLabel: 'EN',
+                  siblingValue: draft.contentEn,
+                  onSiblingChange: (v) => patch('contentEn', v),
+                }}
               />
             </TabsContent>
             <TabsContent value="en" className="mt-4">
@@ -272,6 +277,11 @@ export const AdminBlogEditorPage: React.FC = () => {
                 languageLabel="EN"
                 value={draft.contentEn}
                 onChange={(v) => patch('contentEn', v)}
+                localePair={{
+                  siblingLabel: 'FR',
+                  siblingValue: draft.contentFr,
+                  onSiblingChange: (v) => patch('contentFr', v),
+                }}
               />
             </TabsContent>
           </Tabs>

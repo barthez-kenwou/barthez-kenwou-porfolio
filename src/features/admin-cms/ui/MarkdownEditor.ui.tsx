@@ -1,6 +1,4 @@
 import { useCallback, useRef, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import {
   Bold,
   Code2,
@@ -8,6 +6,7 @@ import {
   Heading2,
   ImagePlus,
   Italic,
+  Languages,
   Link2,
   List,
   Loader2,
@@ -17,13 +16,29 @@ import { toast } from 'sonner';
 import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 import { Label } from '@/shared/ui/label';
+import { Switch } from '@/shared/ui/switch';
 import { Textarea } from '@/shared/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { cn } from '@/shared/lib/utils';
+import { INLINE_COMPRESS } from '@/shared/lib/compressImage';
 import { isApiError } from '@/shared/api';
-import { MarkdownFigure } from '@/shared/ui/markdown/MarkdownFigure';
+import { BlogMarkdown } from '@/shared/ui/markdown/BlogMarkdown';
 import { uploadAdminImage } from '../api/files.api';
+import {
+  appendMissingImages,
+  buildImageMarkdown,
+  extractMarkdownImages,
+  markdownContainsImageUrl,
+} from '../lib/markdownImages';
+
+export type MarkdownLocalePair = {
+  /** Sibling language body (e.g. EN while editing FR) */
+  siblingValue: string;
+  onSiblingChange: (value: string) => void;
+  /** Short label shown in UI, e.g. "EN" */
+  siblingLabel: string;
+};
 
 export type MarkdownEditorProps = {
   label: string;
@@ -34,6 +49,11 @@ export type MarkdownEditorProps = {
   rows?: number;
   /** Upload + insert `![caption](url)` into the markdown body */
   enableImages?: boolean;
+  /**
+   * When set (blog FR/EN pair), new images can be mirrored to the sibling locale
+   * and missing media can be synced in one click.
+   */
+  localePair?: MarkdownLocalePair;
 };
 
 type Snippet = {
@@ -92,9 +112,13 @@ function insertImageMarkdown(
   const selected = value.slice(selectionStart, selectionEnd).trim();
   const alt = selected || caption;
   const prefix =
-    selectionStart > 0 && value[selectionStart - 1] !== '\n' ? '\n\n' : selectionStart > 0 ? '\n' : '';
+    selectionStart > 0 && value[selectionStart - 1] !== '\n'
+      ? '\n\n'
+      : selectionStart > 0
+        ? '\n'
+        : '';
   const suffix = '\n\n';
-  const insertion = `${prefix}![${alt}](${url})${suffix}`;
+  const insertion = `${prefix}${buildImageMarkdown(alt, url)}${suffix}`;
   const next = value.slice(0, selectionStart) + insertion + value.slice(selectionEnd);
   const cursor = selectionStart + insertion.length;
   return { next, cursor };
@@ -108,6 +132,7 @@ export function MarkdownEditor({
   className,
   rows = 12,
   enableImages = true,
+  localePair,
 }: MarkdownEditorProps) {
   const language = useLanguageStore((s) => s.language);
   const isFr = language === 'fr';
@@ -115,6 +140,8 @@ export function MarkdownEditor({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [mode, setMode] = useState('write');
   const [uploading, setUploading] = useState(false);
+  /** Mirror new uploads into the sibling locale (blog FR↔EN). */
+  const [mirrorMedia, setMirrorMedia] = useState(true);
 
   const focusAt = useCallback((cursor: number) => {
     requestAnimationFrame(() => {
@@ -124,6 +151,50 @@ export function MarkdownEditor({
       target.setSelectionRange(cursor, cursor);
     });
   }, []);
+
+  const mirrorImageToSibling = useCallback(
+    (url: string, caption: string) => {
+      if (!localePair || !mirrorMedia) return false;
+      if (markdownContainsImageUrl(localePair.siblingValue, url)) return false;
+      const { next, added } = appendMissingImages(localePair.siblingValue, [
+        { alt: caption, url },
+      ]);
+      if (added > 0) {
+        localePair.onSiblingChange(next);
+        return true;
+      }
+      return false;
+    },
+    [localePair, mirrorMedia],
+  );
+
+  const syncImagesToSibling = useCallback(() => {
+    if (!localePair) return;
+    const images = extractMarkdownImages(value);
+    if (images.length === 0) {
+      toast.message(
+        isFr
+          ? 'Aucune image dans ce contenu à synchroniser.'
+          : 'No images in this content to sync.',
+      );
+      return;
+    }
+    const { next, added } = appendMissingImages(localePair.siblingValue, images);
+    if (added === 0) {
+      toast.success(
+        isFr
+          ? `Toutes les images sont déjà présentes en ${localePair.siblingLabel}.`
+          : `All images are already present in ${localePair.siblingLabel}.`,
+      );
+      return;
+    }
+    localePair.onSiblingChange(next);
+    toast.success(
+      isFr
+        ? `${added} image(s) ajoutée(s) en ${localePair.siblingLabel} (légendes à traduire si besoin).`
+        : `${added} image(s) added to ${localePair.siblingLabel} (translate captions if needed).`,
+    );
+  }, [isFr, localePair, value]);
 
   const applySnippet = useCallback(
     (key: keyof typeof SNIPPETS) => {
@@ -147,7 +218,7 @@ export function MarkdownEditor({
     }
     setUploading(true);
     try {
-      const url = await uploadAdminImage(file);
+      const url = await uploadAdminImage(file, INLINE_COMPRESS);
       const el = textareaRef.current;
       const start = el?.selectionStart ?? value.length;
       const end = el?.selectionEnd ?? value.length;
@@ -157,7 +228,16 @@ export function MarkdownEditor({
       const { next, cursor } = insertImageMarkdown(value, start, end, url, caption);
       onChange(next);
       focusAt(cursor);
-      toast.success(isFr ? 'Image insérée' : 'Image inserted');
+      const mirrored = mirrorImageToSibling(url, caption);
+      toast.success(
+        mirrored
+          ? isFr
+            ? `Image compressée et insérée (${languageLabel || 'FR'} + ${localePair?.siblingLabel}).`
+            : `Image compressed and inserted (${languageLabel || 'EN'} + ${localePair?.siblingLabel}).`
+          : isFr
+            ? 'Image compressée et insérée'
+            : 'Image compressed and inserted',
+      );
     } catch (e) {
       toast.error(
         isApiError(e)
@@ -261,11 +341,58 @@ export function MarkdownEditor({
                   >
                     <FileImage className="size-3.5" />
                   </Button>
+                  {localePair ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon-sm"
+                      onClick={syncImagesToSibling}
+                      aria-label={
+                        isFr
+                          ? `Synchroniser les images vers ${localePair.siblingLabel}`
+                          : `Sync images to ${localePair.siblingLabel}`
+                      }
+                      title={
+                        isFr
+                          ? `Copier les images manquantes vers ${localePair.siblingLabel}`
+                          : `Copy missing images to ${localePair.siblingLabel}`
+                      }
+                      className="rounded-lg"
+                    >
+                      <Languages className="size-3.5" />
+                    </Button>
+                  ) : null}
                 </>
               ) : null}
             </div>
           ) : null}
         </div>
+
+        {enableImages && localePair && mode === 'write' ? (
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border/50 bg-muted/20 px-3 py-2">
+            <div className="min-w-0 space-y-0.5">
+              <p className="text-xs font-medium text-foreground">
+                {isFr
+                  ? `Miroir médias → ${localePair.siblingLabel}`
+                  : `Mirror media → ${localePair.siblingLabel}`}
+              </p>
+              <p className="text-[11px] leading-snug text-muted-foreground">
+                {isFr
+                  ? 'Les nouvelles images sont aussi ajoutées à l’autre langue (même URL). Traduisez seulement les légendes.'
+                  : 'New images are also added to the other language (same URL). Only translate captions.'}
+              </p>
+            </div>
+            <Switch
+              checked={mirrorMedia}
+              onCheckedChange={setMirrorMedia}
+              aria-label={
+                isFr
+                  ? `Insérer aussi en ${localePair.siblingLabel}`
+                  : `Also insert in ${localePair.siblingLabel}`
+              }
+            />
+          </div>
+        ) : null}
 
         <TabsContent value="write">
           <Textarea
@@ -280,38 +407,22 @@ export function MarkdownEditor({
         </TabsContent>
 
         <TabsContent value="preview">
-          <div className="prose prose-sm dark:prose-invert max-w-none min-h-[220px] rounded-xl border border-border/60 bg-card/40 px-4 py-3 shadow-xs">
-            {value.trim() ? (
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  img: ({ src, alt, title }) => (
-                    <MarkdownFigure src={src} alt={alt} title={title} />
-                  ),
-                  p: ({ children }) => {
-                    const kids = Array.isArray(children) ? children : [children];
-                    const onlyFigure =
-                      kids.length === 1 &&
-                      typeof kids[0] === 'object' &&
-                      kids[0] !== null &&
-                      'props' in (kids[0] as object) &&
-                      Boolean(
-                        (kids[0] as { props?: { 'data-md-figure'?: string } }).props?.[
-                          'data-md-figure'
-                        ],
-                      );
-                    if (onlyFigure) return <>{kids[0]}</>;
-                    return <p>{children}</p>;
-                  },
-                }}
-              >
-                {value}
-              </ReactMarkdown>
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                {isFr ? 'Rien à prévisualiser.' : 'Nothing to preview.'}
+          <div className="min-h-[280px] overflow-hidden rounded-xl border border-border/60 bg-background shadow-xs">
+            <div className="border-b border-border/50 bg-muted/25 px-3 py-2">
+              <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                {isFr ? 'Aperçu public (article)' : 'Public article preview'}
               </p>
-            )}
+            </div>
+            <div className="px-4 py-6 sm:px-6 md:px-8 md:py-8">
+              <div className="mx-auto w-full max-w-[42rem]">
+                <BlogMarkdown
+                  content={value}
+                  isFr={languageLabel ? languageLabel.toUpperCase() === 'FR' : isFr}
+                  variant="preview"
+                  emptyLabel={isFr ? 'Rien à prévisualiser.' : 'Nothing to preview.'}
+                />
+              </div>
+            </div>
           </div>
         </TabsContent>
       </Tabs>

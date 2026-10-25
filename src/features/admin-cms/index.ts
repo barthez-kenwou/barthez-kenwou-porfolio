@@ -48,7 +48,14 @@ export { BilingualField } from './ui/BilingualField.ui';
 export type { BilingualFieldProps } from './ui/BilingualField.ui';
 
 export { MarkdownEditor } from './ui/MarkdownEditor.ui';
-export type { MarkdownEditorProps } from './ui/MarkdownEditor.ui';
+export type { MarkdownEditorProps, MarkdownLocalePair } from './ui/MarkdownEditor.ui';
+export {
+  appendMissingImages,
+  extractMarkdownImages,
+  buildImageMarkdown,
+  markdownContainsImageUrl,
+} from './lib/markdownImages';
+export type { MarkdownImageRef } from './lib/markdownImages';
 
 export { MermaidEditor } from './ui/MermaidEditor.ui';
 export type { MermaidEditorProps } from './ui/MermaidEditor.ui';

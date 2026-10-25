@@ -8,6 +8,10 @@ import { uploadAdminImage } from '../api/files.api';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { isApiError } from '@/shared/api';
 import { cn } from '@/shared/lib/utils';
+import {
+  COVER_COMPRESS,
+  type CompressImageOptions,
+} from '@/shared/lib/compressImage';
 
 export type MediaUrlListEditorProps = {
   label: string;
@@ -20,6 +24,8 @@ export type MediaUrlListEditorProps = {
    * Defaults to project-card carousel proportions (≈ 16/10).
    */
   previewClassName?: string;
+  /** Client compression before upload (default: cover/gallery photo preset) */
+  compressOptions?: CompressImageOptions;
 };
 
 function looksLikeImage(url: string) {
@@ -33,6 +39,7 @@ export function MediaUrlListEditor({
   kind = 'any',
   className,
   previewClassName = 'aspect-[16/10]',
+  compressOptions = COVER_COMPRESS,
 }: MediaUrlListEditorProps) {
   const language = useLanguageStore((s) => s.language);
   const isFr = language === 'fr';
@@ -62,9 +69,9 @@ export function MediaUrlListEditor({
     }
     setUploading(true);
     try {
-      const url = await uploadAdminImage(file);
+      const url = await uploadAdminImage(file, compressOptions);
       onChange([...urls.filter((u) => u.trim()), url]);
-      toast.success(isFr ? 'Image ajoutée' : 'Image added');
+      toast.success(isFr ? 'Image compressée et ajoutée' : 'Image compressed and added');
     } catch (e) {
       toast.error(
         isApiError(e)
