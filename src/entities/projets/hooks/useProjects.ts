@@ -6,11 +6,7 @@ import {
   type ResourceResult,
 } from '@/shared/api';
 import { paginateMock } from '@/shared/api/http';
-import {
-  findByNumericId,
-  getProjectPathSlug,
-  parseEntityIdFromParam,
-} from '@/shared/lib/entity-slug';
+import { findByPathSlug, parseEntityIdFromParam } from '@/shared/lib/entity-slug';
 import { isNotFoundError } from '@/shared/api/errors';
 import { projectsData } from '../api/mocks/projectData.mocks';
 import {
@@ -26,26 +22,36 @@ import type { IProject } from '../model/project.types';
 const PUBLIC_LIST: ProjectListParams = { limit: 100, isPublished: true };
 
 function findMockProject(routeParam: string | undefined): IProject | undefined {
-  if (!routeParam) return undefined;
-  return (
-    findByNumericId(projectsData, routeParam) ||
-    projectsData.find((p) => String(p.id) === routeParam) ||
-    projectsData.find((p) => getProjectPathSlug(p) === routeParam)
-  );
+  return findByPathSlug(projectsData, routeParam);
+}
+
+async function resolveProjectIdFromList(routeParam: string): Promise<string | null> {
+  const page = await listProjects(PUBLIC_LIST);
+  const match = findByPathSlug(page.items, routeParam);
+  return match ? String(match.id) : null;
 }
 
 async function fetchPublicProject(routeParam: string): Promise<IProject> {
-  const numericOrMongo = parseEntityIdFromParam(routeParam);
-  const primaryId = numericOrMongo ?? routeParam;
-  try {
-    return await getProject(primaryId);
-  } catch (error) {
-    // Retry with the raw slug if the API stores slug-style keys.
-    if (isNotFoundError(error) && primaryId !== routeParam) {
-      return getProject(routeParam);
+  const directId = parseEntityIdFromParam(routeParam);
+  if (directId) {
+    try {
+      return await getProject(directId);
+    } catch (error) {
+      if (!isNotFoundError(error)) throw error;
     }
-    throw error;
   }
+
+  // Readable slug (`title-0001` / `title-a1b2c3d4`) → resolve via list, then fetch by id.
+  const resolvedId = await resolveProjectIdFromList(routeParam);
+  if (resolvedId) {
+    return getProject(resolvedId);
+  }
+
+  // Last resort: API may accept the raw path segment.
+  if (!directId) {
+    return getProject(routeParam);
+  }
+  throw Object.assign(new Error('Project not found'), { statusCode: 404 });
 }
 
 export function usePublicProjects() {
@@ -66,7 +72,7 @@ export function useAdminProjects(params?: ProjectListParams) {
   });
 }
 
-/** Public detail: accepts numeric id, mongo id, or `{slug}-0001` path param. */
+/** Public detail: bare id, Mongo id, or `{slug}-{id-suffix}` path param. */
 export function useProject(routeParam: string | undefined, enabled = true) {
   return useQuery({
     queryKey: queryKeys.projects.detail(routeParam ?? ''),

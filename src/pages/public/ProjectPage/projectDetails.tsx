@@ -21,7 +21,7 @@ import { ProjectResourcesSection } from './sections/ProjectResourcesSection';
 import { ProjectLinksSection } from './sections/ProjectLinksSection';
 import { OtherProjectSection } from './sections/OtherProjectSection';
 import { CTADetailsSection } from './sections/CTADetailsSection';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { SEO } from '@/shared/ui/SEO/SEO';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { useProject } from '@/entities/projets/hooks/useProjects';
@@ -44,9 +44,8 @@ export const ProjectDetailPage = () => {
     endCtaRef,
     ready: Boolean(project),
   });
-  const projectPath = project
-    ? `/projects/${getProjectPathSlug(project)}`
-    : `/projects/${searchId}`;
+  const canonicalSlug = project ? getProjectPathSlug(project) : null;
+  const projectPath = canonicalSlug ? `/projects/${canonicalSlug}` : `/projects/${searchId}`;
   const contactTo = project
     ? `/contact?from=projects&article=${encodeURIComponent(
         isFr ? project.titleFr : project.titleEn,
@@ -58,9 +57,14 @@ export const ProjectDetailPage = () => {
   }, [searchId]);
 
   useEffect(() => {
-    if (!project) return;
-    void import('@/app/lib/analytics').then((m) => m.trackProjectView(getProjectPathSlug(project)));
-  }, [project]);
+    if (!project || !canonicalSlug) return;
+    void import('@/app/lib/analytics').then((m) => m.trackProjectView(canonicalSlug));
+  }, [project, canonicalSlug]);
+
+  // Old bookmarks `/projects/<mongoId>` → readable `/projects/<slug>-<suffix>`
+  if (project && canonicalSlug && searchId && searchId !== canonicalSlug) {
+    return <Navigate to={projectPath} replace />;
+  }
 
   const notFound =
     !isPending &&

@@ -108,6 +108,8 @@ export interface IProjectBeforeAfter {
 
 export interface IProject {
   id: ID;
+  /** Optional CMS slug used in public URLs (`{slug}-{id-suffix}`). */
+  slug?: string;
   titleFr: string;
   titleEn: string;
   descriptionFr: string;

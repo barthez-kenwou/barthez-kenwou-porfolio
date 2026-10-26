@@ -5,7 +5,9 @@ export { formatDate } from './date';
 export {
   buildEntityPathSlug,
   findByNumericId,
+  findByPathSlug,
   formatId4,
+  formatPathIdSuffix,
   getBlogPathSlug,
   getProjectPathSlug,
   parseEntityIdFromParam,

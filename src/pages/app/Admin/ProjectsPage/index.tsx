@@ -19,6 +19,7 @@ import { isApiError } from '@/shared/api';
 import { QueryState } from '@/shared/ui/QueryState';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { adminPath } from '@/shared/config/admin';
+import { getProjectPathSlug } from '@/shared/lib/entity-slug';
 import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
 import { Switch } from '@/shared/ui/switch';
@@ -69,7 +70,7 @@ export function AdminProjectsPage() {
   };
 
   const copyPublicLink = (row: IProject) => {
-    const path = `/projects/${row.id}`;
+    const path = `/projects/${getProjectPathSlug(row)}`;
     void navigator.clipboard.writeText(`${window.location.origin}${path}`);
     toast.success(fr ? 'Lien copié' : 'Link copied');
   };
@@ -204,7 +205,7 @@ export function AdminProjectsPage() {
                 <Copy className="size-3.5" />
               </Button>
               <Button size="icon-sm" variant="ghost" className="size-11 md:size-8" asChild>
-                <a href={`/projects/${r.id}`} target="_blank" rel="noreferrer">
+                <a href={`/projects/${getProjectPathSlug(r)}`} target="_blank" rel="noreferrer">
                   <ExternalLink className="size-3.5" />
                 </a>
               </Button>
