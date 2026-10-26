@@ -17,6 +17,7 @@ import type {
   ProjectVideoType,
 } from '@/entities/projets/model/project.types';
 import {
+  useAdminProjects,
   useProject,
   useCreateProject,
   useUpdateProject,
@@ -183,6 +184,7 @@ export const AdminProjectEditorPage: React.FC = () => {
   const navigate = useNavigate();
   const create = useCreateProject();
   const update = useUpdateProject();
+  const { data: adminProjects } = useAdminProjects();
   const {
     data: project,
     isPending,
@@ -379,8 +381,10 @@ export const AdminProjectEditorPage: React.FC = () => {
 
     try {
       if (isNew || draft.id === undefined || draft.id === null || draft.id === '') {
-        const created = await create.mutateAsync(payload);
-        markClean({ ...draft, ...payload, id: created.id });
+        const orders = (adminProjects?.items ?? []).map((p) => p.sortOrder ?? 0);
+        const sortOrder = orders.length ? Math.max(...orders) + 1 : 0;
+        const created = await create.mutateAsync({ ...payload, sortOrder });
+        markClean({ ...draft, ...payload, sortOrder, id: created.id });
         allowNextNavigation();
         toast.success(fr ? 'Projet enregistré' : 'Project saved');
         navigate(adminPath('projects', String(created.id)), { replace: true });

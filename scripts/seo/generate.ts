@@ -607,11 +607,13 @@ function injectJsonLd(html: string, id: string, data: unknown): string {
 }
 
 function injectRoot(html: string, bodyInner: string): string {
+  // Crawlable body for bots. Sighted users with JS never see it: index.html
+  // critical CSS hides #seo-prerender when <html class="js"> (set in the first inline script).
   const block = `<div id="root">
-    <main id="seo-prerender" data-seo-prerender="true" style="max-width:72rem;margin:0 auto;padding:1.5rem;font-family:system-ui,sans-serif;line-height:1.6;color:#111;background:#fff">
+    <main id="seo-prerender" data-seo-prerender="true" style="max-width:72rem;margin:0 auto;padding:1.5rem;font-family:system-ui,sans-serif;line-height:1.6;color:#e8e8ed;background:#050505">
       ${bodyInner}
-      <hr />
-      <p style="font-size:.875rem;opacity:.8">Site de <strong>${escapeHtml(SITE_NAME)}</strong> - <a href="${SITE_URL}/">${SITE_URL}</a></p>
+      <hr style="border-color:#2a2a32" />
+      <p style="font-size:.875rem;opacity:.8">Site de <strong>${escapeHtml(SITE_NAME)}</strong> - <a href="${SITE_URL}/" style="color:#b9a0e3">${SITE_URL}</a></p>
     </main>
   </div>`;
   return html.replace(/<div id="root"><\/div>/i, block);

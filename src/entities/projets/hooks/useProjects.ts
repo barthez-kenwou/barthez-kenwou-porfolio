@@ -8,6 +8,7 @@ import {
 import { paginateMock } from '@/shared/api/http';
 import { findByPathSlug, parseEntityIdFromParam } from '@/shared/lib/entity-slug';
 import { isNotFoundError } from '@/shared/api/errors';
+import { sortBySortOrder } from '@/features/admin-cms/lib/reorder';
 import { projectsData } from '../api/mocks/projectData.mocks';
 import {
   createProject,
@@ -20,6 +21,17 @@ import {
 import type { IProject } from '../model/project.types';
 
 const PUBLIC_LIST: ProjectListParams = { limit: 100, isPublished: true };
+
+function withMockSortOrder(items: IProject[]): IProject[] {
+  return items.map((project, index) => ({
+    ...project,
+    sortOrder: project.sortOrder ?? index,
+  }));
+}
+
+function sortProjectsPage(page: PaginatedData<IProject>): PaginatedData<IProject> {
+  return { ...page, items: sortBySortOrder(page.items) };
+}
 
 function findMockProject(routeParam: string | undefined): IProject | undefined {
   return findByPathSlug(projectsData, routeParam);
@@ -57,18 +69,23 @@ async function fetchPublicProject(routeParam: string): Promise<IProject> {
 export function usePublicProjects() {
   return useQuery({
     queryKey: queryKeys.projects.list({ public: true }),
-    queryFn: async (): Promise<ResourceResult<PaginatedData<IProject>>> =>
-      withPublicFallback(
+    queryFn: async (): Promise<ResourceResult<PaginatedData<IProject>>> => {
+      const result = await withPublicFallback(
         () => listProjects(PUBLIC_LIST),
-        () => paginateMock(projectsData),
-      ),
+        () => paginateMock(withMockSortOrder(projectsData)),
+      );
+      return { ...result, data: sortProjectsPage(result.data) };
+    },
   });
 }
 
 export function useAdminProjects(params?: ProjectListParams) {
   return useQuery({
     queryKey: queryKeys.projects.list({ admin: true, ...params }),
-    queryFn: () => listProjects({ limit: 100, includeUnpublished: true, ...params }),
+    queryFn: async () =>
+      sortProjectsPage(
+        await listProjects({ limit: 100, includeUnpublished: true, ...params }),
+      ),
   });
 }
 

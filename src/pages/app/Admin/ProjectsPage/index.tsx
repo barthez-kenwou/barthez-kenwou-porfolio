@@ -1,6 +1,15 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Copy, ExternalLink, Pencil, Plus, Trash2 } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronUp,
+  Copy,
+  ExternalLink,
+  Loader2,
+  Pencil,
+  Plus,
+  Trash2,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import type { IProject } from '@/entities/projets/model/project.types';
 import {
@@ -14,6 +23,8 @@ import {
   AdminDataTable,
   ConfirmDeleteDialog,
   formatAdminDate,
+  getReorderTargets,
+  sortBySortOrder,
 } from '@/features/admin-cms';
 import { isApiError } from '@/shared/api';
 import { QueryState } from '@/shared/ui/QueryState';
@@ -33,7 +44,8 @@ export function AdminProjectsPage() {
   const update = useUpdateProject();
   const remove = useDeleteProject();
   const [pending, setPending] = React.useState<IProject | null>(null);
-  const projects = data?.items ?? [];
+  const [reorderingId, setReorderingId] = React.useState<string | null>(null);
+  const projects = React.useMemo(() => sortBySortOrder(data?.items ?? []), [data?.items]);
 
   const setPublished = async (row: IProject, value: boolean) => {
     try {
@@ -54,6 +66,7 @@ export function AdminProjectsPage() {
 
   const duplicate = async (row: IProject) => {
     const { id: _id, ...rest } = row;
+    const maxOrder = projects.reduce((max, p) => Math.max(max, p.sortOrder ?? 0), 0);
     try {
       const copy = await create.mutateAsync({
         ...rest,
@@ -61,11 +74,27 @@ export function AdminProjectsPage() {
         titleEn: `${row.titleEn} (copy)`,
         isPublished: false,
         isFeatured: false,
+        sortOrder: maxOrder + 1,
       });
       toast.success(fr ? 'Copie créée' : 'Copy created');
       navigate(adminPath('projects', String(copy.id)));
     } catch (e) {
       toast.error(isApiError(e) ? e.message : fr ? 'Échec' : 'Failed');
+    }
+  };
+
+  const reorder = async (id: string, direction: 'up' | 'down') => {
+    const patches = getReorderTargets(projects, id, direction);
+    if (!patches.length) return;
+    setReorderingId(id);
+    try {
+      await Promise.all(
+        patches.map((p) => update.mutateAsync({ id: p.id, payload: { sortOrder: p.sortOrder } })),
+      );
+    } catch (e) {
+      toast.error(isApiError(e) ? e.message : fr ? 'Échec du réordonnancement' : 'Reorder failed');
+    } finally {
+      setReorderingId(null);
     }
   };
 
@@ -140,6 +169,19 @@ export function AdminProjectsPage() {
           ]}
           columns={[
             {
+              key: 'n',
+              header: '#',
+              className: 'w-[3.25rem]',
+              render: (r) => {
+                const idx = projects.findIndex((x) => String(x.id) === String(r.id));
+                return (
+                  <span className="font-heading text-xs font-semibold tabular-nums text-muted-foreground">
+                    {String(idx + 1).padStart(2, '0')}
+                  </span>
+                );
+              },
+            },
+            {
               key: 'title',
               header: fr ? 'Titre' : 'Title',
               render: (r) => (
@@ -193,46 +235,74 @@ export function AdminProjectsPage() {
               ),
             },
           ]}
-          actions={(r) => (
-            <>
-              <Button
-                size="icon-sm"
-                variant="ghost"
-                className="size-11 md:size-8"
-                title={fr ? 'Lien public' : 'Public link'}
-                onClick={() => copyPublicLink(r)}
-              >
-                <Copy className="size-3.5" />
-              </Button>
-              <Button size="icon-sm" variant="ghost" className="size-11 md:size-8" asChild>
-                <a href={`/projects/${getProjectPathSlug(r)}`} target="_blank" rel="noreferrer">
-                  <ExternalLink className="size-3.5" />
-                </a>
-              </Button>
-              <Button
-                size="icon-sm"
-                variant="ghost"
-                className="size-11 md:size-8"
-                title={fr ? 'Dupliquer' : 'Duplicate'}
-                onClick={() => void duplicate(r)}
-              >
-                <Plus className="size-3.5" />
-              </Button>
-              <Button size="icon-sm" variant="ghost" className="size-11 md:size-8" asChild>
-                <Link to={adminPath('projects', String(r.id))}>
-                  <Pencil className="size-3.5" />
-                </Link>
-              </Button>
-              <Button
-                size="icon-sm"
-                variant="ghost"
-                className="size-11 md:size-8"
-                onClick={() => setPending(r)}
-              >
-                <Trash2 className="size-3.5 text-destructive" />
-              </Button>
-            </>
-          )}
+          actions={(r) => {
+            const idx = projects.findIndex((x) => String(x.id) === String(r.id));
+            const busy = reorderingId === String(r.id);
+            return (
+              <>
+                <Button
+                  size="icon-sm"
+                  variant="ghost"
+                  className="size-11 md:size-8"
+                  disabled={idx <= 0 || reorderingId !== null}
+                  title={fr ? 'Monter' : 'Move up'}
+                  onClick={() => void reorder(String(r.id), 'up')}
+                >
+                  {busy ? (
+                    <Loader2 className="size-3.5 animate-spin" />
+                  ) : (
+                    <ChevronUp className="size-3.5" />
+                  )}
+                </Button>
+                <Button
+                  size="icon-sm"
+                  variant="ghost"
+                  className="size-11 md:size-8"
+                  disabled={idx >= projects.length - 1 || reorderingId !== null}
+                  title={fr ? 'Descendre' : 'Move down'}
+                  onClick={() => void reorder(String(r.id), 'down')}
+                >
+                  <ChevronDown className="size-3.5" />
+                </Button>
+                <Button
+                  size="icon-sm"
+                  variant="ghost"
+                  className="size-11 md:size-8"
+                  title={fr ? 'Lien public' : 'Public link'}
+                  onClick={() => copyPublicLink(r)}
+                >
+                  <Copy className="size-3.5" />
+                </Button>
+                <Button size="icon-sm" variant="ghost" className="size-11 md:size-8" asChild>
+                  <a href={`/projects/${getProjectPathSlug(r)}`} target="_blank" rel="noreferrer">
+                    <ExternalLink className="size-3.5" />
+                  </a>
+                </Button>
+                <Button
+                  size="icon-sm"
+                  variant="ghost"
+                  className="size-11 md:size-8"
+                  title={fr ? 'Dupliquer' : 'Duplicate'}
+                  onClick={() => void duplicate(r)}
+                >
+                  <Plus className="size-3.5" />
+                </Button>
+                <Button size="icon-sm" variant="ghost" className="size-11 md:size-8" asChild>
+                  <Link to={adminPath('projects', String(r.id))}>
+                    <Pencil className="size-3.5" />
+                  </Link>
+                </Button>
+                <Button
+                  size="icon-sm"
+                  variant="ghost"
+                  className="size-11 md:size-8"
+                  onClick={() => setPending(r)}
+                >
+                  <Trash2 className="size-3.5 text-destructive" />
+                </Button>
+              </>
+            );
+          }}
         />
       </QueryState>
       <ConfirmDeleteDialog

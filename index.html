@@ -9,6 +9,7 @@
     <meta name="theme-color" content="#FAFAFA" media="(prefers-color-scheme: light)" />
     <script>
       (function () {
+        document.documentElement.classList.add('js');
         try {
           var raw = localStorage.getItem('frontend-starter-theme');
           var theme = 'dark';
@@ -23,6 +24,33 @@
         }
       })();
     </script>
+    <!-- Hide SEO crawl shell + paint dark/light bg before CSS/JS bundles arrive (no white FOUC). -->
+    <style>
+      html.js body {
+        margin: 0;
+        min-height: 100svh;
+        background: #050505;
+        color: #f5f5f5;
+      }
+      html.js:not(.dark) body {
+        background: #fafafa;
+        color: #121217;
+      }
+      html.js #seo-prerender {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+      }
+      html.js #root {
+        min-height: 100svh;
+      }
+    </style>
 
     <!-- SEO & Social -->
     <title>Barthez Kenwou | Développeur Full Stack &amp; Ingénieur DevOps</title>
@@ -228,7 +256,7 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval' https://www.googletagmanager.com https://analytics.zenora360.com https://static.cloudflareinsights.com https://connect.facebook.net 'sha256-Y5DkzDSkKEN0lVZBOszkzzqDGkjpKH2LFz9cE0TXoBY=' 'sha256-zv5y103lLH945kgXRQUh4X1IYN/azBtf+uRV04YhUl4=' 'sha256-YhJXk1iTWplPeapuJ0O01wcXVQ3tP2fS4rbwuTpKjAs='; connect-src 'self' http://localhost:3000 http://127.0.0.1:3000 https://api.barthez-kenwou.dev https://s3.zenora360.com https://*.zenora360.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://analytics.zenora360.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://connect.facebook.net https://www.facebook.com https://cdn.simpleicons.org https://cdn.jsdelivr.net https://*.supabase.co https://*.vimeo.com https://*.vimeocdn.com ws: wss: blob: data:; img-src 'self' data: https: blob:; media-src 'self' blob: https://*.vimeocdn.com https://player.vimeo.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.fontshare.com https://cdn.fontshare.com; font-src 'self' data: https://cdn.fontshare.com https://fonts.gstatic.com; frame-src 'self' blob: https://player.vimeo.com https://vimeo.com https://www.youtube-nocookie.com https://www.youtube.com; child-src 'self' blob: https://player.vimeo.com https://vimeo.com; worker-src 'self' blob:;"
+      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval' https://www.googletagmanager.com https://analytics.zenora360.com https://static.cloudflareinsights.com https://connect.facebook.net 'sha256-uwaIPeWDuepOc9DBev6kSwE0xPuf1IcFYZmj8EpBs0w=' 'sha256-zv5y103lLH945kgXRQUh4X1IYN/azBtf+uRV04YhUl4=' 'sha256-YhJXk1iTWplPeapuJ0O01wcXVQ3tP2fS4rbwuTpKjAs=' 'sha256-VLONLJGjUCF7+pX4Tfml9FPsXBqo/RUN/9L6o93VxB8='; connect-src 'self' http://localhost:3000 http://127.0.0.1:3000 https://api.barthez-kenwou.dev https://s3.zenora360.com https://*.zenora360.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://analytics.zenora360.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://connect.facebook.net https://www.facebook.com https://cdn.simpleicons.org https://cdn.jsdelivr.net https://*.supabase.co https://*.vimeo.com https://*.vimeocdn.com ws: wss: blob: data:; img-src 'self' data: https: blob:; media-src 'self' blob: https://*.vimeocdn.com https://player.vimeo.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.fontshare.com https://cdn.fontshare.com; font-src 'self' data: https://cdn.fontshare.com https://fonts.gstatic.com; frame-src 'self' blob: https://player.vimeo.com https://vimeo.com https://www.youtube-nocookie.com https://www.youtube.com; child-src 'self' blob: https://player.vimeo.com https://vimeo.com; worker-src 'self' blob:;"
     />
 
     <!-- Compatibilité -->

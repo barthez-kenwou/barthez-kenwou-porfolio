@@ -157,6 +157,9 @@ export interface IProject {
   /** When false, hidden from the public projects listing. */
   isPublished?: boolean;
 
+  /** CMS list order (lower = earlier). Backend defaults to 0. */
+  sortOrder?: number;
+
   /** NDA / anonymized case study */
   confidential?: boolean;
 
