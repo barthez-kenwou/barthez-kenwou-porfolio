@@ -88,7 +88,7 @@ export function parseEntityIdFromParam(param: string | undefined): string | null
 }
 
 export function findByNumericId<T extends { id: string | number }>(
-  items: T[],
+  items: readonly T[],
   param: string | undefined,
 ): T | undefined {
   const id = parseEntityIdFromParam(param);
