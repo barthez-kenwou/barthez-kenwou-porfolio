@@ -122,10 +122,7 @@ export const InternalErrorPage: React.FC<InternalErrorPageProps> = ({
                     className="inline-flex items-center gap-1 text-[11px] font-medium text-muted-foreground hover:text-foreground"
                   >
                     <ChevronDown
-                      className={cn(
-                        'size-3.5 transition-transform',
-                        showDetails && 'rotate-180',
-                      )}
+                      className={cn('size-3.5 transition-transform', showDetails && 'rotate-180')}
                     />
                     {detailsLabel}
                   </button>

@@ -17,13 +17,7 @@ import { Button } from '@/shared/ui/button';
 import { SEO } from '@/shared/ui/SEO/SEO';
 import { QueryState } from '@/shared/ui/QueryState';
 import { Ripple } from '@/shared/ui/ripple';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
 import { cn } from '@/shared/lib/utils';
 
 const NO_PROJECT = '__none__';
@@ -229,215 +223,215 @@ export function FeedbackPage() {
             </header>
 
             <div className="rounded-md border border-border/60 bg-card p-4 sm:p-5 md:p-6">
-            {done ? (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex min-h-56 flex-col items-center justify-center gap-2.5 px-2 text-center"
-              >
-                <HiOutlineCheckCircle className="size-10 text-primary" />
-                <p className="text-lg font-medium tracking-tight">
-                  {fr ? 'Merci, reçu.' : 'Thank you, received.'}
-                </p>
-                <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-                  {fr
-                    ? 'Votre avis est en revue. Il ne sera public qu’après validation.'
-                    : 'Your feedback is under review. It goes public only after approval.'}
-                </p>
-                <Button variant="outline" className="mt-2" onClick={() => setDone(false)}>
-                  {fr ? 'En envoyer un autre' : 'Send another'}
-                </Button>
-              </motion.div>
-            ) : (
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-3 sm:space-y-3.5"
-                  noValidate
+              {done ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex min-h-56 flex-col items-center justify-center gap-2.5 px-2 text-center"
                 >
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem className="gap-1">
-                        <FormControl>
-                          <FloatingFillField
-                            label={fr ? 'Nom complet' : 'Full name'}
-                            value={field.value}
-                            onChange={field.onChange}
-                            onBlur={field.onBlur}
-                            name={field.name}
-                            invalid={!!form.formState.errors.name}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="grid gap-3 sm:grid-cols-2 sm:gap-3">
+                  <HiOutlineCheckCircle className="size-10 text-primary" />
+                  <p className="text-lg font-medium tracking-tight">
+                    {fr ? 'Merci, reçu.' : 'Thank you, received.'}
+                  </p>
+                  <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
+                    {fr
+                      ? 'Votre avis est en revue. Il ne sera public qu’après validation.'
+                      : 'Your feedback is under review. It goes public only after approval.'}
+                  </p>
+                  <Button variant="outline" className="mt-2" onClick={() => setDone(false)}>
+                    {fr ? 'En envoyer un autre' : 'Send another'}
+                  </Button>
+                </motion.div>
+              ) : (
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-3 sm:space-y-3.5"
+                    noValidate
+                  >
                     <FormField
                       control={form.control}
-                      name="email"
+                      name="name"
                       render={({ field }) => (
                         <FormItem className="gap-1">
                           <FormControl>
                             <FloatingFillField
-                              label="Email"
-                              type="email"
+                              label={fr ? 'Nom complet' : 'Full name'}
                               value={field.value}
                               onChange={field.onChange}
                               onBlur={field.onBlur}
                               name={field.name}
-                              invalid={!!form.formState.errors.email}
+                              invalid={!!form.formState.errors.name}
                             />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+
+                    <div className="grid gap-3 sm:grid-cols-2 sm:gap-3">
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem className="gap-1">
+                            <FormControl>
+                              <FloatingFillField
+                                label="Email"
+                                type="email"
+                                value={field.value}
+                                onChange={field.onChange}
+                                onBlur={field.onBlur}
+                                name={field.name}
+                                invalid={!!form.formState.errors.email}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="company"
+                        render={({ field }) => (
+                          <FormItem className="gap-1">
+                            <FormControl>
+                              <FloatingFillField
+                                label={fr ? 'Entreprise (optionnel)' : 'Company (optional)'}
+                                value={field.value || ''}
+                                onChange={field.onChange}
+                                onBlur={field.onBlur}
+                                name={field.name}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
                     <FormField
                       control={form.control}
-                      name="company"
+                      name="role"
                       render={({ field }) => (
                         <FormItem className="gap-1">
                           <FormControl>
                             <FloatingFillField
-                              label={fr ? 'Entreprise (optionnel)' : 'Company (optional)'}
-                              value={field.value || ''}
+                              label={fr ? 'Titre / rôle' : 'Title / role'}
+                              value={field.value}
                               onChange={field.onChange}
                               onBlur={field.onBlur}
                               name={field.name}
+                              invalid={!!form.formState.errors.role}
                             />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                  </div>
 
-                  <FormField
-                    control={form.control}
-                    name="role"
-                    render={({ field }) => (
-                      <FormItem className="gap-1">
-                        <FormControl>
-                          <FloatingFillField
-                            label={fr ? 'Titre / rôle' : 'Title / role'}
-                            value={field.value}
-                            onChange={field.onChange}
-                            onBlur={field.onBlur}
-                            name={field.name}
-                            invalid={!!form.formState.errors.role}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="projectId"
-                    render={({ field }) => (
-                      <FormItem className="gap-1.5">
-                        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-                          {fr ? 'Projet concerné' : 'Related project'}
-                          <span className="ml-1.5 normal-case tracking-normal text-muted-foreground/70">
-                            ({fr ? 'optionnel' : 'optional'})
-                          </span>
-                        </p>
-                        <Select
-                          value={field.value?.trim() ? field.value : NO_PROJECT}
-                          onValueChange={(v) => field.onChange(v === NO_PROJECT ? '' : v)}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="h-11 w-full cursor-pointer rounded-sm border-border/55 bg-transparent px-3 text-left text-sm">
-                              <SelectValue
-                                placeholder={
-                                  fr ? 'Aucun projet spécifique' : 'No specific project'
-                                }
-                              />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className="max-w-[min(100vw-2rem,28rem)]">
-                            <SelectItem value={NO_PROJECT}>
-                              {fr ? 'Aucun projet spécifique' : 'No specific project'}
-                            </SelectItem>
-                            {projects.map((p) => (
-                              <SelectItem
-                                key={String(p.id)}
-                                value={String(p.id)}
-                                className="whitespace-normal"
-                              >
-                                {fr ? p.titleFr : p.titleEn}
+                    <FormField
+                      control={form.control}
+                      name="projectId"
+                      render={({ field }) => (
+                        <FormItem className="gap-1.5">
+                          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                            {fr ? 'Projet concerné' : 'Related project'}
+                            <span className="ml-1.5 normal-case tracking-normal text-muted-foreground/70">
+                              ({fr ? 'optionnel' : 'optional'})
+                            </span>
+                          </p>
+                          <Select
+                            value={field.value?.trim() ? field.value : NO_PROJECT}
+                            onValueChange={(v) => field.onChange(v === NO_PROJECT ? '' : v)}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="h-11 w-full cursor-pointer rounded-sm border-border/55 bg-transparent px-3 text-left text-sm">
+                                <SelectValue
+                                  placeholder={
+                                    fr ? 'Aucun projet spécifique' : 'No specific project'
+                                  }
+                                />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent className="max-w-[min(100vw-2rem,28rem)]">
+                              <SelectItem value={NO_PROJECT}>
+                                {fr ? 'Aucun projet spécifique' : 'No specific project'}
                               </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                              {projects.map((p) => (
+                                <SelectItem
+                                  key={String(p.id)}
+                                  value={String(p.id)}
+                                  className="whitespace-normal"
+                                >
+                                  {fr ? p.titleFr : p.titleEn}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  <FormField
-                    control={form.control}
-                    name="rating"
-                    render={({ field }) => (
-                      <FormItem className="gap-1 border-t border-border/40 pt-3">
-                        <StarRating
-                          value={field.value}
-                          onChange={field.onChange}
-                          label={fr ? 'Note' : 'Rating'}
-                          fr={fr}
-                        />
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="message"
-                    render={({ field }) => (
-                      <FormItem className="gap-1">
-                        <FormControl>
-                          <FloatingFillField
-                            label={fr ? 'Votre témoignage' : 'Your testimonial'}
-                            multiline
-                            rows={5}
+                    <FormField
+                      control={form.control}
+                      name="rating"
+                      render={({ field }) => (
+                        <FormItem className="gap-1 border-t border-border/40 pt-3">
+                          <StarRating
                             value={field.value}
                             onChange={field.onChange}
-                            onBlur={field.onBlur}
-                            name={field.name}
-                            invalid={!!form.formState.errors.message}
+                            label={fr ? 'Note' : 'Rating'}
+                            fr={fr}
                           />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  {submitError ? (
-                    <p className="text-sm text-destructive" role="alert">
-                      {submitError}
-                    </p>
-                  ) : null}
+                    <FormField
+                      control={form.control}
+                      name="message"
+                      render={({ field }) => (
+                        <FormItem className="gap-1">
+                          <FormControl>
+                            <FloatingFillField
+                              label={fr ? 'Votre témoignage' : 'Your testimonial'}
+                              multiline
+                              rows={5}
+                              value={field.value}
+                              onChange={field.onChange}
+                              onBlur={field.onBlur}
+                              name={field.name}
+                              invalid={!!form.formState.errors.message}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  <div className="flex justify-end pt-1">
-                    <Button
-                      type="submit"
-                      className="h-11 w-full cursor-pointer gap-2 sm:w-auto sm:min-w-44"
-                      disabled={form.formState.isSubmitting || submitFeedback.isPending}
-                    >
-                      <HiOutlinePaperAirplane className="size-4" />
-                      {fr ? 'Envoyer pour validation' : 'Submit for review'}
-                    </Button>
-                  </div>
-                </form>
-              </Form>
-            )}
-          </div>
+                    {submitError ? (
+                      <p className="text-sm text-destructive" role="alert">
+                        {submitError}
+                      </p>
+                    ) : null}
+
+                    <div className="flex justify-end pt-1">
+                      <Button
+                        type="submit"
+                        className="h-11 w-full cursor-pointer gap-2 sm:w-auto sm:min-w-44"
+                        disabled={form.formState.isSubmitting || submitFeedback.isPending}
+                      >
+                        <HiOutlinePaperAirplane className="size-4" />
+                        {fr ? 'Envoyer pour validation' : 'Submit for review'}
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
+              )}
+            </div>
           </div>
         </section>
 

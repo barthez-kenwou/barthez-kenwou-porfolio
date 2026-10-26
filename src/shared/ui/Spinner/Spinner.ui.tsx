@@ -1,7 +1,5 @@
 import React from 'react';
+import { RouteFallback } from '@/shared/ui/RouteFallback/RouteFallback';
 
-export const LoadingSpinner: React.FC = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
-  </div>
-);
+/** @deprecated Prefer RouteFallback / LoadingPage — kept as branded alias. */
+export const LoadingSpinner: React.FC = () => <RouteFallback fullScreen />;

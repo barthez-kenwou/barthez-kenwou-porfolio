@@ -25,9 +25,7 @@ export const EndContact = () => {
           <div
             className={cn(
               'flex items-center gap-1.5 rounded-t-sm border border-b-0 px-4 py-2.5',
-              isDark
-                ? 'border-zinc-700/80 bg-[#0d1117]'
-                : 'border-primary/20 bg-[#f3eff9]',
+              isDark ? 'border-zinc-700/80 bg-[#0d1117]' : 'border-primary/20 bg-[#f3eff9]',
             )}
           >
             <div className="h-2.5 w-2.5 rounded-full bg-red-500/70" />

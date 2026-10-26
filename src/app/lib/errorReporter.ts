@@ -35,8 +35,8 @@ export async function reportError(error: Error, info?: ErrorReportInfo) {
   // Try to forward to Sentry if available at runtime (opt-in via env and install)
   try {
     if (
-      typeof process !== 'undefined' &&
-      (process.env.SENTRY_DSN || (window as any).__SENTRY_DSN__)
+      Boolean(import.meta.env.VITE_SENTRY_DSN) ||
+      Boolean((window as { __SENTRY_DSN__?: string }).__SENTRY_DSN__)
     ) {
       // Attempt a runtime import using a dynamically-created function so bundlers
       // (Vite/Rollup) do not attempt to statically analyze and resolve the module.

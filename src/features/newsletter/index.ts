@@ -1,8 +1,5 @@
 export { subscribeNewsletter } from './api/newsletter.api';
-export type {
-  NewsletterSubscribeResult,
-  NewsletterSubscribeErrorCode,
-} from './api/newsletter.api';
+export type { NewsletterSubscribeResult, NewsletterSubscribeErrorCode } from './api/newsletter.api';
 export { newsletterAdminApi } from './api/newsletter-admin.api';
 export type {
   NewsletterStats,

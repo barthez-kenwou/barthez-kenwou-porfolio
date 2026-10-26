@@ -16,9 +16,7 @@ export const ProjectTestimonialSection: React.FC<{ project: IProject }> = ({ pro
   return (
     <ProjectSectionShell title={isFr ? 'Avis client' : 'Client note'} tone="quiet">
       <blockquote className="max-w-3xl border-l-2 border-foreground/25 pl-5 md:pl-6">
-        <p className="text-sm md:text-[15px] text-foreground/90 leading-relaxed mb-5">
-          “{quote}”
-        </p>
+        <p className="text-sm md:text-[15px] text-foreground/90 leading-relaxed mb-5">“{quote}”</p>
         <footer className="text-sm">
           <cite className="not-italic font-medium text-foreground">{t.author}</cite>
           {(role || t.company) && (

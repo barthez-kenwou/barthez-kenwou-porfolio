@@ -92,9 +92,7 @@ export function KeyValueEditor({ label, value, onChange, className }: KeyValueEd
   };
 
   const addRow = () => {
-    commit(
-      insertIntoList(rows, { id: createRowId(), key: '', value: '' }, position),
-    );
+    commit(insertIntoList(rows, { id: createRowId(), key: '', value: '' }, position));
   };
 
   return (

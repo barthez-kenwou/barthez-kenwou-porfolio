@@ -1,12 +1,7 @@
 import React from 'react';
 import { Loader2, Send } from 'lucide-react';
 import { toast } from 'sonner';
-import {
-  AdminSectionCard,
-  AdminStickyActions,
-  BilingualField,
-  Field,
-} from '@/features/admin-cms';
+import { AdminSectionCard, AdminStickyActions, BilingualField, Field } from '@/features/admin-cms';
 import {
   useBroadcastNewsletter,
   useNewsletterStats,
@@ -28,11 +23,7 @@ import { Input } from '@/shared/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
 import { Textarea } from '@/shared/ui/textarea';
 import { cn } from '@/shared/lib/utils';
-import {
-  AIEC_PRESETS,
-  applyAiecPreset,
-  type AiecPresetId,
-} from '../lib/aiec-presets';
+import { AIEC_PRESETS, applyAiecPreset, type AiecPresetId } from '../lib/aiec-presets';
 
 const emptyBroadcast = (): NewsletterBroadcastPayload => ({
   subjectFr: '',
@@ -155,9 +146,7 @@ export function ComposeSection({ fr, onSent }: Props) {
         }
       >
         <div className="mb-4 rounded-lg border border-border/60 bg-muted/15 px-3 py-2.5 text-sm">
-          <p className="font-medium">
-            {fr ? 'Audience estimée' : 'Estimated audience'}
-          </p>
+          <p className="font-medium">{fr ? 'Audience estimée' : 'Estimated audience'}</p>
           <p className="mt-0.5 text-muted-foreground">
             {fr
               ? `${activeCount} abonné${activeCount > 1 ? 's' : ''} actif${activeCount > 1 ? 's' : ''} au total. Le segment locale (si choisi) sera appliqué côté serveur.`
@@ -177,9 +166,7 @@ export function ComposeSection({ fr, onSent }: Props) {
               }}
             >
               <SelectTrigger>
-                <SelectValue
-                  placeholder={fr ? 'Choisir un preset…' : 'Choose a preset…'}
-                />
+                <SelectValue placeholder={fr ? 'Choisir un preset…' : 'Choose a preset…'} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="none">
@@ -219,9 +206,7 @@ export function ComposeSection({ fr, onSent }: Props) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">
-                  {fr ? 'Tous les actifs' : 'All active'}
-                </SelectItem>
+                <SelectItem value="all">{fr ? 'Tous les actifs' : 'All active'}</SelectItem>
                 <SelectItem value="fr">FR uniquement</SelectItem>
                 <SelectItem value="en">EN only</SelectItem>
               </SelectContent>

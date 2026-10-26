@@ -140,12 +140,20 @@ export function MarkdownFocusSecondaryDock({
 
         <div className="relative flex h-12 w-full items-end bg-transparent">
           <div className="mx-auto flex h-9 w-full max-w-6xl items-center gap-2 px-3 sm:gap-3 sm:px-6">
-            <FocusStats words={stats.words} minutes={stats.minutes} isFr={isFr} className="hidden sm:flex" />
+            <FocusStats
+              words={stats.words}
+              minutes={stats.minutes}
+              isFr={isFr}
+              className="hidden sm:flex"
+            />
 
             <div className="flex min-w-0 flex-1 items-center justify-center gap-0.5 overflow-x-auto sm:gap-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {writable ? (
                 <>
-                  <IconBtn tip={isFr ? 'Bloc de code' : 'Code block'} onClick={() => onSnippet('codeBlock')}>
+                  <IconBtn
+                    tip={isFr ? 'Bloc de code' : 'Code block'}
+                    onClick={() => onSnippet('codeBlock')}
+                  >
                     <Code2 className="size-3.5" />
                   </IconBtn>
                   <IconBtn tip={isFr ? 'Citation' : 'Quote'} onClick={() => onSnippet('quote')}>
@@ -154,7 +162,10 @@ export function MarkdownFocusSecondaryDock({
                   <IconBtn tip={isFr ? 'Séparateur' : 'Divider'} onClick={() => onSnippet('hr')}>
                     <Minus className="size-3.5" />
                   </IconBtn>
-                  <IconBtn tip={isFr ? 'Liste numérotée' : 'Numbered list'} onClick={() => onSnippet('ol')}>
+                  <IconBtn
+                    tip={isFr ? 'Liste numérotée' : 'Numbered list'}
+                    onClick={() => onSnippet('ol')}
+                  >
                     <ListOrdered className="size-3.5" />
                   </IconBtn>
                   <IconBtn tip="Checklist" onClick={() => onSnippet('checklist')}>
@@ -254,7 +265,8 @@ export function MarkdownFocusSecondaryDock({
                       size="icon-sm"
                       className={cn(
                         btn,
-                        mirrorMedia && 'bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary',
+                        mirrorMedia &&
+                          'bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary',
                       )}
                       aria-pressed={mirrorMedia}
                       title={

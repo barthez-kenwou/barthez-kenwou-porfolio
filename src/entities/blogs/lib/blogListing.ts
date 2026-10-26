@@ -2,9 +2,7 @@ import type { IBlog } from '../model/blog.type';
 
 /** Newest published first (arrival / publication order). */
 export function sortBlogsByArrival(posts: IBlog[]): IBlog[] {
-  return posts
-    .slice()
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  return posts.slice().sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 export function filterPublicBlogs(
@@ -21,8 +19,7 @@ export function filterPublicBlogs(
     if (!q) return true;
     const title = fr ? post.titleFr : post.titleEn;
     return (
-      title.toLowerCase().includes(q) ||
-      post.tags.some((tag) => tag.toLowerCase().includes(q))
+      title.toLowerCase().includes(q) || post.tags.some((tag) => tag.toLowerCase().includes(q))
     );
   });
 }

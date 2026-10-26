@@ -8,12 +8,7 @@ export type BadgeVariant =
   | 'warning'
   | 'destructive';
 
-export const NEWSLETTER_TABS: NewsletterTab[] = [
-  'overview',
-  'subscribers',
-  'campaigns',
-  'compose',
-];
+export const NEWSLETTER_TABS: NewsletterTab[] = ['overview', 'subscribers', 'campaigns', 'compose'];
 
 export function isNewsletterTab(value: string | null): value is NewsletterTab {
   return !!value && (NEWSLETTER_TABS as string[]).includes(value);

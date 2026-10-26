@@ -8,10 +8,7 @@ import { uploadAdminImage } from '../api/files.api';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { isApiError } from '@/shared/api';
 import { cn } from '@/shared/lib/utils';
-import {
-  COVER_COMPRESS,
-  type CompressImageOptions,
-} from '@/shared/lib/compressImage';
+import { COVER_COMPRESS, type CompressImageOptions } from '@/shared/lib/compressImage';
 import { insertIntoList } from '../lib/listInsertPosition';
 import { useListInsertPosition } from '../hooks/useListInsertPosition';
 import { ListInsertPositionToggle } from './ListInsertPositionToggle.ui';
@@ -74,7 +71,13 @@ export function MediaUrlListEditor({
     setUploading(true);
     try {
       const url = await uploadAdminImage(file, compressOptions);
-      onChange(insertIntoList(urls.filter((u) => u.trim()), url, position));
+      onChange(
+        insertIntoList(
+          urls.filter((u) => u.trim()),
+          url,
+          position,
+        ),
+      );
       toast.success(isFr ? 'Image compressée et ajoutée' : 'Image compressed and added');
     } catch (e) {
       toast.error(

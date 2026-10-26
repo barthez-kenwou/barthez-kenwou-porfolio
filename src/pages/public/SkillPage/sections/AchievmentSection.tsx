@@ -1,4 +1,8 @@
-import { AchievmentCard, mapAchievementDtoToCard, usePublicAchievements } from '@/entities/achievment';
+import {
+  AchievmentCard,
+  mapAchievementDtoToCard,
+  usePublicAchievements,
+} from '@/entities/achievment';
 import { QueryState } from '@/shared/ui/QueryState';
 import { useTranslation } from 'react-i18next';
 import React, { useMemo } from 'react';
@@ -8,10 +12,7 @@ export const AchievmentSection: React.FC = () => {
   const { t } = useTranslation();
   const { data, isPending, isError, error } = usePublicAchievements();
 
-  const achievements = useMemo(
-    () => (data?.data.items ?? []).map(mapAchievementDtoToCard),
-    [data],
-  );
+  const achievements = useMemo(() => (data?.data.items ?? []).map(mapAchievementDtoToCard), [data]);
 
   return (
     <section className="mt-2 px-4 md:px-10 lg:px-14">

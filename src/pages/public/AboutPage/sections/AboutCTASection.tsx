@@ -18,9 +18,7 @@ export const AboutCTASection: React.FC = () => {
       <div className="relative z-10 mx-auto w-full p-2 text-center md:p-3">
         <div className="mx-auto flex max-w-xl flex-col items-center rounded-md border border-border/50 bg-background/70 px-4 py-4 shadow-sm backdrop-blur-md dark:bg-background/55 sm:px-5 sm:py-5">
           <h2 className="mb-1.5 font-heading text-base font-bold text-foreground sm:text-lg md:text-xl">
-            {isFr
-              ? 'Un profil aligné avec votre besoin ?'
-              : 'A profile that matches your need?'}
+            {isFr ? 'Un profil aligné avec votre besoin ?' : 'A profile that matches your need?'}
           </h2>
 
           <p className="mb-4 max-w-md text-[11px] leading-relaxed text-foreground/70 sm:text-xs">

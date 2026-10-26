@@ -1,11 +1,7 @@
 import React from 'react';
 import { Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
-import {
-  AdminDataTable,
-  AdminSectionCard,
-  ConfirmDeleteDialog,
-} from '@/features/admin-cms';
+import { AdminDataTable, AdminSectionCard, ConfirmDeleteDialog } from '@/features/admin-cms';
 import {
   useDeleteNewsletterSubscriber,
   useNewsletterSubscribers,
@@ -17,11 +13,7 @@ import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/shared/ui/sheet';
 import { useIsMobile } from '@/shared/hooks/use-mobile';
-import {
-  formatDate,
-  subscriberStatusLabel,
-  subscriberStatusVariant,
-} from '../lib/labels';
+import { formatDate, subscriberStatusLabel, subscriberStatusVariant } from '../lib/labels';
 
 type Props = { fr: boolean };
 
@@ -119,9 +111,7 @@ export function SubscribersSection({ fr }: Props) {
               {
                 key: 'status',
                 label: 'Status',
-                options: (
-                  ['pending', 'active', 'unsubscribed', 'bounced'] as const
-                ).map((s) => ({
+                options: (['pending', 'active', 'unsubscribed', 'bounced'] as const).map((s) => ({
                   value: s,
                   label: subscriberStatusLabel(s, fr),
                 })),
@@ -139,9 +129,7 @@ export function SubscribersSection({ fr }: Props) {
                 label: 'Source',
                 options: Array.from(
                   new Set(
-                    subscribers
-                      .map((s) => s.source?.trim())
-                      .filter((s): s is string => Boolean(s)),
+                    subscribers.map((s) => s.source?.trim()).filter((s): s is string => Boolean(s)),
                   ),
                 )
                   .sort()

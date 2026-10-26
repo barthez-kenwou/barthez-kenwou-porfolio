@@ -149,88 +149,91 @@ export const GridProject: React.FC<GridProjectProps> = ({ filterState }) => {
         errorMessage={error instanceof Error ? error.message : undefined}
         source={source}
       >
-      {/* ── Project Grid ─────────────────────────────────────────────────────── */}
-      {filteredProjects.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-8 text-center animate-fade-in">
-          <div className="p-4 rounded-sm bg-secondary/30 mb-2 border border-border/50">
-            <FaSearch className="h-5 w-5 text-muted-foreground/30 animate-pulse" />
-          </div>
-          <h3 className="text-lg font-bold text-foreground mb-3">
-            {language === 'fr' ? 'Aucun projet trouvé' : 'No projects found'}
-          </h3>
-          <p className="text-muted-foreground text-sm max-w-sm mx-auto text-base leading-relaxed mb-10">
-            {language === 'fr'
-              ? 'Essaiyez de modifier tes critères de recherche ou réinitialisez tous les filtres pour recommencer.'
-              : 'Try adjusting your search criteria or reset all filters to start over.'}
-          </p>
-          <Button onClick={resetAllFilters} className="rounded-sm px-4 shadow-xs shadow-primary/20">
-            {language === 'fr' ? 'Réinitialiser tous les filtres' : 'Reset all filters'}
-          </Button>
-        </div>
-      ) : (
-        <>
-          <div className="mb-10 grid grid-cols-1 gap-8 animate-fade-in md:grid-cols-2 lg:grid-cols-3">
-            {paginatedProjects.map((project) => (
-              <div key={project.id} className="min-w-0">
-                <ProjectCard
-                  project={project}
-                  activeTechs={filters.techs}
-                  onTechClick={toggleTech}
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* ── Pagination UI ───────────────────────────────────────────────────── */}
-          {totalPages > 1 && (
-            <div className="relative z-10 flex items-center justify-center gap-2 pb-2">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => handlePageChange(currentPage - 1, 'prev')}
-                disabled={currentPage === 1}
-                className="cursor-pointer rounded-md border-border/50 hover:border-primary/50"
-                aria-label={language === 'fr' ? 'Page précédente' : 'Previous page'}
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </Button>
-
-              <div className="flex gap-2 rounded-md border border-border/50 bg-secondary/30 p-1">
-                {Array.from({ length: totalPages }).map((_, i) => {
-                  const pageNumber = i + 1;
-                  const isActive = currentPage === pageNumber;
-                  return (
-                    <button
-                      key={pageNumber}
-                      type="button"
-                      onClick={() => handlePageChange(pageNumber, 'page')}
-                      className={cn(
-                        'h-8 w-8 cursor-pointer rounded-md text-sm font-bold transition-all',
-                        isActive
-                          ? 'scale-105 bg-brand text-brand-foreground shadow-none'
-                          : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
-                      )}
-                    >
-                      {pageNumber}
-                    </button>
-                  );
-                })}
-              </div>
-
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => handlePageChange(currentPage + 1, 'next')}
-                disabled={currentPage === totalPages}
-                className="cursor-pointer rounded-md border-border/50 hover:border-primary/50"
-                aria-label={language === 'fr' ? 'Page suivante' : 'Next page'}
-              >
-                <ChevronRight className="h-5 w-5" />
-              </Button>
+        {/* ── Project Grid ─────────────────────────────────────────────────────── */}
+        {filteredProjects.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-8 text-center animate-fade-in">
+            <div className="p-4 rounded-sm bg-secondary/30 mb-2 border border-border/50">
+              <FaSearch className="h-5 w-5 text-muted-foreground/30 animate-pulse" />
             </div>
-          )}
-        </>
-      )}
+            <h3 className="text-lg font-bold text-foreground mb-3">
+              {language === 'fr' ? 'Aucun projet trouvé' : 'No projects found'}
+            </h3>
+            <p className="text-muted-foreground text-sm max-w-sm mx-auto text-base leading-relaxed mb-10">
+              {language === 'fr'
+                ? 'Essaiyez de modifier tes critères de recherche ou réinitialisez tous les filtres pour recommencer.'
+                : 'Try adjusting your search criteria or reset all filters to start over.'}
+            </p>
+            <Button
+              onClick={resetAllFilters}
+              className="rounded-sm px-4 shadow-xs shadow-primary/20"
+            >
+              {language === 'fr' ? 'Réinitialiser tous les filtres' : 'Reset all filters'}
+            </Button>
+          </div>
+        ) : (
+          <>
+            <div className="mb-10 grid grid-cols-1 gap-8 animate-fade-in md:grid-cols-2 lg:grid-cols-3">
+              {paginatedProjects.map((project) => (
+                <div key={project.id} className="min-w-0">
+                  <ProjectCard
+                    project={project}
+                    activeTechs={filters.techs}
+                    onTechClick={toggleTech}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* ── Pagination UI ───────────────────────────────────────────────────── */}
+            {totalPages > 1 && (
+              <div className="relative z-10 flex items-center justify-center gap-2 pb-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => handlePageChange(currentPage - 1, 'prev')}
+                  disabled={currentPage === 1}
+                  className="cursor-pointer rounded-md border-border/50 hover:border-primary/50"
+                  aria-label={language === 'fr' ? 'Page précédente' : 'Previous page'}
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </Button>
+
+                <div className="flex gap-2 rounded-md border border-border/50 bg-secondary/30 p-1">
+                  {Array.from({ length: totalPages }).map((_, i) => {
+                    const pageNumber = i + 1;
+                    const isActive = currentPage === pageNumber;
+                    return (
+                      <button
+                        key={pageNumber}
+                        type="button"
+                        onClick={() => handlePageChange(pageNumber, 'page')}
+                        className={cn(
+                          'h-8 w-8 cursor-pointer rounded-md text-sm font-bold transition-all',
+                          isActive
+                            ? 'scale-105 bg-brand text-brand-foreground shadow-none'
+                            : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
+                        )}
+                      >
+                        {pageNumber}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => handlePageChange(currentPage + 1, 'next')}
+                  disabled={currentPage === totalPages}
+                  className="cursor-pointer rounded-md border-border/50 hover:border-primary/50"
+                  aria-label={language === 'fr' ? 'Page suivante' : 'Next page'}
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </Button>
+              </div>
+            )}
+          </>
+        )}
       </QueryState>
     </section>
   );

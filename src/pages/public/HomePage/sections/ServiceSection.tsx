@@ -79,11 +79,7 @@ export const ServiceSection: React.FC = () => {
               pauseOnHover
             >
               {previewServices.map((service, index) => (
-                <ServiceCard2
-                  key={service.id ?? index}
-                  service={service}
-                  language={language}
-                />
+                <ServiceCard2 key={service.id ?? index} service={service} language={language} />
               ))}
             </AnimatedList>
           </QueryState>

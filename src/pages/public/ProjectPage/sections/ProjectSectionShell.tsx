@@ -80,9 +80,7 @@ export const ProjectSectionShell: React.FC<Props> = ({
             className={cn(
               'mt-2 text-sm text-muted-foreground max-w-2xl leading-relaxed',
               centered && 'mx-auto',
-              (tone === 'default' || tone === 'plain' || tone === 'ruled') &&
-                !centered &&
-                'pl-9',
+              (tone === 'default' || tone === 'plain' || tone === 'ruled') && !centered && 'pl-9',
             )}
           >
             {subtitle}

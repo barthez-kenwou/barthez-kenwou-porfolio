@@ -4,12 +4,7 @@ export { withPublicFallback, type PublicFallbackOptions } from './fallback';
 export { queryKeys } from './query-keys';
 export { paginateMock, toQueryParams, listAllPages } from './http';
 export { createResourceApi, fetchAllPages } from './create-resource-api';
-export {
-  getAccessToken,
-  setAccessToken,
-  clearAccessToken,
-  parseBearerHeader,
-} from './token';
+export { getAccessToken, setAccessToken, clearAccessToken, parseBearerHeader } from './token';
 export {
   getJwtExpiryMs,
   isAccessTokenExpiringSoon,

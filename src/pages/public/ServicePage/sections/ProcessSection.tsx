@@ -20,7 +20,9 @@ export const ProcessSection: React.FC = () => {
         >
           <h2 className="section-title">
             {language === 'fr' ? 'Mon Processus ' : 'My Work '}
-            <span className="font-heading text-foreground">{language === 'fr' ? 'de Travail' : 'Process'}</span>
+            <span className="font-heading text-foreground">
+              {language === 'fr' ? 'de Travail' : 'Process'}
+            </span>
           </h2>
           <div className="w-16 h-1 bg-primary/30 mx-auto rounded-full mb-4" />
           <p className="section-subtitle !mb-0 italic opacity-90">

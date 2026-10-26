@@ -5,7 +5,8 @@ import { AdminSidebar } from './AdminSidebar';
 import { AdminHeader } from './AdminHeader';
 import { AdminMobileDock } from './AdminMobileDock';
 import { ErrorBoundary } from '@/app/lib/ErrorBoundary';
-import { RouteFallback } from '@/shared/ui/RouteFallback/RouteFallback';
+import { ContentSkeleton } from '@/shared/ui/ContentSkeleton/ContentSkeleton';
+import { prefetchAdminShellRoutes } from '@/app/routes/prefetch';
 
 function CloseMobileNavOnRouteChange() {
   const location = useLocation();
@@ -21,6 +22,10 @@ function CloseMobileNavOnRouteChange() {
 
 export function AdminLayout() {
   const location = useLocation();
+
+  useEffect(() => {
+    prefetchAdminShellRoutes();
+  }, []);
 
   return (
     <SidebarProvider defaultOpen>
@@ -45,9 +50,10 @@ export function AdminLayout() {
             {/*
               Boundary around page content only — sidebar / header / dock stay up.
               key=pathname resets after navigation so a fixed page can recover.
+              Suspense: light skeleton only (BK boot is for cold start, not every nav).
             */}
             <ErrorBoundary key={location.pathname} variant="content">
-              <Suspense fallback={<RouteFallback className="min-h-[16rem]" />}>
+              <Suspense fallback={<ContentSkeleton className="min-h-[16rem] py-2" rows={8} />}>
                 <Outlet />
               </Suspense>
             </ErrorBoundary>

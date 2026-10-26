@@ -60,9 +60,7 @@ export const SkillSection: React.FC<Props> = ({ skills, language }) => {
   return (
     <View style={styles.section}>
       <View style={styles.sectionTitleBox}>
-        <Text style={styles.sectionTitle}>
-          {language === 'fr' ? 'Compétences' : 'Skills'}
-        </Text>
+        <Text style={styles.sectionTitle}>{language === 'fr' ? 'Compétences' : 'Skills'}</Text>
       </View>
       {groups.map((group) => (
         <View key={group.label} style={styles.row}>

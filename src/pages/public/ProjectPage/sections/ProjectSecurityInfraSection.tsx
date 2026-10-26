@@ -14,10 +14,7 @@ export const ProjectSecurityInfraSection: React.FC<{ project: IProject }> = ({ p
   if (!hasSecurity && !hasInfra) return null;
 
   return (
-    <ProjectSectionShell
-      title={isFr ? 'Sécurité et infra' : 'Security and ops'}
-      tone="ruled"
-    >
+    <ProjectSectionShell title={isFr ? 'Sécurité et infra' : 'Security and ops'} tone="ruled">
       <div className="grid md:grid-cols-2 gap-10 md:gap-12 lg:gap-16">
         {hasSecurity && (
           <div>

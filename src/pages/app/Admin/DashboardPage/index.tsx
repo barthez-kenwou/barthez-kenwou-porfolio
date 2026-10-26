@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExternalLink, Loader2 } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import {
   AdminPageHeader,
@@ -10,6 +10,7 @@ import {
 import { useNewsletterCampaigns, useNewsletterStats } from '@/features/newsletter';
 import { isApiError } from '@/shared/api';
 import { QueryState } from '@/shared/ui/QueryState';
+import { ContentSkeleton } from '@/shared/ui/ContentSkeleton/ContentSkeleton';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { adminPath } from '@/shared/config/admin';
 import { Badge } from '@/shared/ui/badge';
@@ -150,9 +151,7 @@ export function AdminDashboardPage() {
     {
       label: fr ? 'Messages' : 'Inbox',
       value: String(newContactResponses),
-      hint: newContactResponses
-        ? `${newContactResponses} ${fr ? 'nouveaux' : 'new'}`
-        : undefined,
+      hint: newContactResponses ? `${newContactResponses} ${fr ? 'nouveaux' : 'new'}` : undefined,
       href: adminPath('contact-responses'),
     },
     {
@@ -252,10 +251,7 @@ export function AdminDashboardPage() {
                 {item.value}
               </p>
               {item.hint ? (
-                <Badge
-                  variant="warning"
-                  className="mt-1.5 max-w-full truncate text-[10px]"
-                >
+                <Badge variant="warning" className="mt-1.5 max-w-full truncate text-[10px]">
                   {item.hint}
                 </Badge>
               ) : (
@@ -270,7 +266,9 @@ export function AdminDashboardPage() {
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
               <div className="min-w-0">
                 <h2 className="cursor-default text-[15px] font-semibold tracking-tight sm:text-sm">
-                  {fr ? `Audience · ${periodLabel(period, true)}` : `Audience · ${periodLabel(period, false)}`}
+                  {fr
+                    ? `Audience · ${periodLabel(period, true)}`
+                    : `Audience · ${periodLabel(period, false)}`}
                 </h2>
               </div>
               <div
@@ -297,10 +295,7 @@ export function AdminDashboardPage() {
             </div>
 
             {analytics.isPending ? (
-              <div className="mt-8 flex items-center gap-2 text-sm text-muted-foreground">
-                <Loader2 className="size-4 animate-spin" />
-                {fr ? 'Chargement des stats…' : 'Loading stats…'}
-              </div>
+              <ContentSkeleton className="mt-4 min-h-[12rem]" rows={5} />
             ) : analytics.isError ? (
               <p className="mt-6 cursor-default text-sm text-destructive">
                 {isApiError(analytics.error)
@@ -340,11 +335,7 @@ export function AdminDashboardPage() {
                   <p className="cursor-default text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
                     {fr ? 'Tendance' : 'Trend'}
                   </p>
-                  <VisitorsLineChart
-                    className="mt-3"
-                    series={overview?.timeseries ?? []}
-                    fr={fr}
-                  />
+                  <VisitorsLineChart className="mt-3" series={overview?.timeseries ?? []} fr={fr} />
                 </div>
 
                 <div className="mt-6 grid min-w-0 gap-6 sm:mt-8 sm:grid-cols-2 sm:gap-6">

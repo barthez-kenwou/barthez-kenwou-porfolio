@@ -6,11 +6,7 @@ import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { LanguageToggle } from '@/shared/ui/LanguageToggle';
 import { ThemeToggle } from '@/shared/ui/ThemeToggle';
 import { useSidebar } from '@/shared/ui/sidebar';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/shared/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { useAdminDashboard } from '@/features/admin-cms';
 import { profilePhotos } from '@/shared/assets/images/profilePhotos';
 import { adminPath } from '@/shared/config/admin';
@@ -71,9 +67,7 @@ function AttentionLink({
       <span
         className={cn(
           'absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[9px] font-semibold',
-          tone === 'amber'
-            ? 'bg-amber-500 text-amber-950'
-            : 'bg-primary text-primary-foreground',
+          tone === 'amber' ? 'bg-amber-500 text-amber-950' : 'bg-primary text-primary-foreground',
         )}
       >
         {count > 9 ? '9+' : count}

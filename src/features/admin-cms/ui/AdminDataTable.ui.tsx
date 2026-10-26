@@ -215,7 +215,11 @@ export function AdminDataTable<T>({
           <div className="flex items-center gap-2 md:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button type="button" variant="outline" className="h-11 flex-1 cursor-pointer gap-2 shadow-none">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-11 flex-1 cursor-pointer gap-2 shadow-none"
+                >
                   <SlidersHorizontal className="size-4" />
                   {isFr ? 'Filtres' : 'Filters'}
                   {activeFilterCount > 0 ? (

@@ -17,9 +17,7 @@ export const OtherProjectSection: React.FC<{ currentProjectId: string | number }
 
   const relatedProjects = useMemo(() => {
     const items = data?.data.items ?? [];
-    return items
-      .filter((p) => p.id !== currentProjectId && p.isPublished !== false)
-      .slice(0, 6);
+    return items.filter((p) => p.id !== currentProjectId && p.isPublished !== false).slice(0, 6);
   }, [data, currentProjectId]);
 
   if (!isPending && !isError && relatedProjects.length === 0) return null;
@@ -75,10 +73,7 @@ export const OtherProjectSection: React.FC<{ currentProjectId: string | number }
               className="p-0 [--duration:48s] [--gap:1rem] md:[--duration:56s] md:[--gap:1.25rem]"
             >
               {relatedProjects.map((project) => (
-                <div
-                  key={project.id}
-                  className="w-[min(78vw,20rem)] shrink-0 md:w-[21rem]"
-                >
+                <div key={project.id} className="w-[min(78vw,20rem)] shrink-0 md:w-[21rem]">
                   <ProjectCard project={project} />
                 </div>
               ))}

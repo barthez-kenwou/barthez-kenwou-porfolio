@@ -24,61 +24,58 @@ export const WhyChooseMeSection: React.FC = () => {
               ? 'Une expertise technique au service de vos projets les plus ambitieux.'
               : 'Technical expertise at the service of your most ambitious projects.'}
           </p>
-        </div>     
+        </div>
 
-          <Terminal className="relative z-20 mx-auto w-full max-w-2xl border-primary/20 bg-background/80 shadow-lg backdrop-blur-xl">
-            <TypingAnimation className="text-xs font-bold text-primary sm:text-sm">
-              {isFr ? '$ ls specialites/' : '$ ls core-specialties/'}
-            </TypingAnimation>
+        <Terminal className="relative z-20 mx-auto w-full max-w-2xl border-primary/20 bg-background/80 shadow-lg backdrop-blur-xl">
+          <TypingAnimation className="text-xs font-bold text-primary sm:text-sm">
+            {isFr ? '$ ls specialites/' : '$ ls core-specialties/'}
+          </TypingAnimation>
 
-            <AnimatedSpan className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground sm:gap-1 sm:text-sm">
-              <span className="rounded bg-primary/10 px-2 py-1 text-primary">aws-expert</span>
-              <span className="rounded bg-muted px-2 py-1">fullstack-js</span>
-              <span className="rounded bg-primary/10 px-2 py-1 text-primary">devops-pro</span>
-              <span className="rounded bg-muted px-2 py-1">clean-code</span>
-            </AnimatedSpan>
+          <AnimatedSpan className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground sm:gap-1 sm:text-sm">
+            <span className="rounded bg-primary/10 px-2 py-1 text-primary">aws-expert</span>
+            <span className="rounded bg-muted px-2 py-1">fullstack-js</span>
+            <span className="rounded bg-primary/10 px-2 py-1 text-primary">devops-pro</span>
+            <span className="rounded bg-muted px-2 py-1">clean-code</span>
+          </AnimatedSpan>
 
-            <TypingAnimation
-              delay={800}
-              className="mt-3 text-xs font-bold text-primary sm:text-sm"
-            >
-              {isFr ? '$ ./analyser_atouts.sh' : '$ ./analyze_capabilities.sh'}
-            </TypingAnimation>
+          <TypingAnimation delay={800} className="mt-3 text-xs font-bold text-primary sm:text-sm">
+            {isFr ? '$ ./analyser_atouts.sh' : '$ ./analyze_capabilities.sh'}
+          </TypingAnimation>
 
-            <AnimatedSpan className="mt-1 text-xs text-muted-foreground sm:text-sm">
-              {isFr ? 'Recherche de correspondances...' : 'Searching for matches...'}
-            </AnimatedSpan>
+          <AnimatedSpan className="mt-1 text-xs text-muted-foreground sm:text-sm">
+            {isFr ? 'Recherche de correspondances...' : 'Searching for matches...'}
+          </AnimatedSpan>
 
-            <div className="mt-2 grid gap-0">
-              {whyMe.map((item, index) => (
-                <AnimatedSpan
-                  key={index}
-                  delay={index * 500}
-                  className="flex items-start gap-3 sm:gap-4"
-                >
-                  <span className="mt-[2px] shrink-0 text-xs font-bold text-primary sm:text-sm">
-                    [ ✓ ]
-                  </span>
-                  <span className="text-xs font-medium leading-relaxed text-foreground/90 sm:text-sm">
-                    {isFr ? item.textFr : item.textEn}
-                  </span>
-                </AnimatedSpan>
-              ))}
-            </div>
+          <div className="mt-2 grid gap-0">
+            {whyMe.map((item, index) => (
+              <AnimatedSpan
+                key={index}
+                delay={index * 500}
+                className="flex items-start gap-3 sm:gap-4"
+              >
+                <span className="mt-[2px] shrink-0 text-xs font-bold text-primary sm:text-sm">
+                  [ ✓ ]
+                </span>
+                <span className="text-xs font-medium leading-relaxed text-foreground/90 sm:text-sm">
+                  {isFr ? item.textFr : item.textEn}
+                </span>
+              </AnimatedSpan>
+            ))}
+          </div>
 
-            <TypingAnimation
-              delay={2000}
-              className="mt-3 break-words text-xs font-bold text-primary sm:text-sm"
-            >
-              {isFr ? '$ echo "Prêt à collaborer !"' : '$ echo "Ready to collaborate!"'}
-            </TypingAnimation>
+          <TypingAnimation
+            delay={2000}
+            className="mt-3 break-words text-xs font-bold text-primary sm:text-sm"
+          >
+            {isFr ? '$ echo "Prêt à collaborer !"' : '$ echo "Ready to collaborate!"'}
+          </TypingAnimation>
 
-            <AnimatedSpan className="mt-0 break-words text-xs font-bold text-primary sm:text-sm">
-              {isFr
-                ? '> Statut : DISPONIBLE POUR COLLABORER'
-                : '> Status: AVAILABLE FOR COLLABORATION'}
-            </AnimatedSpan>
-          </Terminal>
+          <AnimatedSpan className="mt-0 break-words text-xs font-bold text-primary sm:text-sm">
+            {isFr
+              ? '> Statut : DISPONIBLE POUR COLLABORER'
+              : '> Status: AVAILABLE FOR COLLABORATION'}
+          </AnimatedSpan>
+        </Terminal>
       </div>
     </section>
   );

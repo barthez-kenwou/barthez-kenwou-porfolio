@@ -9,7 +9,10 @@ export function cleanPdfText(value: string): string {
 }
 
 /** Prefer lead bullets (usually the strongest); fewer for older roles. */
-export function selectExperienceBullets(bullets: string[] | undefined, experienceIndex: number): string[] {
+export function selectExperienceBullets(
+  bullets: string[] | undefined,
+  experienceIndex: number,
+): string[] {
   const list = (bullets ?? []).map(cleanPdfText).filter(Boolean);
   const max = experienceIndex < 3 ? 3 : 2;
   return list.slice(0, max);

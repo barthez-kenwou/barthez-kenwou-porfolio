@@ -56,11 +56,7 @@ const GalleryCell: React.FC<CellProps> = ({
         className,
       )}
     >
-      <Image
-        src={item.src}
-        alt={caption || fallbackAlt}
-        className="w-full h-full object-cover"
-      />
+      <Image src={item.src} alt={caption || fallbackAlt} className="w-full h-full object-cover" />
       {!showOverflow && (
         <>
           <div

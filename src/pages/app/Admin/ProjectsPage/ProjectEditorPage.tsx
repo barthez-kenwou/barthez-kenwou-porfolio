@@ -121,13 +121,7 @@ const GALLERY_KINDS: ProjectGalleryKind[] = [
   'process',
   'other',
 ];
-const RESOURCE_TYPES: ProjectResourceType[] = [
-  'spec',
-  'report',
-  'case-study',
-  'slides',
-  'other',
-];
+const RESOURCE_TYPES: ProjectResourceType[] = ['spec', 'report', 'case-study', 'slides', 'other'];
 
 const emptyVideo = (): IProjectVideo => ({
   url: '',
@@ -780,8 +774,7 @@ export const AdminProjectEditorPage: React.FC = () => {
                       ) : null;
                     }
                     const previewTitle =
-                      (fr ? item.titleFr : item.titleEn) ||
-                      (fr ? 'Aperçu vidéo' : 'Video preview');
+                      (fr ? item.titleFr : item.titleEn) || (fr ? 'Aperçu vidéo' : 'Video preview');
                     return (
                       <div className="space-y-1.5">
                         <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
@@ -810,10 +803,7 @@ export const AdminProjectEditorPage: React.FC = () => {
                 size="sm"
                 variant="outline"
                 onClick={() =>
-                  patch(
-                    'gallery',
-                    insertIntoList(gallery, emptyGalleryItem(), listInsertPosition),
-                  )
+                  patch('gallery', insertIntoList(gallery, emptyGalleryItem(), listInsertPosition))
                 }
               >
                 <Plus className="size-3.5" />
@@ -937,9 +927,7 @@ export const AdminProjectEditorPage: React.FC = () => {
               : 'Write the diagram then check the preview. Invalid diagrams will not show publicly.'}
           </p>
           {diagrams.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              {fr ? 'Aucun schéma.' : 'No diagrams.'}
-            </p>
+            <p className="text-sm text-muted-foreground">{fr ? 'Aucun schéma.' : 'No diagrams.'}</p>
           ) : (
             <div className="space-y-6">
               {diagrams.map((d, i) => (
@@ -1113,10 +1101,7 @@ export const AdminProjectEditorPage: React.FC = () => {
                 size="sm"
                 variant="outline"
                 onClick={() =>
-                  patch(
-                    'decisions',
-                    insertIntoList(decisions, emptyDecision(), listInsertPosition),
-                  )
+                  patch('decisions', insertIntoList(decisions, emptyDecision(), listInsertPosition))
                 }
               >
                 <Plus className="size-3.5" />
@@ -1320,10 +1305,7 @@ export const AdminProjectEditorPage: React.FC = () => {
                 size="sm"
                 variant="outline"
                 onClick={() =>
-                  patch(
-                    'resources',
-                    insertIntoList(resources, emptyResource(), listInsertPosition),
-                  )
+                  patch('resources', insertIntoList(resources, emptyResource(), listInsertPosition))
                 }
               >
                 <Plus className="size-3.5" />
@@ -1433,9 +1415,7 @@ export const AdminProjectEditorPage: React.FC = () => {
           }
         >
           {externalLinks.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              {fr ? 'Aucun lien.' : 'No links.'}
-            </p>
+            <p className="text-sm text-muted-foreground">{fr ? 'Aucun lien.' : 'No links.'}</p>
           ) : (
             <div className="space-y-4">
               {externalLinks.map((item, i) => (

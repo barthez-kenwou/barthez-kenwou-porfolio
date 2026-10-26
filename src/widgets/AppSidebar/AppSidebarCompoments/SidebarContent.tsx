@@ -1,11 +1,7 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import {
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-} from '@/shared/ui/sidebar.tsx';
+import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/shared/ui/sidebar.tsx';
 import { sidebarNavItems } from '@/shared/constants/navItems.const';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/ui/tooltip';
 import { cn } from '@/shared/lib/utils';

@@ -166,11 +166,7 @@ function findHeadingByKey(markdown: string, key: string): HeadingHit | null {
   return listHeadings(markdown).find((h) => h.key === key) ?? null;
 }
 
-function findHeadingByOrdinal(
-  markdown: string,
-  level: number,
-  ordinal: number,
-): HeadingHit | null {
+function findHeadingByOrdinal(markdown: string, level: number, ordinal: number): HeadingHit | null {
   const sameLevel = listHeadings(markdown).filter((h) => h.level === level);
   return sameLevel[ordinal] ?? null;
 }
@@ -196,8 +192,7 @@ function insertIndexInHeadingSection(
   if (imagesAboveInSection <= 0 || imagesInSection.length === 0) {
     return heading.afterLine;
   }
-  const anchor =
-    imagesInSection[Math.min(imagesAboveInSection, imagesInSection.length) - 1];
+  const anchor = imagesInSection[Math.min(imagesAboveInSection, imagesInSection.length) - 1];
   return heading.afterLine + anchor.index + anchor.raw.length;
 }
 
@@ -226,11 +221,7 @@ function resolveInsertIndex(
     placement.headingOrdinal != null &&
     placement.headingOrdinal >= 0
   ) {
-    const heading = findHeadingByOrdinal(
-      target,
-      placement.headingLevel,
-      placement.headingOrdinal,
-    );
+    const heading = findHeadingByOrdinal(target, placement.headingLevel, placement.headingOrdinal);
     if (heading) {
       return insertIndexInHeadingSection(target, heading, imagesAboveInSection);
     }
@@ -301,9 +292,7 @@ export function syncMissingImagesFromSource(
         (p.headingKey || `__ord:${p.headingLevel}:${p.headingOrdinal}`) ===
           (img.headingKey || `__ord:${img.headingLevel}:${img.headingOrdinal}`),
     );
-    const alreadyAbove = siblingsBefore.filter((p) =>
-      markdownContainsImageUrl(next, p.url),
-    ).length;
+    const alreadyAbove = siblingsBefore.filter((p) => markdownContainsImageUrl(next, p.url)).length;
 
     const at = resolveInsertIndex(next, img, alreadyAbove);
     next = insertBlockAt(next, at, buildImageMarkdown(alt, img.url));

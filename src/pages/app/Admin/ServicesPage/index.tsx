@@ -20,10 +20,7 @@ import {
   useUpdateService,
   useDeleteService,
 } from '@/entities/services/hooks/useServices';
-import {
-  SERVICE_ICON_KEYS,
-  type IServiceDto,
-} from '@/entities/services/api/service.api';
+import { SERVICE_ICON_KEYS, type IServiceDto } from '@/entities/services/api/service.api';
 import { isApiError } from '@/shared/api';
 import { QueryState } from '@/shared/ui/QueryState';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
@@ -191,7 +188,11 @@ export const AdminServicesPage: React.FC = () => {
                   onClick={() => void save()}
                   disabled={saving}
                 >
-                  {saving ? <Loader2 className="size-3.5 animate-spin" /> : <Save className="size-3.5" />}
+                  {saving ? (
+                    <Loader2 className="size-3.5 animate-spin" />
+                  ) : (
+                    <Save className="size-3.5" />
+                  )}
                   {fr ? 'Enregistrer' : 'Save'}
                 </Button>
               </AdminStickyActions>
@@ -337,7 +338,11 @@ export const AdminServicesPage: React.FC = () => {
                     title={fr ? 'Monter' : 'Move up'}
                     onClick={() => void reorder(r.id, 'up')}
                   >
-                    {busy ? <Loader2 className="size-3.5 animate-spin" /> : <ChevronUp className="size-3.5" />}
+                    {busy ? (
+                      <Loader2 className="size-3.5 animate-spin" />
+                    ) : (
+                      <ChevronUp className="size-3.5" />
+                    )}
                   </Button>
                   <Button
                     type="button"

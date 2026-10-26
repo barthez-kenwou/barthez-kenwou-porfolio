@@ -49,11 +49,7 @@ export function BilingualField({
 
   const onTranslate = async () => {
     if (!sourceValue.trim()) {
-      toast.error(
-        isFr
-          ? 'Écris d’abord le texte source'
-          : 'Write the source text first',
-      );
+      toast.error(isFr ? 'Écris d’abord le texte source' : 'Write the source text first');
       return;
     }
 
@@ -69,11 +65,7 @@ export function BilingualField({
       );
     } catch (e) {
       toast.error(
-        e instanceof Error
-          ? e.message
-          : isFr
-            ? 'Traduction impossible'
-            : 'Translation failed',
+        e instanceof Error ? e.message : isFr ? 'Traduction impossible' : 'Translation failed',
       );
     } finally {
       setTranslating(false);
@@ -93,9 +85,7 @@ export function BilingualField({
           variant="outline"
           className={cn(
             'h-8 gap-1 px-2.5 shadow-none',
-            translating
-              ? 'cursor-wait disabled:cursor-wait disabled:opacity-80'
-              : 'cursor-pointer',
+            translating ? 'cursor-wait disabled:cursor-wait disabled:opacity-80' : 'cursor-pointer',
           )}
           disabled={translating || !sourceValue.trim()}
           onClick={() => void onTranslate()}
@@ -124,16 +114,10 @@ export function BilingualField({
           ) : (
             <Languages className="size-3.5" />
           )}
-          <span className="text-xs font-medium tracking-wide">
-            → {targetLang.toUpperCase()}
-          </span>
+          <span className="text-xs font-medium tracking-wide">→ {targetLang.toUpperCase()}</span>
         </Button>
       </div>
-      <Tabs
-        value={tab}
-        onValueChange={(v) => setTab(v as TranslateLang)}
-        className="gap-2.5"
-      >
+      <Tabs value={tab} onValueChange={(v) => setTab(v as TranslateLang)} className="gap-2.5">
         <TabsList className="h-9">
           <TabsTrigger value="fr" className="gap-1.5">
             <Badge variant="outline" className="px-1.5 py-0 text-[10px] tracking-wide">

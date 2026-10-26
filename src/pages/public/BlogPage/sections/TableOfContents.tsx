@@ -178,13 +178,15 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
   if (toc.length === 0) return null;
 
   const NavContent = ({ mobile = false }: { mobile?: boolean }) => (
-    <nav className={cn('space-y-0.5', mobile && 'px-2 py-2.5')} aria-label={isFr ? 'Sommaire' : 'Contents'}>
+    <nav
+      className={cn('space-y-0.5', mobile && 'px-2 py-2.5')}
+      aria-label={isFr ? 'Sommaire' : 'Contents'}
+    >
       {groups.map((group) => {
         const hasChildren = group.children.length > 0;
         const isExpanded = !hasChildren || expandedIds.has(group.heading.id);
         const parentActive =
-          activeId === group.heading.id ||
-          group.children.some((child) => child.id === activeId);
+          activeId === group.heading.id || group.children.some((child) => child.id === activeId);
 
         return (
           <div key={group.heading.id} className="min-w-0">

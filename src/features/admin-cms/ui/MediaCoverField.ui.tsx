@@ -9,10 +9,7 @@ import { uploadAdminImage } from '../api/files.api';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { isApiError } from '@/shared/api';
 import { cn } from '@/shared/lib/utils';
-import {
-  COVER_COMPRESS,
-  type CompressImageOptions,
-} from '@/shared/lib/compressImage';
+import { COVER_COMPRESS, type CompressImageOptions } from '@/shared/lib/compressImage';
 
 type MediaCoverFieldProps = {
   label: string;
@@ -64,9 +61,7 @@ export function MediaCoverField({
     try {
       const url = await uploadAdminImage(file, compressOptions);
       onChange(url);
-      toast.success(
-        fr ? 'Image compressée et téléversée' : 'Image compressed and uploaded',
-      );
+      toast.success(fr ? 'Image compressée et téléversée' : 'Image compressed and uploaded');
     } catch (e) {
       toast.error(
         isApiError(e)

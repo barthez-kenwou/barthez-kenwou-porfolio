@@ -68,7 +68,11 @@ export const HomePage: React.FC = () => {
           </DarkBrandParallaxBand>
         </DeferredMount>
 
-        <DeferredMount timeout={1600} rootMargin="120px" fallback={<div className="min-h-[16rem]" aria-hidden />}>
+        <DeferredMount
+          timeout={1600}
+          rootMargin="120px"
+          fallback={<div className="min-h-[16rem]" aria-hidden />}
+        >
           <CTASection />
         </DeferredMount>
       </div>

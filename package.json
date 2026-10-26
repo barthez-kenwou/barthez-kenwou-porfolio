@@ -53,7 +53,7 @@
     "format": "sh ./scripts/format.sh",
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",
-    "md:lint": "markdownlint '**/*.md' -i node_modules",
+    "md:lint": "markdownlint '**/*.md' --ignore-path .markdownlintignore",
     "test": "sh ./scripts/test.sh",
     "test:watch": "vitest",
     "test:ci": "sh ./scripts/test-ci.sh",

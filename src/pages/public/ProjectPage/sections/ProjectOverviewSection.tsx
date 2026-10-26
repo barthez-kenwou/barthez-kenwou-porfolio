@@ -35,10 +35,7 @@ export const ProjectOverviewSection: React.FC<{ project: IProject }> = ({ projec
           </p>
           <dl className="space-y-0 divide-y divide-border/40 border-y border-border/40">
             {facts.map((fact) => (
-              <div
-                key={fact.label}
-                className="flex items-baseline justify-between gap-4 py-3"
-              >
+              <div key={fact.label} className="flex items-baseline justify-between gap-4 py-3">
                 <dt className="text-xs text-muted-foreground shrink-0">{fact.label}</dt>
                 <dd className="text-xs font-medium text-foreground text-right leading-snug">
                   {fact.value}

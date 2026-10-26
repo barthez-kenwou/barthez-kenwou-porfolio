@@ -69,7 +69,12 @@ const cardVariants = {
   }),
 };
 
-function toSkillCard(skill: { name: string; category: string; level: number; icon: string }): ISkill {
+function toSkillCard(skill: {
+  name: string;
+  category: string;
+  level: number;
+  icon: string;
+}): ISkill {
   return {
     name: skill.name,
     category: skill.category,
@@ -83,10 +88,7 @@ export const SkillsSection: React.FC = () => {
   const [swipeDir, setSwipeDir] = useState<SwipeDir>(1);
   const prevIndexRef = useRef(0);
   const { data, isPending, isError, error } = usePublicSkills();
-  const skillsData = useMemo(
-    () => (data?.data.items ?? []).map(toSkillCard),
-    [data],
-  );
+  const skillsData = useMemo(() => (data?.data.items ?? []).map(toSkillCard), [data]);
 
   const skillsByCategory = useMemo(() => {
     return skillsData.reduce<Record<string, ISkill[]>>((acc, skill) => {

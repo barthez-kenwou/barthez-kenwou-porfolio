@@ -1,11 +1,7 @@
 import axios from 'axios';
 import { env } from '@/app/config/env';
 import { clearCsrfToken, csrfHeaderName, ensureCsrfToken, isUnsafeMethod } from './csrf';
-import {
-  ACCESS_REFRESH_SKEW_MS,
-  getJwtExpiryMs,
-  isAccessTokenExpiringSoon,
-} from './jwt';
+import { ACCESS_REFRESH_SKEW_MS, getJwtExpiryMs, isAccessTokenExpiringSoon } from './jwt';
 import { emitSessionEnded } from './session-events';
 import { clearAccessToken, getAccessToken, parseBearerHeader, setAccessToken } from './token';
 import type { ApiError, ApiSuccessEnvelope } from './types';
@@ -101,9 +97,7 @@ function readAuthHeader(headers: unknown): string | null {
   return parseBearerHeader(h.authorization ?? h.Authorization);
 }
 
-function isCsrfFailure(error: {
-  response?: { status: number; data?: unknown };
-}): boolean {
+function isCsrfFailure(error: { response?: { status: number; data?: unknown } }): boolean {
   if (error.response?.status !== 403) return false;
   const data = (error.response.data || {}) as Record<string, unknown>;
   return data.code === 'EBADCSRFTOKEN' || /csrf/i.test(String(data.message || ''));
@@ -184,12 +178,7 @@ class ApiClient {
           }
         }
 
-        if (
-          status === 401 &&
-          original &&
-          !original._retry &&
-          !isAuthRefreshUrl(original.url)
-        ) {
+        if (status === 401 && original && !original._retry && !isAuthRefreshUrl(original.url)) {
           original._retry = true;
           const token = await this.refreshAccessToken({ announceFailure: true });
           if (token) {
@@ -395,7 +384,9 @@ class ApiClient {
     const response = await this.client.post(endpoint, body);
     const data = unwrapData<T & { accessToken?: string }>(response.data);
     const fromBody =
-      data && typeof data === 'object' && typeof (data as { accessToken?: unknown }).accessToken === 'string'
+      data &&
+      typeof data === 'object' &&
+      typeof (data as { accessToken?: unknown }).accessToken === 'string'
         ? String((data as { accessToken: string }).accessToken)
         : null;
     const accessToken = fromBody || readAuthHeader(response.headers);

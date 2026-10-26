@@ -46,10 +46,7 @@ export const FloatingShareRail: React.FC<{ post: IBlog }> = ({ post }) => {
   const [open, setOpen] = useState(defaultOpenForViewport);
   const rootRef = useRef<HTMLElement>(null);
 
-  const share = useMemo(
-    () => buildBlogSharePayload(post, isFr ? 'fr' : 'en'),
-    [post, isFr],
-  );
+  const share = useMemo(() => buildBlogSharePayload(post, isFr ? 'fr' : 'en'), [post, isFr]);
 
   const items = useMemo<ShareItem[]>(
     () => [

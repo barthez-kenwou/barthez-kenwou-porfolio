@@ -137,9 +137,7 @@ const DiagramViewport: React.FC<DiagramViewportProps> = ({
     if (!naturalW || !naturalH) return;
 
     const pad = 36;
-    const scale = clampScale(
-      Math.min((stageW - pad) / naturalW, (stageH - pad) / naturalH, 1.2),
-    );
+    const scale = clampScale(Math.min((stageW - pad) / naturalW, (stageH - pad) / naturalH, 1.2));
     setView({
       scale,
       x: (stageW - naturalW * scale) / 2,

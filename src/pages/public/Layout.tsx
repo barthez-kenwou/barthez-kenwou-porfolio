@@ -5,7 +5,7 @@ import { PUBLIC_SHELL_BREAKPOINT } from '@/shared/hooks/use-mobile';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Footer } from '@/widgets/Footer';
 import { Suspense, useState } from 'react';
-import { RouteFallback } from '@/shared/ui/RouteFallback/RouteFallback';
+import { ContentSkeleton } from '@/shared/ui/ContentSkeleton/ContentSkeleton';
 import { ErrorBoundary } from '@/app/lib/ErrorBoundary';
 import { usePageEngagement } from '@/shared/hooks/usePageEngagement';
 
@@ -48,7 +48,15 @@ export const PublicLayout = () => {
               key=pathname resets the boundary when the user navigates elsewhere.
             */}
             <ErrorBoundary key={location.pathname}>
-              <Suspense fallback={<RouteFallback className="flex-1 min-h-[calc(100svh-10rem)]" />}>
+              <Suspense
+                fallback={
+                  <ContentSkeleton
+                    withTitle
+                    rows={9}
+                    className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 min-h-[calc(100svh-10rem)]"
+                  />
+                }
+              >
                 <PageShell>
                   <Outlet />
                 </PageShell>

@@ -11,7 +11,13 @@ import {
   type AuthUser,
 } from '@/features/admin-auth';
 import { env } from '@/app/config/env';
-import { apiClient, getAccessToken, isNetworkError, onSessionEnded, toApiError } from '@/shared/api';
+import {
+  apiClient,
+  getAccessToken,
+  isNetworkError,
+  onSessionEnded,
+  toApiError,
+} from '@/shared/api';
 import { sessionExpiresAtFromNow } from '@/shared/api/jwt';
 import {
   clearAdminReturnPath,
@@ -85,28 +91,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return;
       }
 
-      const adoptStoredOffline = () => {
-        // Connectivity blip at boot: keep working UI; refresh when back online.
-        apiClient.startSessionKeepAlive();
-        if (!cancelled) setSession(stored);
-      };
+      // Unlock the shell immediately with the stored session — avoid a full-screen
+      // BK boot before every admin visit. /auth/me still verifies in the background.
+      apiClient.startSessionKeepAlive();
+      if (!cancelled) {
+        setSession(stored);
+        setLoading(false);
+      }
 
       try {
         // Expired access JWT → 401 → silent refresh → retry (see api client).
-        // No bearer yet: still try /me after a refresh attempt via keep-alive.
         if (!getAccessToken()) {
           const refreshed = await apiClient.ensureFreshAccessToken();
-          if (!refreshed) {
-            if (typeof navigator !== 'undefined' && !navigator.onLine) {
-              adoptStoredOffline();
-              return;
-            }
-            // Refresh may have failed transiently (network) without ending session.
-            // Still try /me — if that also fails as network, we keep the session below.
+          if (!refreshed && typeof navigator !== 'undefined' && !navigator.onLine) {
+            return;
           }
         }
 
         const user = await fetchCurrentUser();
+        if (cancelled) return;
         const next: AuthSession = {
           ...stored,
           user,
@@ -116,19 +119,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         };
         persistSession(next);
         apiClient.startSessionKeepAlive();
-        if (!cancelled) setSession(next);
+        setSession(next);
       } catch (error) {
+        if (cancelled) return;
         if (isNetworkError(toApiError(error))) {
-          adoptStoredOffline();
+          // Keep optimistic session; refresh when back online.
           return;
         }
         // Invalid / expired API session — force re-login
         rememberCurrentAdminLocation();
         clearSession();
         apiClient.stopSessionKeepAlive();
-        if (!cancelled) setSession(null);
-      } finally {
-        if (!cancelled) setLoading(false);
+        setSession(null);
       }
     }
 

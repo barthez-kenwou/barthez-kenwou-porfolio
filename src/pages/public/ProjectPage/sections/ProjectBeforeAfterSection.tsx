@@ -40,9 +40,7 @@ export const ProjectBeforeAfterSection: React.FC<{ project: IProject }> = ({ pro
                   </figcaption>
                 </figure>
               </div>
-              {caption && (
-                <p className="text-sm text-muted-foreground mt-3 max-w-2xl">{caption}</p>
-              )}
+              {caption && <p className="text-sm text-muted-foreground mt-3 max-w-2xl">{caption}</p>}
             </div>
           );
         })}

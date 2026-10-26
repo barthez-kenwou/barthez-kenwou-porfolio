@@ -1,7 +1,4 @@
-import {
-  stripAllMarkdownImages,
-  syncMissingImagesFromSource,
-} from '../lib/markdownImages';
+import { stripAllMarkdownImages, syncMissingImagesFromSource } from '../lib/markdownImages';
 
 export type TranslateLang = 'fr' | 'en';
 

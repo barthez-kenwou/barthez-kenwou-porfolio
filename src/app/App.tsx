@@ -66,14 +66,11 @@ const router = createBrowserRouter([
           {
             // Pathless group: keep admin sidebar/header when a page blows up
             errorElement: <RouteErrorElement />,
+            // Single Suspense lives in AdminLayout — avoid a second BK/skeleton gate per page.
             children: adminChildRoutes.map((route) => ({
               index: route.path === '',
               path: route.path === '' ? undefined : route.path,
-              element: (
-                <Suspense fallback={<RouteFallback />}>
-                  <route.component />
-                </Suspense>
-              ),
+              element: <route.component />,
             })),
           },
         ],

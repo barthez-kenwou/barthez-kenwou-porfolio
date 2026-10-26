@@ -162,11 +162,7 @@ export function trackProjectPagination(
   });
 }
 
-export function trackShare(
-  channel: string,
-  content: 'blog' | 'project',
-  slug?: string,
-): void {
+export function trackShare(channel: string, content: 'blog' | 'project', slug?: string): void {
   track(AnalyticsEvents.Share, {
     channel: channel.toLowerCase(),
     content,

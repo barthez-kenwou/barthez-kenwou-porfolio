@@ -184,11 +184,20 @@ export const AdminTestimonialsPage: React.FC = () => {
         title={fr ? 'Témoignages' : 'Testimonials'}
         actions={
           <div className="flex flex-wrap gap-2">
-            <Button type="button" variant="outline" className="cursor-pointer" onClick={copyFeedbackLink}>
+            <Button
+              type="button"
+              variant="outline"
+              className="cursor-pointer"
+              onClick={copyFeedbackLink}
+            >
               <Link2 className="size-4" />
               {fr ? 'Lien client' : 'Client link'}
             </Button>
-            <Button type="button" className="cursor-pointer" onClick={() => setEditing(emptyItem())}>
+            <Button
+              type="button"
+              className="cursor-pointer"
+              onClick={() => setEditing(emptyItem())}
+            >
               <Plus className="size-4" />
               {fr ? 'Ajouter' : 'Add'}
             </Button>
@@ -219,7 +228,11 @@ export const AdminTestimonialsPage: React.FC = () => {
                   onClick={() => void save()}
                   disabled={saving}
                 >
-                  {saving ? <Loader2 className="size-3.5 animate-spin" /> : <Save className="size-3.5" />}
+                  {saving ? (
+                    <Loader2 className="size-3.5 animate-spin" />
+                  ) : (
+                    <Save className="size-3.5" />
+                  )}
                   {fr ? 'Enregistrer' : 'Save'}
                 </Button>
               </AdminStickyActions>
@@ -328,7 +341,16 @@ export const AdminTestimonialsPage: React.FC = () => {
           <AdminDataTable<ITestimonial>
             data={items}
             getRowId={(r) => String(r.id)}
-            searchKeys={['nameFr', 'nameEn', 'roleFr', 'roleEn', 'company', 'email', 'textFr', 'textEn']}
+            searchKeys={[
+              'nameFr',
+              'nameEn',
+              'roleFr',
+              'roleEn',
+              'company',
+              'email',
+              'textFr',
+              'textEn',
+            ]}
             emptyTitle={fr ? 'Aucun témoignage' : 'No testimonials'}
             filters={[
               {

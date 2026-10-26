@@ -8,7 +8,7 @@ Levels:
 
 ## Layout (aligned with backend)
 
-```
+```text
 tests/unit/…     # Vitest — mirrors src/ (features/, shared/, …)
 cypress/         # Browser E2E
 ```

@@ -13,9 +13,7 @@ export const ReferenceSection: React.FC<Props> = ({ references, language }) => {
   return (
     <View style={styles.section}>
       <View style={styles.sectionTitleBox}>
-        <Text style={styles.sectionTitle}>
-          {language === 'fr' ? 'Références' : 'References'}
-        </Text>
+        <Text style={styles.sectionTitle}>{language === 'fr' ? 'Références' : 'References'}</Text>
       </View>
       {references.map((ref, i) => {
         const role = language === 'fr' ? ref.roleFr : ref.roleEn;

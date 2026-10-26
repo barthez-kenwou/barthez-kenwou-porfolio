@@ -28,10 +28,7 @@ const BY_FILENAME_HINT: Array<[string, string]> = [
   ['dee480b2-c333-4246-85dd-07a03d9a09b3', BY_PARTNER_ID['6acf763b1d98e9625fda9232']],
 ];
 
-export function resolvePartnerLogoUrl(
-  partnerId: string | number,
-  remoteUrl: string,
-): string {
+export function resolvePartnerLogoUrl(partnerId: string | number, remoteUrl: string): string {
   const byId = BY_PARTNER_ID[String(partnerId)];
   if (byId) return byId;
 

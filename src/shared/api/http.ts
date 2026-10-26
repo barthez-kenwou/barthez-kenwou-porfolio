@@ -29,8 +29,7 @@ export function paginateMock<T>(
 
   const limit = Math.max(1, params?.limit ?? (totalItems || 1));
   const offset =
-    params?.offset ??
-    (params?.page && params.page > 0 ? (params.page - 1) * limit : 0);
+    params?.offset ?? (params?.page && params.page > 0 ? (params.page - 1) * limit : 0);
   const safeOffset = Math.max(0, offset);
   const slice = items.slice(safeOffset, safeOffset + limit);
   const totalPages = Math.max(1, Math.ceil(totalItems / limit));

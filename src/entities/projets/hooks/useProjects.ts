@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { queryKeys, withPublicFallback, type PaginatedData, type ResourceResult } from '@/shared/api';
+import {
+  queryKeys,
+  withPublicFallback,
+  type PaginatedData,
+  type ResourceResult,
+} from '@/shared/api';
 import { paginateMock } from '@/shared/api/http';
 import {
   findByNumericId,
@@ -57,8 +62,7 @@ export function usePublicProjects() {
 export function useAdminProjects(params?: ProjectListParams) {
   return useQuery({
     queryKey: queryKeys.projects.list({ admin: true, ...params }),
-    queryFn: () =>
-      listProjects({ limit: 100, includeUnpublished: true, ...params }),
+    queryFn: () => listProjects({ limit: 100, includeUnpublished: true, ...params }),
   });
 }
 

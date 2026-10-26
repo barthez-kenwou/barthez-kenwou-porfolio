@@ -1,10 +1,4 @@
-import {
-  AlertTriangle,
-  Check,
-  CircleAlert,
-  Info,
-  Loader2,
-} from 'lucide-react';
+import { AlertTriangle, Check, CircleAlert, Info, Loader2 } from 'lucide-react';
 import { Toaster as Sonner, type ToasterProps } from 'sonner';
 import { useThemeStore } from '@/shared/state/useThemeStore';
 
@@ -50,7 +44,9 @@ export function Toaster({
         info: <Info className="size-3.5 shrink-0" strokeWidth={2.25} aria-hidden />,
         warning: <AlertTriangle className="size-3.5 shrink-0" strokeWidth={2.25} aria-hidden />,
         error: <CircleAlert className="size-3.5 shrink-0" strokeWidth={2.25} aria-hidden />,
-        loading: <Loader2 className="size-3.5 shrink-0 animate-spin" strokeWidth={2.25} aria-hidden />,
+        loading: (
+          <Loader2 className="size-3.5 shrink-0 animate-spin" strokeWidth={2.25} aria-hidden />
+        ),
       }}
       toastOptions={{
         classNames: {

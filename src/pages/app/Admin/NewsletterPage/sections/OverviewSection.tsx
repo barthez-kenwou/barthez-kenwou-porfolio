@@ -69,11 +69,7 @@ export function OverviewSection({ fr, onNavigate }: Props) {
           }
         >
           <div className="flex flex-col gap-2 sm:flex-row">
-            <Button
-              size="sm"
-              className="justify-between"
-              onClick={() => onNavigate('compose')}
-            >
+            <Button size="sm" className="justify-between" onClick={() => onNavigate('compose')}>
               <span className="inline-flex items-center gap-2">
                 <Megaphone className="size-3.5" />
                 {fr ? 'Édition mensuelle' : 'Monthly edition'}
@@ -106,9 +102,7 @@ export function OverviewSection({ fr, onNavigate }: Props) {
           isPending={campaignStatsQuery.isPending}
           isError={campaignStatsQuery.isError}
           errorMessage={
-            isApiError(campaignStatsQuery.error)
-              ? campaignStatsQuery.error.message
-              : undefined
+            isApiError(campaignStatsQuery.error) ? campaignStatsQuery.error.message : undefined
           }
         >
           <AdminSectionCard
@@ -143,23 +137,17 @@ export function OverviewSection({ fr, onNavigate }: Props) {
             </div>
             {campaignStats?.byType ? (
               <div className="mt-4 flex flex-wrap gap-1.5">
-                {(
-                  [
-                    'broadcast',
-                    'blog_publish',
-                    'digest',
-                    'welcome',
-                    'confirm',
-                  ] as const
-                ).map((type) => {
-                  const count = campaignStats.byType[type] ?? 0;
-                  if (!count) return null;
-                  return (
-                    <Badge key={type} variant="secondary">
-                      {campaignTypeLabel(type, fr)} · {count}
-                    </Badge>
-                  );
-                })}
+                {(['broadcast', 'blog_publish', 'digest', 'welcome', 'confirm'] as const).map(
+                  (type) => {
+                    const count = campaignStats.byType[type] ?? 0;
+                    if (!count) return null;
+                    return (
+                      <Badge key={type} variant="secondary">
+                        {campaignTypeLabel(type, fr)} · {count}
+                      </Badge>
+                    );
+                  },
+                )}
               </div>
             ) : null}
           </AdminSectionCard>
@@ -179,9 +167,7 @@ export function OverviewSection({ fr, onNavigate }: Props) {
           isPending={recentCampaignsQuery.isPending}
           isError={recentCampaignsQuery.isError}
           errorMessage={
-            isApiError(recentCampaignsQuery.error)
-              ? recentCampaignsQuery.error.message
-              : undefined
+            isApiError(recentCampaignsQuery.error) ? recentCampaignsQuery.error.message : undefined
           }
         >
           {recent.length === 0 ? (

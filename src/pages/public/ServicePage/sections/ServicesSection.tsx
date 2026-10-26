@@ -92,15 +92,8 @@ function ServicesMobileRail({ services }: { services: IServices[] }) {
   );
 
   return (
-    <div
-      ref={spacerRef}
-      className="relative md:hidden"
-      style={{ height: `${spacerHeight}px` }}
-    >
-      <div
-        ref={pinRef}
-        className="sticky top-40 overflow-hidden pb-9 pt-3 sm:top-28"
-      >
+    <div ref={spacerRef} className="relative md:hidden" style={{ height: `${spacerHeight}px` }}>
+      <div ref={pinRef} className="sticky top-40 overflow-hidden pb-9 pt-3 sm:top-28">
         <div
           ref={trackRef}
           className="flex w-max items-stretch will-change-transform"
@@ -154,10 +147,7 @@ function ServicesMobileRail({ services }: { services: IServices[] }) {
 export const ServicesSection: React.FC = () => {
   const { data, isPending, isError, error } = usePublicServices();
 
-  const services = useMemo(
-    () => (data?.data.items ?? []).map(mapServiceDtoToCard),
-    [data],
-  );
+  const services = useMemo(() => (data?.data.items ?? []).map(mapServiceDtoToCard), [data]);
 
   return (
     <section className="relative z-10 -mt-8 py-1 md:-mt-6 md:py-4">

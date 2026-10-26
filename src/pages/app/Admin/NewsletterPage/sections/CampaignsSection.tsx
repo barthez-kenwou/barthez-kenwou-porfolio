@@ -10,6 +10,7 @@ import {
 } from '@/features/newsletter';
 import { isApiError } from '@/shared/api';
 import { QueryState } from '@/shared/ui/QueryState';
+import { ContentSkeleton } from '@/shared/ui/ContentSkeleton/ContentSkeleton';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -101,9 +102,7 @@ function CampaignDetail({
 
       {(campaign.previewFr || campaign.previewEn) && (
         <div className="rounded-lg border border-border/50 px-3 py-2 text-sm">
-          <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-            Preview
-          </p>
+          <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Preview</p>
           <p className="mt-1 text-muted-foreground">
             {fr
               ? campaign.previewFr || campaign.previewEn
@@ -114,9 +113,7 @@ function CampaignDetail({
 
       {payload && Object.keys(payload).length > 0 ? (
         <div className="space-y-2">
-          <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-            Payload
-          </p>
+          <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Payload</p>
           <pre className="max-h-56 overflow-auto rounded-lg border border-border/50 bg-muted/20 p-3 text-xs leading-relaxed">
             {JSON.stringify(payload, null, 2)}
           </pre>
@@ -152,8 +149,7 @@ export function CampaignsSection({ fr }: Props) {
 
   const campaigns = campaignsQuery.data?.items ?? [];
   const detailQuery = useNewsletterCampaign(selectedId);
-  const selected =
-    detailQuery.data ?? campaigns.find((c) => c.id === selectedId) ?? null;
+  const selected = detailQuery.data ?? campaigns.find((c) => c.id === selectedId) ?? null;
   const total = campaignsQuery.data?.totalItems ?? campaigns.length;
 
   const confirmCancel = async () => {
@@ -170,9 +166,7 @@ export function CampaignsSection({ fr }: Props) {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-base font-semibold tracking-tight">
-          {fr ? 'Campagnes' : 'Campaigns'}
-        </h2>
+        <h2 className="text-base font-semibold tracking-tight">{fr ? 'Campagnes' : 'Campaigns'}</h2>
         <p className="text-sm text-muted-foreground">
           {fr
             ? `${total} campagne${total > 1 ? 's' : ''} · historique, compteurs, annulation`
@@ -183,9 +177,7 @@ export function CampaignsSection({ fr }: Props) {
       <QueryState
         isPending={campaignsQuery.isPending}
         isError={campaignsQuery.isError}
-        errorMessage={
-          isApiError(campaignsQuery.error) ? campaignsQuery.error.message : undefined
-        }
+        errorMessage={isApiError(campaignsQuery.error) ? campaignsQuery.error.message : undefined}
       >
         <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <AdminDataTable
@@ -209,12 +201,12 @@ export function CampaignsSection({ fr }: Props) {
               {
                 key: 'status',
                 label: 'Status',
-                options: (
-                  ['queued', 'sending', 'sent', 'failed', 'cancelled'] as const
-                ).map((s) => ({
-                  value: s,
-                  label: campaignStatusLabel(s, fr),
-                })),
+                options: (['queued', 'sending', 'sent', 'failed', 'cancelled'] as const).map(
+                  (s) => ({
+                    value: s,
+                    label: campaignStatusLabel(s, fr),
+                  }),
+                ),
               },
             ]}
             columns={[
@@ -236,9 +228,7 @@ export function CampaignsSection({ fr }: Props) {
                 key: 'type',
                 header: 'Type',
                 hideOnMobile: true,
-                render: (r) => (
-                  <Badge variant="outline">{campaignTypeLabel(r.type, fr)}</Badge>
-                ),
+                render: (r) => <Badge variant="outline">{campaignTypeLabel(r.type, fr)}</Badge>,
               },
               {
                 key: 'status',
@@ -307,9 +297,7 @@ export function CampaignsSection({ fr }: Props) {
                   : 'Select a campaign to inspect payload and delivery counters.'}
               </div>
             ) : detailQuery.isPending && !selected ? (
-              <div className="flex min-h-[220px] items-center justify-center">
-                <Loader2 className="size-5 animate-spin text-muted-foreground" />
-              </div>
+              <ContentSkeleton className="min-h-[220px] p-4" rows={5} />
             ) : selected ? (
               <CampaignDetail
                 campaign={selected}

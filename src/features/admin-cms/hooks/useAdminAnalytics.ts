@@ -1,9 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/shared/api';
-import {
-  fetchAnalyticsOverview,
-  type AnalyticsPeriod,
-} from '../api/analytics.api';
+import { fetchAnalyticsOverview, type AnalyticsPeriod } from '../api/analytics.api';
 
 export function useAdminAnalytics(period: AnalyticsPeriod = '7d') {
   return useQuery({

@@ -169,7 +169,10 @@ export function VisitorsLineChart({
       </div>
       <div className="mt-2 flex items-center gap-4 text-[10px] text-muted-foreground">
         <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block size-2 rounded-full" style={{ background: CHART.visitors }} />
+          <span
+            className="inline-block size-2 rounded-full"
+            style={{ background: CHART.visitors }}
+          />
           {visitorsLabel}
         </span>
         <span className="inline-flex items-center gap-1.5">
@@ -212,7 +215,11 @@ export function SourcesBarChart({
     <div className={cn('min-w-0 w-full overflow-hidden', className)}>
       <div className="h-44 w-full min-w-0 sm:h-48">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 8, right: 2, left: 0, bottom: 8 }} barCategoryGap="22%">
+          <BarChart
+            data={data}
+            margin={{ top: 8, right: 2, left: 0, bottom: 8 }}
+            barCategoryGap="22%"
+          >
             <CartesianGrid stroke={CHART.grid} strokeDasharray="3 3" vertical={false} />
             <XAxis
               dataKey="name"
@@ -238,14 +245,24 @@ export function SourcesBarChart({
                   <ChartTooltip
                     active
                     label={item.fullName}
-                    payload={[{ name: fr ? 'Visiteurs' : 'Visitors', value: item.value, color: CHART.bar }]}
+                    payload={[
+                      { name: fr ? 'Visiteurs' : 'Visitors', value: item.value, color: CHART.bar },
+                    ]}
                   />
                 );
               }}
             />
-            <Bar dataKey="value" name={fr ? 'Visiteurs' : 'Visitors'} radius={[6, 6, 0, 0]} maxBarSize={40}>
+            <Bar
+              dataKey="value"
+              name={fr ? 'Visiteurs' : 'Visitors'}
+              radius={[6, 6, 0, 0]}
+              maxBarSize={40}
+            >
               {data.map((_, index) => (
-                <Cell key={`${data[index].fullName}-${index}`} fill={SOURCE_COLORS[index % SOURCE_COLORS.length]} />
+                <Cell
+                  key={`${data[index].fullName}-${index}`}
+                  fill={SOURCE_COLORS[index % SOURCE_COLORS.length]}
+                />
               ))}
             </Bar>
           </BarChart>
@@ -285,7 +302,11 @@ export function SignalsBarChart({
     <div className={cn('min-w-0 w-full overflow-hidden', className)}>
       <div className="h-44 w-full min-w-0">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 8, right: 2, left: 0, bottom: 8 }} barCategoryGap="22%">
+          <BarChart
+            data={data}
+            margin={{ top: 8, right: 2, left: 0, bottom: 8 }}
+            barCategoryGap="22%"
+          >
             <CartesianGrid stroke={CHART.grid} strokeDasharray="3 3" vertical={false} />
             <XAxis
               dataKey="name"
@@ -322,12 +343,7 @@ export function SignalsBarChart({
                 );
               }}
             />
-            <Bar
-              dataKey="value"
-              fill={CHART.visitors}
-              radius={[6, 6, 0, 0]}
-              maxBarSize={40}
-            />
+            <Bar dataKey="value" fill={CHART.visitors} radius={[6, 6, 0, 0]} maxBarSize={40} />
           </BarChart>
         </ResponsiveContainer>
       </div>

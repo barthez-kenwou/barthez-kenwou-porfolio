@@ -18,4 +18,6 @@ regexes = [
   '''facebook\.com/tr\?id=\d+''',
   # Bing Webmaster ownership meta (public site verification token)
   '''name=["']msvalidate\.01["']\s+content=["'][A-F0-9]+["']''',
+  # Observability stack names in marketing/mock copy (false-positive generic-api-key)
+  '''Prometheus/Loki/Grafana''',
 ]

@@ -51,12 +51,7 @@ export type NewsletterCampaignType =
   | 'digest'
   | 'broadcast';
 
-export type NewsletterCampaignStatus =
-  | 'queued'
-  | 'sending'
-  | 'sent'
-  | 'failed'
-  | 'cancelled';
+export type NewsletterCampaignStatus = 'queued' | 'sending' | 'sent' | 'failed' | 'cancelled';
 
 export interface NewsletterCampaign {
   id: string;

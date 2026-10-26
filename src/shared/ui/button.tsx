@@ -40,7 +40,10 @@ const Button = React.forwardRef<
     VariantProps<typeof buttonVariants> & {
       asChild?: boolean;
     }
->(function Button({ className, variant = 'default', size = 'default', asChild = false, ...props }, ref) {
+>(function Button(
+  { className, variant = 'default', size = 'default', asChild = false, ...props },
+  ref,
+) {
   const Comp = asChild ? Slot : 'button';
 
   return (

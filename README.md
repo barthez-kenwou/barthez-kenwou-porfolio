@@ -13,7 +13,7 @@ Live site: [https://barthez-kenwou.dev](https://barthez-kenwou.dev)
 
 SPA portfolio built with React 18 + TypeScript, Feature-Sliced Design, and a production DevOps pipeline (GHCR → OVH VPS).
 
-**Highlights**
+### Highlights
 
 - Dark premium UI, glassmorphism, Framer Motion, PWA
 - FR / EN via `i18next`

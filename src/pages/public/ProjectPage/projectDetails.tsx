@@ -59,20 +59,18 @@ export const ProjectDetailPage = () => {
 
   useEffect(() => {
     if (!project) return;
-    void import('@/app/lib/analytics').then((m) =>
-      m.trackProjectView(getProjectPathSlug(project)),
-    );
+    void import('@/app/lib/analytics').then((m) => m.trackProjectView(getProjectPathSlug(project)));
   }, [project]);
 
   const notFound =
     !isPending &&
     (Boolean(
       error &&
-        typeof error === 'object' &&
-        'message' in error &&
-        String((error as { message: string }).message)
-          .toLowerCase()
-          .includes('not found'),
+      typeof error === 'object' &&
+      'message' in error &&
+      String((error as { message: string }).message)
+        .toLowerCase()
+        .includes('not found'),
     ) ||
       (!isError && !project));
 

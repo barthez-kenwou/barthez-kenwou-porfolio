@@ -50,7 +50,7 @@ export function createAppStore<TState extends object>(
   options?: CreateOptions,
 ) {
   const name = options?.name ?? 'app-store';
-  const enableDevtools = options?.enableDevtools ?? process.env.NODE_ENV !== 'production';
+  const enableDevtools = options?.enableDevtools ?? import.meta.env.DEV;
   const enablePersist = options?.enablePersist ?? false;
 
   let enhanced = initializer as any;

@@ -5,11 +5,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { PanelLeftIcon } from 'lucide-react';
 
-import {
-  MOBILE_BREAKPOINT,
-  PUBLIC_SHELL_BREAKPOINT,
-  useIsMobile,
-} from '@/shared/hooks/use-mobile';
+import { MOBILE_BREAKPOINT, PUBLIC_SHELL_BREAKPOINT, useIsMobile } from '@/shared/hooks/use-mobile';
 import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';

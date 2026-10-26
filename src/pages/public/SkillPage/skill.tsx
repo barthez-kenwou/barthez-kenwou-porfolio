@@ -5,7 +5,7 @@ import { AchievmentSection } from './sections/AchievmentSection';
 import { CertificationSection } from './sections/CertificationSection';
 import { SkillsCTASection } from './sections/SkillsCTASection';
 import { SEO } from '@/shared/ui/SEO/SEO';
-import { RouteFallback } from '@/shared/ui/RouteFallback/RouteFallback';
+import { ContentSkeleton } from '@/shared/ui/ContentSkeleton/ContentSkeleton';
 import { useSkillIconsStore } from '@/entities/skills/model/useSkillIconsStore';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 
@@ -34,7 +34,11 @@ export const SkillPage: React.FC = () => {
       />
 
       {!iconsReady ? (
-        <RouteFallback fullScreen={false} />
+        <ContentSkeleton
+          withTitle
+          rows={8}
+          className="mx-auto min-h-[50vh] w-full max-w-6xl px-4 py-12"
+        />
       ) : (
         <div className="min-h-screen overflow-x-clip pb-12 md:pb-16">
           <HeroSection />

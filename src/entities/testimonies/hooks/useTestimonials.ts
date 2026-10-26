@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { queryKeys, withPublicFallback, type PaginatedData, type ResourceResult } from '@/shared/api';
+import {
+  queryKeys,
+  withPublicFallback,
+  type PaginatedData,
+  type ResourceResult,
+} from '@/shared/api';
 import { paginateMock } from '@/shared/api/http';
 import { testimonials as testimonialsMock } from '../api/mocks/testimonials.mocks';
 import { isPublicTestimonial } from '../lib/isPublicTestimonial';

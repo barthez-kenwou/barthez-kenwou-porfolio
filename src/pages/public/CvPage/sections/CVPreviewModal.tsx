@@ -3,10 +3,11 @@ import { BlobProvider } from '@react-pdf/renderer';
 import { CvPDFDocument } from '../PDF/PDFDocument';
 import { usePublicCvData } from '@/entities/cv/hooks/useCv';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
-import { X, Download, Loader2, CheckCircle2 } from 'lucide-react';
+import { X, Download, CheckCircle2 } from 'lucide-react';
 import { trackCvDownload } from '@/app/lib/analytics';
 import { createPortal } from 'react-dom';
 import { cn } from '@/shared/lib/utils';
+import { ContentSkeleton } from '@/shared/ui/ContentSkeleton/ContentSkeleton';
 
 interface CVPreviewModalProps {
   isOpen: boolean;
@@ -113,9 +114,7 @@ export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose 
           'border border-border/60 bg-background shadow-2xl',
           'transition-[opacity,transform] duration-300 ease-out',
           // Mobile: sheet from bottom (reliable). Desktop: light fade — no scale-0.2 (clips on iOS)
-          renderState
-            ? 'translate-y-0 opacity-100'
-            : 'translate-y-6 opacity-0 sm:translate-y-3',
+          renderState ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0 sm:translate-y-3',
         )}
       >
         <div className="bg-primary/20 flex shrink-0 items-center justify-between gap-3 border-b border-border/50 px-4 py-3 sm:px-5">
@@ -141,91 +140,83 @@ export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose 
 
         <div className="relative flex min-h-0 flex-1 flex-col bg-background/40">
           {!cvData ? (
-            <div className="flex flex-1 flex-col items-center justify-center gap-3 p-6 text-primary">
-              <Loader2 className="h-9 w-9 animate-spin" />
-              <p className="text-sm font-semibold text-foreground/80">
-                {isFr ? 'Chargement du CV…' : 'Loading CV…'}
-              </p>
-            </div>
+            <ContentSkeleton className="min-h-[16rem] flex-1 px-6 py-8" rows={6} />
           ) : (
-          <BlobProvider document={<CvPDFDocument data={cvData} language={language === 'fr' ? 'fr' : 'en'} />}>
-            {({ url, loading, error }) => {
-              if (error) {
-                return (
-                  <div className="flex flex-1 flex-col items-center justify-center gap-3 p-6 text-center">
-                    <p className="text-sm font-medium text-destructive">
-                      {isFr ? 'Impossible de générer le PDF.' : 'Could not generate the PDF.'}
-                    </p>
-                    <p className="max-w-sm text-xs text-foreground/65">{error.message}</p>
-                  </div>
-                );
-              }
+            <BlobProvider
+              document={<CvPDFDocument data={cvData} language={language === 'fr' ? 'fr' : 'en'} />}
+            >
+              {({ url, loading, error }) => {
+                if (error) {
+                  return (
+                    <div className="flex flex-1 flex-col items-center justify-center gap-3 p-6 text-center">
+                      <p className="text-sm font-medium text-destructive">
+                        {isFr ? 'Impossible de générer le PDF.' : 'Could not generate the PDF.'}
+                      </p>
+                      <p className="max-w-sm text-xs text-foreground/65">{error.message}</p>
+                    </div>
+                  );
+                }
 
-              if (loading || !url) {
-                return (
-                  <div className="flex flex-1 flex-col items-center justify-center gap-3 p-6 text-primary">
-                    <Loader2 className="h-9 w-9 animate-spin" />
-                    <p className="text-sm font-semibold text-foreground/80">
-                      {isFr ? 'Préparation du PDF…' : 'Preparing PDF…'}
-                    </p>
-                  </div>
-                );
-              }
+                if (loading || !url) {
+                  return <ContentSkeleton className="min-h-[16rem] flex-1 px-6 py-8" rows={6} />;
+                }
 
-              return (
-                <>
-                  <div className="relative min-h-0 flex-1 px-3 pt-3 sm:px-5 sm:pt-4">
-                    {mobileLike ? (
-                      <div className="flex h-full flex-col items-center justify-center gap-4 rounded-lg border border-border/50 bg-card/60 px-5 py-8 text-center">
-                        <CheckCircle2 className="h-10 w-10 text-brand dark:text-primary" />
-                        <div className="space-y-1.5">
-                          <p className="font-heading text-sm font-semibold text-foreground">
-                            {isFr ? 'PDF prêt' : 'PDF ready'}
-                          </p>
-                          <p className="mx-auto max-w-xs text-xs leading-relaxed text-foreground/70">
-                            {isFr
-                              ? "L'aperçu intégré est limité sur mobile. Récupérez le fichier pour l'ouvrir dans votre lecteur PDF."
-                              : 'In-app preview is limited on mobile. Get the file to open it in your PDF reader.'}
-                          </p>
+                return (
+                  <>
+                    <div className="relative min-h-0 flex-1 px-3 pt-3 sm:px-5 sm:pt-4">
+                      {mobileLike ? (
+                        <div className="flex h-full flex-col items-center justify-center gap-4 rounded-lg border border-border/50 bg-card/60 px-5 py-8 text-center">
+                          <CheckCircle2 className="h-10 w-10 text-brand dark:text-primary" />
+                          <div className="space-y-1.5">
+                            <p className="font-heading text-sm font-semibold text-foreground">
+                              {isFr ? 'PDF prêt' : 'PDF ready'}
+                            </p>
+                            <p className="mx-auto max-w-xs text-xs leading-relaxed text-foreground/70">
+                              {isFr
+                                ? "L'aperçu intégré est limité sur mobile. Récupérez le fichier pour l'ouvrir dans votre lecteur PDF."
+                                : 'In-app preview is limited on mobile. Get the file to open it in your PDF reader.'}
+                            </p>
+                          </div>
+                          <a
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs font-medium text-primary underline-offset-2 hover:underline"
+                          >
+                            {isFr ? 'Ouvrir dans un nouvel onglet' : 'Open in a new tab'}
+                          </a>
                         </div>
-                        <a
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs font-medium text-primary underline-offset-2 hover:underline"
-                        >
-                          {isFr ? 'Ouvrir dans un nouvel onglet' : 'Open in a new tab'}
-                        </a>
-                      </div>
-                    ) : (
-                      <iframe
-                        src={`${url}#view=FitH`}
-                        className="h-full w-full rounded-lg border border-border/40 bg-background"
-                        title={isFr ? 'Aperçu du CV' : 'CV preview'}
-                      />
-                    )}
-                  </div>
-
-                  <div className="flex shrink-0 justify-center border-t border-border/50 bg-background/90 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md sm:px-5 sm:py-4">
-                    <a
-                      href={url}
-                      download={fileName}
-                      onClick={() => trackCvDownload(language === 'fr' ? 'fr' : 'en', 'cv_preview_modal')}
-                      className={cn(
-                        'inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-md',
-                        'bg-brand px-4 py-3 text-sm font-semibold text-brand-foreground',
-                        'transition-colors hover:bg-brand-hover',
-                        'mx-auto sm:w-auto sm:min-w-[14rem] sm:px-6',
+                      ) : (
+                        <iframe
+                          src={`${url}#view=FitH`}
+                          className="h-full w-full rounded-lg border border-border/40 bg-background"
+                          title={isFr ? 'Aperçu du CV' : 'CV preview'}
+                        />
                       )}
-                    >
-                      <Download className="h-4 w-4" />
-                      {isFr ? 'Récupérer le PDF' : 'Get the PDF'}
-                    </a>
-                  </div>
-                </>
-              );
-            }}
-          </BlobProvider>
+                    </div>
+
+                    <div className="flex shrink-0 justify-center border-t border-border/50 bg-background/90 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md sm:px-5 sm:py-4">
+                      <a
+                        href={url}
+                        download={fileName}
+                        onClick={() =>
+                          trackCvDownload(language === 'fr' ? 'fr' : 'en', 'cv_preview_modal')
+                        }
+                        className={cn(
+                          'inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-md',
+                          'bg-brand px-4 py-3 text-sm font-semibold text-brand-foreground',
+                          'transition-colors hover:bg-brand-hover',
+                          'mx-auto sm:w-auto sm:min-w-[14rem] sm:px-6',
+                        )}
+                      >
+                        <Download className="h-4 w-4" />
+                        {isFr ? 'Récupérer le PDF' : 'Get the PDF'}
+                      </a>
+                    </div>
+                  </>
+                );
+              }}
+            </BlobProvider>
           )}
         </div>
       </div>

@@ -114,11 +114,7 @@ export const AdminContactInfoPage: React.FC = () => {
       onClick={() => void save()}
       disabled={update.isPending || !hydrated}
     >
-      {update.isPending ? (
-        <Loader2 className="size-4 animate-spin" />
-      ) : (
-        <Save className="size-4" />
-      )}
+      {update.isPending ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
       {fr ? 'Enregistrer' : 'Save'}
     </Button>
   );
@@ -147,7 +143,11 @@ export const AdminContactInfoPage: React.FC = () => {
               const meta = TAB_META[key];
               const Icon = meta.icon;
               return (
-                <TabsTrigger key={key} value={key} className={cn('cursor-pointer gap-1.5 px-3 py-2')}>
+                <TabsTrigger
+                  key={key}
+                  value={key}
+                  className={cn('cursor-pointer gap-1.5 px-3 py-2')}
+                >
                   <Icon className="size-3.5 opacity-80" />
                   {fr ? meta.fr : meta.en}
                 </TabsTrigger>
@@ -203,11 +203,7 @@ export const AdminContactInfoPage: React.FC = () => {
           <TabsContent value="coordinates" className="mt-0">
             <AdminSectionCard
               title={fr ? 'Coordonnées' : 'Coordinates'}
-              description={
-                fr
-                  ? 'Canaux directs pour te joindre.'
-                  : 'Direct channels to reach you.'
-              }
+              description={fr ? 'Canaux directs pour te joindre.' : 'Direct channels to reach you.'}
             >
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Email">

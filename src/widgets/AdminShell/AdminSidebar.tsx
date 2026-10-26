@@ -18,7 +18,12 @@ import {
 } from '@/shared/ui/sidebar';
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/lib/utils';
+import { prefetchRoute } from '@/app/routes/prefetch';
 import { adminDashboardItem, adminNavGroups } from './adminNav';
+
+function warmAdminPath(path: string) {
+  void prefetchRoute(path).catch(() => {});
+}
 
 function isNavActive(pathname: string, itemPath: string): boolean {
   if (itemPath === ADMIN_BASE) {
@@ -74,6 +79,8 @@ export function AdminSidebar() {
                   <Link
                     to={adminDashboardItem.path}
                     className="group-data-[collapsible=icon]:justify-center"
+                    onMouseEnter={() => warmAdminPath(adminDashboardItem.path)}
+                    onFocus={() => warmAdminPath(adminDashboardItem.path)}
                   >
                     <span className="flex size-5 shrink-0 items-center justify-center text-[10px] text-primary">
                       {adminDashboardItem.mark}
@@ -117,7 +124,12 @@ export function AdminSidebar() {
                           'group-data-[collapsible=icon]:!mx-auto group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!max-w-8 group-data-[collapsible=icon]:!justify-center group-data-[collapsible=icon]:!gap-0 group-data-[collapsible=icon]:!overflow-visible group-data-[collapsible=icon]:!p-0',
                         )}
                       >
-                        <Link to={item.path} className="group-data-[collapsible=icon]:justify-center">
+                        <Link
+                          to={item.path}
+                          className="group-data-[collapsible=icon]:justify-center"
+                          onMouseEnter={() => warmAdminPath(item.path)}
+                          onFocus={() => warmAdminPath(item.path)}
+                        >
                           <span
                             className={cn(
                               'flex size-5 shrink-0 items-center justify-center font-mono text-[10px] tracking-tight',

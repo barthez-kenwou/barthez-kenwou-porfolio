@@ -88,10 +88,7 @@ export const CvPage = () => {
                 : 'A shareable profile, download the PDF or start the conversation.'}
             </p>
 
-            <div
-              ref={heroActionsRef}
-              className="mx-auto mt-5 flex max-w-md justify-center sm:mt-6"
-            >
+            <div ref={heroActionsRef} className="mx-auto mt-5 flex max-w-md justify-center sm:mt-6">
               <CvQuickActions variant="hero" onDownload={openPreview} />
             </div>
           </div>

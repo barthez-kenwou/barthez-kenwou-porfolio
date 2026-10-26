@@ -43,11 +43,7 @@ import {
   mirrorImageIntoSibling,
   syncMissingImagesFromSource,
 } from '../lib/markdownImages';
-import {
-  readTextareaCaret,
-  restoreTextareaCaret,
-  type TextareaCaret,
-} from '../lib/textareaCaret';
+import { readTextareaCaret, restoreTextareaCaret, type TextareaCaret } from '../lib/textareaCaret';
 import {
   MarkdownFocusBoard,
   MarkdownFocusTrigger,
@@ -140,8 +136,7 @@ const SNIPPETS: Record<string, Snippet> = {
     block: true,
   },
   imageGrid2: {
-    before:
-      '| | |\n| :---: | :---: |\n| ![left](https://) | ![right](https://) |\n',
+    before: '| | |\n| :---: | :---: |\n| ![left](https://) | ![right](https://) |\n',
     block: true,
   },
   imageGrid3: {
@@ -232,12 +227,9 @@ export function MarkdownEditor({
     if (!focusMode) setFocusEditTarget('self');
   }, [focusMode]);
 
-  const editingSibling = Boolean(
-    focusMode && focusEditTarget === 'sibling' && localePair,
-  );
+  const editingSibling = Boolean(focusMode && focusEditTarget === 'sibling' && localePair);
   const activeValue = editingSibling && localePair ? localePair.siblingValue : value;
-  const activeOnChange =
-    editingSibling && localePair ? localePair.onSiblingChange : onChange;
+  const activeOnChange = editingSibling && localePair ? localePair.onSiblingChange : onChange;
   const activeLanguageLabel =
     editingSibling && localePair ? localePair.siblingLabel : languageLabel;
   const otherLanguageLabel =
@@ -245,8 +237,7 @@ export function MarkdownEditor({
       ? languageLabel || (localePair.siblingLabel === 'EN' ? 'FR' : 'EN')
       : localePair?.siblingLabel;
 
-  const sourceLang: TranslateLang =
-    activeLanguageLabel?.toUpperCase() === 'EN' ? 'en' : 'fr';
+  const sourceLang: TranslateLang = activeLanguageLabel?.toUpperCase() === 'EN' ? 'en' : 'fr';
   const targetLang: TranslateLang = sourceLang === 'fr' ? 'en' : 'fr';
 
   const rememberCaret = useCallback(() => {
@@ -344,9 +335,7 @@ export function MarkdownEditor({
     const from = editingSibling ? localePair.siblingValue : value;
     const writeInto = editingSibling ? onChange : localePair.onSiblingChange;
     if (!from.trim()) {
-      toast.error(
-        isFr ? 'Écris d’abord le contenu source' : 'Write the source content first',
-      );
+      toast.error(isFr ? 'Écris d’abord le contenu source' : 'Write the source content first');
       return;
     }
     setTranslating(true);
@@ -360,11 +349,7 @@ export function MarkdownEditor({
       );
     } catch (e) {
       toast.error(
-        e instanceof Error
-          ? e.message
-          : isFr
-            ? 'Traduction impossible'
-            : 'Translation failed',
+        e instanceof Error ? e.message : isFr ? 'Traduction impossible' : 'Translation failed',
       );
     } finally {
       setTranslating(false);
@@ -396,8 +381,10 @@ export function MarkdownEditor({
       const url = await uploadAdminImage(file, INLINE_COMPRESS);
       const caret = readCaretForEdit();
       const caption =
-        file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').trim() ||
-        (isFr ? 'Image' : 'Image');
+        file.name
+          .replace(/\.[^.]+$/, '')
+          .replace(/[-_]+/g, ' ')
+          .trim() || (isFr ? 'Image' : 'Image');
       const { next, cursor } = insertImageMarkdown(
         activeValue,
         caret.start,
@@ -493,9 +480,7 @@ export function MarkdownEditor({
             ) : (
               <Languages className="size-3.5" />
             )}
-            <span className="text-xs font-medium tracking-wide">
-              → {targetLang.toUpperCase()}
-            </span>
+            <span className="text-xs font-medium tracking-wide">→ {targetLang.toUpperCase()}</span>
           </Button>
         ) : null}
       </div>
@@ -530,12 +515,8 @@ export function MarkdownEditor({
                       variant="outline"
                       size="icon-sm"
                       className="w-6 rounded-lg rounded-l-none px-0"
-                      aria-label={
-                        isFr ? 'Autres niveaux de titre' : 'Other heading levels'
-                      }
-                      title={
-                        isFr ? 'Titres H3–H6' : 'Headings H3–H6'
-                      }
+                      aria-label={isFr ? 'Autres niveaux de titre' : 'Other heading levels'}
+                      title={isFr ? 'Titres H3–H6' : 'Headings H3–H6'}
                     >
                       <ChevronDown className="size-3 opacity-70" />
                     </Button>
@@ -582,11 +563,7 @@ export function MarkdownEditor({
                     disabled={uploading}
                     onClick={() => fileInputRef.current?.click()}
                     aria-label={isFr ? 'Insérer une image' : 'Insert image'}
-                    title={
-                      isFr
-                        ? 'Téléverser et insérer une image'
-                        : 'Upload and insert an image'
-                    }
+                    title={isFr ? 'Téléverser et insérer une image' : 'Upload and insert an image'}
                     className="rounded-lg"
                   >
                     {uploading ? (
@@ -729,16 +706,10 @@ export function MarkdownEditor({
         onChange={activeOnChange}
         languageLabel={activeLanguageLabel}
         isFr={isFr}
-        contentIsFr={
-          activeLanguageLabel
-            ? activeLanguageLabel.toUpperCase() === 'FR'
-            : isFr
-        }
+        contentIsFr={activeLanguageLabel ? activeLanguageLabel.toUpperCase() === 'FR' : isFr}
         enableImages={enableImages}
         localePair={
-          localePair && otherLanguageLabel
-            ? { siblingLabel: otherLanguageLabel }
-            : undefined
+          localePair && otherLanguageLabel ? { siblingLabel: otherLanguageLabel } : undefined
         }
         mirrorMedia={mirrorMedia}
         onToggleMirror={() => setMirrorMedia((v) => !v)}
@@ -752,9 +723,7 @@ export function MarkdownEditor({
           localePair
             ? () => {
                 setFocusEditTarget((t) => (t === 'self' ? 'sibling' : 'self'));
-                requestAnimationFrame(() =>
-                  textareaRef.current?.focus({ preventScroll: true }),
-                );
+                requestAnimationFrame(() => textareaRef.current?.focus({ preventScroll: true }));
               }
             : undefined
         }

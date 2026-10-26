@@ -1,8 +1,5 @@
 import { apiClient } from '@/shared/api';
-import {
-  compressImageFile,
-  type CompressImageOptions,
-} from '@/shared/lib/compressImage';
+import { compressImageFile, type CompressImageOptions } from '@/shared/lib/compressImage';
 
 export type PresignedUpload = {
   url: string;
@@ -12,8 +9,7 @@ export type PresignedUpload = {
 };
 
 /** Docker / LAN hosts that the browser can never reach (and CSP will block). */
-const INTERNAL_UPLOAD_HOST =
-  /^(localhost|127\.0\.0\.1|0\.0\.0\.0|seaweed-s3|minio)(:\d+)?$/i;
+const INTERNAL_UPLOAD_HOST = /^(localhost|127\.0\.0\.1|0\.0\.0\.0|seaweed-s3|minio)(:\d+)?$/i;
 
 function assertBrowserReachableUploadUrl(url: string): void {
   let host: string;

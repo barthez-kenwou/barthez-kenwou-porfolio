@@ -23,12 +23,12 @@ cp .env.example .env
 
 Useful variables:
 
-| Variable                         | Role                            |
-| :------------------------------- | :------------------------------ |
-| `VITE_SITE_URL` / `VITE_APP_URL` | Canonical site URL              |
-| `VITE_ENABLE_PWA`                | Enable service worker in builds |
-| `VITE_API_BASE_URL`              | Optional backend base URL       |
-| Presentation video               | CMS: Admin → Contact info → Social                  |
+| Variable                         | Role                               |
+| :------------------------------- | :--------------------------------- |
+| `VITE_SITE_URL` / `VITE_APP_URL` | Canonical site URL                 |
+| `VITE_ENABLE_PWA`                | Enable service worker in builds    |
+| `VITE_API_BASE_URL`              | Optional backend base URL          |
+| Presentation video               | CMS: Admin → Contact info → Social |
 
 ## 4. Dev server
 

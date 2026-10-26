@@ -37,9 +37,7 @@ export function ListInsertPositionToggle({
         className,
       )}
       role="group"
-      aria-label={
-        isFr ? 'Position d’insertion des nouveaux éléments' : 'New item insert position'
-      }
+      aria-label={isFr ? 'Position d’insertion des nouveaux éléments' : 'New item insert position'}
     >
       <Button
         type="button"

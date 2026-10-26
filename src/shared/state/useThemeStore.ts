@@ -17,7 +17,7 @@ export const useThemeStore = createAppStore<ThemeState>(
   }),
   {
     name: 'frontend-starter-theme',
-    enableDevtools: process.env.NODE_ENV !== 'production',
+    enableDevtools: import.meta.env.DEV,
     enablePersist: true,
   },
 );

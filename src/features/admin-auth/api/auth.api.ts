@@ -1,4 +1,10 @@
-import { apiClient, clearAccessToken, getAccessToken, setAccessToken, isApiError } from '@/shared/api';
+import {
+  apiClient,
+  clearAccessToken,
+  getAccessToken,
+  setAccessToken,
+  isApiError,
+} from '@/shared/api';
 import { sessionExpiresAtFromNow } from '@/shared/api/jwt';
 import { env } from '@/app/config/env';
 import { AVATAR_COMPRESS, compressImageFile } from '@/shared/lib/compressImage';
@@ -126,11 +132,7 @@ function loginErrorMessage(error: unknown): string {
       return 'CSRF token rejected. Refresh the page and retry.';
     }
     if (error.statusCode === 400 || error.code === 'BAD_REQUEST') {
-      return (
-        formatValidationDetails(error.details) ||
-        error.message ||
-        'Invalid login request'
-      );
+      return formatValidationDetails(error.details) || error.message || 'Invalid login request';
     }
     if (error.statusCode === 401 || error.code === 'UNAUTHORIZED') {
       return 'Invalid email or password';

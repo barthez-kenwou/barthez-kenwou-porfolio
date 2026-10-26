@@ -11,10 +11,7 @@ type CTADetailsSectionProps = {
   sectionRef?: React.Ref<HTMLElement>;
 };
 
-export const CTADetailsSection: React.FC<CTADetailsSectionProps> = ({
-  project,
-  sectionRef,
-}) => {
+export const CTADetailsSection: React.FC<CTADetailsSectionProps> = ({ project, sectionRef }) => {
   const { language } = useLanguageStore();
   const isFr = language === 'fr';
   const title = isFr ? project.titleFr : project.titleEn;

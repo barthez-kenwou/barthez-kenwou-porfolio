@@ -46,11 +46,7 @@ function loadImage(file: File): Promise<HTMLImageElement> {
   });
 }
 
-function canvasToBlob(
-  canvas: HTMLCanvasElement,
-  type: string,
-  quality?: number,
-): Promise<Blob> {
+function canvasToBlob(canvas: HTMLCanvasElement, type: string, quality?: number): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const done = (blob: Blob | null) => {
       if (!blob) {
@@ -91,10 +87,7 @@ export async function compressImageFile(
   if (type === 'image/svg+xml' || type === 'image/gif') return file;
 
   // Already small WebP/AVIF — no need to re-encode
-  if (
-    file.size <= skipIfUnderBytes &&
-    (type === 'image/webp' || type === 'image/avif')
-  ) {
+  if (file.size <= skipIfUnderBytes && (type === 'image/webp' || type === 'image/avif')) {
     return file;
   }
 
@@ -141,11 +134,7 @@ export async function compressImageFile(
 
   let blob: Blob;
   try {
-    blob = await canvasToBlob(
-      canvas,
-      outType,
-      outType === 'image/png' ? undefined : quality,
-    );
+    blob = await canvasToBlob(canvas, outType, outType === 'image/png' ? undefined : quality);
   } catch {
     return file;
   }

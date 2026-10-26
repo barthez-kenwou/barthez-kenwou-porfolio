@@ -36,9 +36,7 @@ function errorCopy(code: NewsletterSubscribeErrorCode, isFr: boolean) {
     case 'invalid_email':
       return isFr ? 'Adresse email invalide.' : 'Invalid email address.';
     case 'already_subscribed':
-      return isFr
-        ? 'Cette adresse est déjà inscrite.'
-        : 'This address is already subscribed.';
+      return isFr ? 'Cette adresse est déjà inscrite.' : 'This address is already subscribed.';
     case 'rate_limited':
       return isFr
         ? 'Trop de tentatives. Réessayez dans un instant.'
@@ -68,9 +66,7 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
   const [email, setEmail] = React.useState('');
   const [honeypot, setHoneypot] = React.useState('');
   const [status, setStatus] = React.useState<FormStatus>('idle');
-  const [errorCode, setErrorCode] = React.useState<NewsletterSubscribeErrorCode | null>(
-    null,
-  );
+  const [errorCode, setErrorCode] = React.useState<NewsletterSubscribeErrorCode | null>(null);
 
   const isLoading = status === 'loading';
 
@@ -134,9 +130,7 @@ export const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
               id="newsletter-cta-title"
               className="mb-2 font-heading text-base font-bold text-foreground sm:text-lg md:text-xl"
             >
-              {isFr
-                ? 'Notes techniques pour la prod'
-                : 'Technical notes for production'}
+              {isFr ? 'Notes techniques pour la prod' : 'Technical notes for production'}
             </h3>
             <form onSubmit={onSubmit} noValidate className="mx-auto max-w-md space-y-3">
               <input

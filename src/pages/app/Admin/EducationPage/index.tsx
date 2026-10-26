@@ -119,7 +119,11 @@ export const AdminEducationPage: React.FC = () => {
                   onClick={() => void save()}
                   disabled={saving}
                 >
-                  {saving ? <Loader2 className="size-3.5 animate-spin" /> : <Save className="size-3.5" />}
+                  {saving ? (
+                    <Loader2 className="size-3.5 animate-spin" />
+                  ) : (
+                    <Save className="size-3.5" />
+                  )}
                   {fr ? 'Enregistrer' : 'Save'}
                 </Button>
               </AdminStickyActions>
@@ -160,7 +164,9 @@ export const AdminEducationPage: React.FC = () => {
         <QueryState
           isPending={isPending}
           isError={isError}
-          errorMessage={isApiError(error) ? error.message : fr ? 'Chargement impossible' : 'Failed to load'}
+          errorMessage={
+            isApiError(error) ? error.message : fr ? 'Chargement impossible' : 'Failed to load'
+          }
           variant="page"
         >
           <AdminDataTable
@@ -191,7 +197,11 @@ export const AdminEducationPage: React.FC = () => {
                     title={fr ? 'Monter' : 'Move up'}
                     onClick={() => void reorder(r.id, 'up')}
                   >
-                    {busy ? <Loader2 className="size-3.5 animate-spin" /> : <ChevronUp className="size-3.5" />}
+                    {busy ? (
+                      <Loader2 className="size-3.5 animate-spin" />
+                    ) : (
+                      <ChevronUp className="size-3.5" />
+                    )}
                   </Button>
                   <Button
                     type="button"
@@ -240,7 +250,9 @@ export const AdminEducationPage: React.FC = () => {
               toast.success(fr ? 'Supprimé' : 'Deleted');
               setPending(null);
             } catch (e) {
-              toast.error(isApiError(e) ? e.message : fr ? 'Suppression impossible' : 'Delete failed');
+              toast.error(
+                isApiError(e) ? e.message : fr ? 'Suppression impossible' : 'Delete failed',
+              );
             }
           })();
         }}

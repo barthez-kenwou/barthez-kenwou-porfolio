@@ -30,7 +30,9 @@ export const HeaderSection: React.FC<Props> = ({ personalInfo, language }) => (
       )}
     </View>
     <View style={styles.headerRight}>
-      {personalInfo.location ? <Text style={styles.contactLine}>{personalInfo.location}</Text> : null}
+      {personalInfo.location ? (
+        <Text style={styles.contactLine}>{personalInfo.location}</Text>
+      ) : null}
       {personalInfo.email ? <Text style={styles.contactLine}>{personalInfo.email}</Text> : null}
       {personalInfo.phone ? <Text style={styles.contactLine}>{personalInfo.phone}</Text> : null}
       {personalInfo.website ? (

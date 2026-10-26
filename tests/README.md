@@ -3,7 +3,7 @@
 Unit / component tests live **outside** `src/`, same idea as the backend `tests/` tree.
 Browser E2E stays in `cypress/`.
 
-```
+```text
 tests/
 └── unit/                 # Vitest — mirrors src/ features & shared
     ├── features/

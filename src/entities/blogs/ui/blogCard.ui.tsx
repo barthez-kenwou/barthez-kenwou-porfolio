@@ -28,7 +28,9 @@ export const BlogCard: React.FC<{ Blog: IBlog; isFeatured?: boolean }> = ({ Blog
         <div
           className={cn(
             'relative w-full shrink-0 overflow-hidden bg-muted/30',
-            isFeatured ? 'h-36 sm:h-40 md:h-full md:min-h-[168px] md:max-h-[200px]' : 'h-40 sm:h-44',
+            isFeatured
+              ? 'h-36 sm:h-40 md:h-full md:min-h-[168px] md:max-h-[200px]'
+              : 'h-40 sm:h-44',
           )}
         >
           <Image

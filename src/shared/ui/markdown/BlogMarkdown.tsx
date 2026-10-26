@@ -4,10 +4,7 @@ import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 import { cn } from '@/shared/lib/utils';
-import {
-  BLOG_MARKDOWN_COMPONENTS,
-  BLOG_PROSE_CLASSNAME,
-} from './blogMarkdownComponents';
+import { BLOG_MARKDOWN_COMPONENTS, BLOG_PROSE_CLASSNAME } from './blogMarkdownComponents';
 
 /** Allow only safe inline style spans (focus dock color / font wraps). */
 const sanitizeSchema = {
@@ -46,9 +43,7 @@ export const BlogMarkdown: React.FC<BlogMarkdownProps> = ({
 }) => {
   const trimmed = content.trim();
   if (!trimmed) {
-    return emptyLabel ? (
-      <p className="text-sm text-muted-foreground">{emptyLabel}</p>
-    ) : null;
+    return emptyLabel ? <p className="text-sm text-muted-foreground">{emptyLabel}</p> : null;
   }
 
   const components =

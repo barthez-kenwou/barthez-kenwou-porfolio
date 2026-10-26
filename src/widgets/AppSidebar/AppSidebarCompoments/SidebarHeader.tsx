@@ -22,7 +22,12 @@ export const SidebarHeaderSection: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <div className={cn('border-b transition-[padding] duration-500 ease-in-out', contentReady ? 'p-3' : 'p-2')}>
+    <div
+      className={cn(
+        'border-b transition-[padding] duration-500 ease-in-out',
+        contentReady ? 'p-3' : 'p-2',
+      )}
+    >
       <div className="flex cursor-default items-center gap-3">
         <div
           className={cn(
@@ -65,9 +70,7 @@ export const SidebarHeaderSection: React.FC = () => {
           <div
             className={cn(
               'w-full overflow-hidden text-center transition-[opacity,max-height] duration-500 ease-in-out',
-              contentReady
-                ? 'max-h-24 opacity-100'
-                : 'pointer-events-none max-h-0 opacity-0',
+              contentReady ? 'max-h-24 opacity-100' : 'pointer-events-none max-h-0 opacity-0',
             )}
             aria-hidden={!contentReady}
           >

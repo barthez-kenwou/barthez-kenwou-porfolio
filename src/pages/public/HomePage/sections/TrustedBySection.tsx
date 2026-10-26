@@ -82,9 +82,7 @@ export const TrustedBySection: React.FC = () => {
 
   const partners = useMemo(() => {
     const items = data?.data.items ?? [];
-    return sortPartners(
-      items.filter((p) => p.isPublished !== false && Boolean(p.logoUrl?.trim())),
-    );
+    return sortPartners(items.filter((p) => p.isPublished !== false && Boolean(p.logoUrl?.trim())));
   }, [data]);
 
   if (!isPending && !isError && partners.length === 0) return null;
@@ -133,12 +131,7 @@ export const TrustedBySection: React.FC = () => {
           source={data?.source}
         >
           {/* Desktop / tablet: responsive logo grid */}
-          <div
-            className={cn(
-              'hidden gap-3 md:grid md:gap-4',
-              desktopGridClass(partners.length),
-            )}
-          >
+          <div className={cn('hidden gap-3 md:grid md:gap-4', desktopGridClass(partners.length))}>
             {partners.map((partner) => (
               <PartnerLogoCell key={partner.id} partner={partner} isFr={isFr} />
             ))}

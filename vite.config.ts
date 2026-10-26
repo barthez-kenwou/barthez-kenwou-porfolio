@@ -198,9 +198,7 @@ export default defineConfig(({ mode }) => {
     changeOrigin: true,
     secure: proxyIsHttps,
     cookieDomainRewrite: '',
-    configure: (proxy: {
-      on: (event: string, fn: (...args: unknown[]) => void) => void;
-    }) => {
+    configure: (proxy: { on: (event: string, fn: (...args: unknown[]) => void) => void }) => {
       proxy.on('error', (...args: unknown[]) => {
         const err = args[0] as { message?: string };
         console.error(`[vite proxy → ${proxyTarget}]`, err?.message || err);

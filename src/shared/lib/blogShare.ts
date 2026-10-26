@@ -60,10 +60,7 @@ function normalizeHashtag(tag: string): string {
  * Canonical share payload for a blog post — used by the floating rail
  * and kept in sync with OG/Twitter meta on the detail page.
  */
-export function buildBlogSharePayload(
-  post: IBlog,
-  locale: BlogShareLocale,
-): BlogSharePayload {
+export function buildBlogSharePayload(post: IBlog, locale: BlogShareLocale): BlogSharePayload {
   const isFr = locale === 'fr';
   const slug = getBlogPathSlug(post);
   const url = absoluteUrl(`/blog/${slug}`);
@@ -75,14 +72,9 @@ export function buildBlogSharePayload(
   const excerpt = truncate(stripMarkdownLite(rawExcerpt), 180);
   const image = toAbsoluteMediaUrl(post.image);
   const author = post.author?.trim() || SITE_NAME;
-  const hashtags = (post.tags ?? [])
-    .map(normalizeHashtag)
-    .filter(Boolean)
-    .slice(0, 5);
+  const hashtags = (post.tags ?? []).map(normalizeHashtag).filter(Boolean).slice(0, 5);
 
-  const hook = isFr
-    ? 'Article technique de mon blog'
-    : 'Technical article from my blog';
+  const hook = isFr ? 'Article technique de mon blog' : 'Technical article from my blog';
   const tweet = truncate(
     [
       title,

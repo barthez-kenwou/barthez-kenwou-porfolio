@@ -51,10 +51,7 @@ export function FocusEmojiPicker({ isFr, onPick, className }: Props) {
   const theme = useThemeStore((s) => s.theme);
   const pickerTheme = theme === 'dark' ? EmojiTheme.DARK : EmojiTheme.LIGHT;
 
-  const categories = useMemo(
-    () => [...(isFr ? CATEGORIES_FR : CATEGORIES_EN)],
-    [isFr],
-  );
+  const categories = useMemo(() => [...(isFr ? CATEGORIES_FR : CATEGORIES_EN)], [isFr]);
 
   const labels = useMemo(
     () =>

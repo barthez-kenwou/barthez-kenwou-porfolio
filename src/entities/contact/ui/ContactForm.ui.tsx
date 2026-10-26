@@ -36,9 +36,7 @@ function buildContactPrefill(searchParams: URLSearchParams, language: string) {
     const project = searchParams.get('article');
     if (language === 'fr') {
       return {
-        subject: project
-          ? `Échange suite au projet « ${project} »`
-          : 'Échange suite à vos projets',
+        subject: project ? `Échange suite au projet « ${project} »` : 'Échange suite à vos projets',
         message: project
           ? `Bonjour,\n\nJ'ai consulté le projet « ${project} » et je souhaiterais échanger sur un besoin dans la même veine.\n\nCordialement,\n`
           : "Bonjour,\n\nJ'ai consulté vos réalisations et je souhaiterais échanger sur un besoin / une collaboration dans la même veine.\n\nCordialement,\n",
@@ -59,7 +57,7 @@ function buildContactPrefill(searchParams: URLSearchParams, language: string) {
       return {
         subject: "Prise de contact depuis la page d'accueil",
         message:
-          "Bonjour,\n\nJe viens de parcourir votre site et je souhaiterais échanger sur un besoin / une collaboration.\n\nCordialement,\n",
+          'Bonjour,\n\nJe viens de parcourir votre site et je souhaiterais échanger sur un besoin / une collaboration.\n\nCordialement,\n',
       };
     }
     return {
@@ -89,13 +87,12 @@ function buildContactPrefill(searchParams: URLSearchParams, language: string) {
       return {
         subject: 'Prise de contact',
         message:
-          "Bonjour,\n\nJe souhaiterais échanger sur un besoin / une collaboration.\n\nCordialement,\n",
+          'Bonjour,\n\nJe souhaiterais échanger sur un besoin / une collaboration.\n\nCordialement,\n',
       };
     }
     return {
       subject: 'Getting in touch',
-      message:
-        "Hello,\n\nI would like to discuss a need / collaboration.\n\nBest regards,\n",
+      message: 'Hello,\n\nI would like to discuss a need / collaboration.\n\nBest regards,\n',
     };
   }
 
@@ -148,18 +145,14 @@ function buildContactPrefill(searchParams: URLSearchParams, language: string) {
     const article = searchParams.get('article');
     if (language === 'fr') {
       return {
-        subject: article
-          ? `Suite à l'article « ${article} »`
-          : 'Échange suite à vos articles',
+        subject: article ? `Suite à l'article « ${article} »` : 'Échange suite à vos articles',
         message: article
           ? `Bonjour,\n\nJ'ai lu votre article « ${article} » et je souhaiterais échanger sur un besoin dans ce domaine.\n\nCordialement,\n`
           : "Bonjour,\n\nJ'ai parcouru vos articles et je souhaiterais échanger sur un besoin technique.\n\nCordialement,\n",
       };
     }
     return {
-      subject: article
-        ? `Follow-up after « ${article} »`
-        : 'Follow-up after reading your articles',
+      subject: article ? `Follow-up after « ${article} »` : 'Follow-up after reading your articles',
       message: article
         ? `Hello,\n\nI read your article « ${article} » and would like to discuss a need in this area.\n\nBest regards,\n`
         : "Hello,\n\nI've been reading your articles and would like to discuss a technical need.\n\nBest regards,\n",
@@ -245,7 +238,10 @@ export const ContactForm: React.FC = () => {
   return (
     <div className="relative flex h-full flex-col">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex h-full flex-col gap-5 md:gap-6">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex h-full flex-col gap-5 md:gap-6"
+        >
           <div className="grid gap-4 md:grid-cols-2">
             <FormField
               control={form.control}

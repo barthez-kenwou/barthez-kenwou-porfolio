@@ -17,7 +17,7 @@ cdn-cache-control: public, max-age=31536000, immutable
 expires: <~22h>
 ```
 
-→ **Cloudflare Browser Cache TTL** rewrites the *browser* `Cache-Control` to ~1 day. Edge caching is fine; Lighthouse scores the browser TTL.
+→ **Cloudflare Browser Cache TTL** rewrites the _browser_ `Cache-Control` to ~1 day. Edge caching is fine; Lighthouse scores the browser TTL.
 
 ## Fix (dashboard)
 
@@ -36,8 +36,8 @@ Expect `cache-control: public, max-age=31536000, immutable`.
 
 ## Third parties (not fixable in this repo)
 
-| Origin | Issue |
-|--------|--------|
+| Origin                               | Issue                                                     |
+| ------------------------------------ | --------------------------------------------------------- |
 | `s3.zenora360.com` partner originals | Mitigated: home uses local WebP under `/images/partners/` |
-| `analytics.zenora360.com` | 4h TTL — accept or host self |
-| Supabase profile JPEG | Mitigated: local `/images/barthez-type-2.webp` |
+| `analytics.zenora360.com`            | 4h TTL — accept or host self                              |
+| Supabase profile JPEG                | Mitigated: local `/images/barthez-type-2.webp`            |

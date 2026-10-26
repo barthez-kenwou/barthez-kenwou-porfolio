@@ -1,9 +1,5 @@
 import { apiClient, type PaginatedData, type PaginationParams, toQueryParams } from '@/shared/api';
-import type {
-  ContactResponseStatus,
-  IContactInfo,
-  IContactResponse,
-} from '../model/contact.types';
+import type { ContactResponseStatus, IContactInfo, IContactResponse } from '../model/contact.types';
 import type { ContactFormValues } from '../model/contact.schema';
 import { contactsInfo } from '@/shared/mocks/constContactInfo.mocks';
 
@@ -27,9 +23,7 @@ export async function updateContactInfo(payload: IContactInfo): Promise<IContact
   return apiClient.put<IContactInfo>('/contact-infos', payload);
 }
 
-export async function submitContactResponse(
-  payload: ContactFormValues,
-): Promise<IContactResponse> {
+export async function submitContactResponse(payload: ContactFormValues): Promise<IContactResponse> {
   return apiClient.post<IContactResponse>('/contact-responses', payload);
 }
 

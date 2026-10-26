@@ -216,7 +216,9 @@ export function StackedTestimonialsCarousel({
           aria-live="polite"
           aria-atomic="true"
         >
-          <span className="text-brand dark:text-primary">{String(activeIndex + 1).padStart(2, '0')}</span>
+          <span className="text-brand dark:text-primary">
+            {String(activeIndex + 1).padStart(2, '0')}
+          </span>
           <span className="mx-1.5 text-foreground/25">/</span>
           <span>{String(total).padStart(2, '0')}</span>
           <span className="sr-only">{pageLabel}</span>
@@ -283,16 +285,7 @@ type CardProps = {
   isDark: boolean;
 };
 
-function StackedCard({
-  slide,
-  index,
-  total,
-  progress,
-  config,
-  surface,
-  isFr,
-  isDark,
-}: CardProps) {
+function StackedCard({ slide, index, total, progress, config, surface, isFr, isDark }: CardProps) {
   const offset = useTransform(progress, (p) => {
     let diff = (index - p) % total;
     if (diff > total / 2) diff -= total;
@@ -448,12 +441,7 @@ function StackedCard({
         </p>
         <div>
           <p className="font-heading text-sm font-medium tracking-tight">{name}</p>
-          <p
-            className={cn(
-              'mt-0.5 text-[10px]',
-              isDark ? 'text-white/65' : 'text-foreground/60',
-            )}
-          >
+          <p className={cn('mt-0.5 text-[10px]', isDark ? 'text-white/65' : 'text-foreground/60')}>
             {role}
             {slide.company ? ` · ${slide.company}` : ''}
           </p>

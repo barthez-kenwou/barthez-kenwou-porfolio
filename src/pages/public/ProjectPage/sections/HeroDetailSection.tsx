@@ -159,7 +159,8 @@ export const HeroDetailSection: React.FC<Props> = ({ project }) => {
                     /
                   </span>
                   <span>
-                    {PROJECT_STATUS_CONFIG[project.status as ProjectStatus]?.label ?? project.status}
+                    {PROJECT_STATUS_CONFIG[project.status as ProjectStatus]?.label ??
+                      project.status}
                   </span>
                 </>
               )}

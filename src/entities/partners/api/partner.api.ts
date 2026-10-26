@@ -1,9 +1,5 @@
 import { apiClient, type PaginatedData, type PaginationParams, toQueryParams } from '@/shared/api';
-import type {
-  IPartner,
-  PartnerCreatePayload,
-  PartnerUpdatePayload,
-} from '../model/partner.types';
+import type { IPartner, PartnerCreatePayload, PartnerUpdatePayload } from '../model/partner.types';
 import { partnersMock } from './mocks/partners.mocks';
 
 export type PartnerListParams = PaginationParams & {
@@ -11,9 +7,7 @@ export type PartnerListParams = PaginationParams & {
   includeUnpublished?: boolean;
 };
 
-export async function listPartners(
-  params?: PartnerListParams,
-): Promise<PaginatedData<IPartner>> {
+export async function listPartners(params?: PartnerListParams): Promise<PaginatedData<IPartner>> {
   return apiClient.get<PaginatedData<IPartner>>('/partners', toQueryParams(params));
 }
 
@@ -25,10 +19,7 @@ export async function createPartner(payload: PartnerCreatePayload): Promise<IPar
   return apiClient.post<IPartner>('/partners', payload);
 }
 
-export async function updatePartner(
-  id: string,
-  payload: PartnerUpdatePayload,
-): Promise<IPartner> {
+export async function updatePartner(id: string, payload: PartnerUpdatePayload): Promise<IPartner> {
   return apiClient.put<IPartner>(`/partners/${id}`, payload);
 }
 

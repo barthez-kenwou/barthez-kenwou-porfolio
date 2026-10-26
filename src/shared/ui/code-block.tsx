@@ -45,122 +45,124 @@ async function getHighlighter() {
   return highlighterReady;
 }
 
-export const CodeBlock: React.FC<CodeBlockProps> = React.memo(({ language, value, filename, className }) => {
-  const theme = useThemeStore((s) => s.theme);
-  const isDark = theme === 'dark';
-  const shikiTheme = isDark ? DARK_THEME : LIGHT_THEME;
+export const CodeBlock: React.FC<CodeBlockProps> = React.memo(
+  ({ language, value, filename, className }) => {
+    const theme = useThemeStore((s) => s.theme);
+    const isDark = theme === 'dark';
+    const shikiTheme = isDark ? DARK_THEME : LIGHT_THEME;
 
-  const [html, setHtml] = useState<string>('');
-  const [copied, setCopied] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const hasRenderedRef = useRef(false);
+    const [html, setHtml] = useState<string>('');
+    const [copied, setCopied] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const hasRenderedRef = useRef(false);
 
-  useEffect(() => {
-    let cancelled = false;
+    useEffect(() => {
+      let cancelled = false;
 
-    async function highlight() {
-      // First paint only: avoid swapping to a spinner on re-highlight (theme/parent
-      // re-render), which collapses document height and jumps the scroll position.
-      if (!hasRenderedRef.current) setIsLoading(true);
-      try {
-        const highlighter = await getHighlighter();
-        const highlighted = highlighter.codeToHtml(value, {
-          lang: language || 'text',
-          theme: shikiTheme,
-          transformers: [transformerNotationDiff(), transformerNotationHighlight()],
-        });
-        if (!cancelled) {
-          setHtml(highlighted);
-          hasRenderedRef.current = true;
-          setIsLoading(false);
-        }
-      } catch {
-        if (!cancelled) {
-          setHtml(
-            `<pre><code>${value
-              .replace(/&/g, '&amp;')
-              .replace(/</g, '&lt;')
-              .replace(/>/g, '&gt;')}</code></pre>`,
-          );
-          hasRenderedRef.current = true;
-          setIsLoading(false);
+      async function highlight() {
+        // First paint only: avoid swapping to a spinner on re-highlight (theme/parent
+        // re-render), which collapses document height and jumps the scroll position.
+        if (!hasRenderedRef.current) setIsLoading(true);
+        try {
+          const highlighter = await getHighlighter();
+          const highlighted = highlighter.codeToHtml(value, {
+            lang: language || 'text',
+            theme: shikiTheme,
+            transformers: [transformerNotationDiff(), transformerNotationHighlight()],
+          });
+          if (!cancelled) {
+            setHtml(highlighted);
+            hasRenderedRef.current = true;
+            setIsLoading(false);
+          }
+        } catch {
+          if (!cancelled) {
+            setHtml(
+              `<pre><code>${value
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')}</code></pre>`,
+            );
+            hasRenderedRef.current = true;
+            setIsLoading(false);
+          }
         }
       }
-    }
 
-    void highlight();
-    return () => {
-      cancelled = true;
+      void highlight();
+      return () => {
+        cancelled = true;
+      };
+    }, [value, language, shikiTheme]);
+
+    const copyToClipboard = () => {
+      void navigator.clipboard.writeText(value);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     };
-  }, [value, language, shikiTheme]);
 
-  const copyToClipboard = () => {
-    void navigator.clipboard.writeText(value);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <div
-      className={cn(
-        'group relative my-3 w-full max-w-full min-w-0 overflow-hidden rounded-sm border border-border bg-card font-mono text-sm',
-        className,
-      )}
-    >
-      <div className="flex items-center justify-between border-b border-border bg-muted/40 px-3 py-2 md:px-4">
-        <div className="flex items-center gap-2">
-          {filename ? (
-            <span className="text-[11px] font-medium tracking-tight text-foreground/75">
-              {filename}
-            </span>
-          ) : null}
-          {!filename && language ? (
-            <span className="text-[11px] font-medium text-foreground/65">{language}</span>
-          ) : null}
-        </div>
-        <button
-          type="button"
-          onClick={copyToClipboard}
-          className="flex items-center gap-1.5 rounded-sm border border-border bg-background px-2 py-1 text-[11px] font-medium text-foreground/75 transition-colors hover:bg-muted hover:text-foreground"
-        >
-          {copied ? (
-            <>
-              <Check className="h-3 w-3 text-green-600 dark:text-green-500" />
-              <span>Copié !</span>
-            </>
-          ) : (
-            <>
-              <Copy className="h-3 w-3" />
-              <span>Copier</span>
-            </>
-          )}
-        </button>
-      </div>
-
+    return (
       <div
         className={cn(
-          'relative overflow-x-auto p-4 md:p-5 custom-scrollbar',
-          isDark ? 'bg-[#22272e]' : 'bg-[#f6f8fa]',
+          'group relative my-3 w-full max-w-full min-w-0 overflow-hidden rounded-sm border border-border bg-card font-mono text-sm',
+          className,
         )}
       >
-        {isLoading && !html ? (
-          <div className="flex min-h-[100px] items-center justify-center">
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        <div className="flex items-center justify-between border-b border-border bg-muted/40 px-3 py-2 md:px-4">
+          <div className="flex items-center gap-2">
+            {filename ? (
+              <span className="text-[11px] font-medium tracking-tight text-foreground/75">
+                {filename}
+              </span>
+            ) : null}
+            {!filename && language ? (
+              <span className="text-[11px] font-medium text-foreground/65">{language}</span>
+            ) : null}
           </div>
-        ) : (
-          <div
-            dangerouslySetInnerHTML={{ __html: html }}
-            className={cn(
-              'text-[13px] leading-relaxed md:text-sm',
-              '[&>pre]:!m-0 [&>pre]:!bg-transparent [&>pre]:!p-0',
-              '[&_code]:!bg-transparent [&_code]:!text-[inherit]',
-              !isDark && '[&_.line]:text-[#24292f]',
+          <button
+            type="button"
+            onClick={copyToClipboard}
+            className="flex items-center gap-1.5 rounded-sm border border-border bg-background px-2 py-1 text-[11px] font-medium text-foreground/75 transition-colors hover:bg-muted hover:text-foreground"
+          >
+            {copied ? (
+              <>
+                <Check className="h-3 w-3 text-green-600 dark:text-green-500" />
+                <span>Copié !</span>
+              </>
+            ) : (
+              <>
+                <Copy className="h-3 w-3" />
+                <span>Copier</span>
+              </>
             )}
-          />
-        )}
+          </button>
+        </div>
+
+        <div
+          className={cn(
+            'relative overflow-x-auto p-4 md:p-5 custom-scrollbar',
+            isDark ? 'bg-[#22272e]' : 'bg-[#f6f8fa]',
+          )}
+        >
+          {isLoading && !html ? (
+            <div className="flex min-h-[100px] items-center justify-center">
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            </div>
+          ) : (
+            <div
+              dangerouslySetInnerHTML={{ __html: html }}
+              className={cn(
+                'text-[13px] leading-relaxed md:text-sm',
+                '[&>pre]:!m-0 [&>pre]:!bg-transparent [&>pre]:!p-0',
+                '[&_code]:!bg-transparent [&_code]:!text-[inherit]',
+                !isDark && '[&_.line]:text-[#24292f]',
+              )}
+            />
+          )}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
 CodeBlock.displayName = 'CodeBlock';

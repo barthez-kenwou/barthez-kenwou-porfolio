@@ -1,5 +1,9 @@
 import { BlogCard, IBlog, usePublicBlogs } from '@/entities/blogs';
-import { filterPublicBlogs, pickMostReadBlog, sortBlogsByArrival } from '@/entities/blogs/lib/blogListing';
+import {
+  filterPublicBlogs,
+  pickMostReadBlog,
+  sortBlogsByArrival,
+} from '@/entities/blogs/lib/blogListing';
 import { EmptyBlogCard } from '@/entities/blogs/ui/EmptyBlogCard.ui';
 import { categories } from '@/shared/constants/blogCategories.const';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';

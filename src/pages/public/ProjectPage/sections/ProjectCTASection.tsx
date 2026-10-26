@@ -13,8 +13,7 @@ export const ProjectCTASection: React.FC = () => {
   const { language } = useLanguageStore();
   const isFr = language === 'fr';
   const { data } = usePublicContactInfo();
-  const repository =
-    data?.data.repository ?? 'https://github.com/barthez-kenwou?tab=repositories';
+  const repository = data?.data.repository ?? 'https://github.com/barthez-kenwou?tab=repositories';
 
   return (
     <section className="relative z-10 mb-0 overflow-hidden rounded-lg border border-border">

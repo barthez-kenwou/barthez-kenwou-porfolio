@@ -57,10 +57,7 @@ export const SidebarFooterSection: React.FC = () => {
       >
         <div className={cn('flex flex-col gap-2', contentReady ? 'px-3' : 'px-0')}>
           <div
-            className={cn(
-              'flex gap-2',
-              contentReady ? 'justify-center' : 'flex-col items-center',
-            )}
+            className={cn('flex gap-2', contentReady ? 'justify-center' : 'flex-col items-center')}
           >
             {socialLinks.map((link) => {
               const Icon = link.icon;
@@ -91,10 +88,7 @@ export const SidebarFooterSection: React.FC = () => {
           </div>
 
           <div
-            className={cn(
-              'flex gap-2',
-              contentReady ? 'justify-center' : 'flex-col items-center',
-            )}
+            className={cn('flex gap-2', contentReady ? 'justify-center' : 'flex-col items-center')}
           >
             {!contentReady ? (
               <>

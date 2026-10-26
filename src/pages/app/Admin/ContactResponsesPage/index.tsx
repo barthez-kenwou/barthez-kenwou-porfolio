@@ -1,15 +1,6 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
-import {
-  Archive,
-  CheckCircle2,
-  Inbox,
-  Layers,
-  Mail,
-  MailOpen,
-  Reply,
-  Trash2,
-} from 'lucide-react';
+import { Archive, CheckCircle2, Inbox, Layers, Mail, MailOpen, Reply, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   AdminPageHeader,
@@ -335,11 +326,7 @@ export const AdminContactResponsesPage: React.FC = () => {
             const meta = TAB_META[key];
             const Icon = meta.icon;
             return (
-              <TabsTrigger
-                key={key}
-                value={key}
-                className="cursor-pointer gap-1.5 px-3 py-2"
-              >
+              <TabsTrigger key={key} value={key} className="cursor-pointer gap-1.5 px-3 py-2">
                 <Icon className="size-3.5 opacity-80" />
                 {fr ? meta.fr : meta.en}
               </TabsTrigger>
@@ -366,7 +353,9 @@ export const AdminContactResponsesPage: React.FC = () => {
                 <p
                   className={cn(
                     'mt-1.5 cursor-default text-xl font-semibold tabular-nums tracking-tight',
-                    item.tone === 'warning' && item.value > 0 && 'text-amber-600 dark:text-amber-400',
+                    item.tone === 'warning' &&
+                      item.value > 0 &&
+                      'text-amber-600 dark:text-amber-400',
                   )}
                 >
                   {item.value}
@@ -521,12 +510,7 @@ export const AdminContactResponsesPage: React.FC = () => {
           </SheetHeader>
           <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain pr-0.5">
             {selected ? (
-              <MessageDetail
-                selected={selected}
-                fr={fr}
-                language={language}
-                onUpdate={onUpdate}
-              />
+              <MessageDetail selected={selected} fr={fr} language={language} onUpdate={onUpdate} />
             ) : null}
           </div>
         </SheetContent>

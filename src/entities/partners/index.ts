@@ -16,9 +16,5 @@ export {
   useUpdatePartner,
   useDeletePartner,
 } from './hooks/usePartners';
-export type {
-  IPartner,
-  PartnerCreatePayload,
-  PartnerUpdatePayload,
-} from './model/partner.types';
+export type { IPartner, PartnerCreatePayload, PartnerUpdatePayload } from './model/partner.types';
 export { resolvePartnerLogoUrl } from './lib/optimizedPartnerLogos';

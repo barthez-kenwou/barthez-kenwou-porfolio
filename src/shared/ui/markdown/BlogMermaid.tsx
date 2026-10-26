@@ -4,13 +4,7 @@ import { cleanupMermaidDomArtifacts, renderMermaidSvg } from '@/shared/lib/rende
 import { cn } from '@/shared/lib/utils';
 
 /** Renders a ```mermaid fence inside blog markdown (article + CMS preview). */
-export function BlogMermaid({
-  definition,
-  className,
-}: {
-  definition: string;
-  className?: string;
-}) {
+export function BlogMermaid({ definition, className }: { definition: string; className?: string }) {
   const theme = useThemeStore((s) => s.theme);
   const renderId = useId().replace(/:/g, '');
   const [svg, setSvg] = useState('');
@@ -26,11 +20,7 @@ export function BlogMermaid({
 
     void (async () => {
       try {
-        const out = await renderMermaidSvg(
-          id,
-          definition,
-          theme === 'dark' ? 'dark' : 'light',
-        );
+        const out = await renderMermaidSvg(id, definition, theme === 'dark' ? 'dark' : 'light');
         if (alive) setSvg(out);
       } catch {
         cleanupMermaidDomArtifacts(id);

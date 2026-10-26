@@ -3,11 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Loader2, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import type { IBlog } from '@/entities/blogs/model/blog.type';
-import {
-  useAdminBlog,
-  useCreateBlog,
-  useUpdateBlog,
-} from '@/entities/blogs/hooks/useBlogs';
+import { useAdminBlog, useCreateBlog, useUpdateBlog } from '@/entities/blogs/hooks/useBlogs';
 import {
   AdminPageHeader,
   AdminSectionCard,

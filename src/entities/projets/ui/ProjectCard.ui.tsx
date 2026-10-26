@@ -231,9 +231,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             {project.teamSize != null && (
               <div className="flex shrink-0 items-center gap-1.5">
                 <Users className="h-3.5 w-3.5 shrink-0" aria-hidden />
-                <span className="whitespace-nowrap tabular-nums">
-                  {project.teamSize}&nbsp;p.
-                </span>
+                <span className="whitespace-nowrap tabular-nums">{project.teamSize}&nbsp;p.</span>
               </div>
             )}
           </div>

@@ -1,9 +1,5 @@
 import { useEffect, useRef } from 'react';
-import {
-  trackVideoComplete,
-  trackVideoPlay,
-  trackVideoProgress,
-} from '@/app/lib/analytics';
+import { trackVideoComplete, trackVideoPlay, trackVideoProgress } from '@/app/lib/analytics';
 
 /**
  * Attach to a media element (HTML5 video or listen to custom events from embeds).

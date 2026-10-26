@@ -36,6 +36,7 @@ import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/shared/ui/sheet';
 import { cn } from '@/shared/lib/utils';
+import { ContentSkeleton } from '@/shared/ui/ContentSkeleton/ContentSkeleton';
 
 type AccountSection = 'account' | 'audit' | 'permissions';
 
@@ -120,7 +121,9 @@ function AccountDetails({ fr }: { fr: boolean }) {
 
   const saveProfile = async () => {
     if (!apiEnabled) {
-      toast.error(fr ? 'Mode hors ligne — profil non modifiable.' : 'Offline mode — profile is read-only.');
+      toast.error(
+        fr ? 'Mode hors ligne — profil non modifiable.' : 'Offline mode — profile is read-only.',
+      );
       return;
     }
     setSavingProfile(true);
@@ -159,7 +162,9 @@ function AccountDetails({ fr }: { fr: boolean }) {
   const onChangePassword = async () => {
     if (!apiEnabled) return;
     if (newPassword.length < 8) {
-      toast.error(fr ? 'Mot de passe trop court (8 car. min.)' : 'Password too short (min. 8 chars)');
+      toast.error(
+        fr ? 'Mot de passe trop court (8 car. min.)' : 'Password too short (min. 8 chars)',
+      );
       return;
     }
     if (newPassword !== confirmPassword) {
@@ -187,7 +192,9 @@ function AccountDetails({ fr }: { fr: boolean }) {
       const result = await enrollTotp();
       setTotpEnroll(result);
       setTotpCode('');
-      toast.success(fr ? 'Scannez le QR code avec votre app 2FA' : 'Scan the QR code with your 2FA app');
+      toast.success(
+        fr ? 'Scannez le QR code avec votre app 2FA' : 'Scan the QR code with your 2FA app',
+      );
     } catch (e) {
       toast.error(isApiError(e) ? e.message : fr ? 'Échec' : 'Failed');
     } finally {
@@ -253,7 +260,9 @@ function AccountDetails({ fr }: { fr: boolean }) {
 
       <AdminSectionCard
         title={fr ? 'Profil' : 'Profile'}
-        description={fr ? 'Identité et coordonnées modifiables.' : 'Editable identity and contact fields.'}
+        description={
+          fr ? 'Identité et coordonnées modifiables.' : 'Editable identity and contact fields.'
+        }
         actions={<AdminStickyActions>{saveButton}</AdminStickyActions>}
       >
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
@@ -321,7 +330,11 @@ function AccountDetails({ fr }: { fr: boolean }) {
                 onChange={(e) => setDraft((d) => ({ ...d, lastName: e.target.value }))}
               />
             </Field>
-            <Field label={fr ? 'Téléphone' : 'Phone'} htmlFor="profile-phone" className="sm:col-span-2">
+            <Field
+              label={fr ? 'Téléphone' : 'Phone'}
+              htmlFor="profile-phone"
+              className="sm:col-span-2"
+            >
               <Input
                 id="profile-phone"
                 value={draft.phone}
@@ -336,10 +349,7 @@ function AccountDetails({ fr }: { fr: boolean }) {
           {(
             [
               ['Email', user?.email || '—'],
-              [
-                fr ? 'Rôles' : 'Roles',
-                roles.length ? roles.join(', ') : '—',
-              ],
+              [fr ? 'Rôles' : 'Roles', roles.length ? roles.join(', ') : '—'],
               [
                 fr ? 'Vérifié' : 'Verified',
                 user?.isVerified == null
@@ -368,7 +378,9 @@ function AccountDetails({ fr }: { fr: boolean }) {
       <AdminSectionCard
         title={fr ? 'Sécurité' : 'Security'}
         description={
-          fr ? 'Mot de passe et authentification à deux facteurs.' : 'Password and two-factor authentication.'
+          fr
+            ? 'Mot de passe et authentification à deux facteurs.'
+            : 'Password and two-factor authentication.'
         }
       >
         <div className="space-y-6">
@@ -421,13 +433,7 @@ function AccountDetails({ fr }: { fr: boolean }) {
           <div className="space-y-4 border-t border-border/50 pt-6">
             <p className="text-sm font-medium">
               2FA —{' '}
-              {user?.totpEnabled
-                ? fr
-                  ? 'Activée'
-                  : 'Enabled'
-                : fr
-                  ? 'Désactivée'
-                  : 'Disabled'}
+              {user?.totpEnabled ? (fr ? 'Activée' : 'Enabled') : fr ? 'Désactivée' : 'Disabled'}
             </p>
 
             {user?.totpEnabled ? (
@@ -560,20 +566,12 @@ function AuditEntryDetail({
     [fr ? 'Acteur' : 'Actor', entry.actorId || '—'],
     ['Request ID', entry.requestId || '—'],
     ['User-Agent', entry.userAgent || '—'],
-    [
-      fr ? 'Date' : 'Date',
-      formatAdminDate(entry.createdAt, fr ? 'fr' : 'en', { withTime: true }),
-    ],
+    [fr ? 'Date' : 'Date', formatAdminDate(entry.createdAt, fr ? 'fr' : 'en', { withTime: true })],
   ];
 
   return (
     <div className="space-y-4">
-      {loading ? (
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Loader2 className="size-4 animate-spin" />
-          {fr ? 'Chargement du détail…' : 'Loading detail…'}
-        </div>
-      ) : null}
+      {loading ? <ContentSkeleton className="min-h-[8rem] py-4" rows={4} /> : null}
       <dl className="grid gap-2">
         {rows.map(([label, value]) => (
           <div key={label} className="rounded-md border border-border/50 px-3 py-2.5">
@@ -633,10 +631,7 @@ function AuditDetails({ fr }: { fr: boolean }) {
     [fr],
   );
 
-  const items = React.useMemo(
-    () => auditQuery.data?.items ?? [],
-    [auditQuery.data?.items],
-  );
+  const items = React.useMemo(() => auditQuery.data?.items ?? [], [auditQuery.data?.items]);
 
   const filters = React.useMemo<AdminDataTableFilter<AuditEntry>[]>(() => {
     const actions = [...new Set(items.map((i) => i.action).filter(Boolean))].sort();
@@ -670,11 +665,7 @@ function AuditDetails({ fr }: { fr: boolean }) {
   }, []);
 
   if (auditQuery.isPending) {
-    return (
-      <div className="flex min-h-48 items-center justify-center">
-        <Loader2 className="size-5 animate-spin text-muted-foreground" />
-      </div>
-    );
+    return <ContentSkeleton className="min-h-48" rows={6} />;
   }
 
   if (auditQuery.isError) {
@@ -709,7 +700,9 @@ function AuditDetails({ fr }: { fr: boolean }) {
       >
         {!detail ? (
           <p className="text-center text-sm text-muted-foreground py-8">
-            {fr ? 'Sélectionnez une entrée pour voir le détail.' : 'Select an entry to view details.'}
+            {fr
+              ? 'Sélectionnez une entrée pour voir le détail.'
+              : 'Select an entry to view details.'}
           </p>
         ) : (
           <AuditEntryDetail entry={detail} fr={fr} loading={detailLoading} />

@@ -46,7 +46,9 @@ export function mapServicesMockToDto(): IServiceDto[] {
   }));
 }
 
-export async function listServices(params?: ServiceListParams): Promise<PaginatedData<IServiceDto>> {
+export async function listServices(
+  params?: ServiceListParams,
+): Promise<PaginatedData<IServiceDto>> {
   return apiClient.get<PaginatedData<IServiceDto>>('/services', toQueryParams(params));
 }
 
@@ -58,7 +60,10 @@ export async function createService(payload: Omit<IServiceDto, 'id'>): Promise<I
   return apiClient.post<IServiceDto>('/services', payload);
 }
 
-export async function updateService(id: string, payload: Partial<IServiceDto>): Promise<IServiceDto> {
+export async function updateService(
+  id: string,
+  payload: Partial<IServiceDto>,
+): Promise<IServiceDto> {
   return apiClient.put<IServiceDto>(`/services/${id}`, payload);
 }
 

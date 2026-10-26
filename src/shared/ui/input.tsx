@@ -34,17 +34,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(
   };
 
   if (type === 'number') {
-    const {
-      value,
-      defaultValue,
-      onChange,
-      min,
-      max,
-      step,
-      disabled,
-      readOnly,
-      ...rest
-    } = props;
+    const { value, defaultValue, onChange, min, max, step, disabled, readOnly, ...rest } = props;
 
     const stepNum = parseStep(step);
     const minNum = min === undefined || min === '' ? undefined : Number(min);

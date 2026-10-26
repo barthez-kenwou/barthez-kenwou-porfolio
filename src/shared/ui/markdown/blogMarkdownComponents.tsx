@@ -222,13 +222,7 @@ export function createBlogMarkdownComponents({
       }
 
       if (isBlock) {
-        return (
-          <CodeBlock
-            language={lang}
-            value={text}
-            className="my-7 max-w-full border-border"
-          />
-        );
+        return <CodeBlock language={lang} value={text} className="my-7 max-w-full border-border" />;
       }
 
       return (
@@ -270,9 +264,7 @@ export function createBlogMarkdownComponents({
     thead: ({ children }) => (
       <thead className="border-b border-border bg-muted/40">{children}</thead>
     ),
-    tbody: ({ children }) => (
-      <tbody className="divide-y divide-border/60">{children}</tbody>
-    ),
+    tbody: ({ children }) => <tbody className="divide-y divide-border/60">{children}</tbody>,
     tr: ({ children }) => <tr>{children}</tr>,
     th: ({ children }) => (
       <th className="px-3 py-2.5 text-left text-xs font-semibold tracking-normal whitespace-nowrap text-foreground md:px-4">

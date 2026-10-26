@@ -13,10 +13,7 @@ type BrandAmbientFieldProps = {
  * Soft branded CTA atmosphere — violet→indigo only, slow, low contrast.
  * Replaces the old loud GradientDots / AuroraRibbons stack.
  */
-export function BrandAmbientField({
-  className,
-  intensity = 'calm',
-}: BrandAmbientFieldProps) {
+export function BrandAmbientField({ className, intensity = 'calm' }: BrandAmbientFieldProps) {
   const theme = useThemeStore((s) => s.theme);
   const isDark = theme === 'dark';
   const reduceMotion = useReducedMotion();
@@ -29,10 +26,7 @@ export function BrandAmbientField({
       className={cn('pointer-events-none absolute inset-0 overflow-hidden', className)}
     >
       <div
-        className={cn(
-          'absolute inset-0',
-          isDark ? 'bg-[hsl(0_0%_3%)]' : 'bg-[hsl(240_8%_97%)]',
-        )}
+        className={cn('absolute inset-0', isDark ? 'bg-[hsl(0_0%_3%)]' : 'bg-[hsl(240_8%_97%)]')}
       />
 
       {/* Dot grid — neutral, barely there */}

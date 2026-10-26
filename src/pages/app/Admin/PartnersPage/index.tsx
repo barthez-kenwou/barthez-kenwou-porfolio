@@ -117,9 +117,7 @@ export const AdminPartnersPage: React.FC = () => {
     setReorderingId(id);
     try {
       await Promise.all(
-        patches.map((p) =>
-          update.mutateAsync({ id: p.id, payload: { sortOrder: p.sortOrder } }),
-        ),
+        patches.map((p) => update.mutateAsync({ id: p.id, payload: { sortOrder: p.sortOrder } })),
       );
     } catch (e) {
       toast.error(isApiError(e) ? e.message : fr ? 'Échec du réordonnancement' : 'Reorder failed');
@@ -162,7 +160,15 @@ export const AdminPartnersPage: React.FC = () => {
       {editing ? (
         <div ref={editorRef}>
           <AdminSectionCard
-            title={editing.isNew ? (fr ? 'Nouveau partenaire' : 'New partner') : fr ? 'Édition' : 'Editor'}
+            title={
+              editing.isNew
+                ? fr
+                  ? 'Nouveau partenaire'
+                  : 'New partner'
+                : fr
+                  ? 'Édition'
+                  : 'Editor'
+            }
             actions={
               <AdminStickyActions>
                 <Button
@@ -292,11 +298,7 @@ export const AdminPartnersPage: React.FC = () => {
                 header: 'Logo',
                 render: (r) =>
                   r.logoUrl ? (
-                    <img
-                      src={r.logoUrl}
-                      alt=""
-                      className="h-8 w-14 object-contain object-left"
-                    />
+                    <img src={r.logoUrl} alt="" className="h-8 w-14 object-contain object-left" />
                   ) : (
                     <span className="text-xs text-muted-foreground">—</span>
                   ),

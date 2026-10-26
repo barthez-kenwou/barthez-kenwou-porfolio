@@ -215,10 +215,7 @@ export function alternateFileUrls(primary: string): string[] {
   return targets.map((next) => raw.replace(new RegExp(`\\.${ext}(?=$|[?#])`, 'i'), `.${next}`));
 }
 
-export function buildFileVideoSources(
-  primary: string,
-  extras: string[] = [],
-): FileVideoSource[] {
+export function buildFileVideoSources(primary: string, extras: string[] = []): FileVideoSource[] {
   const seen = new Set<string>();
   const ordered = [primary, ...extras, ...alternateFileUrls(primary)];
   const out: FileVideoSource[] = [];

@@ -44,20 +44,18 @@ export const BlogDetailPage = () => {
 
   useEffect(() => {
     if (!post || post.isPublished === false) return;
-    void import('@/app/lib/analytics').then((m) =>
-      m.trackBlogRead(getBlogPathSlug(post), 25),
-    );
+    void import('@/app/lib/analytics').then((m) => m.trackBlogRead(getBlogPathSlug(post), 25));
   }, [post]);
 
   const notFound =
     !isPending &&
     (Boolean(
       error &&
-        typeof error === 'object' &&
-        'message' in error &&
-        String((error as { message: string }).message)
-          .toLowerCase()
-          .includes('not found'),
+      typeof error === 'object' &&
+      'message' in error &&
+      String((error as { message: string }).message)
+        .toLowerCase()
+        .includes('not found'),
     ) ||
       (!isError && !post));
 
@@ -87,10 +85,7 @@ export const BlogDetailPage = () => {
 
   const content = language === 'fr' ? post.contentFr : post.contentEn;
   const blogPath = `/blog/${getBlogPathSlug(post)}`;
-  const pageTitle =
-    language === 'fr'
-      ? post.titleFr
-      : post.titleEn || post.titleFr;
+  const pageTitle = language === 'fr' ? post.titleFr : post.titleEn || post.titleFr;
   const pageDescription = truncateFonction(
     language === 'fr'
       ? post.excerptFr || post.contentFr || ''
@@ -189,11 +184,7 @@ export const BlogDetailPage = () => {
 
           {/* Mobile TOC only below lg — desktop sticky lives in the aside column */}
           <div className="lg:hidden">
-            <TableOfContents
-              content={content}
-              variant="mobile"
-              clearStickyCta={stickyVisible}
-            />
+            <TableOfContents content={content} variant="mobile" clearStickyCta={stickyVisible} />
           </div>
         </div>
       </div>

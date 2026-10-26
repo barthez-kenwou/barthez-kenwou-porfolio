@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { queryKeys, withPublicFallback, type PaginatedData, type ResourceResult } from '@/shared/api';
+import {
+  queryKeys,
+  withPublicFallback,
+  type PaginatedData,
+  type ResourceResult,
+} from '@/shared/api';
 import { paginateMock } from '@/shared/api/http';
 import {
   findByNumericId,
@@ -64,11 +69,7 @@ function findMockBlog(slug: string | undefined): IBlog | undefined {
   return (
     findByNumericId(blogPostsData, slug) ||
     blogPostsData.find(
-      (b) =>
-        b.slug === slug ||
-        b.slug === stripped ||
-        b.id === slug ||
-        getBlogPathSlug(b) === slug,
+      (b) => b.slug === slug || b.slug === stripped || b.id === slug || getBlogPathSlug(b) === slug,
     )
   );
 }

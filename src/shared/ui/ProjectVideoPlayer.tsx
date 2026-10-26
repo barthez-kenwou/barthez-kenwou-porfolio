@@ -1,10 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ExternalLink, Play } from 'lucide-react';
 import { HeroVideoDialog } from '@/shared/ui/hero-video-dialog';
-import {
-  filterPlayableFileSources,
-  type ResolvedVideoMedia,
-} from '@/shared/lib/videoEmbed';
+import { filterPlayableFileSources, type ResolvedVideoMedia } from '@/shared/lib/videoEmbed';
 import { cn } from '@/shared/lib/utils';
 
 type Props = {

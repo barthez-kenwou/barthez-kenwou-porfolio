@@ -5,12 +5,7 @@ import { PROJECT_ROLE_ICONS, PROJECT_STATUS_CONFIG } from '@/entities/projets/mo
 import type { ProjectRole, ProjectStatus } from '@/entities/projets/model/project.types';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { cn } from '@/shared/lib/utils';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '@/shared/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/shared/ui/sheet';
 
 import { FilterDropdown } from './FilterDropdown.ui';
 
@@ -142,7 +137,12 @@ const StatusOptions: React.FC<{
                 : 'border-border/50 bg-secondary/40 text-muted-foreground',
             )}
           >
-            <span className={cn('h-1.5 w-1.5 rounded-full', isActive ? 'bg-brand-foreground' : config.dot)} />
+            <span
+              className={cn(
+                'h-1.5 w-1.5 rounded-full',
+                isActive ? 'bg-brand-foreground' : config.dot,
+              )}
+            />
             {status}
           </button>
         );
@@ -255,10 +255,7 @@ export const ProjectFilterBar: React.FC<ProjectFilterBarProps> = ({
             )}
           </button>
 
-          <SheetContent
-            side="bottom"
-            className="gap-0 rounded-t-xl border-border/50 p-0"
-          >
+          <SheetContent side="bottom" className="gap-0 rounded-t-xl border-border/50 p-0">
             <SheetHeader className="border-b border-border/40 px-4 py-4 text-left">
               <SheetTitle className="font-heading text-base">
                 {isFr ? 'Affiner la sélection' : 'Refine selection'}
