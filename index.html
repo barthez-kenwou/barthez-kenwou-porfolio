@@ -7,6 +7,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#050505" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#FAFAFA" media="(prefers-color-scheme: light)" />
+    <!--
+      FOUC kill (no JS required): paint dark canvas + hide SEO crawl shell before first paint.
+      #seo-prerender stays in the DOM for crawlers; sighted users never see it.
+      Noscript below restores visibility when JS is disabled.
+    -->
+    <style>
+      html {
+        background: #050505;
+      }
+      html:not(.dark) {
+        background: #fafafa;
+      }
+      body {
+        margin: 0;
+        min-height: 100svh;
+        background: #050505;
+        color: #f5f5f5;
+      }
+      html:not(.dark) body {
+        background: #fafafa;
+        color: #121217;
+      }
+      /* `hidden` ⇒ display:none (never paints). Clip rules cover builds without the attr. */
+      #seo-prerender {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+        background: transparent !important;
+        color: transparent !important;
+      }
+      #seo-prerender[hidden] {
+        display: none !important;
+      }
+      #root {
+        min-height: 100svh;
+      }
+    </style>
+    <noscript>
+      <style>
+        #seo-prerender,
+        #seo-prerender[hidden] {
+          position: static !important;
+          width: auto !important;
+          height: auto !important;
+          padding: 1.5rem !important;
+          margin: 0 auto !important;
+          max-width: 72rem;
+          overflow: visible !important;
+          clip: auto !important;
+          white-space: normal !important;
+          color: #e8e8ed !important;
+          background: #050505 !important;
+        }
+      </style>
+    </noscript>
     <script>
       (function () {
         document.documentElement.classList.add('js');
@@ -24,33 +85,6 @@
         }
       })();
     </script>
-    <!-- Hide SEO crawl shell + paint dark/light bg before CSS/JS bundles arrive (no white FOUC). -->
-    <style>
-      html.js body {
-        margin: 0;
-        min-height: 100svh;
-        background: #050505;
-        color: #f5f5f5;
-      }
-      html.js:not(.dark) body {
-        background: #fafafa;
-        color: #121217;
-      }
-      html.js #seo-prerender {
-        position: absolute !important;
-        width: 1px !important;
-        height: 1px !important;
-        padding: 0 !important;
-        margin: -1px !important;
-        overflow: hidden !important;
-        clip: rect(0, 0, 0, 0) !important;
-        white-space: nowrap !important;
-        border: 0 !important;
-      }
-      html.js #root {
-        min-height: 100svh;
-      }
-    </style>
 
     <!-- SEO & Social -->
     <title>Barthez Kenwou | Développeur Full Stack &amp; Ingénieur DevOps</title>
@@ -356,8 +390,8 @@
       gtag('config', 'G-06BRZRGT3V');
     </script>
   </head>
-  <body>
-    <!-- Crawlable fallback when JS is disabled or not yet executed -->
+  <body style="margin: 0; background: #050505; color: #f5f5f5">
+    <!-- Crawlable fallback when JS is disabled (home only; prerender pages use #seo-prerender) -->
     <noscript>
       <main
         style="
@@ -366,8 +400,8 @@
           padding: 1.5rem;
           font-family: system-ui, sans-serif;
           line-height: 1.6;
-          color: #111;
-          background: #fff;
+          color: #e8e8ed;
+          background: #050505;
         "
       >
         <h1>Barthez Kenwou</h1>

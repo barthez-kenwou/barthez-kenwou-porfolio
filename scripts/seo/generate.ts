@@ -607,13 +607,14 @@ function injectJsonLd(html: string, id: string, data: unknown): string {
 }
 
 function injectRoot(html: string, bodyInner: string): string {
-  // Crawlable body for bots. Sighted users with JS never see it: index.html
-  // critical CSS hides #seo-prerender when <html class="js"> (set in the first inline script).
+  // Crawlable body for bots (text stays in HTML source).
+  // `hidden` + index.html critical CSS keep it off-screen for sighted users —
+  // never paint a white shell before React replaces #root.
   const block = `<div id="root">
-    <main id="seo-prerender" data-seo-prerender="true" style="max-width:72rem;margin:0 auto;padding:1.5rem;font-family:system-ui,sans-serif;line-height:1.6;color:#e8e8ed;background:#050505">
+    <main id="seo-prerender" data-seo-prerender="true" hidden>
       ${bodyInner}
-      <hr style="border-color:#2a2a32" />
-      <p style="font-size:.875rem;opacity:.8">Site de <strong>${escapeHtml(SITE_NAME)}</strong> - <a href="${SITE_URL}/" style="color:#b9a0e3">${SITE_URL}</a></p>
+      <hr />
+      <p>Site de <strong>${escapeHtml(SITE_NAME)}</strong> - <a href="${SITE_URL}/">${SITE_URL}</a></p>
     </main>
   </div>`;
   return html.replace(/<div id="root"><\/div>/i, block);
@@ -785,8 +786,12 @@ function prerender() {
     }
 
     html = injectRoot(html, page.bodyHtml);
-    // Page-specific crawlable body lives in #root - drop the home-only noscript shell
-    html = html.replace(/<noscript>[\s\S]*?<\/noscript>/i, '');
+    // Page-specific crawlable body lives in #root — drop the home-only body noscript shell
+    // (do NOT strip head noscripts: fonts fallback / Meta Pixel / FOUC unhide).
+    html = html.replace(
+      /<!-- Crawlable fallback[\s\S]*?<noscript>[\s\S]*?<\/noscript>/i,
+      '',
+    );
 
     const outFile =
       page.path === '/'
