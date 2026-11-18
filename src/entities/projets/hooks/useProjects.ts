@@ -8,7 +8,6 @@ import {
 import { paginateMock } from '@/shared/api/http';
 import { findByPathSlug, parseEntityIdFromParam } from '@/shared/lib/entity-slug';
 import { isNotFoundError } from '@/shared/api/errors';
-import { sortBySortOrder } from '@/features/admin-cms/lib/reorder';
 import { projectsData } from '../api/mocks/projectData.mocks';
 import {
   createProject,
@@ -29,8 +28,24 @@ function withMockSortOrder(items: IProject[]): IProject[] {
   }));
 }
 
+/** Stable CMS order — kept in-entity (FSD: entities must not import features). */
+function sortProjectsByOrder(items: IProject[]): IProject[] {
+  return items
+    .map((item, index) => ({ item, index }))
+    .sort((a, b) => {
+      const ao = a.item.sortOrder;
+      const bo = b.item.sortOrder;
+      if (ao == null && bo == null) return a.index - b.index;
+      if (ao == null) return 1;
+      if (bo == null) return -1;
+      if (ao !== bo) return ao - bo;
+      return a.index - b.index;
+    })
+    .map(({ item }) => item);
+}
+
 function sortProjectsPage(page: PaginatedData<IProject>): PaginatedData<IProject> {
-  return { ...page, items: sortBySortOrder(page.items) };
+  return { ...page, items: sortProjectsByOrder(page.items) };
 }
 
 function findMockProject(routeParam: string | undefined): IProject | undefined {
