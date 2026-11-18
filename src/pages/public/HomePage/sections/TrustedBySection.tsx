@@ -17,6 +17,16 @@ function desktopGridClass(count: number) {
   return 'md:mx-auto md:max-w-[14rem] md:grid-cols-1';
 }
 
+const partnerShellClass = (className?: string) =>
+  cn(
+    'group/logo flex h-[4.5rem] w-full items-center justify-center rounded-md border border-border/50',
+    'bg-background/30 px-4 py-3 backdrop-blur-sm',
+    'transition-[border-color,background-color,box-shadow] duration-300',
+    'hover:border-border hover:bg-background/55',
+    'dark:border-white/10 dark:bg-white/[0.03] dark:hover:border-white/20 dark:hover:bg-white/[0.06]',
+    className,
+  );
+
 const PartnerLogoCell: React.FC<{
   partner: IPartner;
   isFr: boolean;
@@ -45,14 +55,7 @@ const PartnerLogoCell: React.FC<{
     </>
   );
 
-  const shellClass = cn(
-    'group/logo flex h-[4.5rem] w-full items-center justify-center rounded-md border border-border/50',
-    'bg-background/30 px-4 py-3 backdrop-blur-sm',
-    'transition-[border-color,background-color,box-shadow] duration-300',
-    'hover:border-border hover:bg-background/55',
-    'dark:border-white/10 dark:bg-white/[0.03] dark:hover:border-white/20 dark:hover:bg-white/[0.06]',
-    className,
-  );
+  const shellClass = partnerShellClass(className);
 
   if (partner.websiteUrl) {
     return (
@@ -74,6 +77,28 @@ const PartnerLogoCell: React.FC<{
     </div>
   );
 };
+
+/** Closing tile — same shell as logos, signals a longer track record. */
+const MorePartnersCell: React.FC<{ isFr: boolean; className?: string }> = ({
+  isFr,
+  className,
+}) => (
+  <div
+    className={partnerShellClass(className)}
+    title={isFr ? 'Et d’autres structures encore' : 'And more organizations'}
+    aria-label={isFr ? 'Plus de 10 autres structures' : 'Plus 10 other organizations'}
+  >
+    <span
+      className={cn(
+        'font-heading text-sm font-semibold tracking-tight text-muted-foreground tabular-nums',
+        'opacity-70 transition-[opacity,color,transform] duration-300',
+        'group-hover/logo:scale-[1.02] group-hover/logo:opacity-100 group-hover/logo:text-foreground',
+      )}
+    >
+      {isFr ? '+10 autres' : '+10 others'}
+    </span>
+  </div>
+);
 
 export const TrustedBySection: React.FC = () => {
   const { language } = useLanguageStore();
@@ -131,17 +156,24 @@ export const TrustedBySection: React.FC = () => {
           source={data?.source}
         >
           {/* Desktop / tablet: responsive logo grid */}
-          <div className={cn('hidden gap-3 md:grid md:gap-4', desktopGridClass(partners.length))}>
+          <div
+            className={cn(
+              'hidden gap-3 md:grid md:gap-4',
+              desktopGridClass(partners.length + 1),
+            )}
+          >
             {partners.map((partner) => (
               <PartnerLogoCell key={partner.id} partner={partner} isFr={isFr} />
             ))}
+            <MorePartnersCell isFr={isFr} />
           </div>
 
           {/* Mobile: dual opposite marquees with soft edge fade */}
           <div className="relative md:hidden">
             {!useDualMarquee ? (
-              <div className="mx-auto max-w-[14rem]">
+              <div className="mx-auto grid max-w-[14rem] gap-2.5">
                 <PartnerLogoCell partner={partners[0]} isFr={isFr} />
+                <MorePartnersCell isFr={isFr} />
               </div>
             ) : (
               <>
@@ -168,23 +200,22 @@ export const TrustedBySection: React.FC = () => {
                       />
                     ))}
                   </Marquee>
-                  {rowB.length > 0 && (
-                    <Marquee
-                      reverse
-                      pauseOnHover
-                      repeat={rowB.length <= 2 ? 5 : 3}
-                      className="p-0 [--duration:48s] [--gap:0.65rem]"
-                    >
-                      {rowB.map((partner) => (
-                        <PartnerLogoCell
-                          key={partner.id}
-                          partner={partner}
-                          isFr={isFr}
-                          className="w-[9.5rem] shrink-0"
-                        />
-                      ))}
-                    </Marquee>
-                  )}
+                  <Marquee
+                    reverse
+                    pauseOnHover
+                    repeat={rowB.length <= 2 ? 5 : 3}
+                    className="p-0 [--duration:48s] [--gap:0.65rem]"
+                  >
+                    {rowB.map((partner) => (
+                      <PartnerLogoCell
+                        key={partner.id}
+                        partner={partner}
+                        isFr={isFr}
+                        className="w-[9.5rem] shrink-0"
+                      />
+                    ))}
+                    <MorePartnersCell isFr={isFr} className="w-[9.5rem] shrink-0" />
+                  </Marquee>
                 </div>
               </>
             )}
