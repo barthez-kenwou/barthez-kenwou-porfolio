@@ -19,7 +19,9 @@ import { QueryState } from '@/shared/ui/QueryState';
 import { ErrorBoundary } from '@/app/lib/ErrorBoundary';
 import { lazyImport } from '@/shared/lib/lazyImport';
 
-const CVPreviewModal = lazyImport(() => import('./sections/CVPreviewModal'), 'CVPreviewModal');
+const CVPreviewModal = lazyImport(() =>
+  import('./sections/CVPreviewModal').then((m) => ({ default: m.CVPreviewModal })),
+);
 
 export const CvPage = () => {
   const { language } = useLanguageStore();

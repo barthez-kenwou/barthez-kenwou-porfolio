@@ -3,9 +3,10 @@ import { ErrorBoundary } from '@/app/lib/ErrorBoundary';
 import { lazyImport } from '@/shared/lib/lazyImport';
 import { DeferredMount } from '@/shared/ui/DeferredMount';
 
-const PresentationVideo = lazyImport(
-  () => import('@/widgets/PresentationVideo/PresentationVideo'),
-  'PresentationVideo',
+const PresentationVideo = lazyImport(() =>
+  import('@/widgets/PresentationVideo/PresentationVideo').then((m) => ({
+    default: m.PresentationVideo,
+  })),
 );
 
 type PresentationVideoSlotProps = {

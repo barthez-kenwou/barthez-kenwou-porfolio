@@ -11,5 +11,16 @@ export function lazyPage(
   loader: () => Promise<ModuleMap>,
   exportName?: string,
 ): LazyExoticComponent<ComponentType<unknown>> {
-  return lazyImport(loader, exportName);
+  return lazyImport(async () => {
+    const mod = await loader();
+    const Comp = (exportName ? mod[exportName] : mod.default) as ComponentType<unknown> | undefined;
+    if (!Comp) {
+      throw new Error(
+        exportName
+          ? `lazyPage: export "${exportName}" missing from module`
+          : 'lazyPage: default export missing from module',
+      );
+    }
+    return { default: Comp };
+  });
 }
