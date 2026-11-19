@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React from 'react';
 import { SEO } from '@/shared/ui/SEO/SEO';
 import { HeroSection } from './sections/HeroSection';
 import { ServiceSection } from './sections/ServiceSection';
@@ -8,13 +8,8 @@ import { TestimonialsSection } from './sections/TestimonialsSection';
 import { DarkBrandParallaxBand } from './sections/DarkBrandParallaxBand';
 import { CTASection } from './sections/CTASection';
 import { DeferredMount } from '@/shared/ui/DeferredMount';
+import { PresentationVideoSlot } from '@/widgets/PresentationVideo/PresentationVideoSlot';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
-
-const PresentationVideo = lazy(() =>
-  import('@/widgets/PresentationVideo/PresentationVideo').then((m) => ({
-    default: m.PresentationVideo,
-  })),
-);
 
 export const HomePage: React.FC = () => {
   const { language } = useLanguageStore();
@@ -39,15 +34,7 @@ export const HomePage: React.FC = () => {
       <div className="relative min-h-screen overflow-x-clip">
         <HeroSection />
 
-        <DeferredMount
-          timeout={800}
-          rootMargin="120px"
-          fallback={<div className="min-h-[340px]" aria-hidden />}
-        >
-          <Suspense fallback={<div className="min-h-[340px]" aria-hidden />}>
-            <PresentationVideo />
-          </Suspense>
-        </DeferredMount>
+        <PresentationVideoSlot deferred />
 
         <DeferredMount
           timeout={2000}

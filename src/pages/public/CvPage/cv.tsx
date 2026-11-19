@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
 import { CTASection } from './sections/CTASection';
 import { CvQuickActions } from './sections/CvQuickActions';
 import { CvMobileStickyBar } from './sections/CvMobileStickyBar';
@@ -16,10 +16,10 @@ import { usePublicCvData } from '@/entities/cv/hooks/useCv';
 import { RetroGrid } from '@/shared/ui/retro-grid';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { QueryState } from '@/shared/ui/QueryState';
+import { ErrorBoundary } from '@/app/lib/ErrorBoundary';
+import { lazyImport } from '@/shared/lib/lazyImport';
 
-const CVPreviewModal = lazy(() =>
-  import('./sections/CVPreviewModal').then((m) => ({ default: m.CVPreviewModal })),
-);
+const CVPreviewModal = lazyImport(() => import('./sections/CVPreviewModal'), 'CVPreviewModal');
 
 export const CvPage = () => {
   const { language } = useLanguageStore();
@@ -132,21 +132,23 @@ export const CvPage = () => {
       <CvMobileStickyBar onDownload={openPreview} visible={stickyVisible} />
 
       {isPreviewOpen && (
-        <Suspense
-          fallback={
-            <div
-              className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm"
-              role="status"
-              aria-live="polite"
-            >
-              <div className="rounded-md border border-border bg-background px-5 py-4 text-sm font-medium text-foreground shadow-lg">
-                {isFr ? 'Ouverture de l’aperçu…' : 'Opening preview…'}
+        <ErrorBoundary fallback={null}>
+          <Suspense
+            fallback={
+              <div
+                className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+                role="status"
+                aria-live="polite"
+              >
+                <div className="rounded-md border border-border bg-background px-5 py-4 text-sm font-medium text-foreground shadow-lg">
+                  {isFr ? 'Ouverture de l’aperçu…' : 'Opening preview…'}
+                </div>
               </div>
-            </div>
-          }
-        >
-          <CVPreviewModal isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)} />
-        </Suspense>
+            }
+          >
+            <CVPreviewModal isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)} />
+          </Suspense>
+        </ErrorBoundary>
       )}
     </>
   );

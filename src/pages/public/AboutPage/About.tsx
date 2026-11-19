@@ -5,7 +5,7 @@ import { BioSection } from './sections/BioSection';
 import { EducationSection } from './sections/EducationSection';
 import { ExperienceSection } from './sections/ExperienceSection';
 import { SEO } from '@/shared/ui/SEO/SEO';
-import { PresentationVideo } from '@/widgets/PresentationVideo/PresentationVideo';
+import { PresentationVideoSlot } from '@/widgets/PresentationVideo/PresentationVideoSlot';
 import { AboutCTASection } from './sections/AboutCTASection';
 import { useLanguageStore } from '@/shared/state/useLanguageStore';
 import { MobileStickyCtaBar } from '@/shared/ui/MobileStickyCtaBar';
@@ -60,7 +60,7 @@ export const AboutPage: React.FC = () => {
               </div>
             </div>
 
-            <PresentationVideo />
+            <PresentationVideoSlot deferred />
             <div ref={endCtaRef}>
               <AboutCTASection />
             </div>

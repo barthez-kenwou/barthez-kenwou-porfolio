@@ -40,7 +40,10 @@ export class ErrorBoundary extends Component<Props, State> {
   async componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Stale Vite chunk after deploy — hard-reload once to pick up new hashes.
     if (isChunkLoadError(error)) {
-      reloadOnceForChunkError();
+      if (!reloadOnceForChunkError()) {
+        // Already reloaded this session — soft-fail (fallback or error UI).
+        this.setState({ hasError: true, recovering: false, error });
+      }
       return;
     }
 

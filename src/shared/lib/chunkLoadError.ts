@@ -21,7 +21,6 @@ export function reloadOnceForChunkError(): boolean {
   if (typeof window === 'undefined') return false;
   try {
     if (sessionStorage.getItem(CHUNK_RELOAD_KEY) === '1') {
-      sessionStorage.removeItem(CHUNK_RELOAD_KEY);
       return false;
     }
     sessionStorage.setItem(CHUNK_RELOAD_KEY, '1');
@@ -32,11 +31,18 @@ export function reloadOnceForChunkError(): boolean {
   return true;
 }
 
-/** Clear the guard after a successful boot so future deploys can recover again. */
+/**
+ * Clear the reload guard after the app has stayed healthy for a bit.
+ * Clearing immediately on boot would allow an infinite reload loop when a
+ * nested lazy chunk keeps 404’ing after deploy.
+ */
 export function clearChunkReloadGuard(): void {
-  try {
-    sessionStorage.removeItem(CHUNK_RELOAD_KEY);
-  } catch {
-    // ignore
-  }
+  if (typeof window === 'undefined') return;
+  window.setTimeout(() => {
+    try {
+      sessionStorage.removeItem(CHUNK_RELOAD_KEY);
+    } catch {
+      // ignore
+    }
+  }, 8_000);
 }

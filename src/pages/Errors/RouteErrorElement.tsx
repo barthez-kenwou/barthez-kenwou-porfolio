@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { isRouteErrorResponse, useNavigate, useRouteError } from 'react-router-dom';
 import { InternalErrorPage } from './InternalErrorPage/InternalError';
+import { isChunkLoadError, reloadOnceForChunkError } from '@/shared/lib/chunkLoadError';
 
 function normalizeRouteError(error: unknown): { error?: Error; errorId?: string } {
   if (isRouteErrorResponse(error)) {
@@ -22,11 +23,22 @@ function normalizeRouteError(error: unknown): { error?: Error; errorId?: string 
 /**
  * React Router `errorElement` — glass error UI that renders inside the
  * parent layout Outlet (header / aside / footer stay mounted).
+ * Stale chunk errors reload once instead of flashing this screen.
  */
 export const RouteErrorElement: React.FC = () => {
   const routeError = useRouteError();
   const navigate = useNavigate();
   const { error, errorId } = normalizeRouteError(routeError);
+
+  useEffect(() => {
+    if (isChunkLoadError(routeError) || isChunkLoadError(error)) {
+      reloadOnceForChunkError();
+    }
+  }, [routeError, error]);
+
+  if (isChunkLoadError(routeError) || isChunkLoadError(error)) {
+    return null;
+  }
 
   return (
     <InternalErrorPage
